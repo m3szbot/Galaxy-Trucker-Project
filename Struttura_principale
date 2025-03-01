@@ -1,1 +1,53 @@
 --MACRO ASPETTI--
+
+Plancia volo
+Plancia nave
+Componenti
+Avventure
+Banca
+Meccanismo assemblaggio
+Meccanismo volo
+Meccanismo di valutazione
+
+
+--PLANCIA VOLO--
+
+Classe: PlanciaVolo
+
+
+--PLANCIA NAVE--
+
+Classe: StrutturaNave, PlanciaNave
+
+
+--COMPONENTI--
+
+Classe: Connettore
+Sottoclassi: Stoccaggio, Cannone, Propulsione, Batteria, Scudo, Abitazione, Supporto
+
+
+--AVVENTURE--
+
+Interfaccia: Spostamento, Danno, Guadagno, Requisito (implementazione dei metodi nell'interfaccia)
+Classe: NaveAbbandonata, StazioneAbbandonata, SpazioAperto, Meteoriti, Epidemia, PolvereStellare, Pianeti, ZonaDiGuerra
+        Nemici.
+
+
+--BANCA--
+
+Classe: Banca
+
+
+--Meccanismo assemblaggio--
+
+Classe: Assemblaggio, Mazzo.
+
+
+--Meccanismo volo--
+
+Classe: Mazzo (sempre quella di prima), Gestore.
+
+
+--Valutazione--
+
+Classe: Conteggio
