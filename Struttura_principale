@@ -9,7 +9,46 @@ Meccanismo assemblaggio
 Meccanismo volo
 Meccanismo di valutazione
 
-Ripartizione del lavoro:
+--MVC--
+
+Model:
+
+AssemblingModel : contiene tutte le informazioni di gioco nella fase di assemblaggio
+
+Gli elementi che contiene saranno: i 4 mazzi, la clessidra, le plance nave, i componenti, i giocatori.
+
+FlightModel : stessa cosa per la fase di volo.
+
+Gli elementi che contiene saranno: il mazzo principale, le plance nave, la plancia volo, i giocatori.
+
+EvaluationModel: stessa cosa per la fase finale.
+
+Gli elementi che contiene saranno: le plance nave, la plancia volo, i giocatori.
+
+View:
+
+AssemblingView : gestisce l'input dell'utente e la sua interfaccia in fase di assemblaggio.
+
+FlightView : stessa cosa ma per la fase di volo.
+
+EvaluationView: stessa cosa ma per la fase di valutazione del punteggio.
+
+Controller:
+
+AssemblingController : gestisce la fase di assemblaggio, modificando gli elementi del model relativi a tale fase e
+                          aggiornando l'interfaccia dell'utente. Agisce da ponte tra model e view.
+
+FlightController : stessa cosa di prima ma per la fase di volo.
+
+EvaluationController: stessa cosa ma per la fase di valutazione finale.
+
+Ci saranno quindi 3 classi principali nel main:
+
+AssemblingPhase che contiene model, view e controller della fase di assemblaggio.
+FlightPhase     ''  ''       ''     ''     ''         ''    ''   '' volo
+EvaluationPhase ''  ''       ''     ''     ''         ''    ''    '' valutazione.
+
+--RIPARTIZIONE LAVORO UML--
 
 Giacomo: Plancia nave, assemblaggio
 
