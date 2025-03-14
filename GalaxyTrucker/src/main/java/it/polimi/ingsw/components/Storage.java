@@ -11,7 +11,7 @@ public class Storage extends Component{
     private int numberOfMaximumElements;
     private int[] goods = new int[4];
 
-    private String getComponentName(){
+    public String getComponentName(){
         return "Storage";
     }
     public boolean getType(){
