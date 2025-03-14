@@ -8,5 +8,24 @@ package it.polimi.ingsw.components;
 
 public class AlienSupport extends Component{
 
+    private boolean purple;
 
+    public AlienSupport(SideType[] sides, boolean purple){
+        super(sides);
+        this.purple = purple;
+    }
+
+    /**
+     *
+     * @return boolean that is true if the alienSupport is for purple aliens
+     */
+
+    public boolean isPurple() {
+        return purple;
+    }
+
+    @Override
+    public String getComponentName() {
+        return "AlienSupport";
+    }
 }
