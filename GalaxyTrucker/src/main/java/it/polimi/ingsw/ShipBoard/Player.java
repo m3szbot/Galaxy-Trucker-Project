@@ -1,3 +1,4 @@
+
 package it.polimi.ingsw.ShipBoard;
 
 public class Player {
@@ -16,6 +17,7 @@ public class Player {
      *
      * @param nickName The nickname of the player.
      * @param color The color representing the player.
+     * @author Giacomo
      */
     public Player(String nickName, Color color) {
         this.nickName = nickName;
@@ -27,6 +29,7 @@ public class Player {
      * Returns the player's nickname.
      *
      * @return The player's nickname.
+     * @author Giacomo
      */
     public String getNickName() {
         return nickName;
@@ -36,8 +39,12 @@ public class Player {
      * Returns the player's color.
      *
      * @return The color associated with the player.
+     * @author Giacomo
      */
     public Color getColor() {
         return color;
     }
 }
+
+
+

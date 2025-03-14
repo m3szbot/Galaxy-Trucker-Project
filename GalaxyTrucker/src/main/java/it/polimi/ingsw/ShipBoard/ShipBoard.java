@@ -1,3 +1,4 @@
+
 package it.polimi.ingsw.ShipBoard;
 
 public class ShipBoard {
@@ -17,9 +18,10 @@ public class ShipBoard {
     /**
      * Constructor for ShipBoard.
      * Initializes the ship's structure and default values for all attributes.
+     * @author Giacomo
      */
     public ShipBoard() {
-        shipStructure = new ShipStructure(gameInformation.gameType);
+        shipStructure = new ShipStructure(gameInformation.gameType, this);
         drivingPower = 0;
         firePower = 0;
         crewMembers = 0;
@@ -39,6 +41,7 @@ public class ShipBoard {
     /**
      * Updates the firepower of the ship.
      * @param value Amount to increase the firepower by.
+     * @author Giacomo
      */
     public void updateFirePower(int value) {
         this.firePower = this.firePower + value;
@@ -47,6 +50,7 @@ public class ShipBoard {
     /**
      * Updates the ship's driving power.
      * @param value Amount to increase the driving power by.
+     * @author Giacomo
      */
     public void updateDrivingPower(int value) {
         this.drivingPower = this.drivingPower + value;
@@ -55,6 +59,7 @@ public class ShipBoard {
     /**
      * Updates the number of crew members onboard.
      * @param value Number of crew members to add.
+     * @author Giacomo
      */
     public void updateCrewMembers(int value) {
         this.crewMembers = this.crewMembers + value;
@@ -64,6 +69,7 @@ public class ShipBoard {
     /**
      * Updates the presence of an alien crew member.
      * @param crewType The type of alien crew member (purple or brown).
+     * @author Giacomo
      */
     public void updateAlien(CrewType crewType) {
         if(crewType == CrewType.PURPLE) {
@@ -77,6 +83,7 @@ public class ShipBoard {
     /**
      * Updates the battery power of the ship.
      * @param value Amount to increase the battery power by.
+     * @author Giacomo
      */
     public void updateBatteryPower(int value) {
         this.batteryPower = this.batteryPower + value;
@@ -85,7 +92,9 @@ public class ShipBoard {
     /**
      * Updates the coverage status of a specific side of the ship.
      * @param side The side to update (index 0-3).
+     * The first Side (0) is front, the other indexes follow the clockwise.
      * @param type True if the side is covered, false otherwise.
+     * @author Giacomo
      */
     public void updateCoveredSides(int side, boolean type) {
         if(type){
@@ -96,11 +105,12 @@ public class ShipBoard {
         }
     }
 
-   // 1 red, 0 blue
+    // 1 red, 0 blue
     /**
      * Updates the number of available red or blue slots.
      * @param type 1 for red slots, 0 for blue slots.
      * @param slots Number of slots to add.
+     * @author Giacomo
      */
     public void updateAvailableSlots(int type, int slots) {
         if(type == 1){
@@ -114,6 +124,7 @@ public class ShipBoard {
     /**
      * Updates the count of destroyed components on the ship.
      * @param components Number of components destroyed.
+     * @author Giacomo
      */
     public void updateDestroyedComponents(int components) {
         this.destroyedComponents = this.destroyedComponents + components;
@@ -122,6 +133,7 @@ public class ShipBoard {
     /**
      * Returns the current driving power of the ship.
      * @return The driving power.
+     * @author Giacomo
      */
     public int getDrivingPower(){
         return drivingPower;
@@ -130,6 +142,7 @@ public class ShipBoard {
     /**
      * Returns the current firepower of the ship.
      * @return The firepower.
+     * @author Giacomo
      */
     public float getFirePower(){
         return firePower;
@@ -138,6 +151,7 @@ public class ShipBoard {
     /**
      * Returns the number of crew members onboard.
      * @return The crew member count.
+     * @author Giacomo
      */
     public int getCrewMembers(){
         return crewMembers;
@@ -146,20 +160,22 @@ public class ShipBoard {
     /**
      * Returns the type of alien crew member present on the ship.
      * @return 1 if a purple alien is present, 2 if a brown alien is present, 0 if none.
+     * @author Giacomo
      */
     public int getAlienType(){
-      if(purpleAlien == true){
-          return 1;
-      }
-       else if(brownAlien == true){
-          return 2;
-      }
-       return 0;
+        if(purpleAlien == true){
+            return 1;
+        }
+        else if(brownAlien == true){
+            return 2;
+        }
+        return 0;
     }
 
     /**
      * Returns the current battery power of the ship.
      * @return The battery power level.
+     * @author Giacomo
      */
     public int getBatteryPower(){
         return batteryPower;
@@ -169,6 +185,7 @@ public class ShipBoard {
      * Checks if a specific side of the ship is covered.
      * @param side The side to check (index 0-3).
      * @return True if the side is covered, false otherwise.
+     * @author Giacomo
      */
     public boolean checkSide(int side) {
         if (coveredSides[side] == true) {
@@ -182,6 +199,7 @@ public class ShipBoard {
     /**
      * Returns the number of available red slots.
      * @return The number of available red slots.
+     * @author Giacomo
      */
     public int getAvailableRedSlots(){
         return availableRedSlots;
@@ -190,6 +208,7 @@ public class ShipBoard {
     /**
      * Returns the number of available blue slots.
      * @return The number of available blue slots.
+     * @author Giacomo
      */
     public int getAvailableBlueSlots(){
         return availableBlueSlots;
@@ -198,18 +217,21 @@ public class ShipBoard {
     /**
      * Returns the number of destroyed components on the ship.
      * @return The number of destroyed components.
+     * @author Giacomo
      */
     public int getDestroyedComponents(){
         return destroyedComponents;
     }
 
+/*IL SEGUENTE CONTROLLO SUGLI SLOT TOTALI DISPONIBILI VIENE SPOSTATO NEL CONTROLLORE, E VIENE CREATO UN METODO CHECKSLOTS IN SHIPSTRUCTURE PER CONTROLLARE QUESTA ROBA
     /**
      * Checks if the ship has enough slots available to store specified goods.
      * @param goods An array representing different types of goods.
      * @param x The x-coordinate where the goods are placed.
      * @param y The y-coordinate where the goods are placed.
      * @return True if there are enough slots available, false otherwise.
-     */
+     * @author Giacomo
+
     public boolean checkSlots(int[] goods, int x, int y){
         boolean flag = true;
         if(goods[0] != 0){
@@ -227,6 +249,7 @@ public class ShipBoard {
         }
         return flag;
     }
-
+*/
 
 }
+
