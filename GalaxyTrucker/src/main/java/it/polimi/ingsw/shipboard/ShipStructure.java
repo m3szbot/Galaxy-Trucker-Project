@@ -1,8 +1,8 @@
-package it.polimi.ingsw.ShipBoard;
+package it.polimi.ingsw.shipboard;
+
 
 import it.polimi.ingsw.components.*;
-
-import it.polimi.ingsw.components.SideType;
+import it.polimi.ingsw.components.Component;
 
 import java.awt.*;
 
@@ -81,13 +81,12 @@ public class ShipStructure{
      *
      * @param x The x-coordinate of the component.
      * @param y The y-coordinate of the component.
-     * @param shipBoard The ShipBoard object that keeps track of destroyed components.
      * @author Giacomo
      */
-    public void removeComponent(int x, int y, ShipBoard shipBoard) {
+    public void removeComponent(int x, int y) {
         if (matr[x][y] == true && structureMatrix[x][y] != null) {
-            shipBoard.
-                    structureMatrix[x][y] = null;
+            structureMatrix[x][y] = null;
+            shipBoard.updateDestroyedComponents(1);
         }
 
     }
@@ -106,16 +105,16 @@ public class ShipStructure{
             for(int j = 1; j < 11; j++){
                 if (structureMatrix[i][j] != null){
                     //va sistemato il fatto che qualora si volesse davvero usare un enum allora dovrebbe essere messo tipodiverso da vuoto e diverso da shield
-                    if(!(structureMatrix[i][j].getLeft.equals(SideType.Smooth) && structureMatrix[i-1][j] == null)){
+                    if(!(structureMatrix[i][j].getLeft().equals(SideType.Smooth) && structureMatrix[i-1][j] == null)){
                         externalJunctions++;
                     }
-                    if(!(structureMatrix[i][j].getRight.equals(SideType.Smooth) && structureMatrix[i+1][j] == null)){
+                    if(!(structureMatrix[i][j].getRight().equals(SideType.Smooth) && structureMatrix[i+1][j] == null)){
                         externalJunctions++;
                     }
-                    if(!(structureMatrix[i][j].getFront.equals(SideType.Smooth) && structureMatrix[i][j-1] == null)){
+                    if(!(structureMatrix[i][j].getFront().equals(SideType.Smooth) && structureMatrix[i][j-1] == null)){
                         externalJunctions++;
                     }
-                    if(!(structureMatrix[i][j].getBack.equals(SideType.Smooth) && structureMatrix[i][j+1] == null)){
+                    if(!(structureMatrix[i][j].getBack().equals(SideType.Smooth) && structureMatrix[i][j+1] == null)){
                         externalJunctions++;
                     }
                 }
@@ -198,16 +197,16 @@ public class ShipStructure{
     private void goDownChecking(int x, int y, boolean[][] mat){
         mat[x][y] = true;
         if(structureMatrix[x+1][y] != null ){
-            if((structureMatrix[x][y].getRight.equals(SideType.Single) && (structureMatrix[x+1][y].getLeft.equals(SideType.Single)|| structureMatrix[x+1][y].getLeft.equals(SideType.Universal))) || (structureMatrix[x][y].getRight.equals(SideType.Double) && (structureMatrix[x+1][y].getLeft.equals(SideType.Double) || structureMatrix[x+1][y].getLeft.equals(SideType.Universal)))){
+            if((structureMatrix[x][y].getRight().equals(SideType.Single) && (structureMatrix[x+1][y].getLeft().equals(SideType.Single)|| structureMatrix[x+1][y].getLeft().equals(SideType.Universal))) || (structureMatrix[x][y].getRight().equals(SideType.Double) && (structureMatrix[x+1][y].getLeft().equals(SideType.Double) || structureMatrix[x+1][y].getLeft().equals(SideType.Universal)))){
                 goDownChecking(x+1, y, mat);
             }
-            if((structureMatrix[x][y].getLeft.equals(SideType.Single) && (structureMatrix[x-1][y].getRight.equals(SideType.Single) || structureMatrix[x-1][y].getRight.equals(SideType.Universal))) || (structureMatrix[x][y].getLeft.equals(SideType.Double) && (structureMatrix[x-1][y].getRight.equals(SideType.Double) || structureMatrix[x-1][y].getRight.equals(SideType.Universal)))){
+            if((structureMatrix[x][y].getLeft().equals(SideType.Single) && (structureMatrix[x-1][y].getRight().equals(SideType.Single) || structureMatrix[x-1][y].getRight().equals(SideType.Universal))) || (structureMatrix[x][y].getLeft().equals(SideType.Double) && (structureMatrix[x-1][y].getRight().equals(SideType.Double) || structureMatrix[x-1][y].getRight().equals(SideType.Universal)))){
                 goDownChecking(x-1, y, mat);
             }
-            if((structureMatrix[x][y].getBack.equals(SideType.Single) && (structureMatrix[x][y+1].getFront.equals(SideType.Single) || structureMatrix[x][y+1].getFront.equals(SideType.Universal))) || (structureMatrix[x][y].getBack.equals(SideType.Double) && (structureMatrix[x][y+1].getFront.equals(SideType.Double) || structureMatrix[x][y+1].getFront.equals(SideType.Universal)))){
+            if((structureMatrix[x][y].getBack().equals(SideType.Single) && (structureMatrix[x][y+1].getFront().equals(SideType.Single) || structureMatrix[x][y+1].getFront().equals(SideType.Universal))) || (structureMatrix[x][y].getBack().equals(SideType.Double) && (structureMatrix[x][y+1].getFront().equals(SideType.Double) || structureMatrix[x][y+1].getFront().equals(SideType.Universal)))){
                 goDownChecking(x, y+1, mat);
             }
-            if((structureMatrix[x][y].getFront.equals(SideType.Single) && (structureMatrix[x][y-1].getBack.equals(SideType.Single) || structureMatrix[x][y-1].getBack.equals(SideType.Universal))) || (structureMatrix[x][y].getFront.equals(SideType.Double) && (structureMatrix[x][y-1].getBack.equals(SideType.Double) || structureMatrix[x][y-1].getBack.equals(SideType.Universal)))){
+            if((structureMatrix[x][y].getFront().equals(SideType.Single) && (structureMatrix[x][y-1].getBack().equals(SideType.Single) || structureMatrix[x][y-1].getBack().equals(SideType.Universal))) || (structureMatrix[x][y].getFront().equals(SideType.Double) && (structureMatrix[x][y-1].getBack().equals(SideType.Double) || structureMatrix[x][y-1].getBack().equals(SideType.Universal)))){
                 goDownChecking(x, y-1, mat);
             }
         }
@@ -223,10 +222,10 @@ public class ShipStructure{
      */
     private boolean checkCorrectJunctions(int x, int y){
         if (structureMatrix[x][y] != null) {
-            if((structureMatrix[x][y].getLeft.equals(SideType.Single) && structureMatrix[x-1][y] != null && (!structureMatrix[x-1][y].getRight.equals(SideType.Single) && !structureMatrix[x-1][y].getRight.equals(SideType.Universal))) || (structureMatrix[x][y].getLeft.equals(SideType.Double) && structureMatrix[x-1][y] != null && (!structureMatrix[x-1][y].getRight.equals(SideType.Single) && !structureMatrix[x-1][y].getRight.equals(SideType.Universal))) ||
-                    (structureMatrix[x][y].getFront.equals(SideType.Double) && structureMatrix[x][y-1] != null && (!structureMatrix[x][y-1].getBNack.equals(SideType.Single) && !structureMatrix[x][y-1].getBack.equals(SideType.Universal))) || (structureMatrix[x][y].getFront.equals(SideType.Single) && structureMatrix[x][y-1] != null && (!structureMatrix[x][y-1].getBack.equals(SideType.Double) && !structureMatrix[x][y-1].getBack.equals(SideType.Universal))) ||
-                    (structureMatrix[x][y].getRight.equals(SideType.Single) && structureMatrix[x+1][y] != null && (!structureMatrix[x+1][y].getLeft.equals(SideType.Single) && !structureMatrix[x+1][y].getLeft.equals(SideType.Universal))) || (structureMatrix[x][y].getRight.equals(SideType.Double) && structureMatrix[x+1][y] != null && (!structureMatrix[x+1][y].getLeft.equals(SideType.Single) && !structureMatrix[x+1][y].getLeft.equals(SideType.Universal))  ||
-                    (structureMatrix[x][y].getBack.equals(SideType.Double) && structureMatrix[x][y+1] != null && (!structureMatrix[x][y+1].getFront.equals(SideType.Single) && !structureMatrix[x][y+1].getFront.equals(SideType.Universal))) || (structureMatrix[x][y].getBack.equals(SideType.Single) && structureMatrix[x][y+1] != null && (!structureMatrix[x][y+1].getFront.equals(SideType.Double) && !structureMatrix[x][y+1].getFront.equals(SideType.Universal))))){
+            if((structureMatrix[x][y].getLeft().equals(SideType.Single) && structureMatrix[x-1][y] != null && (!structureMatrix[x-1][y].getRight().equals(SideType.Single) && !structureMatrix[x-1][y].getRight().equals(SideType.Universal))) || (structureMatrix[x][y].getLeft().equals(SideType.Double) && structureMatrix[x-1][y] != null && (!structureMatrix[x-1][y].getRight().equals(SideType.Single) && !structureMatrix[x-1][y].getRight().equals(SideType.Universal))) ||
+                    (structureMatrix[x][y].getFront().equals(SideType.Double) && structureMatrix[x][y-1] != null && (!structureMatrix[x][y-1].getBack().equals(SideType.Single) && !structureMatrix[x][y-1].getBack().equals(SideType.Universal))) || (structureMatrix[x][y].getFront().equals(SideType.Single) && structureMatrix[x][y-1] != null && (!structureMatrix[x][y-1].getBack().equals(SideType.Double) && !structureMatrix[x][y-1].getBack().equals(SideType.Universal))) ||
+                    (structureMatrix[x][y].getRight().equals(SideType.Single) && structureMatrix[x+1][y] != null && (!structureMatrix[x+1][y].getLeft().equals(SideType.Single) && !structureMatrix[x+1][y].getLeft().equals(SideType.Universal))) || (structureMatrix[x][y].getRight().equals(SideType.Double) && structureMatrix[x+1][y] != null && (!structureMatrix[x+1][y].getLeft().equals(SideType.Single) && !structureMatrix[x+1][y].getLeft().equals(SideType.Universal))  ||
+                    (structureMatrix[x][y].getBack().equals(SideType.Double) && structureMatrix[x][y+1] != null && (!structureMatrix[x][y+1].getFront().equals(SideType.Single) && !structureMatrix[x][y+1].getFront().equals(SideType.Universal))) || (structureMatrix[x][y].getBack().equals(SideType.Single) && structureMatrix[x][y+1] != null && (!structureMatrix[x][y+1].getFront().equals(SideType.Double) && !structureMatrix[x][y+1].getFront().equals(SideType.Universal))))){
                 return false;
             }
         }

@@ -1,5 +1,5 @@
 
-package it.polimi.ingsw.ShipBoard;
+package it.polimi.ingsw.shipboard;
 
 public class Player {
     // The nickname of the player

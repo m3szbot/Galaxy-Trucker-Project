@@ -1,4 +1,4 @@
-package it.polimi.ingsw.ShipBoard;
+package it.polimi.ingsw.shipboard;
 
 public enum Color {
     RED, BLUE, YELLOW, GREEN

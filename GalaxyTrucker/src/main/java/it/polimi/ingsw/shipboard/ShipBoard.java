@@ -1,5 +1,6 @@
 
-package it.polimi.ingsw.ShipBoard;
+package it.polimi.ingsw.shipboard;
+import it.polimi.ingsw.components.*;
 
 public class ShipBoard {
     // Represents the structure of the ship
@@ -72,10 +73,10 @@ public class ShipBoard {
      * @author Giacomo
      */
     public void updateAlien(CrewType crewType) {
-        if(crewType == CrewType.PURPLE) {
+        if(crewType == CrewType.Purple) {
             this.purpleAlien = true;
         }
-        else if(crewType == CrewType.BROWN) {
+        else if(crewType == CrewType.Brown) {
             this.brownAlien = true;
         }
     }
