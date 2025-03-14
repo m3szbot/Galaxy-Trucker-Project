@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ShipBoard;
 
+import it.polimi.ingsw.components.*;
 
 import it.polimi.ingsw.components.SideType;
 
