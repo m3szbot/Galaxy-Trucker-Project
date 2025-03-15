@@ -84,11 +84,15 @@ public class ShipStructure{
      * @author Giacomo
      */
     public void removeComponent(int x, int y) {
+        boolean flag = true;
+
         if (matr[x][y] == true && structureMatrix[x][y] != null) {
             structureMatrix[x][y] = null;
             shipBoard.updateDestroyedComponents(1);
+            while(flag){
+                flag = checkNotReachable(this.shipBoard);
+            }
         }
-
     }
 
     /**
