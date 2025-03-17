@@ -7,15 +7,15 @@ package it.polimi.ingsw.components;
 
 public class Storage extends Component{
 
-    private boolean type;
+    private boolean isRed;
     private int numberOfMaximumElements;
     private int[] goods = new int[4];
 
     public String getComponentName(){
         return "Storage";
     }
-    public boolean getType(){
-        return type;
+    public boolean getIsRed(){
+        return isRed;
     }
     public int getNumberOfMaximumElements(){
         return numberOfMaximumElements;
@@ -39,7 +39,7 @@ public class Storage extends Component{
 
         super(sides);
         int i;
-        this.type = type;
+        this.isRed = type;
         this.numberOfMaximumElements = numberOfMaximumElements;
     }
 }
