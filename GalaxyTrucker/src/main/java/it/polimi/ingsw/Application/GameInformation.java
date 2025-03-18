@@ -5,9 +5,11 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
-//import packages containing cards, bank, flightboard, gametype and viewtype
-import it.polimi.ingsw.components.Component;
-import it.polimi.ingsw.shipboard.Player;
+import it.polimi.ingsw.components.*;
+import it.polimi.ingsw.cards.*;
+import it.polimi.ingsw.Bank.*;
+import it.polimi.ingsw.assembly.*;
+import it.polimi.ingsw.shipboard.*;
 
 public class GameInformation {
     private Card[] cardsList;
@@ -38,35 +40,45 @@ public class GameInformation {
         return flightBoard;
     }
 
-    public GameType getGameType() {
+    public GameType getGameType(){
         return gameType;
     }
 
-    public ViewType getViewType() {
+    public ViewType getViewType(){
         return viewType;
     }
 
-    public void setUpCards(GameType gameType){
-        //card creation
+    public Card[] setUpCards(GameType gameType){
+        if(gameType == gameType.TestGame){
+
+        }else{
+
+        }
     }
 
-    public void setUpComponents(Component[] componentList){
-        //components creation
-    }
+    public void setUpComponents(){}
 
-    public  void setUpPlayers(Player[] playerList){
-        //playerList creation
-    }
+    public  void setUpPlayers(){}
 
     public void setUpBank(){
-        //bank creation
+        this.bank = new Bank();
     }
 
-    public void setUpFlightBoard(GameType gameType){
-        //flightboard creation
+    public void setUpFlightBoard(GameType gameType, FlightBoard flightBoard){
+        if(gameType == gameType.TestGame){
+
+        }else{
+
+        }
     }
 
-    public void setUpGameType(GameType gameType){}
+    public void setUpGameType(GameType gameType){
+        //chiama un metodo nella view per chiedere la tipologia di game
+        this.gameType = askGameType();
+    }
 
-    public void setViewType(ViewType viewType){}
+    public void setViewType(ViewType viewType){
+        //chama un metodo nella view per chiedere il tipo di view
+        this.viewType = askViewType();
+    }
 }

@@ -6,5 +6,5 @@ package it.polimi.ingsw.Application;
  */
 
 public enum GameType {
-    GameTest, NormalGame;
+    TestGame, NormalGame;
 }
