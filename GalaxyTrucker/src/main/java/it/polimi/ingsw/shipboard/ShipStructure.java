@@ -140,11 +140,16 @@ public class ShipStructure{
     }
 
     /**
-     * Checks for errors in the ship structure related to incorrect junctions.
-     * Errors are counted but not automatically corrected.
+     * Scans the ship structure to identify errors related to incorrect junctions.
+     * Errors are detected and counted but not automatically corrected.
      *
-     * @param shipBoard The ShipBoard object tracking errors.
-     * @return The number of detected errors.
+     * The function iterates through the structure matrix and:
+     * 1. Verifies if components are correctly connected.
+     * 2. Checks if the "Engine" component is incorrectly placed.
+     * 3. Ensures "Cannon" components follow specific placement rules.
+     *
+     * @param shipBoard The ShipBoard object that tracks errors.
+     * @return The total number of detected errors.
      * @author Giacomo
      */
     public int checkErrors(ShipBoard shipBoard){
@@ -156,9 +161,69 @@ public class ShipStructure{
                 for (int j = 1; j < 12; j++) {
                     if (structureMatrix[i][j] != null) {
                         if(checkCorrectJunctions(i,j)){
+                            System.out.println("Component"+ i+" "+j+" is not well connected");
                             errors++;
                             //  removeComponent(i, j); i componenti non li deve rimuovere il gioco ma l'utente
                             flag = checkNotReachable(shipBoard);
+                        }
+                        if(structureMatrix[i][j].getComponentName().equals("Engine")){
+                            boolean check = false;
+                            for(int k = j+1; k < 12; k++){
+                                if(structureMatrix[i][k] != null){
+                                    check = true;
+                                    errors++;
+                                }
+                            }
+                            if(check){
+                                System.out.println("Error, in component" + i +' '+ j);
+                            }
+                        }
+                        if(structureMatrix[i][j].getComponentName().equals("Cannon")){
+                            boolean check = false;
+                            if(structureMatrix[i][j].getLeft().equals(SideType.Special)){
+                                for(int k = i-1; k >= 0; k--){
+                                    if(structureMatrix[k][j] != null){
+                                        check = true;
+                                        errors++;
+                                    }
+                                }
+                                if(check){
+                                    System.out.println("Error, in component" + i +' '+ j);
+                                }
+                            }
+                            else if(structureMatrix[i][j].getRight().equals(SideType.Special)){
+                                for(int k = i+1; k < 12; k++){
+                                    if(structureMatrix[k][j] != null){
+                                        check = true;
+                                        errors++;
+                                    }
+                                }
+                                if(check){
+                                    System.out.println("Error, in component" + i +' '+ j);
+                                }
+                            }
+                            else if(structureMatrix[i][j].getFront().equals(SideType.Special)){
+                                for(int k = j-1; k >= 0; k--){
+                                    if(structureMatrix[i][k] != null){
+                                        check = true;
+                                        errors++;
+                                    }
+                                }
+                                if(check){
+                                    System.out.println("Error, in component" + i +' '+ j);
+                                }
+                            }
+                            else if(structureMatrix[i][j].getBack().equals(SideType.Special)){
+                                for(int k = j+1; k < 12; k++){
+                                    if(structureMatrix[k][j] != null){
+                                        check = true;
+                                        errors++;
+                                    }
+                                }
+                                if(check){
+                                    System.out.println("Error, in component" + i +' '+ j);
+                                }
+                            }
                         }
                     }
                 }

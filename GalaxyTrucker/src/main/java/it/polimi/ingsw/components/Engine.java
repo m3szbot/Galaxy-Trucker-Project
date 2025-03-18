@@ -12,6 +12,9 @@ public class Engine extends Component{
    public Engine(SideType[] sides, boolean single){
        super(sides);
        this.single = single;
+       while(this.getBack()!= SideType.Special){
+           this.rotate();
+       }
    }
 
     /**
