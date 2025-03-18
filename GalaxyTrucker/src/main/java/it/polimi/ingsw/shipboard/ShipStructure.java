@@ -3,6 +3,7 @@ package it.polimi.ingsw.shipboard;
 
 import it.polimi.ingsw.components.*;
 import it.polimi.ingsw.components.Component;
+import it.polimi.ingsw.Application.*;
 
 import java.awt.*;
 
@@ -39,7 +40,7 @@ public class ShipStructure{
             }
         }
 
-        if (gametype.equals(GameType.GameTest)){}
+        if (gameType.equals(GameType.TestGame)){}
         else{
             // Set forbidden zones in the structure
             for(int i = 0; i < 12; i++){
