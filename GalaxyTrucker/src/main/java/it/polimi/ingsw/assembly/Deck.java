@@ -4,6 +4,8 @@ package it.polimi.ingsw.assembly;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import it.polimi.ingsw.cards.*;
+import it.polimi.ingsw.Application.*;
 
 /**
  * Represents one of the decks of cards used in the assembly phase of the game.
