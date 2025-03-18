@@ -4,7 +4,8 @@ import java.util.*;
 // import Card
 // import it.polimi.ingsw.;
 import it.polimi.ingsw.shipboard.Player;
-import it.polimi.ingsw.application.GameType;
+import it.polimi.ingsw.Application.GameType;
+import it.polimi.ingsw.cards.Card;
 
 
 public class FlightMechanism {

@@ -4,9 +4,6 @@ import java.util.*;
 
 import it.polimi.ingsw.shipboard.Player;
 
-
-import it.polimi.ingsw.Application.GameInformation;
-
 public class ScoreCounter {
     // use ArrayList?
     // more players can have the minimum and both receive points

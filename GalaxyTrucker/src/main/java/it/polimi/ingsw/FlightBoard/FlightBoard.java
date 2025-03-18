@@ -3,9 +3,9 @@ package it.polimi.ingsw.FlightBoard;
 import java.util.*;
 
 import it.polimi.ingsw.shipboard.Player;
-import it.polimi.ingsw.application.GameType;
+import it.polimi.ingsw.Application.GameType;
 
-// numberOfTiles, startingTiles selected based on
+// numberOfTiles, startingTiles selected based on gameType
 
 public class FlightBoard {
     // constants - game types:
@@ -23,7 +23,7 @@ public class FlightBoard {
     private List<Player> playerOrderList;
 
     public FlightBoard(GameType gameType) {
-        if (gameType.equals("NormalGame")) {
+        if (gameType == GameType.NormalGame) {
             this.numberOfTiles = normalNumberOfTiles;
             this.startingTiles = normalStartingTiles;
         } else {
