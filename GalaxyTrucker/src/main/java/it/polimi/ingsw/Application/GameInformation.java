@@ -61,7 +61,7 @@ public class GameInformation {
     public  void setUpPlayers(){}
 
     public void setUpBank(){
-        this.bank = new Bank();
+        this.bank = new Bank(gameType);
     }
 
     public void setUpFlightBoard(GameType gameType, FlightBoard flightBoard){
