@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Bank;
 
-// needs playerList, flightBoardPoints from GameInformation
-
 import java.util.*;
+
+import it.polimi.ingsw.shipboard.Player;
 
 
 import it.polimi.ingsw.Application.GameInformation;
@@ -54,5 +54,5 @@ public class ScoreCounter {
         // add player to leastExposedLinksList
 
     }
-    }
 }
+
