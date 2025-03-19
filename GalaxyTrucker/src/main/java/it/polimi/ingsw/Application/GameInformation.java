@@ -78,16 +78,10 @@ public class GameInformation {
     }
 
     /**
-     * creates the flightboard based on the game type
-     * @param gameType
-     * @param flightBoard
+     * creates the flight board based on the game type
      */
-    public void setUpFlightBoard(GameType gameType, FlightBoard flightBoard){
-        if(gameType == gameType.TestGame){
-
-        }else{
-
-        }
+    public void setUpFlightBoard(){
+        this.flightBoard = new FlightBoard(gameType);
     }
 
     /**
