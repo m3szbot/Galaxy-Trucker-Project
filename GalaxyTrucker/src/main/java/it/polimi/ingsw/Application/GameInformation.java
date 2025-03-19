@@ -48,7 +48,11 @@ public class GameInformation {
         return viewType;
     }
 
-    public Card[] setUpCards(GameType gameType){
+    /**
+     * creates the complete list of cards based on the type of game
+     * @param gameType
+     */
+    public void setUpCards(GameType gameType){
         if(gameType == gameType.TestGame){
 
         }else{
@@ -56,14 +60,28 @@ public class GameInformation {
         }
     }
 
+    /**
+     * creates components objects
+     */
     public void setUpComponents(){}
 
-    public  void setUpPlayers(){}
+    /**
+     * creates playerList
+     */
+    public void setUpPlayers(){}
 
+    /**
+     * creates bank
+     */
     public void setUpBank(){
         this.bank = new Bank(gameType);
     }
 
+    /**
+     * creates the flightboard based on the game type
+     * @param gameType
+     * @param flightBoard
+     */
     public void setUpFlightBoard(GameType gameType, FlightBoard flightBoard){
         if(gameType == gameType.TestGame){
 
@@ -72,13 +90,19 @@ public class GameInformation {
         }
     }
 
+    /**
+     * asks the creator of the game which mode to play
+     * @param gameType
+     */
     public void setUpGameType(GameType gameType){
-        //chiama un metodo nella view per chiedere la tipologia di game
         this.gameType = askGameType();
     }
 
+    /**
+     * asks each player which view type they want to play with
+     * @param viewType
+     */
     public void setViewType(ViewType viewType){
-        //chama un metodo nella view per chiedere il tipo di view
         this.viewType = askViewType();
     }
 }

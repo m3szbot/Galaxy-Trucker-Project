@@ -1,0 +1,820 @@
+//lascio fuori i 4 pezzi centrali di ciascuna nave (quelli colorati)
+[
+  {
+    "sides": [1,3,2,3]
+  },
+  {
+    "sides": [0,3,1,3]
+  },
+  {
+    "sides": [1,3,1,3]
+  },
+  {
+    "sides": [0,3,2,3]
+  },
+  {
+    "sides": [1,2,3,3]
+  },
+  {
+    "sides": [0,3,3,2]
+  },
+  {
+    "sides": [0,1,3,3]
+  },
+  {
+    "sides": [2,2,3,3]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,4,3,1]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,2,0,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,0,3,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [1,2,1,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,0,4,3]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,2,4,3]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,1,0,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,1,4,2]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,2,3,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [1,2,4,2]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,1,0,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,3,2,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,0,4,3]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,3,4,1]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [1,4,2,3]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,1,1,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [1,3,2,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,0,3,4]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,4,2,2]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,4,1,3]
+  },
+  {
+    "name": "engine",
+    "single": true,
+    "sides": [0,2,0,4]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [0,1,3,4]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [0,1,0,4]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [0,3,1,4]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [0,2,0,4]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [0,4,3,2]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [0,4,2,3]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [1,1,1,4]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [0,3,4,3]
+  },
+  {
+    "name": "engine",
+    "single": false,
+    "sides": [2,2,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,2,1,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,3,4,2]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,0,1,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,4,1,3]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,0,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,4,2,1]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,0,4,1]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,2,0,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,4,1,2]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,4,2,3]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,2,0,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,3,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [1,4,2,3]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,3,1,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,2,4,1]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [2,2,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [1,3,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,1,0,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,4,3,1]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,0,4,2]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,1,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,1,0,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [1,1,1,4]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,1,4,3]
+  },
+  {
+    "name": "cannon",
+    "single": true,
+    "sides": [0,2,3,4]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,0,3,4]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,0,4,3]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,4,3,2]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,1,0,4]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [1,2,1,4]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,4,1,3]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,2,0,4]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,3,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [2,1,2,4]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,1,4,2]
+  },
+  {
+    "name": "cannon",
+    "single": false,
+    "sides": [0,1,3,4]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [1,2,2,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,1,2,1]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,1,3,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,1,3,1]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [1,1,2,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,2,3,1]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [1,1,1,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [1,2,1,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,2,3,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,2,0,3]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,1,1,3]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,2,1,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,1,0,3]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,0,1,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,3,2,2]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,0,3,1]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [0,0,2,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [0,0,0,0],
+    "sides": [0,3,0,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [0,0,0,0],
+    "sides": [0,0,3,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [0,0,0,0],
+    "sides": [0,3,2,1]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [0,0,0,0],
+    "sides": [0,2,1,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [0,0,0,0],
+    "sides": [1,1,1,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [0,0,0,0],
+    "sides": [2,2,2,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,1,0,2]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,0,0,1]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,2,1,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,0,0,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,0,0,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,0,3,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,1,2,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [1,2,1,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,1,0,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [0,2,0,3]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [0,0,0,0],
+    "sides": [1,2,3,2]
+  },
+  {
+  "name": "Storage",
+  "isRed": true,
+  "numberOfMaximumElements": 2,
+  "goods": [0,0,0,0],
+  "sides": [0,0,0,2]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [0,0,0,0],
+    "sides": [0,0,0,1]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [0,0,0,0],
+    "sides": [0,2,0,2]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [0,0,0,0],
+    "sides": [0,1,0,1]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [0,0,0,0],
+    "sides": [0,1,2,2]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [0,0,0,0],
+    "sides": [0,0,0,2]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [0,0,0,0],
+    "sides": [0,2,1,1]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,3,0,3]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,0,3,3]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [2,2,2,3]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,0,3,2]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,3,2,1]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,0,1,3]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,0,0,3]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,3,1,2]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [1,1,1,3]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [1,2,1,2]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [0,0,0,3]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [0,0,2,1]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [0,1,1,2]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [0,1,0,2]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [0,0,0,2]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [0,0,0,1]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [0,2,2,1]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [0,1,3,1]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [0,0,1,3]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [0,2,2,3]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [0,0,3,2]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [0,2,2,2]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 3,
+    "coveredSide2": 0,
+    "sides": [1,2,1,2]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [1,2,1,2]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 3,
+    "coveredSide2": 0,
+    "sides": [0,1,1,1]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [0,0,1,3]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [0,2,0,3]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [0,1,1,1]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [0,0,3,1]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [0,0,0,3]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [0,1,2,1]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [0,2,2,2]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [0,1,0,3]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [0,2,1,2]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [0,0,0,3]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [0,0,3,2]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [0,0,2,3]
+  }
+]
