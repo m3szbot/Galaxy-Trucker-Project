@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Bank;
 
+import it.polimi.ingsw.Application.GameType;
+
 public class Bank {
     // constants (physical quantity)
     // red yellow green blue
@@ -21,15 +23,19 @@ public class Bank {
     // constructor
     // attributes are not final to keep count of the quantities in the bank
     // pass aliens=0 if no aliens are used
-    public Bank(int[] maxGoods, int maxCredits, int maxBatteries, int maxAstronauts,
-                int maxPurpleAliens, int maxBrownAliens) {
+    public Bank(GameType gameType) {
         this.goodsNumber = new int[maxGoods.length];
         System.arraycopy(maxGoods, 0, this.goodsNumber, 0, maxGoods.length);
         this.creditsNumber = maxCredits;
         this.batteriesNumber = maxBatteries;
         this.astronautsNumber = maxAstronauts;
-        this.purpleAliensNumber = maxPurpleAliens;
-        this.brownAliensNumber = maxBrownAliens;
+        if (gameType == GameType.NormalGame) {
+            this.purpleAliensNumber = maxPurpleAliens;
+            this.brownAliensNumber = maxBrownAliens;
+        } else {
+            this.purpleAliensNumber = 0;
+            this.brownAliensNumber = 0;
+        }
     }
 
     // removers

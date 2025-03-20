@@ -1,6 +1,5 @@
 package it.polimi.ingsw.components;
 
-
 /**
  * Superclass to express what all components have in common
  * SideType[0] corresponds to the front side, then rotate clockwise.
@@ -19,7 +18,6 @@ public class Component {
         this.right = sides[1];
         this.back = sides[2];
         this.left = sides[3];
-
     }
 
     /**

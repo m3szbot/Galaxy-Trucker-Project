@@ -8,7 +8,6 @@ package it.polimi.ingsw.Application;
 import it.polimi.ingsw.components.*;
 import it.polimi.ingsw.cards.*;
 import it.polimi.ingsw.Bank.*;
-import it.polimi.ingsw.assembly.*;
 import it.polimi.ingsw.shipboard.*;
 import it.polimi.ingsw.FlightBoard.*;
 
@@ -49,7 +48,11 @@ public class GameInformation {
         return viewType;
     }
 
-    public Card[] setUpCards(GameType gameType){
+    /**
+     * creates the complete list of cards based on the type of game
+     * @param gameType
+     */
+    public void setUpCards(GameType gameType){
         if(gameType == gameType.TestGame){
 
         }else{
@@ -57,29 +60,43 @@ public class GameInformation {
         }
     }
 
+    /**
+     * creates components objects
+     */
     public void setUpComponents(){}
 
-    public  void setUpPlayers(){}
+    /**
+     * creates playerList
+     */
+    public void setUpPlayers(){}
 
+    /**
+     * creates bank
+     */
     public void setUpBank(){
-        this.bank = new Bank();
+        this.bank = new Bank(gameType);
     }
 
-    public void setUpFlightBoard(GameType gameType, FlightBoard flightBoard){
-        if(gameType == gameType.TestGame){
-
-        }else{
-
-        }
+    /**
+     * creates the flight board based on the game type
+     */
+    public void setUpFlightBoard(){
+        this.flightBoard = new FlightBoard(gameType);
     }
 
+    /**
+     * asks the creator of the game which mode to play
+     * @param gameType
+     */
     public void setUpGameType(GameType gameType){
-        //chiama un metodo nella view per chiedere la tipologia di game
         this.gameType = askGameType();
     }
 
+    /**
+     * asks each player which view type they want to play with
+     * @param viewType
+     */
     public void setViewType(ViewType viewType){
-        //chama un metodo nella view per chiedere il tipo di view
         this.viewType = askViewType();
     }
 }
