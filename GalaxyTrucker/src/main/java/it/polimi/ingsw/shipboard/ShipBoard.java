@@ -4,7 +4,6 @@ import it.polimi.ingsw.components.*;
 
 public class ShipBoard {
     // Represents the structure of the ship
-    ShipStructure shipStructure;
     private int drivingPower; // The ship's driving power
     private float firePower; // The ship's firepower
     private int crewMembers; // Number of crew members onboard
@@ -22,7 +21,6 @@ public class ShipBoard {
      * @author Giacomo
      */
     public ShipBoard() {
-        shipStructure = new ShipStructure(gameInformation.gameType, this);
         drivingPower = 0;
         firePower = 0;
         crewMembers = 0;

@@ -1,12 +1,13 @@
 
 package it.polimi.ingsw.shipboard;
+import it.polimi.ingsw.Application.*;
 
 public class Player {
     // The nickname of the player
     private String nickName;
 
     // The player's ship board, representing their ship in the game
-    ShipBoard shipBoard;
+    ShipStructure shipStructure;
 
     // The color associated with the player
     Color color;
@@ -21,7 +22,7 @@ public class Player {
      */
     public Player(String nickName, Color color) {
         this.nickName = nickName;
-        this.shipBoard = new ShipBoard();
+        this.shipStructure = new ShipStructure(gameInformation.gameType);
         this.color = color;
     }
 

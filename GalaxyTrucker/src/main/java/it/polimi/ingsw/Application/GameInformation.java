@@ -10,6 +10,7 @@ import it.polimi.ingsw.cards.*;
 import it.polimi.ingsw.Bank.*;
 import it.polimi.ingsw.assembly.*;
 import it.polimi.ingsw.shipboard.*;
+import it.polimi.ingsw.FlightBoard.*;
 
 public class GameInformation {
     private Card[] cardsList;

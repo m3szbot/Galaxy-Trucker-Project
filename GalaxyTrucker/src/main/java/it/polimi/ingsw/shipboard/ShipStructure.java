@@ -16,18 +16,22 @@ public class ShipStructure{
     ShipBoard shipBoard;
 
     /**
-     * Constructor for ShipStructure.
+     * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement
-     * based on the game type.
+     * based on the specified game type.
+     *
+     * - Initializes a 12x12 matrix for ship components.
+     * - Marks all positions as valid initially.
+     * - If the game type is not "TestGame", restricts specific areas of the matrix
+     *   by marking them as forbidden zones.
      *
      * @param gameType The type of game being played.
-     * @param shipBoard The ship board associated with the structure.
      * @author Giacomo
      */
-    public ShipStructure(GameType gameType, ShipBoard shipBoard) {
+    public ShipStructure(GameType gameType) {
         this.structureMatrix = new Component[12][12];
         this. matr = new boolean[12][12];
-        this.shipBoard = shipBoard;
+        this.shipBoard = new ShipBoard();
         // Initialize all positions as valid
         for(int i = 0; i < 12; i++){
             for(int j = 0; j < 12; j++){
@@ -86,6 +90,7 @@ public class ShipStructure{
         if (matr[x][y] == true) {
             structureMatrix[x][y] = component;
         }
+        //qua devi elaborare
     }
 
     /**
