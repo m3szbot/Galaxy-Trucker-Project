@@ -70,23 +70,23 @@ public class Component implements Visitable {
         return 0;
     }
 
-    private int getFirePower(){
+    public int getFirePower(){
         return 0;
     }
 
-    private int getCrewMembers(){
+    public int getCrewMembers(){
         return 0;
     }
 
-    private int getBatteryPower(){
+    public int getBatteryPower(){
         return 0;
     }
 
-    private boolean[] getCoveredSides(){
+    public boolean[] getCoveredSides(){
         return new boolean[]{false, false, false, false};
     }
 
-    private int getAvailableRedSlots(){
+    public int getAvailableRedSlots(){
         return 0;
     }
 
@@ -107,8 +107,8 @@ public class Component implements Visitable {
 
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     };
 
 }

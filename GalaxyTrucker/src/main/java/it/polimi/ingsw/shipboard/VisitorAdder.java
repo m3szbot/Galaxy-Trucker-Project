@@ -5,13 +5,19 @@ import it.polimi.ingsw.components.Component;
 import it.polimi.ingsw.components.Shield;
 import javafx.concurrent.Worker;
 
-public class VisitorAdder implements Visitor {
+import java.util.List;
+
+public class VisitorAdder implements Visitor<List<Integer>> {
     @Override
-    public void visit(Cannon cannon) {
-        cannon.getAllIndexes();
+    public List<Integer> visit(Cannon cannon) {
+        return cannon.getAllIndexes();
     }
     @Override
-    public void visit(Shield shield) {}
+    public List<Integer> visit(Shield shield) {
+        return shield.getAllIndexes();
+    }
     @Override
-    public void visit(Component component){}
+    public List<Integer> visit(Component component){
+        return component.getAllIndexes();
+    }
 }

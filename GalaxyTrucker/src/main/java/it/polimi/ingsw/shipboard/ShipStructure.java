@@ -6,6 +6,7 @@ import it.polimi.ingsw.components.Component;
 import it.polimi.ingsw.Application.*;
 
 import java.awt.*;
+import java.util.List;
 
 public class ShipStructure{
     // Matrix representing the ship's component layout
@@ -86,13 +87,12 @@ public class ShipStructure{
     public void addComponent(Component component, int x, int y) {
         x = x-1;
         y = y-1;
-        VisitorAdder visitor = new VisitorAdder();
+        Visitor<List<Integer>> visitor = new VisitorAdder();
         if (matr[x][y] == true) {
             structureMatrix[x][y] = component;
         }
-        //qua devo fare l'aggiunta degli indici
+        //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
         component.accept(visitor);
-
     }
 
     /**
