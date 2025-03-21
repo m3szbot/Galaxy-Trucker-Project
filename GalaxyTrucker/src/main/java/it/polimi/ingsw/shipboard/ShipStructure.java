@@ -90,7 +90,9 @@ public class ShipStructure{
         if (matr[x][y] == true) {
             structureMatrix[x][y] = component;
         }
+        //qua devo fare l'aggiunta degli indici
         component.accept(visitor);
+
     }
 
     /**

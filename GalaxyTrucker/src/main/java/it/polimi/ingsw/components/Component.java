@@ -3,6 +3,8 @@ package it.polimi.ingsw.components;
 import it.polimi.ingsw.shipboard.Visitor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Superclass to express what all components have in common
@@ -68,29 +70,41 @@ public class Component implements Visitable {
         return 0;
     }
 
-    public int getFirePower(){
+    private int getFirePower(){
         return 0;
     }
 
-    public int getCrewMembers(){
+    private int getCrewMembers(){
         return 0;
     }
 
-    public int getBatteryPower(){
+    private int getBatteryPower(){
         return 0;
     }
 
-    public boolean[] getCoveredSides(){
+    private boolean[] getCoveredSides(){
         return new boolean[]{false, false, false, false};
     }
 
-    public int getAvailableRedSlots(){
+    private int getAvailableRedSlots(){
         return 0;
     }
 
-    public int getAvailableBlueSlots(){
+    private int getAvailableBlueSlots(){
         return 0;
     }
+
+    public List<Integer> getAllIndexes(){
+        ArrayList<Integer> indexes = new ArrayList<>();
+        indexes.add(getDrivingPower());
+        indexes.add(getFirePower());
+        indexes.add(getCrewMembers());
+        indexes.add(getBatteryPower());
+        //mancano indici
+        return indexes;
+    }
+
+
 
     @Override
     public void accept(Visitor visitor) {

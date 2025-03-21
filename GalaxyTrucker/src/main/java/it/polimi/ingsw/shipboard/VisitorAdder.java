@@ -8,7 +8,7 @@ import javafx.concurrent.Worker;
 public class VisitorAdder implements Visitor {
     @Override
     public void visit(Cannon cannon) {
-        cannon.getFirePower();
+        cannon.getAllIndexes();
     }
     @Override
     public void visit(Shield shield) {}
