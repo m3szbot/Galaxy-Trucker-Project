@@ -29,4 +29,15 @@ public class Cannon extends Component{
     public String getComponentName(){
         return "Cannon";
     }
+
+    //aggiunte
+
+    @Override
+    public int getFirePower(){
+       if (single){
+           return 1;
+       }
+       // codice da aggiungere
+       return 0;
+    }
 }

@@ -1,19 +1,23 @@
 package it.polimi.ingsw.components;
 
+import it.polimi.ingsw.shipboard.Visitor;
+
+import java.io.Serializable;
+
 /**
  * Superclass to express what all components have in common
  * SideType[0] corresponds to the front side, then rotate clockwise.
  * @author carlo
  */
 
-public class Component {
+public class Component implements Visitable {
 
     private SideType front;
     private SideType right;
     private SideType back;
     private SideType left;
 
-    public Component(SideType[] sides){
+    public Component(SideType[] sides) {
         this.front = sides[0];
         this.right = sides[1];
         this.back = sides[2];
@@ -24,7 +28,7 @@ public class Component {
      * Rotates the component clockwise
      */
 
-    public void rotate(){
+    public void rotate() {
 
         SideType temp1, temp2;
 
@@ -55,7 +59,42 @@ public class Component {
         return back;
     }
 
-    public String getComponentName(){
+    public String getComponentName() {
         return "Connector";
     }
+
+    //Da qui in poi codice aggiunto da Giacomo per provare ad implementare il visitor pattern
+    public int getDrivingPower(){
+        return 0;
+    }
+
+    public int getFirePower(){
+        return 0;
+    }
+
+    public int getCrewMembers(){
+        return 0;
+    }
+
+    public int getBatteryPower(){
+        return 0;
+    }
+
+    public boolean[] getCoveredSides(){
+        return new boolean[]{false, false, false, false};
+    }
+
+    public int getAvailableRedSlots(){
+        return 0;
+    }
+
+    public int getAvailableBlueSlots(){
+        return 0;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    };
+
 }

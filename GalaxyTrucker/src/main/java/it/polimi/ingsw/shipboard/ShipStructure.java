@@ -12,7 +12,6 @@ public class ShipStructure{
     Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
-
     ShipBoard shipBoard;
 
     /**
@@ -87,10 +86,11 @@ public class ShipStructure{
     public void addComponent(Component component, int x, int y) {
         x = x-1;
         y = y-1;
+        VisitorAdder visitor = new VisitorAdder();
         if (matr[x][y] == true) {
             structureMatrix[x][y] = component;
         }
-        //qua devi elaborare
+        component.accept(visitor);
     }
 
     /**
