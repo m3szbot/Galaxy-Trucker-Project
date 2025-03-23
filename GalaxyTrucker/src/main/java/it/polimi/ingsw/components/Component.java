@@ -94,13 +94,15 @@ public class Component implements Visitable {
         return 0;
     }
 
-    public List<Integer> getAllIndexes(){
-        ArrayList<Integer> indexes = new ArrayList<>();
+    public List<Object> getAllIndexes(){
+        ArrayList<Object> indexes = new ArrayList<>();
         indexes.add(getDrivingPower());
         indexes.add(getFirePower());
         indexes.add(getCrewMembers());
         indexes.add(getBatteryPower());
-        //mancano indici
+        indexes.add(getCoveredSides());
+        indexes.add(getAvailableRedSlots());
+        indexes.add(getAvailableBlueSlots());
         return indexes;
     }
 

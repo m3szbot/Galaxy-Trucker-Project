@@ -6,6 +6,7 @@ import it.polimi.ingsw.components.Component;
 import it.polimi.ingsw.Application.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShipStructure{
@@ -87,12 +88,24 @@ public class ShipStructure{
     public void addComponent(Component component, int x, int y) {
         x = x-1;
         y = y-1;
-        Visitor<List<Integer>> visitor = new VisitorAdder();
+        Visitor<List<Object>> visitor = new VisitorAdder();
         if (matr[x][y] == true) {
             structureMatrix[x][y] = component;
         }
         //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
-        component.accept(visitor);
+        List<Object> list = component.accept(visitor);
+        shipBoard.updateBatteryPower((Integer) list.get(0));
+        shipBoard.updateFirePower((Integer) list.get(1));
+        shipBoard.updateCrewMembers((Integer) list.get(2));
+        shipBoard.updateBatteryPower((Integer) list.get(3));
+        Boolean[] booleans = (Boolean[]) list.get(4);
+        for(int i = 0; i <4; i++){
+            if (booleans[i]){
+                shipBoard.updateCoveredSides(i, true);
+            }
+        }
+        shipBoard.updateAvailableSlots(1,(Integer) list.get(5));
+        shipBoard.updateAvailableSlots(2,(Integer) list.get(6));
     }
 
     /**
