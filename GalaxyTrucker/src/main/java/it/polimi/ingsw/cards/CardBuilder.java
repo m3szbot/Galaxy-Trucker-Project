@@ -8,7 +8,7 @@ package it.polimi.ingsw.cards;
  * @author carlo
  */
 
-class CardBuilder {
+public class CardBuilder {
 
     private Card builtCard;
     public ElementType blowType, requirementType, lossType;
