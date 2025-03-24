@@ -30,7 +30,6 @@ public class Pirates extends Card{
     }
 
     @Override
-
     public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView){
 
     }

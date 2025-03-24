@@ -41,6 +41,8 @@ public class Cannon extends Component{
                return 0.5f;
            }
        }
-       return 0;
+       else{
+           return 2;
+       }
     }
 }

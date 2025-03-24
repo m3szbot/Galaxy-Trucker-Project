@@ -94,8 +94,8 @@ public class ShipStructure{
         }
         //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
         List<Object> list = component.accept(visitor);
-        shipBoard.updateBatteryPower((Integer) list.get(0));
-        shipBoard.updateFirePower((Float) list.get(1));
+        shipBoard.updateDrivingPower((Integer) list.get(0));
+        if((Float) list.get(1) == 1){shipBoard.updateFirePower((Float) list.get(1));}
         shipBoard.updateCrewMembers((Integer) list.get(2));
         shipBoard.updateBatteryPower((Integer) list.get(3));
         Integer[] sides = (Integer[]) list.get(4);
@@ -122,8 +122,8 @@ public class ShipStructure{
             Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
             List<Object> list = component.accept(visitor);
             shipBoard.updateDestroyedComponents(1);
-            shipBoard.updateBatteryPower(-(Integer) list.get(0));
-            shipBoard.updateFirePower(-(Float) list.get(1));
+            shipBoard.updateDrivingPower(-(Integer) list.get(0));
+            if((Float) list.get(1) == 1){shipBoard.updateFirePower(-(Float) list.get(1));}
             shipBoard.updateCrewMembers(-(Integer) list.get(2));
             shipBoard.updateBatteryPower(-(Integer) list.get(3));
             Integer[] sides = (Integer[]) list.get(4);
@@ -187,6 +187,7 @@ public class ShipStructure{
     public int checkErrors(ShipBoard shipBoard){
         boolean flag = true;
         int errors = 0;
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         while(flag){
             flag = false;
             for (int i =1; i < 12; i++) {
@@ -198,10 +199,10 @@ public class ShipStructure{
                             //  removeComponent(i, j); i componenti non li deve rimuovere il gioco ma l'utente
                             flag = checkNotReachable(shipBoard);
                         }
-                        if(structureMatrix[i][j].getComponentName().equals("Engine")){
+                        if((Integer) structureMatrix[i][j].accept(visitor).get(0) > 0){
                             boolean check = false;
                             for(int k = j+1; k < 12; k++){
-                                if(structureMatrix[i][k] != null){
+                                if(structureMatrix[i][j+1] != null){
                                     check = true;
                                     errors++;
                                 }
@@ -210,48 +211,44 @@ public class ShipStructure{
                                 System.out.println("Error, in component" + i +' '+ j);
                             }
                         }
-                        if(structureMatrix[i][j].getComponentName().equals("Cannon")){
+                        if((Float)structureMatrix[i][j].accept(visitor).get(1) >0){
                             boolean check = false;
                             if(structureMatrix[i][j].getLeft().equals(SideType.Special)){
-                                for(int k = i-1; k >= 0; k--){
-                                    if(structureMatrix[k][j] != null){
+
+                                    if(structureMatrix[i-1][j] != null){
                                         check = true;
                                         errors++;
                                     }
-                                }
+
                                 if(check){
                                     System.out.println("Error, in component" + i +' '+ j);
                                 }
                             }
                             else if(structureMatrix[i][j].getRight().equals(SideType.Special)){
-                                for(int k = i+1; k < 12; k++){
-                                    if(structureMatrix[k][j] != null){
+
+                                    if(structureMatrix[i+1][j] != null){
                                         check = true;
                                         errors++;
                                     }
-                                }
+
                                 if(check){
                                     System.out.println("Error, in component" + i +' '+ j);
                                 }
                             }
                             else if(structureMatrix[i][j].getFront().equals(SideType.Special)){
-                                for(int k = j-1; k >= 0; k--){
-                                    if(structureMatrix[i][k] != null){
+                                    if(structureMatrix[i][j-1] != null){
                                         check = true;
                                         errors++;
                                     }
-                                }
                                 if(check){
                                     System.out.println("Error, in component" + i +' '+ j);
                                 }
                             }
                             else if(structureMatrix[i][j].getBack().equals(SideType.Special)){
-                                for(int k = j+1; k < 12; k++){
-                                    if(structureMatrix[k][j] != null){
+                                    if(structureMatrix[i][j+1] != null){
                                         check = true;
                                         errors++;
                                     }
-                                }
                                 if(check){
                                     System.out.println("Error, in component" + i +' '+ j);
                                 }
@@ -356,7 +353,8 @@ public class ShipStructure{
      * @author Giacomo
      */
     public void addGoods(int x, int y, int[] goods){
-        if(structureMatrix[x][y] != null && structureMatrix[x][y].getComponentName().equals("Storage")){
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
+        if(structureMatrix[x][y] != null && ((Integer) structureMatrix[x][y].accept(visitor).get(5) > 0 || (Integer) structureMatrix[x][y].accept(visitor).get(6) > 0)){
             x = x-1;
             y = y-1;
             checkSlots(goods, x, y);
@@ -417,7 +415,7 @@ public class ShipStructure{
      * @author Giacomo
      */
     private boolean checkSlots(int[] goods, int x, int y){
-        if(structureMatrix[x][y] != null && structureMatrix[x][y].getComponentName().equals("Storage")){
+        if(structureMatrix[x][y] != null ){
             if(((Storage)structureMatrix[x][y]).getIsRed()){
                 if(goods[0] <= ((Storage)structureMatrix[x][y]).getNumberOfMaximumElements() - ((Storage)structureMatrix[x][y]).getGoods()[0]){
                     return true;

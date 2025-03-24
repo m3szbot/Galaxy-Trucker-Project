@@ -42,7 +42,7 @@ public class ShipBoard {
      * @param value Amount to increase the firepower by.
      * @author Giacomo
      */
-    public void updateFirePower(int value) {
+    public void updateFirePower(float value) {
         this.firePower = this.firePower + value;
     }
 
