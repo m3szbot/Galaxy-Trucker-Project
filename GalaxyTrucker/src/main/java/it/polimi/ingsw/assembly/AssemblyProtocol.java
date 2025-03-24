@@ -3,6 +3,7 @@ package it.polimi.ingsw.assembly;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import it.polimi.ingsw.cards.*;
 
 //tutto ancora da implementare
 public class AssemblyProtocol {
