@@ -37,7 +37,7 @@ public class ScoreCounter {
      * @param gameType   Game type that determines scoring
      * @param playerList List of players
      */
-    public ScoreCounter(GameType gameType, Player[] playerList) {
+    public ScoreCounter(GameType gameType, List<Player> playerList) {
         // set score point attributes based on game type
         if (gameType == GameType.NormalGame) {
             this.leastExposedLinksPoints = normalLeastExposedLinksPoints;
@@ -115,7 +115,7 @@ public class ScoreCounter {
      *
      * @param playerList List of players
      */
-    private void calculateLeastExposedLinks(Player[] playerList) {
+    private void calculateLeastExposedLinks(List<Player> playerList) {
         // Map of exposed links of players
         Map<Player, Integer> playerExposedLinks = new Hashtable<Player, Integer>();
         // calculate exposed links and add to Map
