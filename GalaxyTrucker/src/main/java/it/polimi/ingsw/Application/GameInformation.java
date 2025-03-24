@@ -66,7 +66,7 @@ public class GameInformation {
         ElementType blowType, requirementType, lossType;
         int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
         int[] goods = new int[0], planet1 = new int[0], planet2 = new int[0], planet3 = new int[0], planet4 = new int[0];
-        Blow blows[], blow;
+        Blow blows[] = new Blow[0], blow;
         String cardName, elementType;
         JsonNode tempValues;
 
@@ -168,6 +168,7 @@ public class GameInformation {
 
                     if(tempValues != null && tempValues.isArray()) {
 
+                        blows = new Blow[tempValues.size()];
                         int direction;
                         boolean big;
                         blows = new Blow[tempValues.size()];
