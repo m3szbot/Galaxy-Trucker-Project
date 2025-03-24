@@ -59,6 +59,256 @@ public class GameInformation {
      */
     public void setUpCards(GameType gameType) throws IOException {
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(new File("Cards.json"));
+        CardBuilder cardBuilder = new CardBuilder();
+
+        ElementType blowType, requirementType, lossType;
+        int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
+        int[] goods = new int[0], planet1 = new int[0], planet2 = new int[0], planet3 = new int[0], planet4 = new int[0];
+        Blow blows[], blow;
+        String cardName, elementType;
+        JsonNode tempValues;
+
+        if(gameType == gameType.TestGame){
+
+            for(JsonNode node: rootNode) {
+
+                if(node.get("level").asInt() == 1) {
+
+
+
+                   cardLevel = node.get("level").asInt();
+                   cardName = node.get("cardName").asText();
+                   daysLost = node.get("daysLost").asInt();
+                   gainedCredit = node.get("gainedCredit").asInt();
+                   requirementNumber = node.get("requirementNumber").asInt();
+                   lossNumber = node.get("lossNumber").asInt();
+                   elementType = node.get("blowType").asText();
+                   blowType = ElementType.valueOf(elementType);
+                   elementType = node.get("requirementType").asText();
+                   requirementType = ElementType.valueOf(elementType);
+                   elementType = node.get("lossType").asText();
+                   lossType = ElementType.valueOf(elementType);
+
+                   tempValues = node.get("goods");
+
+                   if(tempValues != null && tempValues.isArray()) {
+
+                       goods = new int[tempValues.size()];
+
+                       for(int i = 0;i < tempValues.size();i++) {
+
+                           goods[i] = tempValues.get(i).asInt();
+
+                       }
+
+                   }
+
+                   tempValues = node.get("planet1");
+
+                    if(tempValues != null && tempValues.isArray()) {
+
+                        planet1 = new int[tempValues.size()];
+
+                        for(int i = 0;i < tempValues.size();i++) {
+
+                            planet1[i] = tempValues.get(i).asInt();
+
+                        }
+
+                    }
+
+
+                    tempValues = node.get("planet2");
+
+                    if(tempValues != null && tempValues.isArray()) {
+
+                        planet2 = new int[tempValues.size()];
+
+                        for(int i = 0;i < tempValues.size();i++) {
+
+                            planet2[i] = tempValues.get(i).asInt();
+
+                        }
+
+                    }
+
+
+                    tempValues = node.get("planet3");
+
+                    if(tempValues != null && tempValues.isArray()) {
+
+                        planet3 = new int[tempValues.size()];
+
+                        for(int i = 0;i < tempValues.size();i++) {
+
+                            planet3[i] = tempValues.get(i).asInt();
+
+                        }
+
+                    }
+
+
+                    tempValues = node.get("planet4");
+
+                    if(tempValues != null && tempValues.isArray()) {
+
+                        planet4 = new int[tempValues.size()];
+
+                        for(int i = 0;i < tempValues.size();i++) {
+
+                            planet4[i] = tempValues.get(i).asInt();
+
+                        }
+
+                    }
+
+                    tempValues = node.get("blows");
+
+                    if(tempValues != null && tempValues.isArray()) {
+
+                        int direction;
+                        boolean big;
+                        blows = new Blow[tempValues.size()];
+                        int i = 0;
+
+                        for(JsonNode obj : tempValues) {
+
+                            direction = obj.get("direction").asInt();
+                            big = obj.get("big").asBoolean();
+                            blow = new Blow(direction, big);
+                            blows[i] = blow;
+                            i++;
+
+                        }
+
+                    }
+
+                    cardsList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredit(gainedCredit).buildRequirementNumber(requirementNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).getBuiltCard());
+
+
+                }
+
+            }
+
+        }
+        else{
+            for(JsonNode node: rootNode) {
+
+                cardLevel = node.get("level").asInt();
+                cardName = node.get("cardName").asText();
+                daysLost = node.get("daysLost").asInt();
+                gainedCredit = node.get("gainedCredit").asInt();
+                requirementNumber = node.get("requirementNumber").asInt();
+                lossNumber = node.get("lossNumber").asInt();
+                elementType = node.get("blowType").asText();
+                blowType = ElementType.valueOf(elementType);
+                elementType = node.get("requirementType").asText();
+                requirementType = ElementType.valueOf(elementType);
+                elementType = node.get("lossType").asText();
+                lossType = ElementType.valueOf(elementType);
+
+                tempValues = node.get("goods");
+
+                if(tempValues != null && tempValues.isArray()) {
+
+                    goods = new int[tempValues.size()];
+
+                    for(int i = 0;i < tempValues.size();i++) {
+
+                        goods[i] = tempValues.get(i).asInt();
+
+                    }
+
+                }
+
+                tempValues = node.get("planet1");
+
+                if(tempValues != null && tempValues.isArray()) {
+
+                    planet1 = new int[tempValues.size()];
+
+                    for(int i = 0;i < tempValues.size();i++) {
+
+                        planet1[i] = tempValues.get(i).asInt();
+
+                    }
+
+                }
+
+
+                tempValues = node.get("planet2");
+
+                if(tempValues != null && tempValues.isArray()) {
+
+                    planet2 = new int[tempValues.size()];
+
+                    for(int i = 0;i < tempValues.size();i++) {
+
+                        planet2[i] = tempValues.get(i).asInt();
+
+                    }
+
+                }
+
+
+                tempValues = node.get("planet3");
+
+                if(tempValues != null && tempValues.isArray()) {
+
+                    planet3 = new int[tempValues.size()];
+
+                    for(int i = 0;i < tempValues.size();i++) {
+
+                        planet3[i] = tempValues.get(i).asInt();
+
+                    }
+
+                }
+
+
+                tempValues = node.get("planet4");
+
+                if(tempValues != null && tempValues.isArray()) {
+
+                    planet4 = new int[tempValues.size()];
+
+                    for(int i = 0;i < tempValues.size();i++) {
+
+                        planet4[i] = tempValues.get(i).asInt();
+
+                    }
+
+                }
+
+                tempValues = node.get("blows");
+
+                if(tempValues != null && tempValues.isArray()) {
+
+                    int direction;
+                    boolean big;
+                    blows = new Blow[tempValues.size()];
+                    int i = 0;
+
+                    for(JsonNode obj : tempValues) {
+
+                        direction = obj.get("direction").asInt();
+                        big = obj.get("big").asBoolean();
+                        blow = new Blow(direction, big);
+                        blows[i] = blow;
+                        i++;
+
+                    }
+
+                }
+
+                cardsList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredit(gainedCredit).buildRequirementNumber(requirementNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).getBuiltCard());
+
+            }
+
+        }
+
     }
 
     /**
