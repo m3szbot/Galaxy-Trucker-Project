@@ -17,7 +17,6 @@ public class CardBuilder {
     public Blow blows[];
     public String cardName;
 
-    private CardBuilder(){}
 
     public CardBuilder buildCardLevel(int cardLevel){
         this.cardLevel = cardLevel;
