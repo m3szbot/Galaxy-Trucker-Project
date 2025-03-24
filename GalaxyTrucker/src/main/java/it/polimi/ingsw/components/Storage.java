@@ -42,4 +42,20 @@ public class Storage extends Component{
         this.isRed = type;
         this.numberOfMaximumElements = numberOfMaximumElements;
     }
+
+    @Override
+    public int getAvailableRedSlots(){
+        if(isRed){
+            return numberOfMaximumElements - goods[0];
+        }
+        return 0;
+    }
+
+    @Override
+    public int  getAvailableBlueSlots(){
+        if(isRed == false) {
+            return numberOfMaximumElements - goods[1] - goods[2] - goods[3];
+        }
+        return 0;
+    }
 }

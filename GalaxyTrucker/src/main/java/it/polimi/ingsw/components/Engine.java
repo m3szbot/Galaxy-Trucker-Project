@@ -30,4 +30,18 @@ public class Engine extends Component{
     public String getComponentName(){
        return "Engine";
     }
+
+    @Override
+    public int getDrivingPower(){
+        if(single){
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public void rotate(){
+        System.out.println("Cannot rotate an engine!!");
+    }
 }
+

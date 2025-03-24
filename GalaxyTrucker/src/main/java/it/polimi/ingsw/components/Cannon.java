@@ -33,11 +33,14 @@ public class Cannon extends Component{
     //aggiunte
 
     @Override
-    public int getFirePower(){
+    public float getFirePower(){
        if (single){
-           return 1;
+           if(this.getFront().equals(SideType.Special)){
+               return 1;
+           }else{
+               return 0.5f;
+           }
        }
-       // codice da aggiungere
        return 0;
     }
 }

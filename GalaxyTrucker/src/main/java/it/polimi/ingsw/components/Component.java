@@ -70,7 +70,7 @@ public class Component implements Visitable {
         return 0;
     }
 
-    public int getFirePower(){
+    public float getFirePower(){
         return 0;
     }
 
@@ -82,15 +82,15 @@ public class Component implements Visitable {
         return 0;
     }
 
-    public boolean[] getCoveredSides(){
-        return new boolean[]{false, false, false, false};
+    public int[] getCoveredSides(){
+        return new int[]{0, 0, 0, 0};
     }
 
     public int getAvailableRedSlots(){
         return 0;
     }
 
-    private int getAvailableBlueSlots(){
+    public int getAvailableBlueSlots(){
         return 0;
     }
 

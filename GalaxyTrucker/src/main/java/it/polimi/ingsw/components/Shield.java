@@ -63,4 +63,9 @@ public class Shield extends Component{
         return "Shield";
     }
 
+    @Override
+    public int[] getCoveredSides(){
+        return
+    }
+
 }
