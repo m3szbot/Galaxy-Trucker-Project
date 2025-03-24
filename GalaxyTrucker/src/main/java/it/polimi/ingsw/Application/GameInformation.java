@@ -89,7 +89,6 @@ public class GameInformation {
                 if(jsonNode.hasNonNull("blows")){
                     var blows = jsonNode.get("blows");
                 }
-                cardsList = cardsList.add(getBuiltCard());
             }
         }else{
 
