@@ -1,8 +1,7 @@
 package it.polimi.ingsw.shipboard;
 
-import it.polimi.ingsw.components.Cannon;
-import it.polimi.ingsw.components.Component;
-import it.polimi.ingsw.components.Shield;
+import it.polimi.ingsw.components.*;
+import javafx.concurrent.Worker;
 
 import java.util.List;
 
@@ -18,5 +17,25 @@ public class VisitorAdder implements Visitor<List<Object>> {
     @Override
     public List<Object> visit(Component component){
         return component.getAllIndexes();
+    }
+    @Override
+    public List<Object> visit(Battery battery) {
+        return battery.getAllIndexes();
+    }
+    @Override
+    public List<Object> visit(AlienSupport alienSupport) {
+        return alienSupport.getAllIndexes();
+    }
+    @Override
+    public List<Object> visit(Cabin cabin) {
+        return cabin.getAllIndexes();
+    }
+    @Override
+    public List<Object> visit(Engine engine) {
+        return engine.getAllIndexes();
+    }
+    @Override
+    public List<Object> visit(Storage storage) {
+        return storage.getAllIndexes();
     }
 }
