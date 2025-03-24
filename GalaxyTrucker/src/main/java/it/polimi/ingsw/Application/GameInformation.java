@@ -58,41 +58,7 @@ public class GameInformation {
      * @param gameType
      */
     public void setUpCards(GameType gameType) throws IOException {
-        if(gameType == gameType.TestGame){
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.readTree(new File("Cards.json"));
-            while(jsonNode.get("level").asInt() == 1){
-                int cardLevel = jsonNode.get("level").asInt();
-                String cardName = jsonNode.get("cardName").asText();
-                boolean solved = jsonNode.get("solved").asBoolean();
-                if(jsonNode.hasNonNull("blowType")) {
-                    var blowType = jsonNode.get("blowType").asText();
-                }
-                if(jsonNode.hasNonNull("requirementType")) {
-                    var requirementType = jsonNode.get("requirementType").asText();
-                }
-                if(jsonNode.hasNonNull("lossType")) {
-                    var lossType = jsonNode.get("lossType").asText();
-                }
-                if(jsonNode.hasNonNull("daysLost")) {
-                    int daysLost = jsonNode.get("daysLost").asInt();
-                }
-                if(jsonNode.hasNonNull("gainedCredit")) {
-                    int gainedCredit = jsonNode.get("gainedCredit").asInt();
-                }
-                if(jsonNode.hasNonNull("requirementNumber")) {
-                    int requirementNumber = jsonNode.get("requirementNumber").asInt();
-                }
-                if(jsonNode.hasNonNull("goods")){
-                    var goods = jsonNode.get("goods");
-                }
-                if(jsonNode.hasNonNull("blows")){
-                    var blows = jsonNode.get("blows");
-                }
-            }
-        }else{
 
-        }
     }
 
     /**
