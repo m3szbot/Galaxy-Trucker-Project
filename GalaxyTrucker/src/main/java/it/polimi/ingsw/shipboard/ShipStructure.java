@@ -88,21 +88,19 @@ public class ShipStructure{
     public void addComponent(Component component, int x, int y) {
         x = x-1;
         y = y-1;
-        Visitor<List<Object>> visitor = new VisitorAdder();
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         if (matr[x][y] == true) {
             structureMatrix[x][y] = component;
         }
         //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
         List<Object> list = component.accept(visitor);
         shipBoard.updateBatteryPower((Integer) list.get(0));
-        shipBoard.updateFirePower((Integer) list.get(1));
+        shipBoard.updateFirePower((Float) list.get(1));
         shipBoard.updateCrewMembers((Integer) list.get(2));
         shipBoard.updateBatteryPower((Integer) list.get(3));
-        Boolean[] booleans = (Boolean[]) list.get(4);
+        Integer[] sides = (Integer[]) list.get(4);
         for(int i = 0; i <4; i++){
-            if (booleans[i]){
-                shipBoard.updateCoveredSides(i, true);
-            }
+                shipBoard.updateCoveredSides(i, -sides[i]);
         }
         shipBoard.updateAvailableSlots(1,(Integer) list.get(5));
         shipBoard.updateAvailableSlots(2,(Integer) list.get(6));
@@ -120,8 +118,21 @@ public class ShipStructure{
         boolean flag = true;
 
         if (matr[x][y] == true && structureMatrix[x][y] != null) {
-            structureMatrix[x][y] = null;
+            Component component = structureMatrix[x][y];
+            Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
+            List<Object> list = component.accept(visitor);
             shipBoard.updateDestroyedComponents(1);
+            shipBoard.updateBatteryPower(-(Integer) list.get(0));
+            shipBoard.updateFirePower(-(Float) list.get(1));
+            shipBoard.updateCrewMembers(-(Integer) list.get(2));
+            shipBoard.updateBatteryPower(-(Integer) list.get(3));
+            Integer[] sides = (Integer[]) list.get(4);
+            for(int i = 0; i <4; i++){
+                shipBoard.updateCoveredSides(i, sides[i]);
+            }
+            shipBoard.updateAvailableSlots(1,-(Integer) list.get(5));
+            shipBoard.updateAvailableSlots(2,-(Integer) list.get(6));
+            structureMatrix[x][y] = null;
             while(flag){
                 flag = checkNotReachable(this.shipBoard);
             }

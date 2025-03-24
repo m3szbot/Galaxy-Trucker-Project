@@ -10,7 +10,7 @@ public class ShipBoard {
     private boolean purpleAlien; // Presence of a purple alien crew member
     private boolean brownAlien;  // Presence of a brown alien crew member
     private int batteryPower; // Ship's battery power
-    private boolean coveredSides[]; // Indicates which sides of the ship are covered
+    private int coveredSides[]; // Indicates which sides of the ship are covered
     private int availableRedSlots; // Number of available red slots
     private int availableBlueSlots; // Number of available blue slots
     private int destroyedComponents; // Number of destroyed components
@@ -27,9 +27,9 @@ public class ShipBoard {
         purpleAlien = false;
         brownAlien = false;
         batteryPower = 0;
-        coveredSides = new boolean[4];
+        coveredSides = new int[4];
         for (int i = 0; i < 4; i++) {
-            coveredSides[i] = false;
+            coveredSides[i] = 0;
         }
         availableRedSlots = 0;
         availableBlueSlots = 0;
@@ -95,13 +95,8 @@ public class ShipBoard {
      * @param type True if the side is covered, false otherwise.
      * @author Giacomo
      */
-    public void updateCoveredSides(int side, boolean type) {
-        if(type){
-            this.coveredSides[side] = true;
-        }
-        else {
-            this.coveredSides[side] = false;
-        }
+    public void updateCoveredSides(int side, int type) {
+        this.coveredSides[side] = this.coveredSides[side] + type;
     }
 
     // 1 red, 0 blue
@@ -187,7 +182,7 @@ public class ShipBoard {
      * @author Giacomo
      */
     public boolean checkSide(int side) {
-        if (coveredSides[side] == true) {
+        if (coveredSides[side] > 0) {
             return true;
         }
         else{

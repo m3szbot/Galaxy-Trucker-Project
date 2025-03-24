@@ -1,11 +1,9 @@
 package it.polimi.ingsw.shipboard;
 
 import it.polimi.ingsw.components.*;
-import javafx.concurrent.Worker;
-
 import java.util.List;
 
-public class VisitorAdder implements Visitor<List<Object>> {
+public class VisitorAttributesUpdater implements Visitor<List<Object>> {
     @Override
     public List<Object> visit(Cannon cannon) {
         return cannon.getAllIndexes();
