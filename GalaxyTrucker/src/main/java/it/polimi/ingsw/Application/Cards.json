@@ -312,7 +312,7 @@
     "cardName": "SmallMeteorSwarm",
     "solved": false,
     "blowType": "Meteorite",
-    "meteorites": [
+    "blows": [
       {
         "direction": 2,
         "big": true
@@ -332,7 +332,7 @@
     "cardName": "BigMeteorSwarm",
     "solved": false,
     "blowType": "Meteorite",
-    "meteorites": [
+    "blows": [
       {
         "direction": 2,
         "big": false
@@ -360,7 +360,7 @@
     "cardName": "SmallMeteorSwarm",
     "solved": false,
     "blowType": "Meteorite",
-    "meteorites": [
+    "blows": [
       {
         "direction": 2,
         "big": true
@@ -380,7 +380,7 @@
     "cardName": "BigMeteorSwarm",
     "solved": false,
     "blowType": "Meteorite",
-    "meteorites": [
+    "blows": [
       {
         "direction": 2,
         "big": false
@@ -408,7 +408,7 @@
     "cardName": "BigMeteorSwarm",
     "solved": false,
     "blowType": "Meteorite",
-    "meteorites": [
+    "blows": [
       {
         "direction": 2,
         "big": true
@@ -436,7 +436,7 @@
     "cardName": "BigMeteorSwarm",
     "solved": false,
     "blowType": "Meteorite",
-    "meteorites": [
+    "blows": [
       {
         "direction": 2,
         "big": false

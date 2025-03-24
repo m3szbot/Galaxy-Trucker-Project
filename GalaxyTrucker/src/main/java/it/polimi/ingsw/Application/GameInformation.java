@@ -10,25 +10,30 @@ import it.polimi.ingsw.cards.*;
 import it.polimi.ingsw.Bank.*;
 import it.polimi.ingsw.shipboard.*;
 import it.polimi.ingsw.FlightBoard.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.*;
 
 public class GameInformation {
-    private Card[] cardsList;
-    private Component[] componentList;
-    private Player[] playerList;
+    private List<Card> cardsList;
+    private List<Component> componentList;
+    private List<Player> playerList;
     private Bank bank;
     private FlightBoard flightBoard;
     private GameType gameType;
     private ViewType viewType;
 
-    public Card[] getCardsList() {
+    public List<Card> getCardsList() {
         return cardsList;
     }
 
-    public Component[] getComponentList() {
+    public List<Component> getComponentList() {
         return componentList;
     }
 
-    public Player[] getPlayerList() {
+    public List<Player> getPlayerList() {
         return playerList;
     }
 
@@ -52,9 +57,40 @@ public class GameInformation {
      * creates the complete list of cards based on the type of game
      * @param gameType
      */
-    public void setUpCards(GameType gameType){
+    public void setUpCards(GameType gameType) throws IOException {
         if(gameType == gameType.TestGame){
-
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(new File("Cards.json"));
+            while(jsonNode.get("level").asInt() == 1){
+                int cardLevel = jsonNode.get("level").asInt();
+                String cardName = jsonNode.get("cardName").asText();
+                boolean solved = jsonNode.get("solved").asBoolean();
+                if(jsonNode.hasNonNull("blowType")) {
+                    var blowType = jsonNode.get("blowType").asText();
+                }
+                if(jsonNode.hasNonNull("requirementType")) {
+                    var requirementType = jsonNode.get("requirementType").asText();
+                }
+                if(jsonNode.hasNonNull("lossType")) {
+                    var lossType = jsonNode.get("lossType").asText();
+                }
+                if(jsonNode.hasNonNull("daysLost")) {
+                    int daysLost = jsonNode.get("daysLost").asInt();
+                }
+                if(jsonNode.hasNonNull("gainedCredit")) {
+                    int gainedCredit = jsonNode.get("gainedCredit").asInt();
+                }
+                if(jsonNode.hasNonNull("requirementNumber")) {
+                    int requirementNumber = jsonNode.get("requirementNumber").asInt();
+                }
+                if(jsonNode.hasNonNull("goods")){
+                    var goods = jsonNode.get("goods");
+                }
+                if(jsonNode.hasNonNull("blows")){
+                    var blows = jsonNode.get("blows");
+                }
+                cardsList = cardsList.add(getBuiltCard());
+            }
         }else{
 
         }

@@ -1,34 +1,34 @@
 [
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [1,3,2,3]
   },
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [0,3,1,3]
   },
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [1,3,1,3]
   },
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [0,3,2,3]
   },
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [1,2,3,3]
   },
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [0,3,3,2]
   },
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [0,1,3,3]
   },
   {
-    "name": "openSpace",
+    "name": "component",
     "sides": [2,2,3,3]
   },
   {
