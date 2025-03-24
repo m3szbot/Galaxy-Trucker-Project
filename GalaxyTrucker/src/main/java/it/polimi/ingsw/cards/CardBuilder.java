@@ -13,7 +13,7 @@ class CardBuilder {
     private Card builtCard;
     public ElementType blowType, requirementType, lossType;
     public int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
-    public int[] goods;
+    public int[] goods, planet1, planet2, planet3, planet4;
     public Blow blows[];
     public String cardName;
 
@@ -67,6 +67,14 @@ class CardBuilder {
 
     public CardBuilder buildBlows(Blow[] blows){
         this.blows = blows;
+        return this;
+    }
+
+    public CardBuilder buildPlanets(int[] planet1, int[] planet2, int[] planet3, int[] planet4){
+        this.planet1 = planet1;
+        this.planet2 = planet2;
+        this.planet3 = planet3;
+        this.planet4 = planet4;
         return this;
     }
 
