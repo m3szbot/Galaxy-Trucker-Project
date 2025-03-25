@@ -6,8 +6,24 @@ package it.polimi.ingsw.components;
  * @author carlo
  */
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "name")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Component.class, name = "Component"),
+        @JsonSubTypes.Type(value = Engine.class, name = "Engine"),
+        @JsonSubTypes.Type(value = Cannon.class, name = "Cannon"),
+        @JsonSubTypes.Type(value = Cabin.class, name = "Cabin"),
+        @JsonSubTypes.Type(value = Storage.class, name = "Storage"),
+        @JsonSubTypes.Type(value = Battery.class, name = "Battery"),
+        @JsonSubTypes.Type(value = Shield.class, name = "Shield"),
+        @JsonSubTypes.Type(value = AlienSupport.class, name = "AlienSupport")
+})
+
 public class Component {
 
+    private String name;
     private SideType front;
     private SideType right;
     private SideType back;

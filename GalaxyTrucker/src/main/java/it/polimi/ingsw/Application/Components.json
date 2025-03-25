@@ -1,363 +1,363 @@
 [
   {
-    "name": "component",
+    "name": "Component",
     "sides": [1,3,2,3]
   },
   {
-    "name": "component",
+    "name": "Component",
     "sides": [0,3,1,3]
   },
   {
-    "name": "component",
+    "name": "Component",
     "sides": [1,3,1,3]
   },
   {
-    "name": "component",
+    "name": "Component",
     "sides": [0,3,2,3]
   },
   {
-    "name": "component",
+    "name": "Component",
     "sides": [1,2,3,3]
   },
   {
-    "name": "component",
+    "name": "Component",
     "sides": [0,3,3,2]
   },
   {
-    "name": "component",
+    "name": "Component",
     "sides": [0,1,3,3]
   },
   {
-    "name": "component",
+    "name": "Component",
     "sides": [2,2,3,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,4,3,1]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,2,0,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,0,3,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [1,2,1,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,0,4,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,2,4,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,1,0,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,1,4,2]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,2,3,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [1,2,4,2]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,1,0,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,3,2,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,0,4,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,3,4,1]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [1,4,2,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,1,1,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [1,3,2,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,0,3,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,4,2,2]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,4,1,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": true,
     "sides": [0,2,0,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [0,1,3,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [0,1,0,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [0,3,1,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [0,2,0,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [0,4,3,2]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [0,4,2,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [1,1,1,4]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [0,3,4,3]
   },
   {
-    "name": "engine",
+    "name": "Engine",
     "single": false,
     "sides": [2,2,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,2,1,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,3,4,2]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,0,1,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,4,1,3]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,0,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,4,2,1]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,0,4,1]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,2,0,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,4,1,2]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,4,2,3]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,2,0,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,3,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [1,4,2,3]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,3,1,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,2,4,1]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [2,2,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [1,3,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,1,0,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,4,3,1]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,0,4,2]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,1,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,1,0,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [1,1,1,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,1,4,3]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": true,
     "sides": [0,2,3,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,0,3,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,0,4,3]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,4,3,2]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,1,0,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [1,2,1,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,4,1,3]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,2,0,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,3,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [2,1,2,4]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,1,4,2]
   },
   {
-    "name": "cannon",
+    "name": "Cannon",
     "single": false,
     "sides": [0,1,3,4]
   },

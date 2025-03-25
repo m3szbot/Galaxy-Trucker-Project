@@ -5,6 +5,7 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import it.polimi.ingsw.components.*;
 import it.polimi.ingsw.cards.*;
 import it.polimi.ingsw.Bank.*;
@@ -315,7 +316,13 @@ public class GameInformation {
     /**
      * creates components objects
      */
-    public void setUpComponents(){}
+    public void setUpComponents() throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+
+        componentList = mapper.readValue(new File("Components.json"),
+                mapper.getTypeFactory().constructCollectionType(List.class, Component.class));
+
+    }
 
     /**
      * creates playerList
