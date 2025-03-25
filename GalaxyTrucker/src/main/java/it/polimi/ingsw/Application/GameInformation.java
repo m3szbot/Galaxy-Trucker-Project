@@ -2,6 +2,7 @@ package it.polimi.ingsw.Application;
 
 /**
  * main class of the model
+ *
  * @author Ludo
  */
 
@@ -11,6 +12,7 @@ import it.polimi.ingsw.cards.*;
 import it.polimi.ingsw.Bank.*;
 import it.polimi.ingsw.shipboard.*;
 import it.polimi.ingsw.FlightBoard.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -46,16 +48,17 @@ public class GameInformation {
         return flightBoard;
     }
 
-    public GameType getGameType(){
+    public GameType getGameType() {
         return gameType;
     }
 
-    public ViewType getViewType(){
+    public ViewType getViewType() {
         return viewType;
     }
 
     /**
      * creates the complete list of cards based on the type of game
+     *
      * @param gameType
      */
     public void setUpCards(GameType gameType) throws IOException {
@@ -71,48 +74,47 @@ public class GameInformation {
         String cardName, elementType;
         JsonNode tempValues;
 
-        if(gameType == gameType.TestGame){
+        if (gameType == gameType.TestGame) {
 
-            for(JsonNode node: rootNode) {
+            for (JsonNode node : rootNode) {
 
-                if(node.get("level").asInt() == 1) {
+                if (node.get("level").asInt() == 1) {
 
 
+                    cardLevel = node.get("level").asInt();
+                    cardName = node.get("cardName").asText();
+                    daysLost = node.get("daysLost").asInt();
+                    gainedCredit = node.get("gainedCredit").asInt();
+                    requirementNumber = node.get("requirementNumber").asInt();
+                    lossNumber = node.get("lossNumber").asInt();
+                    elementType = node.get("blowType").asText();
+                    blowType = ElementType.valueOf(elementType);
+                    elementType = node.get("requirementType").asText();
+                    requirementType = ElementType.valueOf(elementType);
+                    elementType = node.get("lossType").asText();
+                    lossType = ElementType.valueOf(elementType);
 
-                   cardLevel = node.get("level").asInt();
-                   cardName = node.get("cardName").asText();
-                   daysLost = node.get("daysLost").asInt();
-                   gainedCredit = node.get("gainedCredit").asInt();
-                   requirementNumber = node.get("requirementNumber").asInt();
-                   lossNumber = node.get("lossNumber").asInt();
-                   elementType = node.get("blowType").asText();
-                   blowType = ElementType.valueOf(elementType);
-                   elementType = node.get("requirementType").asText();
-                   requirementType = ElementType.valueOf(elementType);
-                   elementType = node.get("lossType").asText();
-                   lossType = ElementType.valueOf(elementType);
+                    tempValues = node.get("goods");
 
-                   tempValues = node.get("goods");
+                    if (tempValues != null && tempValues.isArray()) {
 
-                   if(tempValues != null && tempValues.isArray()) {
+                        goods = new int[tempValues.size()];
 
-                       goods = new int[tempValues.size()];
+                        for (int i = 0; i < tempValues.size(); i++) {
 
-                       for(int i = 0;i < tempValues.size();i++) {
+                            goods[i] = tempValues.get(i).asInt();
 
-                           goods[i] = tempValues.get(i).asInt();
+                        }
 
-                       }
+                    }
 
-                   }
+                    tempValues = node.get("planet1");
 
-                   tempValues = node.get("planet1");
-
-                    if(tempValues != null && tempValues.isArray()) {
+                    if (tempValues != null && tempValues.isArray()) {
 
                         planet1 = new int[tempValues.size()];
 
-                        for(int i = 0;i < tempValues.size();i++) {
+                        for (int i = 0; i < tempValues.size(); i++) {
 
                             planet1[i] = tempValues.get(i).asInt();
 
@@ -123,11 +125,11 @@ public class GameInformation {
 
                     tempValues = node.get("planet2");
 
-                    if(tempValues != null && tempValues.isArray()) {
+                    if (tempValues != null && tempValues.isArray()) {
 
                         planet2 = new int[tempValues.size()];
 
-                        for(int i = 0;i < tempValues.size();i++) {
+                        for (int i = 0; i < tempValues.size(); i++) {
 
                             planet2[i] = tempValues.get(i).asInt();
 
@@ -138,11 +140,11 @@ public class GameInformation {
 
                     tempValues = node.get("planet3");
 
-                    if(tempValues != null && tempValues.isArray()) {
+                    if (tempValues != null && tempValues.isArray()) {
 
                         planet3 = new int[tempValues.size()];
 
-                        for(int i = 0;i < tempValues.size();i++) {
+                        for (int i = 0; i < tempValues.size(); i++) {
 
                             planet3[i] = tempValues.get(i).asInt();
 
@@ -153,11 +155,11 @@ public class GameInformation {
 
                     tempValues = node.get("planet4");
 
-                    if(tempValues != null && tempValues.isArray()) {
+                    if (tempValues != null && tempValues.isArray()) {
 
                         planet4 = new int[tempValues.size()];
 
-                        for(int i = 0;i < tempValues.size();i++) {
+                        for (int i = 0; i < tempValues.size(); i++) {
 
                             planet4[i] = tempValues.get(i).asInt();
 
@@ -167,7 +169,7 @@ public class GameInformation {
 
                     tempValues = node.get("blows");
 
-                    if(tempValues != null && tempValues.isArray()) {
+                    if (tempValues != null && tempValues.isArray()) {
 
                         blows = new Blow[tempValues.size()];
                         int direction;
@@ -175,7 +177,7 @@ public class GameInformation {
                         blows = new Blow[tempValues.size()];
                         int i = 0;
 
-                        for(JsonNode obj : tempValues) {
+                        for (JsonNode obj : tempValues) {
 
                             direction = obj.get("direction").asInt();
                             big = obj.get("big").asBoolean();
@@ -194,9 +196,8 @@ public class GameInformation {
 
             }
 
-        }
-        else{
-            for(JsonNode node: rootNode) {
+        } else {
+            for (JsonNode node : rootNode) {
 
                 cardLevel = node.get("level").asInt();
                 cardName = node.get("cardName").asText();
@@ -213,11 +214,11 @@ public class GameInformation {
 
                 tempValues = node.get("goods");
 
-                if(tempValues != null && tempValues.isArray()) {
+                if (tempValues != null && tempValues.isArray()) {
 
                     goods = new int[tempValues.size()];
 
-                    for(int i = 0;i < tempValues.size();i++) {
+                    for (int i = 0; i < tempValues.size(); i++) {
 
                         goods[i] = tempValues.get(i).asInt();
 
@@ -227,11 +228,11 @@ public class GameInformation {
 
                 tempValues = node.get("planet1");
 
-                if(tempValues != null && tempValues.isArray()) {
+                if (tempValues != null && tempValues.isArray()) {
 
                     planet1 = new int[tempValues.size()];
 
-                    for(int i = 0;i < tempValues.size();i++) {
+                    for (int i = 0; i < tempValues.size(); i++) {
 
                         planet1[i] = tempValues.get(i).asInt();
 
@@ -242,11 +243,11 @@ public class GameInformation {
 
                 tempValues = node.get("planet2");
 
-                if(tempValues != null && tempValues.isArray()) {
+                if (tempValues != null && tempValues.isArray()) {
 
                     planet2 = new int[tempValues.size()];
 
-                    for(int i = 0;i < tempValues.size();i++) {
+                    for (int i = 0; i < tempValues.size(); i++) {
 
                         planet2[i] = tempValues.get(i).asInt();
 
@@ -257,11 +258,11 @@ public class GameInformation {
 
                 tempValues = node.get("planet3");
 
-                if(tempValues != null && tempValues.isArray()) {
+                if (tempValues != null && tempValues.isArray()) {
 
                     planet3 = new int[tempValues.size()];
 
-                    for(int i = 0;i < tempValues.size();i++) {
+                    for (int i = 0; i < tempValues.size(); i++) {
 
                         planet3[i] = tempValues.get(i).asInt();
 
@@ -272,11 +273,11 @@ public class GameInformation {
 
                 tempValues = node.get("planet4");
 
-                if(tempValues != null && tempValues.isArray()) {
+                if (tempValues != null && tempValues.isArray()) {
 
                     planet4 = new int[tempValues.size()];
 
-                    for(int i = 0;i < tempValues.size();i++) {
+                    for (int i = 0; i < tempValues.size(); i++) {
 
                         planet4[i] = tempValues.get(i).asInt();
 
@@ -286,14 +287,14 @@ public class GameInformation {
 
                 tempValues = node.get("blows");
 
-                if(tempValues != null && tempValues.isArray()) {
+                if (tempValues != null && tempValues.isArray()) {
 
                     int direction;
                     boolean big;
                     blows = new Blow[tempValues.size()];
                     int i = 0;
 
-                    for(JsonNode obj : tempValues) {
+                    for (JsonNode obj : tempValues) {
 
                         direction = obj.get("direction").asInt();
                         big = obj.get("big").asBoolean();
@@ -316,7 +317,7 @@ public class GameInformation {
     /**
      * creates components objects
      */
-    public void setUpComponents() throws IOException{
+    public void setUpComponents() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
         componentList = mapper.readValue(new File("Components.json"),
@@ -327,35 +328,38 @@ public class GameInformation {
     /**
      * creates playerList
      */
-    public void setUpPlayers(){}
+    public void setUpPlayers() {
+    }
 
     /**
      * creates bank
      */
-    public void setUpBank(){
+    public void setUpBank() {
         this.bank = new Bank(gameType);
     }
 
     /**
      * creates the flight board based on the game type
      */
-    public void setUpFlightBoard(){
+    public void setUpFlightBoard() {
         this.flightBoard = new FlightBoard(gameType);
     }
 
     /**
      * asks the creator of the game which mode to play
+     *
      * @param gameType
      */
-    public void setUpGameType(GameType gameType){
+    public void setUpGameType(GameType gameType) {
         this.gameType = askGameType();
     }
 
     /**
      * asks each player which view type they want to play with
+     *
      * @param viewType
      */
-    public void setViewType(ViewType viewType){
+    public void setViewType(ViewType viewType) {
         this.viewType = askViewType();
     }
 }
