@@ -376,12 +376,13 @@ public class ShipStructure{
     public void setCrewType(CrewType crewType, int x, int y){
         x = x-1;
         y = y-1;
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         if(structureMatrix[x][y] != null && structureMatrix[x][y].getComponentName().equals("Cabin")){
             if(crewType.equals(CrewType.Brown)){
-                if((structureMatrix[x-1][y].getComponentName().equals("AlienSupport") && !((AlienSupport)structureMatrix[x-1][y]).isPurple()) ||
-                        (structureMatrix[x+1][y].getComponentName().equals("AlienSupport") && !((AlienSupport)structureMatrix[x+1][y]).isPurple()) ||
-                        (structureMatrix[x][y-1].getComponentName().equals("AlienSupport") && !((AlienSupport)structureMatrix[x][y-1]).isPurple()) ||
-                        (structureMatrix[x][y+1].getComponentName().equals("AlienSupport") && !((AlienSupport)structureMatrix[x][y+1]).isPurple())){
+                if(((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && !((AlienSupport)structureMatrix[x-1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && !((AlienSupport)structureMatrix[x+1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && !((AlienSupport)structureMatrix[x][y-1]).isPurple()) ||
+                        ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && !((AlienSupport)structureMatrix[x][y+1]).isPurple())){
                     ((Cabin)structureMatrix[x][y]).setCrewType(crewType);
                 }
                 else{
@@ -389,10 +390,10 @@ public class ShipStructure{
                 }
             }
             else{
-                if((structureMatrix[x-1][y].getComponentName().equals("AlienSupport") && ((AlienSupport)structureMatrix[x-1][y]).isPurple()) ||
-                        (structureMatrix[x+1][y].getComponentName().equals("AlienSupport") && ((AlienSupport)structureMatrix[x+1][y]).isPurple()) ||
-                        (structureMatrix[x][y-1].getComponentName().equals("AlienSupport") && ((AlienSupport)structureMatrix[x][y-1]).isPurple()) ||
-                        (structureMatrix[x][y+1].getComponentName().equals("AlienSupport") && ((AlienSupport)structureMatrix[x][y+1]).isPurple())){
+                if(((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && ((AlienSupport)structureMatrix[x-1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && ((AlienSupport)structureMatrix[x+1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && ((AlienSupport)structureMatrix[x][y-1]).isPurple()) ||
+                        ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && ((AlienSupport)structureMatrix[x][y+1]).isPurple())){
                     ((Cabin)structureMatrix[x][y]).setCrewType(crewType);
                 }
                 else{

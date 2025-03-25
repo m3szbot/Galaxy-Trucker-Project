@@ -94,6 +94,10 @@ public class Component implements Visitable {
         return 0;
     }
 
+    public boolean amIASupport(){
+        return false;
+    }
+
     public List<Object> getAllIndexes(){
         ArrayList<Object> indexes = new ArrayList<>();
         indexes.add(getDrivingPower());
@@ -103,6 +107,7 @@ public class Component implements Visitable {
         indexes.add(getCoveredSides());
         indexes.add(getAvailableRedSlots());
         indexes.add(getAvailableBlueSlots());
+        indexes.add(amIASupport());
         return indexes;
     }
 
