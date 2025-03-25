@@ -384,6 +384,8 @@ public class ShipStructure{
                         ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && !((AlienSupport)structureMatrix[x][y-1]).isPurple()) ||
                         ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && !((AlienSupport)structureMatrix[x][y+1]).isPurple())){
                     ((Cabin)structureMatrix[x][y]).setCrewType(crewType);
+                    shipBoard.updateAlien(CrewType.Brown);
+                    shipBoard.updateCrewMembers(-1);
                 }
                 else{
                     System.out.println("CrewType not permitted");
@@ -395,6 +397,8 @@ public class ShipStructure{
                         ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && ((AlienSupport)structureMatrix[x][y-1]).isPurple()) ||
                         ((Boolean) structureMatrix[x-1][y].accept(visitor).get(7) && ((AlienSupport)structureMatrix[x][y+1]).isPurple())){
                     ((Cabin)structureMatrix[x][y]).setCrewType(crewType);
+                    shipBoard.updateAlien(CrewType.Brown);
+                    shipBoard.updateCrewMembers(-1);
                 }
                 else{
                     System.out.println("CrewType not permitted");
