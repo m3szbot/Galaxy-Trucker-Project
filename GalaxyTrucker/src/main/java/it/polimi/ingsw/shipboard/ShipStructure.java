@@ -13,7 +13,7 @@ public class ShipStructure{
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
 
-    ShipBoard shipBoard;
+    public ShipBoard shipBoard;
 
     /**
      * Constructs a ShipStructure instance.

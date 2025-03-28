@@ -42,7 +42,7 @@ public class FlightMechanism {
     }
 
     // TODO
-    private FlightBoard setUpBoard(GameType gameType, Player[] playerList) {
+    private FlightBoard setUpBoard(GameType gameType, List<Player> playerList) {
         FlightBoard flightBoard = new FlightBoard(gameType);
         // add players
         return flightBoard;

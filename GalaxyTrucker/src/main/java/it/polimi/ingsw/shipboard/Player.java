@@ -7,7 +7,7 @@ public class Player {
     private String nickName;
 
     // The player's ship board, representing their ship in the game
-    ShipStructure shipStructure;
+    public ShipStructure shipStructure;
 
     // The color associated with the player
     Color color;
