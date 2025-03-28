@@ -6,7 +6,6 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import it.polimi.ingsw.components.*;
 import it.polimi.ingsw.cards.*;
 import it.polimi.ingsw.Bank.*;
@@ -15,6 +14,7 @@ import it.polimi.ingsw.FlightBoard.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.*;
@@ -23,6 +23,7 @@ public class GameInformation {
     private List<Card> cardsList;
     private List<Component> componentList;
     private List<Player> playerList;
+    private int maxNumberOfPlayers;
     private Bank bank;
     private FlightBoard flightBoard;
     private GameType gameType;
@@ -38,6 +39,10 @@ public class GameInformation {
 
     public List<Player> getPlayerList() {
         return playerList;
+    }
+
+    public int getMaxNumberOfPlayers() {
+        return maxNumberOfPlayers;
     }
 
     public Bank getBank() {
@@ -315,7 +320,7 @@ public class GameInformation {
     }
 
     /**
-     * creates components objects
+     * creates component objects
      */
     public void setUpComponents() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -326,9 +331,41 @@ public class GameInformation {
     }
 
     /**
-     * creates playerList
+     * creates playerList and adds new player
+     *
+     * @param player
+     * @param maxNumberOfPlayers
      */
-    public void setUpPlayers() {
+    public void setUpPlayers(Player player, int maxNumberOfPlayers) {
+        if (playerList.equals(null)) {
+
+            this.maxNumberOfPlayers = maxNumberOfPlayers;
+            playerList = new ArrayList<Player>();
+            playerList.add(player);
+
+        }
+    }
+
+    /**
+     * adds a player to the playerList
+     *
+     * @param player
+     */
+    public void addPlayers(Player player) {
+
+        if (playerList.contains(player) && playerList.size() < maxNumberOfPlayers) {
+            playerList.add(player);
+
+        }
+    }
+
+    /**
+     * removes a player from the playerList
+     *
+     * @param player
+     */
+    public void removePlayers(Player player) {
+        playerList.remove(player);
     }
 
     /**
@@ -347,19 +384,15 @@ public class GameInformation {
 
     /**
      * asks the creator of the game which mode to play
-     *
-     * @param gameType
      */
-    public void setUpGameType(GameType gameType) {
+    public void setGameType() {
         this.gameType = askGameType();
     }
 
     /**
      * asks each player which view type they want to play with
-     *
-     * @param viewType
      */
-    public void setViewType(ViewType viewType) {
+    public void setViewType() {
         this.viewType = askViewType();
     }
 }
