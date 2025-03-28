@@ -337,7 +337,7 @@ public class GameInformation {
      * @param maxNumberOfPlayers
      */
     public void setUpPlayers(Player player, int maxNumberOfPlayers) {
-        if (playerList.equals(null)) {
+        if (playerList.isEmpty()) {
 
             this.maxNumberOfPlayers = maxNumberOfPlayers;
             playerList = new ArrayList<Player>();
