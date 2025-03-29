@@ -343,6 +343,8 @@ public class GameInformation {
             playerList = new ArrayList<Player>();
             playerList.add(player);
 
+        } else {
+            addPlayers(player);
         }
     }
 
@@ -356,6 +358,8 @@ public class GameInformation {
         if (playerList.contains(player) && playerList.size() < maxNumberOfPlayers) {
             playerList.add(player);
 
+        } else {
+            System.out.println("Cannot join match, max number of players reached");
         }
     }
 
@@ -385,14 +389,14 @@ public class GameInformation {
     /**
      * asks the creator of the game which mode to play
      */
-    public void setGameType() {
-        this.gameType = askGameType();
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 
     /**
      * asks each player which view type they want to play with
      */
-    public void setViewType() {
-        this.viewType = askViewType();
+    public void setViewType(ViewType viewType) {
+        this.viewType = viewType;
     }
 }
