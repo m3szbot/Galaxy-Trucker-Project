@@ -6,10 +6,10 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
-import it.polimi.ingsw.components.*;
-import it.polimi.ingsw.cards.*;
+import it.polimi.ingsw.Components.*;
+import it.polimi.ingsw.Cards.*;
 import it.polimi.ingsw.Bank.*;
-import it.polimi.ingsw.shipboard.*;
+import it.polimi.ingsw.Shipboard.*;
 import it.polimi.ingsw.FlightBoard.*;
 
 import java.io.File;

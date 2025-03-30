@@ -3,7 +3,7 @@ package it.polimi.ingsw.Bank;
 import java.util.*;
 
 import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.shipboard.Player;
+import it.polimi.ingsw.Shipboard.Player;
 
 /**
  * ScoreCounter class to evaluate player score at end of flight

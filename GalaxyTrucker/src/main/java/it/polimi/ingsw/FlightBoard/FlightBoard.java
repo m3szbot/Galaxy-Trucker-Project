@@ -3,7 +3,7 @@ package it.polimi.ingsw.FlightBoard;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import it.polimi.ingsw.shipboard.Player;
+import it.polimi.ingsw.Shipboard.Player;
 import it.polimi.ingsw.Application.GameType;
 
 /**

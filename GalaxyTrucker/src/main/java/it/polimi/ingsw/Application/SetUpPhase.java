@@ -6,7 +6,7 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
-import it.polimi.ingsw.shipboard.Player;
+import it.polimi.ingsw.Shipboard.Player;
 
 public class SetUpPhase {
     Player player;
