@@ -29,4 +29,20 @@ public class Cannon extends Component {
     public String getComponentName() {
         return "Cannon";
     }
+
+    //aggiunte
+
+    @Override
+    public float getFirePower(){
+       if (single){
+           if(this.getFront().equals(SideType.Special)){
+               return 1;
+           }else{
+               return 0.5f;
+           }
+       }
+       else{
+           return 2;
+       }
+    }
 }

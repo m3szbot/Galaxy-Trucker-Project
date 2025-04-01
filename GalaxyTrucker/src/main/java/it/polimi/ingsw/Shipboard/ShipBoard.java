@@ -5,16 +5,17 @@ import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Application.*;
 
+import java.util.List;
+
 public class ShipBoard {
     // Matrix representing the ship's component layout
     Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
-
-    public ShipBoardAttributes shipBoardAttributes;
+    ShipBoardAttributes shipBoardAttributes;
 
     /**
-     * Constructs a ShipBoard instance.
+     * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement
      * based on the specified game type.
      * <p>
@@ -85,10 +86,24 @@ public class ShipBoard {
     public void addComponent(Component component, int x, int y) {
         x = x - 1;
         y = y - 1;
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         if (matr[x][y] == true) {
             structureMatrix[x][y] = component;
         }
-        //qua devi elaborare
+        //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
+        List<Object> list = component.accept(visitor);
+        shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
+        if ((Float) list.get(1) == 1) {
+            shipBoardAttributes.updateFirePower((Float) list.get(1));
+        }
+        shipBoardAttributes.updateCrewMembers((Integer) list.get(2));
+        shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
+        Integer[] sides = (Integer[]) list.get(4);
+        for (int i = 0; i < 4; i++) {
+            shipBoardAttributes.updateCoveredSides(i, -sides[i]);
+        }
+        shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
+        shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
     }
 
     /**
@@ -103,8 +118,23 @@ public class ShipBoard {
         boolean flag = true;
 
         if (matr[x][y] == true && structureMatrix[x][y] != null) {
-            structureMatrix[x][y] = null;
+            Component component = structureMatrix[x][y];
+            Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
+            List<Object> list = component.accept(visitor);
             shipBoardAttributes.updateDestroyedComponents(1);
+            shipBoardAttributes.updateDrivingPower(-(Integer) list.get(0));
+            if ((Float) list.get(1) == 1) {
+                shipBoardAttributes.updateFirePower(-(Float) list.get(1));
+            }
+            shipBoardAttributes.updateCrewMembers(-(Integer) list.get(2));
+            shipBoardAttributes.updateBatteryPower(-(Integer) list.get(3));
+            Integer[] sides = (Integer[]) list.get(4);
+            for (int i = 0; i < 4; i++) {
+                shipBoardAttributes.updateCoveredSides(i, sides[i]);
+            }
+            shipBoardAttributes.updateAvailableSlots(1, -(Integer) list.get(5));
+            shipBoardAttributes.updateAvailableSlots(2, -(Integer) list.get(6));
+            structureMatrix[x][y] = null;
             while (flag) {
                 flag = checkNotReachable(this.shipBoardAttributes);
             }
@@ -152,13 +182,14 @@ public class ShipBoard {
      * 2. Checks if the "Engine" component is incorrectly placed.
      * 3. Ensures "Cannon" components follow specific placement rules.
      *
-     * @param shipBoard The ShipBoardAttributes object that tracks errors.
+     * @param shipBoard The ShipBoard object that tracks errors.
      * @return The total number of detected errors.
      * @author Giacomo
      */
-    public int checkErrors(ShipBoardAttributes shipBoard) {
+    public int checkErrors(ShipBoard shipBoard) {
         boolean flag = true;
         int errors = 0;
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         while (flag) {
             flag = false;
             for (int i = 1; i < 12; i++) {
@@ -168,9 +199,9 @@ public class ShipBoard {
                             System.out.println("Component" + i + " " + j + " is not well connected");
                             errors++;
                             //  removeComponent(i, j); i componenti non li deve rimuovere il gioco ma l'utente
-                            flag = checkNotReachable(shipBoard);
+                            flag = checkNotReachable(shipBoardAttributes);
                         }
-                        if (structureMatrix[i][j].getComponentName().equals("Engine")) {
+                        if ((Integer) structureMatrix[i][j].accept(visitor).get(0) > 0) {
                             boolean check = false;
                             for (int k = j + 1; k < 12; k++) {
                                 if (structureMatrix[i][k] != null) {
@@ -182,44 +213,40 @@ public class ShipBoard {
                                 System.out.println("Error, in component" + i + ' ' + j);
                             }
                         }
-                        if (structureMatrix[i][j].getComponentName().equals("Cannon")) {
+                        if ((Float) structureMatrix[i][j].accept(visitor).get(1) > 0) {
                             boolean check = false;
                             if (structureMatrix[i][j].getLeft().equals(SideType.Special)) {
-                                for (int k = i - 1; k >= 0; k--) {
-                                    if (structureMatrix[k][j] != null) {
-                                        check = true;
-                                        errors++;
-                                    }
+
+                                if (structureMatrix[i - 1][j] != null) {
+                                    check = true;
+                                    errors++;
                                 }
+
                                 if (check) {
                                     System.out.println("Error, in component" + i + ' ' + j);
                                 }
                             } else if (structureMatrix[i][j].getRight().equals(SideType.Special)) {
-                                for (int k = i + 1; k < 12; k++) {
-                                    if (structureMatrix[k][j] != null) {
-                                        check = true;
-                                        errors++;
-                                    }
+
+                                if (structureMatrix[i + 1][j] != null) {
+                                    check = true;
+                                    errors++;
                                 }
+
                                 if (check) {
                                     System.out.println("Error, in component" + i + ' ' + j);
                                 }
                             } else if (structureMatrix[i][j].getFront().equals(SideType.Special)) {
-                                for (int k = j - 1; k >= 0; k--) {
-                                    if (structureMatrix[i][k] != null) {
-                                        check = true;
-                                        errors++;
-                                    }
+                                if (structureMatrix[i][j - 1] != null) {
+                                    check = true;
+                                    errors++;
                                 }
                                 if (check) {
                                     System.out.println("Error, in component" + i + ' ' + j);
                                 }
                             } else if (structureMatrix[i][j].getBack().equals(SideType.Special)) {
-                                for (int k = j + 1; k < 12; k++) {
-                                    if (structureMatrix[k][j] != null) {
-                                        check = true;
-                                        errors++;
-                                    }
+                                if (structureMatrix[i][j + 1] != null) {
+                                    check = true;
+                                    errors++;
                                 }
                                 if (check) {
                                     System.out.println("Error, in component" + i + ' ' + j);
@@ -237,11 +264,11 @@ public class ShipBoard {
      * Checks if any components are not connected to the main structure.
      * If a component is unreachable, it is removed.
      *
-     * @param shipBoard The ShipBoardAttributes object that tracks destroyed components.
+     * @param shipBoardAttributes The ShipBoard object that tracks destroyed components.
      * @return True if any unreachable components were found, false otherwise.
      * @author Giacomo
      */
-    public boolean checkNotReachable(ShipBoardAttributes shipBoard) {
+    public boolean checkNotReachable(ShipBoardAttributes shipBoardAttributes) {
         boolean result = false;
         int flag = 1;
         boolean[][] mat = new boolean[12][12];
@@ -261,7 +288,7 @@ public class ShipBoard {
                             flag = 1;
                             result = true;
                             removeComponent(i, j);
-                            shipBoard.updateDestroyedComponents(1);
+                            shipBoardAttributes.updateDestroyedComponents(1);
                         }
                     }
                 }
@@ -325,7 +352,8 @@ public class ShipBoard {
      * @author Giacomo
      */
     public void addGoods(int x, int y, int[] goods) {
-        if (structureMatrix[x][y] != null && structureMatrix[x][y].getComponentName().equals("Storage")) {
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
+        if (structureMatrix[x][y] != null && ((Integer) structureMatrix[x][y].accept(visitor).get(5) > 0 || (Integer) structureMatrix[x][y].accept(visitor).get(6) > 0)) {
             x = x - 1;
             y = y - 1;
             checkSlots(goods, x, y);
@@ -345,22 +373,27 @@ public class ShipBoard {
     public void setCrewType(CrewType crewType, int x, int y) {
         x = x - 1;
         y = y - 1;
+        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         if (structureMatrix[x][y] != null && structureMatrix[x][y].getComponentName().equals("Cabin")) {
             if (crewType.equals(CrewType.Brown)) {
-                if ((structureMatrix[x - 1][y].getComponentName().equals("AlienSupport") && !((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
-                        (structureMatrix[x + 1][y].getComponentName().equals("AlienSupport") && !((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
-                        (structureMatrix[x][y - 1].getComponentName().equals("AlienSupport") && !((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
-                        (structureMatrix[x][y + 1].getComponentName().equals("AlienSupport") && !((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
+                if (((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
+                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
                     ((Cabin) structureMatrix[x][y]).setCrewType(crewType);
+                    shipBoardAttributes.updateAlien(CrewType.Brown);
+                    shipBoardAttributes.updateCrewMembers(-1);
                 } else {
                     System.out.println("CrewType not permitted");
                 }
             } else {
-                if ((structureMatrix[x - 1][y].getComponentName().equals("AlienSupport") && ((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
-                        (structureMatrix[x + 1][y].getComponentName().equals("AlienSupport") && ((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
-                        (structureMatrix[x][y - 1].getComponentName().equals("AlienSupport") && ((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
-                        (structureMatrix[x][y + 1].getComponentName().equals("AlienSupport") && ((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
+                if (((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
+                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
+                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
                     ((Cabin) structureMatrix[x][y]).setCrewType(crewType);
+                    shipBoardAttributes.updateAlien(CrewType.Brown);
+                    shipBoardAttributes.updateCrewMembers(-1);
                 } else {
                     System.out.println("CrewType not permitted");
                 }
@@ -380,7 +413,7 @@ public class ShipBoard {
      * @author Giacomo
      */
     private boolean checkSlots(int[] goods, int x, int y) {
-        if (structureMatrix[x][y] != null && structureMatrix[x][y].getComponentName().equals("Storage")) {
+        if (structureMatrix[x][y] != null) {
             if (((Storage) structureMatrix[x][y]).getIsRed()) {
                 if (goods[0] <= ((Storage) structureMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) structureMatrix[x][y]).getGoods()[0]) {
                     return true;
