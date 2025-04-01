@@ -3,9 +3,13 @@ package it.polimi.ingsw.Shipboard;
 
 import it.polimi.ingsw.Application.GameInformation;
 
+import it.polimi.ingsw.Application.ViewType;
+
 public class Player {
     // The nickname of the player
     private String nickName;
+
+    private ViewType viewType;
 
     // The player's ship board, representing their ship in the game
     public ShipBoard shipBoard;

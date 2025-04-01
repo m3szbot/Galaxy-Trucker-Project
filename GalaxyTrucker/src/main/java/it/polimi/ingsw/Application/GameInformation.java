@@ -27,7 +27,6 @@ public class GameInformation {
     private Bank bank;
     private FlightBoard flightBoard;
     private GameType gameType;
-    private ViewType viewType;
 
     public List<Card> getCardsList() {
         return cardsList;
