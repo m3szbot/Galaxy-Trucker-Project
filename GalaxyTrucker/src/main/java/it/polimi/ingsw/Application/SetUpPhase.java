@@ -8,26 +8,26 @@ package it.polimi.ingsw.Application;
 
 import it.polimi.ingsw.Shipboard.Player;
 
-public class SetUpPhase {
-    Player player;
+import java.io.IOException;
+
+public class SetUpPhase implements Startable {
 
     /**
      * start is the method to be called from main in order to set up the game, it operates differently based on who calls it (the first player or the subsequent ones)
      *
      * @param gameInformation
      */
-    public void start(GameInformation gameInformation) {
+    public void start(GameInformation gameInformation, SetUpView setUpView, Player player) throws IOException {
         if (gameInformation.getPlayerList().isEmpty()) {
-            int maxNumberOfPlayers = askMaxNumberOfPlayers(setUpView);
+            int maxNumberOfPlayers = setUpView.askMaxNumberOfPlayers();
             gameInformation.setUpPlayers(player, maxNumberOfPlayers);
-            GameType gameType = askGameType(setUpView);
+            GameType gameType = setUpView.askGameType();
             gameInformation.setGameType(gameType);
         } else {
             gameInformation.addPlayers(player);
         }
-        ViewType viewType = askViewType(setUpView);
+        ViewType viewType = setUpView.askViewType();
         gameInformation.setViewType(viewType);
-
     }
 
     /**
@@ -36,7 +36,7 @@ public class SetUpPhase {
      * @param setUpView
      * @return int
      */
-    public int askMaxNumberOfPlayers(SetUpView setUpView) {
+    public int askMaxNumberOfPlayers(SetUpView setUpView) throws IOException {
         return setUpView.askMaxNumberOfPlayers();
     }
 
