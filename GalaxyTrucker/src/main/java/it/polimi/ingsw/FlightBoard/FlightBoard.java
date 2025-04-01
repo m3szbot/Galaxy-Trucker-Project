@@ -3,6 +3,7 @@ package it.polimi.ingsw.FlightBoard;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Shipboard.Player;
 import it.polimi.ingsw.Application.GameType;
 
@@ -14,12 +15,16 @@ import it.polimi.ingsw.Application.GameType;
 
 public class FlightBoard {
     // constants - game types:
+    private final int normalCardCount = 12;
+    private final int testCardCount = 8;
     private final int normalNumberOfTiles = 24;
     private final int[] normalStartingTiles = {1, 2, 4, 7};
     private final int testNumberOfTiles = 18;
     private final int[] testStartingTiles = {1, 2, 3, 5};
 
     // attributes
+    // stack of event cards
+    private Stack<Card> cardsStack;
     // numberOfTiles, startingTiles selected based on gameType
     private final int numberOfTiles;
     private final int[] startingTiles;
@@ -33,18 +38,33 @@ public class FlightBoard {
      *
      * @param gameType Game type to set tiles
      */
-    public FlightBoard(GameType gameType) {
+    public FlightBoard(GameType gameType, List<Card> cardsList) {
+        int cardCount;
+        cardsStack = new Stack<>();
+        playerTilesMap = new HashMap<>();
+        playerOrderList = new ArrayList<>();
         if (gameType == GameType.NormalGame) {
+            cardCount = normalCardCount;
             this.numberOfTiles = normalNumberOfTiles;
             this.startingTiles = new int[normalStartingTiles.length];
             System.arraycopy(normalStartingTiles, 0, startingTiles, 0, normalStartingTiles.length);
         } else {
+            cardCount = testCardCount;
             this.numberOfTiles = testNumberOfTiles;
             this.startingTiles = new int[testStartingTiles.length];
             System.arraycopy(testStartingTiles, 0, startingTiles, 0, testStartingTiles.length);
         }
-        playerTilesMap = new HashMap<>();
-        playerOrderList = new ArrayList<>();
+        for (int i = 0; i < cardCount; i++)
+            cardsStack.push(cardsList.get(i));
+    }
+
+    /**
+     * Get new card from the cardStack
+     *
+     * @return new card
+     */
+    private Card getNewCard() {
+        return cardsStack.pop();
     }
 
     /**
