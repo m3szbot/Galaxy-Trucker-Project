@@ -59,4 +59,18 @@ public class Shield extends Component {
         return "Shield";
     }
 
+    @Override
+    public int[] getCoveredSides() {
+        int[] sides = new int[4];
+        int i;
+        for (i = 0; i < sides.length; i++) {
+            if (i == coveredSide1 || i == coveredSide2) {
+                sides[i] = 1;
+            } else {
+                sides[i] = 0;
+            }
+        }
+        return sides;
+    }
+
 }

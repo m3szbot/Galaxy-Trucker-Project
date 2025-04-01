@@ -1,5 +1,11 @@
 package it.polimi.ingsw.Components;
 
+import it.polimi.ingsw.Shipboard.Visitor;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Superclass to express what all components have in common
  * SideType[0] corresponds to the front side, then rotate clockwise.
@@ -7,24 +13,8 @@ package it.polimi.ingsw.Components;
  * @author carlo
  */
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+public class Component implements Visitable {
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "name")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Component.class, name = "Component"),
-        @JsonSubTypes.Type(value = Engine.class, name = "Engine"),
-        @JsonSubTypes.Type(value = Cannon.class, name = "Cannon"),
-        @JsonSubTypes.Type(value = Cabin.class, name = "Cabin"),
-        @JsonSubTypes.Type(value = Storage.class, name = "Storage"),
-        @JsonSubTypes.Type(value = Battery.class, name = "Battery"),
-        @JsonSubTypes.Type(value = Shield.class, name = "Shield"),
-        @JsonSubTypes.Type(value = AlienSupport.class, name = "AlienSupport")
-})
-
-public class Component {
-
-    private String name;
     private SideType front;
     private SideType right;
     private SideType back;
@@ -75,4 +65,59 @@ public class Component {
     public String getComponentName() {
         return "Connector";
     }
+
+    //Da qui in poi codice aggiunto da Giacomo per provare ad implementare il visitor pattern
+    public int getDrivingPower() {
+        return 0;
+    }
+
+    public float getFirePower() {
+        return 0;
+    }
+
+    public int getCrewMembers() {
+        return 0;
+    }
+
+    public int getBatteryPower() {
+        return 0;
+    }
+
+    public int[] getCoveredSides() {
+        return new int[]{0, 0, 0, 0};
+    }
+
+    public int getAvailableRedSlots() {
+        return 0;
+    }
+
+    public int getAvailableBlueSlots() {
+        return 0;
+    }
+
+    public boolean amIASupport() {
+        return false;
+    }
+
+    public List<Object> getAllIndexes() {
+        ArrayList<Object> indexes = new ArrayList<>();
+        indexes.add(getDrivingPower());
+        indexes.add(getFirePower());
+        indexes.add(getCrewMembers());
+        indexes.add(getBatteryPower());
+        indexes.add(getCoveredSides());
+        indexes.add(getAvailableRedSlots());
+        indexes.add(getAvailableBlueSlots());
+        indexes.add(amIASupport());
+        return indexes;
+    }
+
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    ;
+
 }
