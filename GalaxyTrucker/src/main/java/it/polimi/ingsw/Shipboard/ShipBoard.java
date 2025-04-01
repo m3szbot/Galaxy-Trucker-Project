@@ -11,7 +11,7 @@ public class ShipBoard {
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
 
-    public ShipBoardAttributes shipBoard;
+    public ShipBoardAttributes shipBoardAttributes;
 
     /**
      * Constructs a ShipBoard instance.
@@ -29,7 +29,7 @@ public class ShipBoard {
     public ShipBoard(GameType gameType) {
         this.structureMatrix = new Component[12][12];
         this.matr = new boolean[12][12];
-        this.shipBoard = new ShipBoardAttributes();
+        this.shipBoardAttributes = new ShipBoardAttributes();
         // Initialize all positions as valid
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
@@ -104,9 +104,9 @@ public class ShipBoard {
 
         if (matr[x][y] == true && structureMatrix[x][y] != null) {
             structureMatrix[x][y] = null;
-            shipBoard.updateDestroyedComponents(1);
+            shipBoardAttributes.updateDestroyedComponents(1);
             while (flag) {
-                flag = checkNotReachable(this.shipBoard);
+                flag = checkNotReachable(this.shipBoardAttributes);
             }
         }
     }
