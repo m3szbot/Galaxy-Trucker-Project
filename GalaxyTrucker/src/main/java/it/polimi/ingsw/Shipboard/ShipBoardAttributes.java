@@ -15,6 +15,7 @@ public class ShipBoardAttributes {
     private int availableRedSlots; // Number of available red slots
     private int availableBlueSlots; // Number of available blue slots
     private int destroyedComponents; // Number of destroyed components
+    private int credits;
 
     /**
      * Constructor for ShipBoard.
@@ -36,6 +37,7 @@ public class ShipBoardAttributes {
         availableRedSlots = 0;
         availableBlueSlots = 0;
         destroyedComponents = 0;
+        credits = 0;
     }
 
     //metodo che si chiama solo una volta all'inizio e inizializza red slot, firepower, driving power e crew
@@ -262,6 +264,14 @@ public class ShipBoardAttributes {
         return flag;
     }
 */
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public void updateCredits(int credits) {
+        this.credits = this.credits + credits;
+    }
 
 }
 
