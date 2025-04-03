@@ -28,7 +28,7 @@ public class Game {
     }
 
     public void start() {
-        setState(new AssemblyState(assemblyView, assemblyProtocol));
+        setState(new AssemblyState(assemblyView, assemblyProtocol, //da capire cossa mettere come player));
 
         // Thread separato per leggere l'input dell'utente
         new Thread(() -> {
@@ -55,7 +55,7 @@ public class Game {
             currentState.update(this);
         }
 
-        System.out.println("🎮 Game Over.");
+        assemblyView.printGameOverMessage();
     }
 
     public static void main(String[] args) {

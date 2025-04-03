@@ -37,13 +37,13 @@ public class ComponentChoice implements GameState{
         }
         switch (caseManagement) {
             case 1:
-                gameInformation.assemblyProtocol.chooseComponent(player, Integer.parseInt(input));
+                game.getGameInformation().getAssemblyProtocol().chooseComponent(player, Integer.parseInt(input));
                 break;
             case 2:
                 System.out.println("Error in component choice");
                 break;
         }
-        game.setState(new AssemblyState());
+        game.setState(new AssemblyState(view, assemblyProtocol));
     }
 
 }
