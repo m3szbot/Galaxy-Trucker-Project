@@ -83,8 +83,8 @@ public class Component implements Visitable {
         return 0;
     }
 
-    public int[] getCoveredSides() {
-        return new int[]{0, 0, 0, 0};
+    public boolean[] getCoveredSides() {
+        return new boolean[]{false, false, false, false};
     }
 
     public int getAvailableRedSlots() {

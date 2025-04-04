@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
 /**
@@ -11,6 +13,7 @@ import it.polimi.ingsw.Shipboard.Player;
 public class Planets extends Card {
 
     public int daysLost;
+    private boolean[] occupied = {false, false, false, false};
 
     private int[] planet1;
     private int[] planet2;
