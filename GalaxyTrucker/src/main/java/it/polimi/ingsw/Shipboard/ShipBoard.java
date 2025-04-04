@@ -430,4 +430,21 @@ public class ShipBoard {
         }
         return false;
     }
+
+    private int getDrivingPower(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(0);
+    }
+    private float getFirePower(VisitorAttributesUpdater visitor, Component component) {
+        return (Float) component.accept(visitor).get(1);
+    }
+    private int getCrewMembers(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(2);
+    }
+    private int getBatteryPower(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(3);
+    }
+    private int[] getCoveredSides(VisitorAttributesUpdater visitor, Component component) {
+        return (int[]) component.accept(visitor).get(4);
+    }
+    
 }
