@@ -8,8 +8,8 @@ public interface SufferBlows {
     default void hit(Player player, Blow[] blows, ElementType blowType, FlightView flightView) {
 
         int randomNumber, i, leftCoord = 0, rightCoord = 0, blowNumber = 0;
-        int rows = player.shipBoard.structureMatrix.length;
-        int cols = player.shipBoard.structureMatrix[0].length;
+        int rows = player.getShipBoard().getMatrixRows();
+        int cols = player.getShipBoard().getMatricCols();
         boolean componentFlag;
         String direction, message;
 
@@ -28,7 +28,7 @@ public interface SufferBlows {
 
                 for(i = 0;i < rows; i++){
 
-                    if(player.shipBoard.structureMatrix[i][randomNumber] != null){
+                    if(player.getShipBoard().getComponent(i, randomNumber) != null){
                         componentFlag = true;
                         leftCoord = i;
                         rightCoord = randomNumber;
@@ -46,7 +46,7 @@ public interface SufferBlows {
 
                 for(i = cols - 1;i >= 0; i--){
 
-                    if(player.shipBoard.structureMatrix[randomNumber][i] != null){
+                    if(player.getShipBoard().getComponent(randomNumber, i) != null){
                         componentFlag = true;
                         leftCoord = randomNumber;
                         rightCoord = i;
@@ -63,7 +63,7 @@ public interface SufferBlows {
 
                 for(i = rows - 1; i >= 0; i--){
 
-                    if(player.shipBoard.structureMatrix[i][randomNumber] != null){
+                    if(player.getShipBoard().getComponent(i, randomNumber) != null){
                         componentFlag = true;
                         leftCoord = i;
                         rightCoord = randomNumber;
@@ -79,7 +79,7 @@ public interface SufferBlows {
 
                 for(i = 0; i < cols; i++){
 
-                    if(player.shipBoard.structureMatrix[randomNumber][i] != null){
+                    if(player.getShipBoard().getComponent(randomNumber, i) != null){
                         componentFlag = true;
                         leftCoord = randomNumber;
                         rightCoord = i;
@@ -101,10 +101,10 @@ public interface SufferBlows {
 
                 if(blow.isBig()){
 
-                    player.shipBoard.removeComponent(leftCoord, rightCoord);
+                    player.getShipBoard().removeComponent(leftCoord, rightCoord);
                 }
                 else{
-                    if(player.shipBoard.shipBoardAttributes.isCovered(blow.getDirection())) {
+                    if(player.getShipBoard().shipBoardAttributes.checkSide(blow.getDirection())) {
 
 
                         message = new String("The small cannon blow is directed on position ["
@@ -121,7 +121,7 @@ public interface SufferBlows {
 
                                 coordinates = flightView.askPlayerCoordinates(player, message);
 
-                                if((player.shipBoard.getComponent(coordinates[0], coordinates[1]).getComponentName().equals("Battery"))){
+                                if((player.getShipBoard().getComponent(coordinates[0], coordinates[1]).getComponentName().equals("Battery"))){
                                     break;
                                 }
 

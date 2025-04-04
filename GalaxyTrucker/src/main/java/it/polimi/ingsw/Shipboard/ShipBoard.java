@@ -140,7 +140,7 @@ public class ShipBoard {
             }
             shipBoardAttributes.updateCrewMembers(-(Integer) list.get(2));
             shipBoardAttributes.updateBatteryPower(-(Integer) list.get(3));
-            Integer[] sides = (Integer[]) list.get(4);
+            boolean[] sides = (boolean[]) list.get(4);
             for (int i = 0; i < 4; i++) {
                 shipBoardAttributes.updateCoveredSides(i, sides[i]);
             }

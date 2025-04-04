@@ -16,6 +16,7 @@ public class ShipBoardAttributes {
     private int availableBlueSlots; // Number of available blue slots
     private int destroyedComponents; // Number of destroyed components
     private int credits;
+    private int goods[];
 
     /**
      * Constructor for ShipBoard.
@@ -106,8 +107,8 @@ public class ShipBoardAttributes {
      * @param type True if the side is covered, false otherwise.
      * @author Giacomo
      */
-    public void updateCoveredSides(int side, boolean covered) {
-        this.coveredSides[side] = covered;
+    public void updateCoveredSides(int side, boolean cover) {
+        this.coveredSides[side] = cover;
     }
 
     // 1 red, 0 blue
@@ -199,7 +200,7 @@ public class ShipBoardAttributes {
      * @return True if the side is covered, false otherwise.
      * @author Giacomo
      */
-    public boolean isCovered(int side) {
+    public boolean checkSide(int side) {
         if (coveredSides[side]) {
             return true;
         } else {
@@ -272,8 +273,6 @@ public class ShipBoardAttributes {
     public void updateCredits(int credits) {
         this.credits = this.credits + credits;
     }
-
-
 
 }
 
