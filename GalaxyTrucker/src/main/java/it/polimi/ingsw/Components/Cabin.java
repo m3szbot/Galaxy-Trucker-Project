@@ -41,4 +41,9 @@ public class Cabin extends Component {
     public String getComponentName() {
         return "Cabin";
     }
+
+    @Override
+    public int getCrewMembers(){
+        return numberOfCurrentInhabitant;
+    }
 }

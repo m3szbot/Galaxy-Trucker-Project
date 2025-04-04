@@ -27,4 +27,9 @@ public class Battery extends Component {
         return "Battery";
     }
 
+    @Override
+    public int getBatteryPower(){
+        return numberOfCurrentBatteries;
+    }
+
 }

@@ -11,13 +11,14 @@ public class ShipBoardAttributes {
     private boolean purpleAlien; // Presence of a purple alien crew member
     private boolean brownAlien;  // Presence of a brown alien crew member
     private int batteryPower; // Ship's battery power
-    private boolean coveredSides[]; // Indicates which sides of the ship are covered
+    private int coveredSides[]; // Indicates which sides of the ship are covered
     private int availableRedSlots; // Number of available red slots
     private int availableBlueSlots; // Number of available blue slots
     private int destroyedComponents; // Number of destroyed components
+    private int credits;
 
     /**
-     * Constructor for ShipBoardAttributes.
+     * Constructor for ShipBoard.
      * Initializes the ship's structure and default values for all attributes.
      *
      * @author Giacomo
@@ -29,13 +30,14 @@ public class ShipBoardAttributes {
         purpleAlien = false;
         brownAlien = false;
         batteryPower = 0;
-        coveredSides = new boolean[4];
+        coveredSides = new int[4];
         for (int i = 0; i < 4; i++) {
-            coveredSides[i] = false;
+            coveredSides[i] = 0;
         }
         availableRedSlots = 0;
         availableBlueSlots = 0;
         destroyedComponents = 0;
+        credits = 0;
     }
 
     //metodo che si chiama solo una volta all'inizio e inizializza red slot, firepower, driving power e crew
@@ -46,7 +48,7 @@ public class ShipBoardAttributes {
      * @param value Amount to increase the firepower by.
      * @author Giacomo
      */
-    public void updateFirePower(int value) {
+    public void updateFirePower(float value) {
         this.firePower = this.firePower + value;
     }
 
@@ -104,12 +106,8 @@ public class ShipBoardAttributes {
      * @param type True if the side is covered, false otherwise.
      * @author Giacomo
      */
-    public void updateCoveredSides(int side, boolean type) {
-        if (type) {
-            this.coveredSides[side] = true;
-        } else {
-            this.coveredSides[side] = false;
-        }
+    public void updateCoveredSides(int side, int type) {
+        this.coveredSides[side] = this.coveredSides[side] + type;
     }
 
     // 1 red, 0 blue
@@ -202,7 +200,7 @@ public class ShipBoardAttributes {
      * @author Giacomo
      */
     public boolean checkSide(int side) {
-        if (coveredSides[side] == true) {
+        if (coveredSides[side] > 0) {
             return true;
         } else {
             return false;
@@ -266,6 +264,14 @@ public class ShipBoardAttributes {
         return flag;
     }
 */
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public void updateCredits(int credits) {
+        this.credits = this.credits + credits;
+    }
 
 }
 

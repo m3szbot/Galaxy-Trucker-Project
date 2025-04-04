@@ -8,7 +8,7 @@ package it.polimi.ingsw.Application;
 
 import java.io.IOException;
 
-public class InitializationPhase {
+public class InitializationPhase implements Startable {
 
     /**
      * start is to be called in the main in order to initialize the objects of the game

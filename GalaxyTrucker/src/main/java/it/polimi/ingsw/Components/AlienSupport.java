@@ -28,4 +28,9 @@ public class AlienSupport extends Component {
     public String getComponentName() {
         return "AlienSupport";
     }
+
+    @Override
+    public boolean amIASupport(){
+        return true;
+    }
 }
