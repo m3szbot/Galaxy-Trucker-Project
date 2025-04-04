@@ -12,10 +12,10 @@ public class Player {
     private ViewType viewType;
 
     // The player's ship board, representing their ship in the game
-    public ShipBoard shipBoard;
+    private ShipBoard shipBoard;
 
     // The color associated with the player
-    Color color;
+    private Color color;
 
     /**
      * Constructor for the Player class.
@@ -29,6 +29,10 @@ public class Player {
         this.nickName = nickName;
         this.shipBoard = new ShipBoard(gameInformation.getGameType());
         this.color = color;
+    }
+
+    public ShipBoard getShipBoard() {
+        return shipBoard;
     }
 
     /**
