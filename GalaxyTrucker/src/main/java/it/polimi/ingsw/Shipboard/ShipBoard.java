@@ -9,10 +9,10 @@ import java.util.List;
 
 public class ShipBoard {
     // Matrix representing the ship's component layout
-    Component[][] structureMatrix;
+    private Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
-    ShipBoardAttributes shipBoardAttributes;
+    private ShipBoardAttributes shipBoardAttributes;
 
     /**
      * Constructs a ShipStructure instance.
@@ -75,6 +75,22 @@ public class ShipBoard {
         }
     }
 
+    public Component getComponent(int x, int y){
+        return structureMatrix[x][y];
+    }
+
+    public int getMatrixRows(){
+       return structureMatrix.length;
+    }
+
+    public int getMatricCols(){
+        return structureMatrix[0].length;
+    }
+
+    public ShipBoardAttributes getShipBoardAttributes() {
+        return shipBoardAttributes;
+    }
+
     /**
      * Adds a component to the specified position in the structure matrix.
      *
@@ -98,9 +114,9 @@ public class ShipBoard {
         }
         shipBoardAttributes.updateCrewMembers((Integer) list.get(2));
         shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
-        Integer[] sides = (Integer[]) list.get(4);
+        boolean[] sides = (boolean[]) list.get(4);
         for (int i = 0; i < 4; i++) {
-            shipBoardAttributes.updateCoveredSides(i, -sides[i]);
+            shipBoardAttributes.updateCoveredSides(i, sides[i]);
         }
         shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
         shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
@@ -128,7 +144,7 @@ public class ShipBoard {
             }
             shipBoardAttributes.updateCrewMembers(-(Integer) list.get(2));
             shipBoardAttributes.updateBatteryPower(-(Integer) list.get(3));
-            Integer[] sides = (Integer[]) list.get(4);
+            boolean[] sides = (boolean[]) list.get(4);
             for (int i = 0; i < 4; i++) {
                 shipBoardAttributes.updateCoveredSides(i, sides[i]);
             }

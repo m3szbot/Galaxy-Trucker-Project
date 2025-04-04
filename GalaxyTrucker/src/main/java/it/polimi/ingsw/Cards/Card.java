@@ -11,6 +11,7 @@ public abstract class Card {
     protected int cardLevel;
     protected String cardName;
     protected boolean solved = false;
+    protected String informationString;
 
     /**
      * Abstract method that must be defined for every card class. It is

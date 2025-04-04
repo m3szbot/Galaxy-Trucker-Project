@@ -16,14 +16,14 @@ public interface Requirement {
 
         if (requirementType == ElementType.CrewMember) {
 
-            if (player.shipStructure.shipBoard.getCrewMembers() >= quantity) {
+            if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= quantity) {
                 return true;
             }
 
             return false;
         } else {
 
-            if (player.shipStructure.shipBoard.getFirePower() >= quantity) {
+            if (player.getShipBoard().getShipBoardAttributes().getFirePower() >= quantity) {
                 return true;
             }
 

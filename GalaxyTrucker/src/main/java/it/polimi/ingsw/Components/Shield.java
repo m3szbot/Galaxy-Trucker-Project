@@ -60,14 +60,14 @@ public class Shield extends Component {
     }
 
     @Override
-    public int[] getCoveredSides() {
-        int[] sides = new int[4];
+    public boolean[] getCoveredSides() {
+        boolean[] sides = new boolean[4];
         int i;
         for (i = 0; i < sides.length; i++) {
             if (i == coveredSide1 || i == coveredSide2) {
-                sides[i] = 1;
+                sides[i] = true;
             } else {
-                sides[i] = 0;
+                sides[i] = true;
             }
         }
         return sides;
