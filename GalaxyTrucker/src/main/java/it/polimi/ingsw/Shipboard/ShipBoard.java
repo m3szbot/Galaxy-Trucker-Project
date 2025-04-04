@@ -9,10 +9,10 @@ import java.util.List;
 
 public class ShipBoard {
     // Matrix representing the ship's component layout
-    Component[][] structureMatrix;
+    private Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
-    ShipBoardAttributes shipBoardAttributes;
+    private ShipBoardAttributes shipBoardAttributes;
 
     /**
      * Constructs a ShipStructure instance.
@@ -73,6 +73,10 @@ public class ShipBoard {
             matr[9][4] = false;
             matr[9][5] = false;
         }
+    }
+
+    public ShipBoardAttributes getShipBoardAttributes() {
+        return shipBoardAttributes;
     }
 
     /**
