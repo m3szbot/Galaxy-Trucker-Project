@@ -23,19 +23,19 @@ public interface SmallestCrew {
 
         for (Player player : players) {
 
-            if (player.getShipBoard().shipBoardAttributes.getCrewMembers() == smallestCrew) {
+            if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() == smallestCrew) {
 
                 if (flightBoard.getPlayerOrder(player) < playerPosition) {
 
                     playerPosition = flightBoard.getPlayerOrder(player);
-                    smallestCrew = player.getShipBoard().shipBoardAttributes.getCrewMembers();
+                    smallestCrew = player.getShipBoard().getShipBoardAttributes().getCrewMembers();
                     smallestCrewPlayer = player;
                 }
 
-            } else if (player.getShipBoard().shipBoardAttributes.getCrewMembers() < smallestCrew) {
+            } else if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() < smallestCrew) {
 
                 playerPosition = flightBoard.getPlayerOrder(player);
-                smallestCrew = player.getShipBoard().shipBoardAttributes.getCrewMembers();
+                smallestCrew = player.getShipBoard().getShipBoardAttributes().getCrewMembers();
                 smallestCrewPlayer = player;
 
             }

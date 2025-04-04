@@ -12,7 +12,7 @@ public class ShipBoard {
     private Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
-    public ShipBoardAttributes shipBoardAttributes;
+    private ShipBoardAttributes shipBoardAttributes;
 
     /**
      * Constructs a ShipStructure instance.
@@ -85,6 +85,10 @@ public class ShipBoard {
 
     public int getMatricCols(){
         return structureMatrix[0].length;
+    }
+
+    public ShipBoardAttributes getShipBoardAttributes() {
+        return shipBoardAttributes;
     }
 
     /**

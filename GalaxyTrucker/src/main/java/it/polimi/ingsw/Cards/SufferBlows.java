@@ -104,7 +104,7 @@ public interface SufferBlows {
                     player.getShipBoard().removeComponent(leftCoord, rightCoord);
                 }
                 else{
-                    if(player.getShipBoard().shipBoardAttributes.checkSide(blow.getDirection())) {
+                    if(player.getShipBoard().getShipBoardAttributes().checkSide(blow.getDirection())) {
 
 
                         message = new String("The small cannon blow is directed on position ["
