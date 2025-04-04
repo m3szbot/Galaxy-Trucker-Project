@@ -39,6 +39,10 @@ public class ShipBoardAttributes {
         availableBlueSlots = 0;
         destroyedComponents = 0;
         credits = 0;
+        goods = new int[4];
+        for (int i = 0; i < 4; i++) {
+            goods[i] = 0;
+        }
     }
 
     //metodo che si chiama solo una volta all'inizio e inizializza red slot, firepower, driving power e crew
@@ -104,7 +108,7 @@ public class ShipBoardAttributes {
      *
      * @param side The side to update (index 0-3).
      *             The first Side (0) is front, the other indexes follow the clockwise.
-     * @param type True if the side is covered, false otherwise.
+     * @param cover True if the side is covered, false otherwise.
      * @author Giacomo
      */
     public void updateCoveredSides(int side, boolean cover) {

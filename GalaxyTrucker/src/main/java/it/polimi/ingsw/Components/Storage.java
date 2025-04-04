@@ -53,6 +53,7 @@ public class Storage extends Component {
     @Override
     public int getAvailableRedSlots(){
         if(isRed){
+            //qua sta cosa va sistemata, forse devo fare get number of maximumElements e basta perchè quando va a zero come faccio a capire che è uno Storage
             return numberOfMaximumElements - goods[0];
         }
         return 0;
