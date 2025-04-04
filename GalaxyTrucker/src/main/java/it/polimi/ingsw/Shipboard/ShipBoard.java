@@ -75,6 +75,10 @@ public class ShipBoard {
         }
     }
 
+    /**
+     * @return shipBoardAttributes
+     * @author Boti
+     */
     public ShipBoardAttributes getShipBoardAttributes() {
         return shipBoardAttributes;
     }
