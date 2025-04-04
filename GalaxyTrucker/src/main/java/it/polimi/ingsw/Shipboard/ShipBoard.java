@@ -7,7 +7,7 @@ import it.polimi.ingsw.Application.*;
 
 public class ShipBoard {
     // Matrix representing the ship's component layout
-    Component[][] structureMatrix;
+    public Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
 
