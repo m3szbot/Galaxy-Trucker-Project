@@ -16,6 +16,7 @@ public class ShipBoardAttributes {
     private int availableBlueSlots; // Number of available blue slots
     private int destroyedComponents; // Number of destroyed components
     private int credits;
+    private int goods[];
 
     /**
      * Constructor for ShipBoard.
@@ -30,14 +31,12 @@ public class ShipBoardAttributes {
         purpleAlien = false;
         brownAlien = false;
         batteryPower = 0;
-        coveredSides = new int[4];
-        for (int i = 0; i < 4; i++) {
-            coveredSides[i] = 0;
-        }
+        coveredSides = new int[]{0, 0, 0, 0};
         availableRedSlots = 0;
         availableBlueSlots = 0;
         destroyedComponents = 0;
         credits = 0;
+        this.goods = new int[]{0, 0, 0, 0};
     }
 
     //metodo che si chiama solo una volta all'inizio e inizializza red slot, firepower, driving power e crew
@@ -271,6 +270,19 @@ public class ShipBoardAttributes {
 
     public void updateCredits(int credits) {
         this.credits = this.credits + credits;
+    }
+
+    /**
+     * @return goods[4] array
+     * @author Boti
+     */
+    public int[] getGoods() {
+        return goods;
+    }
+
+    public int countExposedLinks() {
+        int exposedLinks = 0;
+        return exposedLinks;
     }
 
 }
