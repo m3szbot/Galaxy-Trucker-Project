@@ -7,64 +7,70 @@ import it.polimi.ingsw.Shipboard.Player;
 public class AssemblyState implements GameState{
     private long startTime;
     private boolean actionTaken = false;
-    private AssemblyView assembly;
+    private AssemblyView view;
     private AssemblyProtocol protocol;
     private Player player;
 
     public AssemblyState(AssemblyView assembly, AssemblyProtocol protocol, Player player) {
-        this.assembly = assembly;
+        this.view = assembly;
         this.protocol = protocol;
         this.player = player;
     }
 
 
     @Override
-    public void enter(Game game, AssemblyView view) {
+    public void enter(AssemblyGame assemblyGame, AssemblyView view) {
         startTime = System.currentTimeMillis();
         actionTaken = false;
-        assembly = view;
+        view = view;
     }
 
     @Override
-    public void handleInput(String input, Game game) {
+    public void handleInput(String input, AssemblyGame assemblyGame) {
         if (actionTaken) return; // Ignora input dopo che è stata presa una decisione
-        assembly.printAssemblyMessage();
+        view.printAssemblyMessage();
         switch (input.toLowerCase()) {
-            case "Place":
-                System.out.println("Dove vuoi posizionare il componente (X Y):");
+            case "place":
                 actionTaken = true;
-                game.setState(new AssemblyState(assembly, protocol,player));
+                assemblyGame.setState(new AssemblyState(view, protocol,player));
                 break;
-            case "pesca":
-                System.out.println("New Component:");
+            case "draw":
                 actionTaken = true;
-                game.getGameInformation().getAssemblyProtocol().newComponent(player);
-                game.setState(new AssemblyState(assembly, protocol, player));
+                assemblyGame.getGameInformation().getAssemblyProtocol().newComponent(player);
+                assemblyGame.setState(new AssemblyState(view, protocol, player));
                 break;
-            case "Choose":
+            case "choose":
                 actionTaken = true;
-                game.setState(new ComponentChoice(assembly, protocol));
+                assemblyGame.setState(new ComponentChoice(view, protocol, player));
                 break;
-            case "Rotate":
-                System.out.println("Componente ruotato.");
-                game.setState(new AssemblyState(assembly, protocol, player));
+            case "rotate":
+                assemblyGame.getGameInformation().getAssemblyProtocol().getViewMap().get(player).rotate();
+                view.printRotateMessage(assemblyGame.getGameInformation().getAssemblyProtocol().getViewMap().get(player));
+                assemblyGame.setState(new AssemblyState(view, protocol, player));
                 break;
-            case "gira clessidra":
-                //
+            case "turn":
+                actionTaken = true;
+                view.printTurnMessage();
+                assemblyGame.getGameInformation().getAssemblyProtocol().getHourGlass().twist();
+                assemblyGame.setState(new AssemblyState(view, protocol, player));
+                break;
+            case "show":
+                actionTaken = true;
+                // To do
                 break;
             default:
-                System.out.println("Comando non valido.");
-                game.setState(new AssemblyState(assembly, protocol, player));
+                view.printErrorInCommandMessage();
+                assemblyGame.setState(new AssemblyState(view, protocol, player));
         }
     }
 
-    public void update(Game game) {
+    public void update(AssemblyGame assemblyGame) {
         if (!actionTaken) {
             long now = System.currentTimeMillis();
-            if (now - startTime >= 5000) { // 5 secondi
-                System.out.println("❗ Time out");
+            if (now - startTime >= 50000) { // 5 secondi
+                view.printAssemblyMessage();
                 actionTaken = true;
-                game.setState(new AssemblyState(assembly, protocol, player));
+                assemblyGame.setState(new AssemblyState(view, protocol, player));
             }
         }
     }

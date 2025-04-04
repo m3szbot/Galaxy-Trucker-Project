@@ -104,4 +104,15 @@ public class AssemblyProtocol {
         return uncoveredList;
     }
 
+    public Map<Player, List<Component>> getBookedMap(){
+        return bookedMap;
+    }
+    public Map<Player, Component> getViewMap(){
+        return viewMap;
+    }
+
+    public HourGlass getHourGlass() {
+        return hourGlass;
+    }
+
 }

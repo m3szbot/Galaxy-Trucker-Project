@@ -30,6 +30,7 @@ public class GameInformation {
     private GameType gameType;
     private AssemblyProtocol assemblyProtocol;
 
+
     public AssemblyProtocol getAssemblyProtocol() {
         return assemblyProtocol;
     }

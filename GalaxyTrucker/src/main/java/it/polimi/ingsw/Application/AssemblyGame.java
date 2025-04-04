@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Game {
+public class AssemblyGame {
     private GameState currentState;
     private boolean running = true;
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
@@ -27,8 +27,8 @@ public class Game {
         running = value;
     }
 
-    public void start() {
-        setState(new AssemblyState(assemblyView, assemblyProtocol, //da capire cossa mettere come player));
+    public void start() { // qui va lanciato il thread per tutti i player, non solo per il primo
+        setState(new AssemblyState(assemblyView,assemblyProtocol, gameInformation.getPlayerList().getFirst()));
 
         // Thread separato per leggere l'input dell'utente
         new Thread(() -> {
@@ -59,6 +59,6 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        new Game().start();
+        new AssemblyGame().start();
     }
 }
