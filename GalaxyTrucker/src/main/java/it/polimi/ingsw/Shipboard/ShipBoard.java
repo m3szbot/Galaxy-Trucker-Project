@@ -75,15 +75,15 @@ public class ShipBoard {
         }
     }
 
-    public Component getComponent(int x, int y){
+    public Component getComponent(int x, int y) {
         return structureMatrix[x][y];
     }
 
-    public int getMatrixRows(){
-       return structureMatrix.length;
+    public int getMatrixRows() {
+        return structureMatrix.length;
     }
 
-    public int getMatricCols(){
+    public int getMatrixCols() {
         return structureMatrix[0].length;
     }
 
@@ -450,21 +450,27 @@ public class ShipBoard {
     private int getDrivingPower(VisitorAttributesUpdater visitor, Component component) {
         return (Integer) component.accept(visitor).get(0);
     }
+
     private float getFirePower(VisitorAttributesUpdater visitor, Component component) {
         return (Float) component.accept(visitor).get(1);
     }
+
     private int getCrewMembers(VisitorAttributesUpdater visitor, Component component) {
         return (Integer) component.accept(visitor).get(2);
     }
+
     private int getBatteryPower(VisitorAttributesUpdater visitor, Component component) {
         return (Integer) component.accept(visitor).get(3);
     }
+
     private boolean[] getCoveredSides(VisitorAttributesUpdater visitor, Component component) {
         return (boolean[]) component.accept(visitor).get(4);
     }
+
     private int getAvailableRedSlots(VisitorAttributesUpdater visitor, Component component) {
         return (Integer) component.accept(visitor).get(5);
     }
+
     private int getAvailableBlueSlots(VisitorAttributesUpdater visitor, Component component) {
         return (Integer) component.accept(visitor).get(6);
     }
