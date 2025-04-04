@@ -8,14 +8,11 @@ import it.polimi.ingsw.Application.ViewType;
 public class Player {
     // The nickname of the player
     private String nickName;
-
-    private ViewType viewType;
-
-    // The player's ship board, representing their ship in the game
-    private ShipBoard shipBoard;
-
     // The color associated with the player
     private Color color;
+    // The player's ship board, representing their ship in the game
+    private ShipBoard shipBoard;
+    private ViewType viewType;
 
     /**
      * Constructor for the Player class.
@@ -29,10 +26,6 @@ public class Player {
         this.nickName = nickName;
         this.shipBoard = new ShipBoard(gameInformation.getGameType());
         this.color = color;
-    }
-
-    public ShipBoard getShipBoard() {
-        return shipBoard;
     }
 
     /**
@@ -53,6 +46,22 @@ public class Player {
      */
     public Color getColor() {
         return color;
+    }
+
+    /**
+     * @return shipBoard
+     * @author Boti
+     */
+    public ShipBoard getShipBoard() {
+        return shipBoard;
+    }
+
+    /**
+     * @return viewType
+     * @author Boti
+     */
+    public ViewType getViewType() {
+        return viewType;
     }
 }
 
