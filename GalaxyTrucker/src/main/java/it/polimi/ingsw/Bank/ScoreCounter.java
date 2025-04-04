@@ -14,7 +14,7 @@ import it.polimi.ingsw.Shipboard.Player;
 public class ScoreCounter {
     // more players can have the minimum and both receive points
     private List<Player> leastExposedLinksList;
-    
+
     // constants
     private final int leastExposedLinksPoints;
     private final int lostComponentsPoints;
@@ -28,21 +28,19 @@ public class ScoreCounter {
      * @param playerList List of players
      */
     public ScoreCounter(GameType gameType, List<Player> playerList) {
-        int leastExposedLinksPoints;
-        int lostComponentsPoints = -1;
-        int[] finishOrderPoints;
-        int[] goodsPoints;
         // set scoring attributes based on game type
-        // normal game
+        // normal game values
+        int leastExposedLinksPoints = 4;
+        int lostComponentsPoints = -1;
+        int[] finishOrderPoints = {8, 6, 4, 2};
+        int[] goodsPoints = {8, 6, 4, 2};
+        // test game values
         if (gameType == GameType.TestGame) {
             leastExposedLinksPoints = 2;
             finishOrderPoints = new int[]{4, 3, 2, 1};
             goodsPoints = new int[]{4, 3, 2, 1};
-        } else {
-            leastExposedLinksPoints = 4;
-            finishOrderPoints = new int[]{8, 6, 4, 2};
-            goodsPoints = new int[]{8, 6, 4, 2};
         }
+        // set  instance attributes
         this.leastExposedLinksPoints = leastExposedLinksPoints;
         this.lostComponentsPoints = lostComponentsPoints;
         this.finishOrderPoints = new int[finishOrderPoints.length];

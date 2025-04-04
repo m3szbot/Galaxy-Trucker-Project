@@ -9,16 +9,7 @@ import it.polimi.ingsw.Application.GameType;
  */
 
 public class Bank {
-    // constants (physical quantity)
     // Goods: red yellow green blue
-    public final int[] maxGoods = {12, 17, 13, 14};
-    public final int maxCredits = 150;
-    public final int maxBatteries = 40;
-    public final int maxAstronauts = 42;
-    public final int maxPurpleAliens = 4;
-    public final int maxBrownAliens = 4;
-
-    // attributes
     private int[] goodsNumber;
     private int creditsNumber;
     private int batteriesNumber;
@@ -33,18 +24,24 @@ public class Bank {
      * @param gameType Type of game
      */
     public Bank(GameType gameType) {
+        int[] maxGoods = {12, 17, 13, 14};
+        int maxCredits = 150;
+        int maxBatteries = 40;
+        int maxAstronauts = 42;
+        int maxPurpleAliens = 4;
+        int maxBrownAliens = 4;
+        if (gameType == GameType.TestGame) {
+            maxPurpleAliens = 0;
+            maxBrownAliens = 0;
+        }
+        // set instance attributes
         this.goodsNumber = new int[maxGoods.length];
         System.arraycopy(maxGoods, 0, this.goodsNumber, 0, maxGoods.length);
         this.creditsNumber = maxCredits;
         this.batteriesNumber = maxBatteries;
         this.astronautsNumber = maxAstronauts;
-        if (gameType == GameType.NormalGame) {
-            this.purpleAliensNumber = maxPurpleAliens;
-            this.brownAliensNumber = maxBrownAliens;
-        } else {
-            this.purpleAliensNumber = 0;
-            this.brownAliensNumber = 0;
-        }
+        this.purpleAliensNumber = maxPurpleAliens;
+        this.brownAliensNumber = maxBrownAliens;
     }
 
     /**
