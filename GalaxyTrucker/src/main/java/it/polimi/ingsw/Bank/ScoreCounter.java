@@ -12,24 +12,14 @@ import it.polimi.ingsw.Shipboard.Player;
  */
 
 public class ScoreCounter {
-    // constants for scores depending on game type
-    // normal game
-    private final int normalLeastExposedLinksPoints = 4;
-    private final int[] normalFinishOrderPoints = {8, 6, 4, 2};
-    private final int[] normalGoodsPoints = {8, 6, 4, 2};
-    // test game
-    private final int testLeastExposedLinksPoints = 2;
-    private final int[] testFinishOrderPoints = {4, 3, 2, 1};
-    private final int[] testGoodsPoints = {4, 3, 2, 1};
-
-    // attributes
-    private final int leastExposedLinksPoints;
-    private final int[] finishOrderPoints;
-    private final int[] goodsPoints;
-    private final int lostComponentsPoints = -1;
-
     // more players can have the minimum and both receive points
     private List<Player> leastExposedLinksList;
+    
+    // constants
+    private final int leastExposedLinksPoints;
+    private final int lostComponentsPoints;
+    private final int[] finishOrderPoints;
+    private final int[] goodsPoints;
 
     /**
      * Constructor, calculates leastExposedLinks player(s)
@@ -38,28 +28,34 @@ public class ScoreCounter {
      * @param playerList List of players
      */
     public ScoreCounter(GameType gameType, List<Player> playerList) {
-        // set score point attributes based on game type
-        if (gameType == GameType.NormalGame) {
-            this.leastExposedLinksPoints = normalLeastExposedLinksPoints;
-            this.finishOrderPoints = new int[normalFinishOrderPoints.length];
-            System.arraycopy(normalFinishOrderPoints, 0, finishOrderPoints, 0, normalFinishOrderPoints.length);
-            this.goodsPoints = new int[normalGoodsPoints.length];
-            System.arraycopy(normalGoodsPoints, 0, goodsPoints, 0, normalGoodsPoints.length);
+        int leastExposedLinksPoints;
+        int lostComponentsPoints = -1;
+        int[] finishOrderPoints;
+        int[] goodsPoints;
+        // set scoring attributes based on game type
+        // normal game
+        if (gameType == GameType.TestGame) {
+            leastExposedLinksPoints = 2;
+            finishOrderPoints = new int[]{4, 3, 2, 1};
+            goodsPoints = new int[]{4, 3, 2, 1};
         } else {
-            this.leastExposedLinksPoints = testLeastExposedLinksPoints;
-            this.finishOrderPoints = new int[testFinishOrderPoints.length];
-            System.arraycopy(testFinishOrderPoints, 0, finishOrderPoints, 0, testFinishOrderPoints.length);
-            this.goodsPoints = new int[testGoodsPoints.length];
-            System.arraycopy(testGoodsPoints, 0, goodsPoints, 0, testGoodsPoints.length);
+            leastExposedLinksPoints = 4;
+            finishOrderPoints = new int[]{8, 6, 4, 2};
+            goodsPoints = new int[]{8, 6, 4, 2};
         }
+        this.leastExposedLinksPoints = leastExposedLinksPoints;
+        this.lostComponentsPoints = lostComponentsPoints;
+        this.finishOrderPoints = new int[finishOrderPoints.length];
+        System.arraycopy(finishOrderPoints, 0, finishOrderPoints, 0, finishOrderPoints.length);
+        this.goodsPoints = new int[goodsPoints.length];
+        System.arraycopy(goodsPoints, 0, goodsPoints, 0, goodsPoints.length);
+        // create and fill leastExposedLinksList with players
         this.leastExposedLinksList = new ArrayList<Player>();
         calculateLeastExposedLinks(playerList);
     }
 
-    // TODO assign player credits based on scores
-
     /**
-     * Calculate score of a player
+     * Calculate score of a player (credits assigned by controller)
      *
      * @param player Player whose score is to be calculated
      * @return Score of the given player
@@ -93,20 +89,21 @@ public class ScoreCounter {
      */
     private int calculateGoodsPoints(Player player) {
         int storagePoints = 0;
-        // TODO to finish
-        //for()
+        // TODO
+        // for(int goods : player.shipBoard.)
         return storagePoints;
     }
 
     /**
-     * Calculate earned points given for lost components
+     * Calculate earned (negative) points given for lost components
      *
      * @param player Player to evaluate
      * @return Earned (negative) points
      */
     private int calculateLostComponentsPoints(Player player) {
         int lostPoints = 0;
-        // TODO to finish
+        // TODO
+        // lostPoints -= player.shipBoard.
         return lostPoints;
     }
 
@@ -119,11 +116,19 @@ public class ScoreCounter {
         // Map of exposed links of players
         Map<Player, Integer> playerExposedLinks = new Hashtable<Player, Integer>();
         // calculate exposed links and add to Map
+        // TODO
+        //for (Player player : playerList) {
+        //playerExposedLinks.put(player, player.shipBoard.)
+        //}
 
         // find minimum value
         int minValue = playerExposedLinks.values().stream().min(Integer::compare).orElse(Integer.MAX_VALUE);
         // add player to leastExposedLinksList
-
+        for (Map.Entry<Player, Integer> entry : playerExposedLinks.entrySet()) {
+            if (entry.getValue() == minValue) {
+                leastExposedLinksList.add(entry.getKey());
+            }
+        }
     }
 }
 
