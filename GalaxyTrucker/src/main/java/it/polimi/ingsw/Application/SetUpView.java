@@ -6,6 +6,8 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
+import it.polimi.ingsw.Shipboard.Color;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -71,5 +73,29 @@ public class SetUpView {
         }
         scanner.close();
         return ViewType.valueOf(type);
+    }
+
+    public String askNickName() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+
+    public Color askColor() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        String mycolor;
+
+        while (true) {
+            System.out.println("What color do you want to play as (RED, YELLOW, BLUE, GREEN?");
+            mycolor = scanner.nextLine().toUpperCase();
+            try {
+                Color color = Color.valueOf(mycolor);
+                System.out.println("You selected " + color);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Please enter a valid color.");
+            }
+        }
+        scanner.close();
+        return Color.valueOf(mycolor);
     }
 }
