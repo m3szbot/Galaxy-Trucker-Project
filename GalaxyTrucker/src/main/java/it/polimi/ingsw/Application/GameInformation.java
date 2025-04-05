@@ -6,6 +6,7 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
+import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Cards.*;
 import it.polimi.ingsw.Bank.*;
@@ -29,6 +30,11 @@ public class GameInformation {
     private FlightBoard flightBoard;
     private GameType gameType;
     private HashMap<Player, ViewType> playerViewMap;
+    private AssemblyProtocol assemblyProtocol;
+
+    public AssemblyProtocol getAssemblyProtocol() {
+        return assemblyProtocol;
+    }
 
     public List<Card> getCardsList() {
         return cardsList;
