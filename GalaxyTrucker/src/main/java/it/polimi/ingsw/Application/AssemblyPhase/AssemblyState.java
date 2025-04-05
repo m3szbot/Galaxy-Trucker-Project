@@ -1,10 +1,10 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.AssemblyPhase;
 
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Shipboard.Player;
 
 
-public class AssemblyState implements GameState{
+public class AssemblyState implements GameState {
     private long startTime;
     private boolean actionTaken = false;
     private AssemblyView view;
@@ -36,7 +36,7 @@ public class AssemblyState implements GameState{
                 break;
             case "draw":
                 actionTaken = true;
-                assemblyGame.getGameInformation().getAssemblyProtocol().newComponent(player);
+                assemblyGame.getAssemblyProtocol().newComponent(player);
                 assemblyGame.setState(new AssemblyState(view, protocol, player));
                 break;
             case "choose":
@@ -44,14 +44,14 @@ public class AssemblyState implements GameState{
                 assemblyGame.setState(new ComponentChoice(view, protocol, player));
                 break;
             case "rotate":
-                assemblyGame.getGameInformation().getAssemblyProtocol().getViewMap().get(player).rotate();
-                view.printRotateMessage(assemblyGame.getGameInformation().getAssemblyProtocol().getViewMap().get(player));
+                assemblyGame.getAssemblyProtocol().getViewMap().get(player).rotate();
+                view.printRotateMessage(assemblyGame.getAssemblyProtocol().getViewMap().get(player));
                 assemblyGame.setState(new AssemblyState(view, protocol, player));
                 break;
             case "turn":
                 actionTaken = true;
                 view.printTurnMessage();
-                assemblyGame.getGameInformation().getAssemblyProtocol().getHourGlass().twist();
+                assemblyGame.getAssemblyProtocol().getHourGlass().twist();
                 assemblyGame.setState(new AssemblyState(view, protocol, player));
                 break;
             case "show":

@@ -30,11 +30,6 @@ public class GameInformation {
     private FlightBoard flightBoard;
     private GameType gameType;
     private HashMap<Player, ViewType> playerViewMap;
-    private AssemblyProtocol assemblyProtocol;
-
-    public AssemblyProtocol getAssemblyProtocol() {
-        return assemblyProtocol;
-    }
 
     public List<Card> getCardsList() {
         return cardsList;

@@ -1,8 +1,8 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.AssemblyPhase;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Shipboard.*;
 
-public class ComponentChoice implements GameState{
+public class ComponentChoice implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private AssemblyView view;
@@ -27,7 +27,7 @@ public class ComponentChoice implements GameState{
         catch(NumberFormatException e) {
             e.printStackTrace();
         }
-        if(caseManagement >= 0 && caseManagement < assemblyGame.getGameInformation().getAssemblyProtocol().getUncoveredList().size()){
+        if(caseManagement >= 0 && caseManagement < assemblyGame.getAssemblyProtocol().getUncoveredList().size()){
             caseManagement = 1;
         }
         else{
@@ -35,9 +35,9 @@ public class ComponentChoice implements GameState{
         }
         switch (caseManagement) {
             case 1:
-                view.printUncoveredComponentsMessage(assemblyGame.getGameInformation());
-                assemblyGame.getGameInformation().getAssemblyProtocol().chooseComponent(player, Integer.parseInt(input));
-                view.printNewComponentMessage(assemblyGame.getGameInformation().getAssemblyProtocol().getViewMap().get(player));
+                view.printUncoveredComponentsMessage(assemblyGame);
+                assemblyGame.getAssemblyProtocol().chooseComponent(player, Integer.parseInt(input));
+                view.printNewComponentMessage(assemblyGame.getAssemblyProtocol().getViewMap().get(player));
                 break;
             case 2:
                 view.printErrorComponentChoiceMessage();

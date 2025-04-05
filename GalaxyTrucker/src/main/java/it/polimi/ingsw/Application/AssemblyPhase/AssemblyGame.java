@@ -1,5 +1,6 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.AssemblyPhase;
 
+import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 
 import java.util.Scanner;
@@ -13,6 +14,16 @@ public class AssemblyGame {
     private GameInformation gameInformation;
     private AssemblyProtocol assemblyProtocol;
     private AssemblyView assemblyView;
+
+    public AssemblyGame(GameInformation gameInformation) {
+        this.gameInformation = gameInformation;
+        assemblyProtocol = new AssemblyProtocol(gameInformation.getCardsList(),gameInformation.getComponentList(), gameInformation.getGameType());
+        assemblyView = new AssemblyView();
+    }
+
+    public AssemblyProtocol getAssemblyProtocol() {
+        return assemblyProtocol;
+    }
 
     public void setState(GameState newState) {
         this.currentState = newState;
@@ -58,6 +69,7 @@ public class AssemblyGame {
         assemblyView.printGameOverMessage();
     }
 
+    //questo andrà spostato nella classe con dentro gameInformation inizializzato
     public static void main(String[] args) {
         new AssemblyGame().start();
     }

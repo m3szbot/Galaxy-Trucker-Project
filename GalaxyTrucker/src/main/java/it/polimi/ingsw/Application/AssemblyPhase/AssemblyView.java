@@ -1,5 +1,6 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.AssemblyPhase;
 
+import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Components.Component;
 
 public class AssemblyView {
@@ -19,9 +20,9 @@ public class AssemblyView {
     public void printRotateMessage(Component component){
         System.out.println("Component rotated:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft());
     }
-    public void printUncoveredComponentsMessage(GameInformation gameInformation){
-        for(int i = 0; i < gameInformation.getAssemblyProtocol().getUncoveredList().size(); i++){
-            Component component = gameInformation.getAssemblyProtocol().getUncoveredList().get(i);
+    public void printUncoveredComponentsMessage(AssemblyGame assemblyGame){
+        for(int i = 0; i < assemblyGame.getAssemblyProtocol().getUncoveredList().size(); i++){
+            Component component = assemblyGame.getAssemblyProtocol().getUncoveredList().get(i);
             System.out.println("Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft());
         }
     }
@@ -33,5 +34,11 @@ public class AssemblyView {
     }
     public void printComponentPlacingMessage(){
         System.out.println("Where do you want to place the component? Indicate coordinates X and Y");
+    }
+    public void printChooseDeckMessage(){
+        System.out.println("Choose a deck from 1 to 3 writing the number:");
+    }
+    public void printNotValidDeckNumberMessage(){
+        System.out.println("Invalid deck number");
     }
 }

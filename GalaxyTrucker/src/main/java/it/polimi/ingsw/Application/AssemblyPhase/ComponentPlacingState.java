@@ -1,9 +1,9 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.AssemblyPhase;
 
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Shipboard.Player;
 
-public class ComponentPlacingState implements GameState{
+public class ComponentPlacingState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private AssemblyView view;
@@ -25,8 +25,8 @@ public class ComponentPlacingState implements GameState{
         int num1 = Integer.parseInt(parts[0]);
         int num2 = Integer.parseInt(parts[1]);
 
-        assemblyGame.getGameInformation().getPlayerList().get(assemblyGame.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyGame.getGameInformation().getAssemblyProtocol().getViewMap().get(player), num1, num2);
-        assemblyGame.getGameInformation().getAssemblyProtocol().newComponent(player);
+        assemblyGame.getGameInformation().getPlayerList().get(assemblyGame.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyGame.getAssemblyProtocol().getViewMap().get(player), num1, num2);
+        assemblyGame.getAssemblyProtocol().newComponent(player);
         assemblyGame.setState(new AssemblyState(view, assemblyProtocol, player));
     }
 }
