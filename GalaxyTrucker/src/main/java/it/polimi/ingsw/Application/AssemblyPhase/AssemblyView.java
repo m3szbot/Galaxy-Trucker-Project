@@ -1,11 +1,10 @@
 package it.polimi.ingsw.Application.AssemblyPhase;
 
-import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Components.Component;
 
 public class AssemblyView {
     public void printAssemblyMessage(){
-        System.out.println("👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass)");
+        System.out.println("👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one)");
     }
     public void printComponentChoice(){
         System.out.println("Print the number of the component you would like:");

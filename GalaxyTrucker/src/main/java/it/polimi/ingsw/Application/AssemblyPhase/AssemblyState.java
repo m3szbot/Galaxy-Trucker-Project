@@ -56,7 +56,12 @@ public class AssemblyState implements GameState {
                 break;
             case "show":
                 actionTaken = true;
-                // To do
+                assemblyGame.setState(new ShowDeckState(view, protocol, player));
+                break;
+            case "book":
+                actionTaken = true;
+                assemblyGame.getAssemblyProtocol().bookComponent(player);
+                assemblyGame.setState(new AssemblyState(view, protocol, player));
                 break;
             default:
                 view.printErrorInCommandMessage();
