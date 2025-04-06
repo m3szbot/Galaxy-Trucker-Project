@@ -14,6 +14,8 @@ public class FlightView {
        //update GUI for all players
     }
 
+    //Todo
+
     public void sendMessageToAll(String situationString){
         /*
         Print a pop up the players screen telling the actual situation
@@ -23,12 +25,22 @@ public class FlightView {
          */
     }
 
+    //Todo
 
     public boolean askPlayerGenericQuestion(Player player, String question){
 
     }
 
+    //Todo
+
     public int[] askPlayerCoordinates(Player player, String question){
+
+    }
+
+    //Todo
+
+    public int askPlayerValue(Player player, String question){
+
 
     }
 

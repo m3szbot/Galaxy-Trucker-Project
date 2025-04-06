@@ -83,7 +83,7 @@ public class ShipBoard {
        return structureMatrix.length;
     }
 
-    public int getMatricCols(){
+    public int getMatrixCols(){
         return structureMatrix[0].length;
     }
 
@@ -430,7 +430,7 @@ public class ShipBoard {
      */
     private boolean checkSlots(int[] goods, int x, int y) {
         if (structureMatrix[x][y] != null) {
-            if (((Storage) structureMatrix[x][y]).getIsRed()) {
+            if (((Storage) structureMatrix[x][y]).isRed()) {
                 if (goods[0] <= ((Storage) structureMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) structureMatrix[x][y]).getGoods()[0]) {
                     return true;
                 } else {

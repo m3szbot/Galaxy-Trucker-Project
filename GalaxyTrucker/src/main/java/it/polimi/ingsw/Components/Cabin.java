@@ -13,7 +13,6 @@ public class Cabin extends Component {
 
     public Cabin(SideType[] sides) {
         super(sides);
-        this.numberOfCurrentInhabitant = numberOfCurrentInhabitant;
     }
 
     /**
@@ -30,6 +29,11 @@ public class Cabin extends Component {
         }
     }
 
+    public CrewType getCrewType(){
+        return crewType;
+    }
+
+    //redundancy
     public int getNumberOfCurrentInhabitant() {
         return numberOfCurrentInhabitant;
     }

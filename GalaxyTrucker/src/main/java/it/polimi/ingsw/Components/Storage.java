@@ -16,8 +16,22 @@ public class Storage extends Component {
         return "Storage";
     }
 
-    public boolean getIsRed() {
+    public boolean isRed() {
         return isRed;
+    }
+
+    //Todo
+
+    public boolean isEmpty(){
+
+
+    }
+
+    //Todo
+
+    public boolean isFull(){
+
+
     }
 
     public int getNumberOfMaximumElements() {

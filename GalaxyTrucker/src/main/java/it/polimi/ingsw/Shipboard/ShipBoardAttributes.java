@@ -104,7 +104,7 @@ public class ShipBoardAttributes {
      *
      * @param side The side to update (index 0-3).
      *             The first Side (0) is front, the other indexes follow the clockwise.
-     * @param type True if the side is covered, false otherwise.
+     * @param cover True if the side is covered, false otherwise.
      * @author Giacomo
      */
     public void updateCoveredSides(int side, boolean cover) {
@@ -175,10 +175,13 @@ public class ShipBoardAttributes {
      * @author Giacomo
      */
     public int getAlienType() {
-        if (purpleAlien == true) {
+        if (purpleAlien && brownAlien) {
             return 1;
-        } else if (brownAlien == true) {
+        } else if (purpleAlien == true) {
             return 2;
+        }
+        else if(brownAlien == true){
+            return 3;
         }
         return 0;
     }

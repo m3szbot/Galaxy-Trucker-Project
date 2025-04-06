@@ -3,7 +3,7 @@ package it.polimi.ingsw.Cards;
 import it.polimi.ingsw.Shipboard.Player;
 
 /**
- * Interface that defines a method which returns true or false whether
+ * Interface that defines a default method which returns true or false whether
  * the player satisfies or not the specified requirement. Note that
  * the requirement can only be 2.
  *
@@ -11,6 +11,17 @@ import it.polimi.ingsw.Shipboard.Player;
  */
 
 public interface Requirement {
+
+    /**
+     *
+     * @param player target player
+     * @param requirementType requirement to verify
+     * @param quantity quantity of the specified requiriment that you want to verify
+     * @return true if the player has met the requirement in the specified quantity,
+     * false otherwise
+     *
+     * @author Carlo
+     */
 
     default boolean isSatisfying(Player player, ElementType requirementType, int quantity) {
 
