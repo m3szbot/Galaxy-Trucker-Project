@@ -2,9 +2,11 @@ package it.polimi.ingsw.Application.AssemblyPhase;
 
 import it.polimi.ingsw.Components.Component;
 
+import java.util.List;
+
 public class AssemblyView {
     public void printAssemblyMessage(){
-        System.out.println("👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one)");
+        System.out.println("👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component)");
     }
     public void printComponentChoice(){
         System.out.println("Print the number of the component you would like:");
@@ -39,5 +41,17 @@ public class AssemblyView {
     }
     public void printNotValidDeckNumberMessage(){
         System.out.println("Invalid deck number");
+    }
+    public void printChooseBookedComponentMessage(List<Component> bookedComponent){
+        if(bookedComponent != null){
+            for(int i = 0; i < bookedComponent.size(); i++){
+                Component component = bookedComponent.get(i);
+                System.out.println("Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft());
+            }
+            System.out.println("Write the number associated to the booked component you want to place:");
+        }
+    }
+    public void printErrorChoosingBookedComponentMessage(){
+        System.out.println("The Booked Component chose doesn't exist");
     }
 }

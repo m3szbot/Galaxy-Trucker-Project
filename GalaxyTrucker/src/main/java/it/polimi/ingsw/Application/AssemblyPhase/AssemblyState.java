@@ -3,7 +3,12 @@ package it.polimi.ingsw.Application.AssemblyPhase;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Shipboard.Player;
 
-
+/**
+ * AssemblyState handles the player's turn during the assembly phase,
+ * managing their input and timing.
+ *
+ * @author Giacomo
+ */
 public class AssemblyState implements GameState {
     private long startTime;
     private boolean actionTaken = false;
@@ -11,13 +16,18 @@ public class AssemblyState implements GameState {
     private AssemblyProtocol protocol;
     private Player player;
 
+    /**
+     * Constructs a new AssemblyState for the given player.
+     */
     public AssemblyState(AssemblyView assembly, AssemblyProtocol protocol, Player player) {
         this.view = assembly;
         this.protocol = protocol;
         this.player = player;
     }
 
-
+    /**
+     * Called when this state becomes active. Initializes the timer and resets the action flag.
+     */
     @Override
     public void enter(AssemblyGame assemblyGame, AssemblyView view) {
         startTime = System.currentTimeMillis();
@@ -25,9 +35,12 @@ public class AssemblyState implements GameState {
         view = view;
     }
 
+    /**
+     * Handles user input commands during the assembly phase.
+     */
     @Override
     public void handleInput(String input, AssemblyGame assemblyGame) {
-        if (actionTaken) return; // Ignora input dopo che è stata presa una decisione
+        if (actionTaken) return; // Ignore input after an action is taken
         view.printAssemblyMessage();
         switch (input.toLowerCase()) {
             case "place":
@@ -63,16 +76,23 @@ public class AssemblyState implements GameState {
                 assemblyGame.getAssemblyProtocol().bookComponent(player);
                 assemblyGame.setState(new AssemblyState(view, protocol, player));
                 break;
+            case "place booked":
+                actionTaken = true;
+                assemblyGame.setState(new PlaceBookedComponentState(view, protocol, player));
+                break;
             default:
                 view.printErrorInCommandMessage();
                 assemblyGame.setState(new AssemblyState(view, protocol, player));
         }
     }
 
+    /**
+     * Periodically called to check if the player has timed out.
+     */
     public void update(AssemblyGame assemblyGame) {
         if (!actionTaken) {
             long now = System.currentTimeMillis();
-            if (now - startTime >= 50000) { // 5 secondi
+            if (now - startTime >= 50000) { // 50 seconds timeout
                 view.printAssemblyMessage();
                 actionTaken = true;
                 assemblyGame.setState(new AssemblyState(view, protocol, player));
