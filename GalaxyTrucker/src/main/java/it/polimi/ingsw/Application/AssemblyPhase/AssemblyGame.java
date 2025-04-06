@@ -1,18 +1,29 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.AssemblyPhase;
 
+import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Game {
+public class AssemblyGame {
     private GameState currentState;
     private boolean running = true;
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private GameInformation gameInformation;
     private AssemblyProtocol assemblyProtocol;
     private AssemblyView assemblyView;
+
+    public AssemblyGame(GameInformation gameInformation) {
+        this.gameInformation = gameInformation;
+        assemblyProtocol = new AssemblyProtocol(gameInformation.getCardsList(),gameInformation.getComponentList(), gameInformation.getGameType());
+        assemblyView = new AssemblyView();
+    }
+
+    public AssemblyProtocol getAssemblyProtocol() {
+        return assemblyProtocol;
+    }
 
     public void setState(GameState newState) {
         this.currentState = newState;
@@ -27,8 +38,8 @@ public class Game {
         running = value;
     }
 
-    public void start() {
-        setState(new AssemblyState(assemblyView, assemblyProtocol, //da capire cossa mettere come player));
+    public void start() { // qui va lanciato il thread per tutti i player, non solo per il primo
+        setState(new AssemblyState(assemblyView,assemblyProtocol, gameInformation.getPlayerList().getFirst()));
 
         // Thread separato per leggere l'input dell'utente
         new Thread(() -> {
@@ -58,7 +69,8 @@ public class Game {
         assemblyView.printGameOverMessage();
     }
 
+    //questo andrà spostato nella classe con dentro gameInformation inizializzato
     public static void main(String[] args) {
-        new Game().start();
+        new AssemblyGame().start();
     }
 }

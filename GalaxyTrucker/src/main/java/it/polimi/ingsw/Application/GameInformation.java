@@ -16,6 +16,7 @@ import it.polimi.ingsw.FlightBoard.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.*;
@@ -28,11 +29,7 @@ public class GameInformation {
     private Bank bank;
     private FlightBoard flightBoard;
     private GameType gameType;
-    private AssemblyProtocol assemblyProtocol;
-
-    public AssemblyProtocol getAssemblyProtocol() {
-        return assemblyProtocol;
-    }
+    private HashMap<Player, ViewType> playerViewMap;
 
     public List<Card> getCardsList() {
         return cardsList;
@@ -62,8 +59,8 @@ public class GameInformation {
         return gameType;
     }
 
-    public ViewType getViewType() {
-        return viewType;
+    public ViewType getPlayerViewType(Player player) {
+        return playerViewMap.get(player);
     }
 
     /**
@@ -388,7 +385,7 @@ public class GameInformation {
      * creates the flight board based on the game type
      */
     public void setUpFlightBoard() {
-        this.flightBoard = new FlightBoard(gameType);
+        this.flightBoard = new FlightBoard(gameType, cardsList);
     }
 
     /**
@@ -401,7 +398,7 @@ public class GameInformation {
     /**
      * asks each player which view type they want to play with
      */
-    public void setViewType(ViewType viewType) {
-        this.viewType = viewType;
+    public void setPlayerViewType(Player player, ViewType viewType) {
+        playerViewMap.put(player, viewType);
     }
 }

@@ -31,14 +31,12 @@ public class ShipBoardAttributes {
         purpleAlien = false;
         brownAlien = false;
         batteryPower = 0;
-        coveredSides = new boolean[4];
-        for (int i = 0; i < 4; i++) {
-            coveredSides[i] = false;
-        }
+        coveredSides = new boolean[]{false, false, false, false};
         availableRedSlots = 0;
         availableBlueSlots = 0;
         destroyedComponents = 0;
         credits = 0;
+        goods = new int[]{0, 0, 0, 0};
     }
 
     //metodo che si chiama solo una volta all'inizio e inizializza red slot, firepower, driving power e crew
@@ -102,8 +100,8 @@ public class ShipBoardAttributes {
     /**
      * Updates the coverage status of a specific side of the ship.
      *
-     * @param side The side to update (index 0-3).
-     *             The first Side (0) is front, the other indexes follow the clockwise.
+     * @param side  The side to update (index 0-3).
+     *              The first Side (0) is front, the other indexes follow the clockwise.
      * @param cover True if the side is covered, false otherwise.
      * @author Giacomo
      */
@@ -275,6 +273,14 @@ public class ShipBoardAttributes {
 
     public void updateCredits(int credits) {
         this.credits = this.credits + credits;
+    }
+
+    /**
+     * @return Goods[4] array
+     * @author Boti
+     */
+    public int[] getGoods() {
+        return this.goods;
     }
 
 }

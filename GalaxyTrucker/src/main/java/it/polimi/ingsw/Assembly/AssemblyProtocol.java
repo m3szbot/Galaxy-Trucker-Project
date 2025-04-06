@@ -71,9 +71,11 @@ public class AssemblyProtocol {
     public void bookComponent(Player player){
         if(bookedMap.get(player) == null){
             bookedMap.put(player, new ArrayList<>());
+            newComponent(player);
         }
         if (bookedMap.get(player).size() < 3 && viewMap.containsKey(player)) {
             bookedMap.get(player).add(viewMap.get(player));
+            newComponent(player);
         }
         else{
             System.out.println("Too many booked components");
@@ -102,6 +104,17 @@ public class AssemblyProtocol {
 
     public List<Component> getUncoveredList(){
         return uncoveredList;
+    }
+
+    public Map<Player, List<Component>> getBookedMap(){
+        return bookedMap;
+    }
+    public Map<Player, Component> getViewMap(){
+        return viewMap;
+    }
+
+    public HourGlass getHourGlass() {
+        return hourGlass;
     }
 
 }

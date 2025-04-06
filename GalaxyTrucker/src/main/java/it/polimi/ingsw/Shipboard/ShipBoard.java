@@ -446,4 +446,36 @@ public class ShipBoard {
         }
         return false;
     }
+
+    private int getDrivingPower(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(0);
+    }
+
+    private float getFirePower(VisitorAttributesUpdater visitor, Component component) {
+        return (Float) component.accept(visitor).get(1);
+    }
+
+    private int getCrewMembers(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(2);
+    }
+
+    private int getBatteryPower(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(3);
+    }
+
+    private boolean[] getCoveredSides(VisitorAttributesUpdater visitor, Component component) {
+        return (boolean[]) component.accept(visitor).get(4);
+    }
+
+    private int getAvailableRedSlots(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(5);
+    }
+
+    private int getAvailableBlueSlots(VisitorAttributesUpdater visitor, Component component) {
+        return (Integer) component.accept(visitor).get(6);
+    }
+
+    private boolean getAmIASupport(VisitorAttributesUpdater visitor, Component component) {
+        return (Boolean) component.accept(visitor).get(7);
+    }
 }
