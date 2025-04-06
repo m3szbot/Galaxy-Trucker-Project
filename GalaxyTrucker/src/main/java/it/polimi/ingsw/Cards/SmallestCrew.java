@@ -6,7 +6,7 @@ import it.polimi.ingsw.Shipboard.Player;
 import java.util.ArrayList;
 
 /**
- * Interface that defines a method which return
+ * Interface that defines a default method which return
  * the player with the smallest crew members. If there are
  * ties, then the player which is most forward in the flight board
  * is selected.
@@ -15,6 +15,15 @@ import java.util.ArrayList;
  */
 
 public interface SmallestCrew {
+
+    /**
+     *
+     * @param flightBoard flightboard of the current game
+     * @param players all the players playing the game
+     * @return the player with the smallest number of inhabitants on the ship
+     *
+     * @author Carlo
+     */
 
     default Player calculateSmallestCrew(FlightBoard flightBoard, ArrayList<Player> players) {
 
