@@ -63,7 +63,7 @@ public class FlightBoard {
      *
      * @return new card
      */
-    private Card getNewCard() {
+    public Card getNewCard() {
         return cardsStack.pop();
     }
 
@@ -148,19 +148,10 @@ public class FlightBoard {
     }
 
     /**
-     * Update playerOrderList based on playerTilesMap
-     */
-    public void updatePlayerOrderList() {
-        List<Map.Entry<Player, Integer>> sortedMap = new ArrayList<>(playerTilesMap.entrySet());
-        sortedMap.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        playerOrderList = sortedMap.stream().map(Map.Entry::getKey).collect(Collectors.toList());
-    }
-
-    /**
      * Check for lapped players and remove them from the FlightBoard
      * does not update order (part of checkBoard)
      */
-    public void checkLappedPlayers() {
+    private void checkLappedPlayers() {
         for (Map.Entry<Player, Integer> current : playerTilesMap.entrySet()) {
             for (Map.Entry<Player, Integer> other : playerTilesMap.entrySet()) {
                 if (!current.equals(other) &&
@@ -169,6 +160,16 @@ public class FlightBoard {
             }
         }
     }
+
+    /**
+     * Update playerOrderList based on playerTilesMap
+     */
+    private void updatePlayerOrderList() {
+        List<Map.Entry<Player, Integer>> sortedMap = new ArrayList<>(playerTilesMap.entrySet());
+        sortedMap.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        playerOrderList = sortedMap.stream().map(Map.Entry::getKey).collect(Collectors.toList());
+    }
+
 
     /**
      * Remove player from FlightBoard, if present
