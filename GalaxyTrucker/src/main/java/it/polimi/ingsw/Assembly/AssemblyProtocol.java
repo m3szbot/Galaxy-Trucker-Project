@@ -7,25 +7,38 @@ import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Shipboard.Player;
 import it.polimi.ingsw.Application.*;
 
-//tutto ancora da implementare
+/**
+ * AssemblyProtocol handles the logic behind deck selection, component
+ * booking and drawing, and other player interactions.
+ *
+ * @author Giacomo
+ */
 public class AssemblyProtocol {
     private Deck blockedDeck;
     private Deck[] decksList;
     private HourGlass hourGlass;
     private List<Component> coveredList;
     private List<Component> uncoveredList;
-    private Map<Player, List<Component>> bookedMap;
+    private Map<Player, Optional<List<Component>>> bookedMap;
     private Map<Player, Component> viewMap;
     private boolean deck[];
 
-    public AssemblyProtocol(List<Card> cards, List<Component> components, GameType gameType) {
+
+    /**
+     * Initializes the assembly protocol with the game setup.
+     * Prepares decks, covered components, and player maps.
+     *
+     * @param gameInformation information about players, cards, and components
+     */
+    public AssemblyProtocol(GameInformation gameInformation) {
         coveredList = new ArrayList<>();
-        coveredList.addAll(components);
+        coveredList.addAll(gameInformation.getComponentList());
         deck = new boolean[4];
-        blockedDeck = new Deck(cards, gameType);
+        blockedDeck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
         decksList = new Deck[3];
         for (int i = 0; i < 3; i++) {
-            decksList[i] = new Deck(cards, gameType);
+            //qui c'è da verificare che le carte già utlizzate vengano rimosse
+            decksList[i] = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
         }
         for (int i = 0; i < 4; i++) {
             deck[i] = false;
@@ -33,9 +46,19 @@ public class AssemblyProtocol {
         hourGlass = new HourGlass();
         uncoveredList = new ArrayList<>();
         bookedMap = new HashMap<>();
+        for(int i = 0; i < gameInformation.getPlayerList().size(); i++) {
+            Player player = gameInformation.getPlayerList().get(i);
+            bookedMap.put(player, Optional.empty());
+        }
         viewMap = new HashMap<>();
     }
 
+    /**
+     * Marks a deck as revealed and returns it.
+     *
+     * @param num the deck index (1 to 3), 0 is blocked
+     * @return the selected deck, or null if blocked
+     */
     public Deck showDeck(int num){
 
         if(num == 1){
@@ -56,6 +79,12 @@ public class AssemblyProtocol {
         }
     }
 
+    /**
+     * Draws a new component for the player and updates the current view.
+     * Moves the previous component (if any) to the uncovered list.
+     *
+     * @param player the player drawing a component
+     */
     public void newComponent(Player player){
         if(viewMap.get(player) != null){
             uncoveredList.add(viewMap.get(player));
@@ -64,17 +93,30 @@ public class AssemblyProtocol {
         coveredList.remove(0);
     }
 
+    /**
+     * Allows the player to choose a component from the uncovered list.
+     * The player's current component is returned to the uncovered list,
+     * and the selected component replaces it in the player's view.
+     *
+     * @param player the player making the selection
+     * @param num the index of the component in the uncovered list
+     */
     public void chooseComponent(Player player, int num){
-        //da capire come fare la scelta
+        Component component = viewMap.get(player);
+        viewMap.put(player, uncoveredList.remove(num));
+        uncoveredList.add(component);
+        return;
     }
 
+    /**
+     * Books the player's current component if they haven't reached the max (3).
+     * Replaces it with a new one.
+     *
+     * @param player the player booking the component
+     */
     public void bookComponent(Player player){
-        if(bookedMap.get(player) == null){
-            bookedMap.put(player, new ArrayList<>());
-            newComponent(player);
-        }
-        if (bookedMap.get(player).size() < 3 && viewMap.containsKey(player)) {
-            bookedMap.get(player).add(viewMap.get(player));
+        if (bookedMap.get(player).map(List::size).orElse(0) < 3 && viewMap.containsKey(player)) {
+            bookedMap.get(player).ifPresent(list -> list.add(viewMap.get(player)));
             newComponent(player);
         }
         else{
@@ -82,6 +124,12 @@ public class AssemblyProtocol {
         }
     }
 
+    /**
+     * Checks whether the specified deck is already occupied.
+     *
+     * @param num the deck index (1 to 3)
+     * @return true if occupied or invalid index, false otherwise
+     */
     public boolean checkOccupation(int num){
         if(num > 0 && num < 3){
             num--;
@@ -92,6 +140,11 @@ public class AssemblyProtocol {
         }
     }
 
+    /**
+     * Shuffles all cards from the blocked deck and the three side decks.
+     *
+     * @return a shuffled list of all cards
+     */
     public List<Card> shuffleDeck(){
         List<Card> mainDeck = new ArrayList<Card>();
         mainDeck.addAll(blockedDeck.getCards());
@@ -102,19 +155,46 @@ public class AssemblyProtocol {
         return mainDeck;
     }
 
+    /**
+     * Returns the list of uncovered components on the table.
+     */
     public List<Component> getUncoveredList(){
         return uncoveredList;
     }
 
-    public Map<Player, List<Component>> getBookedMap(){
+    /**
+     * Returns the map of booked components per player.
+     */
+    public Map<Player, Optional<List<Component>>> getBookedMap(){
         return bookedMap;
     }
+
+    /**
+     * Returns the current visible component for each player.
+     */
     public Map<Player, Component> getViewMap(){
         return viewMap;
     }
 
+
+    /**
+     * Returns the HourGlass object for managing time mechanics.
+     */
     public HourGlass getHourGlass() {
         return hourGlass;
     }
 
+    /**
+     * Takes and removes a booked component from the player's list based on index.
+     *
+     * @param player the player retrieving a booked component
+     * @param num the index of the component to take
+     * @return the component removed, or null if not found
+     */
+    public Component takeBookedComponentToPlace(Player player, int num){
+        Component component = bookedMap.get(player).filter(list -> num >= 0 && num < list.size())
+                .map(list -> list.remove(num))
+                .orElse(null);
+        return component;
+    }
 }

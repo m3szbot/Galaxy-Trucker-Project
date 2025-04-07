@@ -2,23 +2,48 @@ package it.polimi.ingsw.Application.AssemblyPhase;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Shipboard.*;
 
+/**
+ * ComponentChoice handles the user input when a player chooses
+ * a component from the uncovered list.
+ *
+ * @author Giacomo
+ */
 public class ComponentChoice implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private AssemblyView view;
 
-
+    /**
+     * Constructs a ComponentChoice state.
+     *
+     * @param view the game view for showing messages
+     * @param protocol the game logic handler
+     * @param player the current player
+     */
     public ComponentChoice(AssemblyView view, AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
         this.view = view;
         this.player = player;
     }
 
+    /**
+     * Displays the message prompting the player to choose a component.
+     *
+     * @param assemblyGame the current game instance
+     * @param view the view used to show the message
+     */
     @Override
     public void enter(AssemblyGame assemblyGame, AssemblyView view) {
         view.printComponentChoice();
     }
 
+    /**
+     * Handles the input used to choose a component from the uncovered list.
+     * If the choice is valid, the component is assigned to the player.
+     *
+     * @param input the index of the component
+     * @param assemblyGame the current game instance
+     */
     @Override
     public void handleInput(String input, AssemblyGame assemblyGame) {
         String imput = input.toLowerCase();
