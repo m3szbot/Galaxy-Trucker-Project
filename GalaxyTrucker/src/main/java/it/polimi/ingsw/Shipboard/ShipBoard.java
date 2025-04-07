@@ -109,12 +109,21 @@ public class ShipBoard {
         }
         //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
         List<Object> list = component.accept(visitor);
-        shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
+        if ((Integer) list.get(0) == 1){
+            shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
+        }else if ((Integer) list.get(0) == 2){
+            shipBoardAttributes.updateNumberDoubleEngines(1);
+        }
         if ((Float) list.get(1) == 1) {
             shipBoardAttributes.updateFirePower((Float) list.get(1));
         }
         else if ((Float) list.get(1) == 2) {
-
+            if(component.getFront().equals(SideType.Special)){
+                shipBoardAttributes.updateNumberForwardDoubleCannons(1);
+            }
+            else{
+                shipBoardAttributes.updateNumberNotForwardDoubleCannons(1);
+            }
         }
         shipBoardAttributes.updateCrewMembers((Integer) list.get(2));
         shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
@@ -145,6 +154,13 @@ public class ShipBoard {
             shipBoardAttributes.updateDrivingPower(-(Integer) list.get(0));
             if ((Float) list.get(1) == 1) {
                 shipBoardAttributes.updateFirePower(-(Float) list.get(1));
+            } else if ((Float) list.get(1) == 2) {
+                if(component.getFront().equals(SideType.Special)){
+                    shipBoardAttributes.updateNumberForwardDoubleCannons(-1);
+                }
+                else{
+                    shipBoardAttributes.updateNumberNotForwardDoubleCannons(-1);
+                }
             }
             shipBoardAttributes.updateCrewMembers(-(Integer) list.get(2));
             shipBoardAttributes.updateBatteryPower(-(Integer) list.get(3));
