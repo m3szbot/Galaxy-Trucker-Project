@@ -1,6 +1,10 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
+
+import java.util.List;
 
 /**
  * class that represent the card openspace
@@ -8,7 +12,7 @@ import it.polimi.ingsw.Shipboard.Player;
  * @author carlo
  */
 
-public class OpenSpace extends Card {
+public class OpenSpace extends Card implements Movable{
 
     public OpenSpace(CardBuilder cardBuilder) {
 
@@ -19,7 +23,9 @@ public class OpenSpace extends Card {
 
     @Override
 
-    public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+
+
 
     }
 }

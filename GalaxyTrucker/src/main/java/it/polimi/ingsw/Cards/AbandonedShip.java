@@ -1,7 +1,10 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Application.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
+
+import java.util.List;
 
 /**
  * class that represent the card abbandonedShip
@@ -9,7 +12,7 @@ import it.polimi.ingsw.Shipboard.Player;
  * @author carlo
  */
 
-public class AbandonedShip extends Card {
+public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGain{
 
     private int daysLost;
     private ElementType lossType;
@@ -29,7 +32,31 @@ public class AbandonedShip extends Card {
 
     @Override
 
-    public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+
+        for(Player player : flightBoard.getPlayerOrderList()){
+
+            if(player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= lossNumber){
+
+                message = "Do you want to solve the card ? ";
+
+                if(flightView.askPlayerGenericQuestion(player, message)){
+                    //player decide to solve the card
+
+                    inflictLoss(player, lossType, lossNumber, flightView);
+                    give(player, gainedCredit);
+                    changePlayerPosition(player, daysLost, flightBoard);
+
+                    message = player.getNickName() + "has solved the card!";
+                    flightView.sendMessageToAll(message);
+
+                    break;
+                }
+            }
+        }
+
+        message = "Nobody solved the card!";
+        flightView.sendMessageToAll(message);
 
     }
 

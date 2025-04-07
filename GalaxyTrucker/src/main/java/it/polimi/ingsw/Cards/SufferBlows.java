@@ -13,6 +13,9 @@ import it.polimi.ingsw.Shipboard.Player;
  * @author carlo
  */
 
+//Check that the remove method in shipboard does everything else, including checking if the ship was destroyed
+//in 2 different pieces.
+
 public interface SufferBlows {
 
     /**

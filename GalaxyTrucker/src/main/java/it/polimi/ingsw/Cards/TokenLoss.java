@@ -19,7 +19,7 @@ public interface TokenLoss {
 
     /**
      *
-     * @param player player that is victim of the loss
+     * @param player target player
      * @param lossType can be either inhabitants or goods
      * @param quantity quantity of the loss
      * @param flightView class to comunicate with the player

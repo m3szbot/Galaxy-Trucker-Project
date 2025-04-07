@@ -14,6 +14,7 @@ public class ShipBoard {
     private boolean[][] matr;
     private ShipBoardAttributes shipBoardAttributes;
 
+
     /**
      * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement

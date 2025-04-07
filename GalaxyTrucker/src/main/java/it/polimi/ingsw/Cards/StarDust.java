@@ -1,6 +1,10 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
+
+import java.util.List;
 
 /**
  * class that represent the card StarDust.
@@ -8,7 +12,7 @@ import it.polimi.ingsw.Shipboard.Player;
  * @author carlo
  */
 
-public class StarDust extends Card {
+public class StarDust extends Card implements Movable{
 
 
     public StarDust(CardBuilder cardBuilder) {
@@ -20,11 +24,13 @@ public class StarDust extends Card {
 
     @Override
 
-    public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
-    }
+        for(int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--){
 
-    private int calculateExposedConnectors(Player player) {
+            changePlayerPosition(flightBoard.getPlayerOrderList().get(i), -flightBoard.getPlayerOrderList().get(i).getShipBoard().countExternalJunctions(), flightBoard);
+
+        }
 
     }
 
