@@ -14,17 +14,6 @@ import it.polimi.ingsw.Application.GameType;
  */
 
 public class FlightBoard {
-    // constants - game types:
-    private final int normalCardCount = 12;
-    private final int testCardCount = 8;
-    private final int normalNumberOfTiles = 24;
-    private final int[] normalStartingTiles = {1, 2, 4, 7};
-    private final int testNumberOfTiles = 18;
-    private final int[] testStartingTiles = {1, 2, 3, 5};
-
-    // attributes
-    // stack of event cards
-    private Stack<Card> cardsStack;
     // numberOfTiles, startingTiles selected based on gameType
     private final int numberOfTiles;
     private final int[] startingTiles;
@@ -32,6 +21,8 @@ public class FlightBoard {
     private Map<Player, Integer> playerTilesMap;
     // Arraylist
     private List<Player> playerOrderList;
+    // stack of event cards
+    private Stack<Card> cardsStack;
 
     /**
      * FlightBoard constructor
@@ -39,78 +30,35 @@ public class FlightBoard {
      * @param gameType Game type to set tiles
      */
     public FlightBoard(GameType gameType, List<Card> cardsList) {
-        int cardCount;
-        cardsStack = new Stack<>();
+        // normal game
+        int cardCount = 12;
+        int numberOfTiles = 24;
+        int[] startingTiles = new int[]{1, 2, 4, 7};
+        // test game
+        if (gameType == GameType.TestGame) {
+            cardCount = 8;
+            numberOfTiles = 18;
+            startingTiles = new int[]{1, 2, 3, 5};
+        }
+        // assign attributes
+        this.numberOfTiles = numberOfTiles;
+        this.startingTiles = new int[startingTiles.length];
+        System.arraycopy(startingTiles, 0, this.startingTiles, 0, startingTiles.length);
+
         playerTilesMap = new HashMap<>();
         playerOrderList = new ArrayList<>();
-        if (gameType == GameType.NormalGame) {
-            cardCount = normalCardCount;
-            this.numberOfTiles = normalNumberOfTiles;
-            this.startingTiles = new int[normalStartingTiles.length];
-            System.arraycopy(normalStartingTiles, 0, startingTiles, 0, normalStartingTiles.length);
-        } else {
-            cardCount = testCardCount;
-            this.numberOfTiles = testNumberOfTiles;
-            this.startingTiles = new int[testStartingTiles.length];
-            System.arraycopy(testStartingTiles, 0, startingTiles, 0, testStartingTiles.length);
-        }
+        cardsStack = new Stack<>();
         for (int i = 0; i < cardCount; i++)
             cardsStack.push(cardsList.get(i));
     }
 
-    public List<Player> getPlayerOrderList(){
-        return playerOrderList;
-    }
-
     /**
-     * Get new card from the cardStack
+     * Return possible starting tiles to choose from
      *
-     * @return new card
+     * @return startingTiles
      */
-    public Card getNewCard() {
-        return cardsStack.pop();
-    }
-
-    /**
-     * Check if player is present on FlightBoard
-     *
-     * @param player Player to examine
-     * @return true if player is present, false if not present
-     */
-    private boolean isPresent(Player player) {
-        return (playerTilesMap.containsKey(player) && playerOrderList.contains(player));
-    }
-
-    /**
-     * Add player to flight board, if not already present
-     *
-     * @param player Player to add
-     * @param tile   Player's starting position
-     */
-    // add player and it's position to the flight board
-    public void addPlayer(Player player, int tile) {
-        if (!isPresent(player)) {
-            this.playerTilesMap.put(player, tile);
-            this.playerOrderList.add(player);
-            checkBoard();
-        } else {
-            // throw exception
-        }
-    }
-
-    /**
-     * Increment player tiles by given value, if player is present
-     *
-     * @param player Player to act on
-     * @param tiles  Value of increment of tiles
-     */
-    public void incrementPlayerTile(Player player, int tiles) {
-        if (isPresent(player)) {
-            this.playerTilesMap.compute(player, (key, value) -> value + tiles);
-            checkBoard();
-        } else {
-            // throw exception
-        }
+    public int[] getStartingTiles() {
+        return startingTiles;
     }
 
     /**
@@ -124,7 +72,7 @@ public class FlightBoard {
             return this.playerTilesMap.get(player);
         else {
             // throw exception
-            return 0;
+            throw new NoSuchElementException("player not present");
         }
     }
 
@@ -139,45 +87,65 @@ public class FlightBoard {
             return (playerOrderList.indexOf(player) + 1);
         } else {
             // throw exception
-        }
-        return 0;
-    }
-
-    /**
-     * Check FlightBoard for lapped players and update order based on tiles
-     */
-    public void checkBoard() {
-        checkLappedPlayers();
-        updatePlayerOrderList();
-    }
-
-    /**
-     * Check for lapped players and remove them from the FlightBoard
-     * does not update order (part of checkBoard)
-     */
-    private void checkLappedPlayers() {
-        for (Map.Entry<Player, Integer> current : playerTilesMap.entrySet()) {
-            for (Map.Entry<Player, Integer> other : playerTilesMap.entrySet()) {
-                if (!current.equals(other) &&
-                        Math.abs(current.getValue() - other.getValue()) > numberOfTiles)
-                    removePlayer(current.getKey());
-            }
+            throw new NoSuchElementException("player not present");
         }
     }
 
     /**
-     * Update playerOrderList based on playerTilesMap
+     * Return playerOrderList
+     *
+     * @return playerOrderList
      */
-    private void updatePlayerOrderList() {
-        List<Map.Entry<Player, Integer>> sortedMap = new ArrayList<>(playerTilesMap.entrySet());
-        sortedMap.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        playerOrderList = sortedMap.stream().map(Map.Entry::getKey).collect(Collectors.toList());
+    public List<Player> getPlayerOrderList() {
+        return playerOrderList;
     }
 
+    /**
+     * Get new card from the cardStack
+     *
+     * @return new card
+     */
+    public Card getNewCard() {
+        return cardsStack.pop();
+    }
 
     /**
-     * Remove player from FlightBoard, if present
-     * does not update order (part of checkLappedPlayers)
+     * Add player to flight board, if not already present
+     *
+     * @param player Player to add
+     * @param tile   Player's starting position
+     */
+    // add player and it's position to the flight board
+    public void addPlayer(Player player, int tile) {
+        if (!isPresent(player)) {
+            this.playerTilesMap.put(player, tile);
+            this.playerOrderList.add(player);
+            checkFlightBoard();
+        } else {
+            // throw exception
+            throw new IllegalArgumentException("player already present, no duplicates allowed");
+        }
+    }
+
+    /**
+     * Increment player tiles by given value, if player is present
+     *
+     * @param player Player to act on
+     * @param tiles  Value of increment of tiles
+     */
+    public void incrementPlayerTile(Player player, int tiles) {
+        if (isPresent(player)) {
+            this.playerTilesMap.compute(player, (_, value) -> (value + tiles));
+            checkFlightBoard();
+        } else {
+            // throw exception
+            throw new NoSuchElementException("player not present");
+        }
+    }
+
+    /**
+     * Remove player from FlightBoard if present, and update playerOrderList
+     * must update order! (public)
      *
      * @param player Player to remove
      */
@@ -185,8 +153,66 @@ public class FlightBoard {
         if (isPresent(player)) {
             playerTilesMap.remove(player);
             playerOrderList.remove(player);
+            updatePlayerOrderList();
         } else {
             // throw exception
+            throw new NoSuchElementException("player not present");
         }
+    }
+
+    /**
+     * Update playerOrderList and remove lapped players
+     * to call after every modification to the players
+     */
+    private void checkFlightBoard() {
+        // update playerOrderList - necessary for removal
+        updatePlayerOrderList();
+
+        // remove lapped players
+        // toRemove list to avoid concurrent modification issues
+        List<Player> toRemove = new ArrayList<>();
+        Player low, high;
+        // start from low as it gets removed
+        for (int i = playerOrderList.size() - 1; i > 1; i--) {
+            low = playerOrderList.get(i);
+            for (int j = 0; j < i; j++) {
+                high = playerOrderList.get(j);
+                if (playerTilesMap.get(high) - playerTilesMap.get(low) > this.numberOfTiles) {
+                    toRemove.add(low);
+                    // skip to next low
+                    break;
+                }
+            }
+        }
+        // remove lapped players
+        // removePlayer updates playerOrderList
+        for (Player player : toRemove) {
+            removePlayer(player);
+        }
+    }
+
+    /**
+     * Update playerOrderList based on playerTilesMap positions (highest is first)
+     */
+    private void updatePlayerOrderList() {
+        List<Map.Entry<Player, Integer>> sortedMap = new ArrayList<>(playerTilesMap.entrySet());
+        sortedMap.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        playerOrderList = sortedMap.stream().map(Map.Entry::getKey).collect(Collectors.toList());
+    }
+
+    /**
+     * Check if player is present on FlightBoard
+     *
+     * @param player Player to examine
+     * @return true if player is present, false if not present
+     */
+    private boolean isPresent(Player player) {
+        if (playerTilesMap.containsKey(player) && !playerOrderList.contains(player)) {
+            throw new IllegalStateException("player is present in playerTilesMap but not in playerOrderList ");
+        }
+        if (!playerTilesMap.containsKey(player) && playerOrderList.contains(player)) {
+            throw new IllegalStateException("player is present in playerOrderList but not in playerTilesMap");
+        }
+        return (playerTilesMap.containsKey(player) && playerOrderList.contains(player));
     }
 }
