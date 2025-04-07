@@ -45,7 +45,7 @@ public class AssemblyState implements GameState {
         switch (input.toLowerCase()) {
             case "place":
                 actionTaken = true;
-                assemblyGame.setState(new AssemblyState(view, protocol,player));
+                assemblyGame.setState(new ComponentPlacingState(view, protocol,player));
                 break;
             case "draw":
                 actionTaken = true;

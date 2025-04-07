@@ -28,7 +28,7 @@ public class AssemblyView {
         }
     }
     public void printErrorComponentChoiceMessage(){
-        System.out.println("Error in comonent choice");
+        System.out.println("Error in component choice");
     }
     public void printErrorInCommandMessage(){
         System.out.println("Invalid command");
