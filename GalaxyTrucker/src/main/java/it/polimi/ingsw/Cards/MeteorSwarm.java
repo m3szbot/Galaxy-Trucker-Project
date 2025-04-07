@@ -1,6 +1,10 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
+
+import java.util.List;
 
 /**
  * Class that represent the card meteorswarm
@@ -8,7 +12,7 @@ import it.polimi.ingsw.Shipboard.Player;
  * @author carlo
  */
 
-public class MeteorSwarm extends Card {
+public class MeteorSwarm extends Card implements SufferBlows{
 
     private Blow[] blows;
     private ElementType blowType;
@@ -24,7 +28,12 @@ public class MeteorSwarm extends Card {
 
     @Override
 
-    public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+
+        for(Player player : flightBoard.getPlayerOrderList()){
+
+            hit(player, blows, blowType, flightView);
+        }
 
     }
 }

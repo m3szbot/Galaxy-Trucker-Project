@@ -58,12 +58,16 @@ public class FlightBoard {
             cardsStack.push(cardsList.get(i));
     }
 
+    public List<Player> getPlayerOrderList(){
+        return playerOrderList;
+    }
+
     /**
      * Get new card from the cardStack
      *
      * @return new card
      */
-    private Card getNewCard() {
+    public Card getNewCard() {
         return cardsStack.pop();
     }
 

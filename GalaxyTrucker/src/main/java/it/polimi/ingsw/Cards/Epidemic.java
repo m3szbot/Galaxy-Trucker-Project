@@ -1,6 +1,10 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
+
+import java.util.List;
 
 /**
  * class that represent the card epidemic
@@ -19,7 +23,7 @@ public class Epidemic extends Card {
 
     @Override
 
-    public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
 
     }

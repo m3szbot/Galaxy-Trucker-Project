@@ -23,7 +23,10 @@ public interface Requirement {
      * @author Carlo
      */
 
+    //need to add the possibility of increasing firePower of enginePower with batteries.
+
     default boolean isSatisfying(Player player, ElementType requirementType, int quantity) {
+        int addedPower = 0;
 
         if (requirementType == ElementType.CrewMember) {
 
@@ -32,13 +35,17 @@ public interface Requirement {
             }
 
             return false;
-        } else {
+        } else if (requirementType == ElementType.FirePower){
 
             if (player.getShipBoard().getShipBoardAttributes().getFirePower() >= quantity) {
                 return true;
             }
 
             return false;
+        }
+        else{
+
+
         }
 
     }

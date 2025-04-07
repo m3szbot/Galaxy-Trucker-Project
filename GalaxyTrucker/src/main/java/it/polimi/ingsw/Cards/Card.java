@@ -1,5 +1,11 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Shipboard.Player;
+
+import java.util.List;
+
 /**
  * Abstract class that is the superclass of every card class.
  *
@@ -10,8 +16,7 @@ public abstract class Card {
 
     protected int cardLevel;
     protected String cardName;
-    protected boolean solved = false;
-    protected String informationString;
+    protected String message;
 
     /**
      * Abstract method that must be defined for every card class. It is
@@ -23,15 +28,9 @@ public abstract class Card {
      * MVC.
      */
 
-    /*
 
-    public abstract void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView);
+    public abstract void resolve(FlightBoard flightBoard, FlightView flightView);
 
-
-     */
-    protected boolean isSolved() {
-        return solved;
-    }
 
     public int getCardLevel() {
         return cardLevel;

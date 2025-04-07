@@ -4,13 +4,15 @@ import it.polimi.ingsw.Application.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
+import java.util.List;
+
 /**
  * Class that represent the card combat
  *
  * @author carlo
  */
 
-public class CombatZone extends Card {
+public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movable, TokenLoss{
 
     private int daysLost;
     private int lossNumber;
@@ -32,20 +34,27 @@ public class CombatZone extends Card {
 
     @Override
 
-    public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
     }
 
     /**
-     * private method that is used in the resolve method.
+     * private method that is used in the resolve method
      *
-     * @return the player with the weakest engine power or fire power.
+     * @return the player with the weakest engine power
      */
 
     private Player calculateWeakestEnginePower() {
 
 
+
     }
+
+    /**
+     * private method that is used in the resolve method
+     *
+     * @return the player with the weakest fire power
+     */
 
     private Player calculateWeakestFirePower() {
 

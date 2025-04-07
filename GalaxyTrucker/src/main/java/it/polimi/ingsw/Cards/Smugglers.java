@@ -1,6 +1,10 @@
 package it.polimi.ingsw.Cards;
 
 import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
+
+import java.util.List;
 
 /**
  * class that represent the card smugglers
@@ -8,7 +12,7 @@ import it.polimi.ingsw.Shipboard.Player;
  * @author carlo
  */
 
-public class Smugglers extends Card {
+public class Smugglers extends Card implements Movable, Requirement, GoodsGain, TokenLoss{
 
     private int daysLost;
     private ElementType requirementType;
@@ -31,7 +35,7 @@ public class Smugglers extends Card {
 
     @Override
 
-    public void resolve(Player[] players, FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
     }
 }
