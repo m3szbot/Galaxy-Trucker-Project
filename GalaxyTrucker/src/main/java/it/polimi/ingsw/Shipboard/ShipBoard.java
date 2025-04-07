@@ -112,6 +112,9 @@ public class ShipBoard {
         if ((Float) list.get(1) == 1) {
             shipBoardAttributes.updateFirePower((Float) list.get(1));
         }
+        else if ((Float) list.get(1) == 2) {
+
+        }
         shipBoardAttributes.updateCrewMembers((Integer) list.get(2));
         shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
         boolean[] sides = (boolean[]) list.get(4);

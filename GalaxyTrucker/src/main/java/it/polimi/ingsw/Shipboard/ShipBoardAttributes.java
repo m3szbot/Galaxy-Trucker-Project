@@ -17,6 +17,9 @@ public class ShipBoardAttributes {
     private int destroyedComponents; // Number of destroyed components
     private int credits;
     private int goods[];
+    private int numberForwardDoubleCannons;
+    private int numberNotForwardDoubleCannons;
+    private int numberDoubleEngines;
 
     /**
      * Constructor for ShipBoard.
@@ -37,6 +40,9 @@ public class ShipBoardAttributes {
         destroyedComponents = 0;
         credits = 0;
         goods = new int[]{0, 0, 0, 0};
+        numberForwardDoubleCannons = 0;
+        numberNotForwardDoubleCannons = 0;
+        numberDoubleEngines = 0;
     }
 
     //metodo che si chiama solo una volta all'inizio e inizializza red slot, firepower, driving power e crew
@@ -281,6 +287,28 @@ public class ShipBoardAttributes {
      */
     public int[] getGoods() {
         return this.goods;
+    }
+
+    public int getNumberForwardDoubleCannons() {
+        return numberForwardDoubleCannons;
+    }
+
+    public int getNumberNotForwardDoubleCannons() {
+        return numberNotForwardDoubleCannons;
+    }
+
+    public int getNumberDoubleEngines() {
+        return numberDoubleEngines;
+    }
+
+    public void updateNumberForwardDoubleCannons(int number) {
+        this.numberForwardDoubleCannons = this.numberForwardDoubleCannons +  number;
+    }
+    public void updateNumberNotForwardDoubleCannons(int number) {
+        this.numberNotForwardDoubleCannons = this.numberNotForwardDoubleCannons + number;
+    }
+    public void updateNumberDoubleEngines(int number) {
+        this.numberDoubleEngines = this.numberDoubleEngines + number;
     }
 
 }
