@@ -30,9 +30,14 @@ public class MeteorSwarm extends Card implements SufferBlows{
 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
+        //leader rolling the dices for each blow
+        for(int i = 0; i < blows.length; i++){
+            blows[i].rollDice();
+        }
+
         for(Player player : flightBoard.getPlayerOrderList()){
 
-            hit(player, blows, blowType, flightView);
+            hit(player, blows, blowType,flightView);
         }
 
     }

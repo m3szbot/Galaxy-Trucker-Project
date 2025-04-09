@@ -30,16 +30,13 @@ public interface SufferBlows {
 
     default void hit(Player player, Blow[] blows, ElementType blowType, FlightView flightView) {
 
-        int randomNumber, i, leftCoord = 0, rightCoord = 0;
+        int i, leftCoord = 0, rightCoord = 0;
         int rows = player.getShipBoard().getMatrixRows();
         int cols = player.getShipBoard().getMatrixCols();
         boolean componentFlag = false, hitFlag = false;
         String direction, message;
 
         for(Blow blow: blows) {
-
-            randomNumber = (int) (Math.random() * 13); //Generating random number from 0 to 12.
-
 
             //blow coming from front
             if (blow.getDirection() == 0) {
@@ -48,10 +45,10 @@ public interface SufferBlows {
 
                 for (i = 0; i < rows; i++) {
 
-                    if (player.getShipBoard().getComponent(i, randomNumber) != null) {
+                    if (player.getShipBoard().getComponent(i, blow.getRoll()) != null) {
                         componentFlag = true;
                         leftCoord = i;
-                        rightCoord = randomNumber;
+                        rightCoord = blow.getRoll();
                         break;
                     }
 
@@ -66,9 +63,9 @@ public interface SufferBlows {
 
                 for (i = cols - 1; i >= 0; i--) {
 
-                    if (player.getShipBoard().getComponent(randomNumber, i) != null) {
+                    if (player.getShipBoard().getComponent(blow.getRoll(), i) != null) {
                         componentFlag = true;
-                        leftCoord = randomNumber;
+                        leftCoord = blow.getRoll();
                         rightCoord = i;
                         break;
                     }
@@ -83,10 +80,10 @@ public interface SufferBlows {
 
                 for (i = rows - 1; i >= 0; i--) {
 
-                    if (player.getShipBoard().getComponent(i, randomNumber) != null) {
+                    if (player.getShipBoard().getComponent(i, blow.getRoll()) != null) {
                         componentFlag = true;
                         leftCoord = i;
-                        rightCoord = randomNumber;
+                        rightCoord = blow.getRoll();
                         break;
                     }
                 }
@@ -99,9 +96,9 @@ public interface SufferBlows {
 
                 for (i = 0; i < cols; i++) {
 
-                    if (player.getShipBoard().getComponent(randomNumber, i) != null) {
+                    if (player.getShipBoard().getComponent(blow.getRoll(), i) != null) {
                         componentFlag = true;
-                        leftCoord = randomNumber;
+                        leftCoord = blow.getRoll();
                         rightCoord = i;
                         break;
                     }
@@ -177,15 +174,13 @@ public interface SufferBlows {
                         int cannonLeftCoordinate = 0, cannonRightCoordinate = 0;
                         boolean hasCannon = false;
 
-                        if (blow.getDirection() == 0 || blow.getDirection() == 2) {
+                        if (blow.getDirection() == 0) {
 
                             for (i = 0; i < rows; i++) {
 
                                 if (player.getShipBoard().getComponent(i, rightCoord).getComponentName().equals("Cannon")
-                                        && ((player.getShipBoard().getComponent(i, rightCoord).getFront() == SideType.Special
-                                        && blow.getDirection() == 0)
-                                        || (player.getShipBoard().getComponent(i, rightCoord).getBack() == SideType.Special)
-                                        && blow.getDirection() == 2)) {
+                                        && (player.getShipBoard().getComponent(i, rightCoord).getFront() == SideType.Special
+                                        && blow.getDirection() == 0)) {
 
                                     //there is a cannon that can hit the blow
 
@@ -198,17 +193,54 @@ public interface SufferBlows {
                                 }
                             }
 
-                        } else {
+                        }
+                        else if(blow.getDirection() == 1 || blow.getDirection() == 3){
+
+                            int temp;
 
                             for (i = 0; i < cols; i++) {
 
-                                if (player.getShipBoard().getComponent(leftCoord, i).getComponentName().equals("Cannon")
-                                        && ((player.getShipBoard().getComponent(leftCoord, i).getFront() == SideType.Special
-                                        && blow.getDirection() == 0)
-                                        || (player.getShipBoard().getComponent(leftCoord, i).getBack() == SideType.Special)
-                                        && blow.getDirection() == 2)) {
+                                temp = leftCoord;
 
-                                    cannonLeftCoordinate = leftCoord;
+                                if (player.getShipBoard().getComponent(temp, i).getComponentName().equals("Cannon")
+                                        && ((player.getShipBoard().getComponent(temp, i).getRight() == SideType.Special
+                                        && blow.getDirection() == 1)
+                                        || (player.getShipBoard().getComponent(temp, i).getLeft() == SideType.Special)
+                                        && blow.getDirection() == 3)) {
+
+                                    cannonLeftCoordinate = temp;
+                                    cannonRightCoordinate = i;
+
+                                    hasCannon = true;
+                                    break;
+
+                                }
+
+                                temp = leftCoord + 1;
+
+                                if(player.getShipBoard().getComponent(temp, i).getComponentName().equals("Cannon")
+                                        && ((player.getShipBoard().getComponent(temp, i).getRight() == SideType.Special
+                                        && blow.getDirection() == 1)
+                                        || (player.getShipBoard().getComponent(temp, i).getLeft() == SideType.Special)
+                                        && blow.getDirection() == 3)) {
+
+                                    cannonLeftCoordinate = temp;
+                                    cannonRightCoordinate = i;
+
+                                    hasCannon = true;
+                                    break;
+
+                                }
+
+                                temp = leftCoord - 1;
+
+                                if(player.getShipBoard().getComponent(temp, i).getComponentName().equals("Cannon")
+                                        && ((player.getShipBoard().getComponent(temp, i).getRight() == SideType.Special
+                                        && blow.getDirection() == 1)
+                                        || (player.getShipBoard().getComponent(temp, i).getLeft() == SideType.Special)
+                                        && blow.getDirection() == 3)) {
+
+                                    cannonLeftCoordinate = temp;
                                     cannonRightCoordinate = i;
 
                                     hasCannon = true;
@@ -216,6 +248,53 @@ public interface SufferBlows {
 
                                 }
                             }
+                        }
+                        else{
+                            //blow come from the back
+                            int temp;
+
+                            for (i = 0; i < rows; i++) {
+
+                                temp = rightCoord;
+
+                                if (player.getShipBoard().getComponent(i, temp).getComponentName().equals("Cannon")
+                                        && ((player.getShipBoard().getComponent(i, temp).getBack() == SideType.Special))) {
+
+                                    cannonLeftCoordinate = i;
+                                    cannonRightCoordinate = temp;
+
+                                    hasCannon = true;
+                                    break;
+
+                                }
+
+                                temp = leftCoord + 1;
+
+                                if(player.getShipBoard().getComponent(i, temp).getComponentName().equals("Cannon")
+                                        && ((player.getShipBoard().getComponent(i, temp).getBack() == SideType.Special))) {
+
+                                    cannonLeftCoordinate = i;
+                                    cannonRightCoordinate = temp;
+
+                                    hasCannon = true;
+                                    break;
+
+                                }
+
+                                temp = leftCoord - 1;
+
+                                if(player.getShipBoard().getComponent(i, temp).getComponentName().equals("Cannon")
+                                        && ((player.getShipBoard().getComponent(i, temp).getBack() == SideType.Special))) {
+
+                                    cannonLeftCoordinate = i;
+                                    cannonRightCoordinate = temp;
+
+                                    hasCannon = true;
+                                    break;
+
+                                }
+                            }
+
 
                         }
 
@@ -232,7 +311,7 @@ public interface SufferBlows {
 
                                     if(flightView.askPlayerGenericQuestion(player, message)){ //player decide to defend itself
 
-                                        int[] coordinates = new int[2];
+                                        int[] coordinates;
 
                                         message = "Enter coordinate of the battery want to use: ";
 
@@ -368,5 +447,4 @@ public interface SufferBlows {
             }
         }
     }
-
 }

@@ -19,7 +19,7 @@ public interface CreditsGain {
      * @author Carlo
      */
 
-    default void give(Player player, int creditNumber) {
+    default void giveCredits(Player player, int creditNumber) {
 
         player.getShipBoard().getShipBoardAttributes().updateCredits(creditNumber);
 

@@ -12,11 +12,11 @@ import java.util.List;
  * @author carlo
  */
 
-public class Smugglers extends Card implements Movable, Requirement, GoodsGain, TokenLoss{
+public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, FirePowerChoice{
 
     private int daysLost;
-    private ElementType requirementType;
     private ElementType lossType;
+    private int requirementNumber;
     private int lossNumber;
     private int[] goods;
 
@@ -25,10 +25,10 @@ public class Smugglers extends Card implements Movable, Requirement, GoodsGain, 
         this.cardLevel = cardBuilder.cardLevel;
         this.cardName = cardBuilder.cardName;
         this.daysLost = cardBuilder.daysLost;
-        this.requirementType = cardBuilder.requirementType;
         this.lossType = cardBuilder.lossType;
         this.lossNumber = cardBuilder.lossNumber;
         this.goods = cardBuilder.goods;
+        this.requirementNumber = cardBuilder.requirementNumber;
 
 
     }
@@ -36,6 +36,75 @@ public class Smugglers extends Card implements Movable, Requirement, GoodsGain, 
     @Override
 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
+        int numberOfPlayers = flightBoard.getPlayerOrderList().size(), i;
+        float chosenFirePower;
+        String message;
+        AttackStates[] results = new AttackStates[numberOfPlayers];
 
+        for(i = 0; i < numberOfPlayers; i++){
+
+            chosenFirePower = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
+
+            if(chosenFirePower > requirementNumber){
+
+                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has defeated the" +
+                        "enemies!";
+                flightView.sendMessageToAll(message);
+                results[i] = AttackStates.EnemyDefeated;
+                break;
+
+            }
+            else if(chosenFirePower == requirementNumber){
+
+                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " equalized the" +
+                        "enemies!";
+                results[i] = AttackStates.Equalized;
+                flightView.sendMessageToAll(message);
+
+            }
+            else{
+
+                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has been" +
+                        " defeated by the enemies!";
+                results[i] = AttackStates.PlayerDefeated;
+                flightView.sendMessageToAll(message);
+
+            }
+
+        }
+
+        for(i = 0; i < numberOfPlayers; i++){
+
+            if(results[i] == AttackStates.EnemyDefeated){
+
+                message = "Would you like to collect the reward for defeating the enemies ?";
+
+                if(flightView.askPlayerGenericQuestion(flightBoard.getPlayerOrderList().get(i), message)){
+
+                    message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() +
+                            "has collected the reward!";
+
+                    giveGoods(flightBoard.getPlayerOrderList().get(i), goods, flightView);
+                    changePlayerPosition(flightBoard.getPlayerOrderList().get(i), daysLost, flightBoard);
+                    flightView.sendMessageToAll(message);
+
+                }
+                else{
+
+                    message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() +
+                            "hasn't collected the reward!";
+
+                    flightView.sendMessageToAll(message);
+                }
+
+                break;
+            }
+            else if(results[i] == AttackStates.PlayerDefeated){
+
+                inflictLoss(flightBoard.getPlayerOrderList().get(i), lossType, lossNumber, flightView);
+
+            }
+
+        }
     }
 }

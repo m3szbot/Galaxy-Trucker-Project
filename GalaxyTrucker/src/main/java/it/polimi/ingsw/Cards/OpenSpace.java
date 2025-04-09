@@ -12,7 +12,7 @@ import java.util.List;
  * @author carlo
  */
 
-public class OpenSpace extends Card implements Movable{
+public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
     public OpenSpace(CardBuilder cardBuilder) {
 
@@ -25,7 +25,21 @@ public class OpenSpace extends Card implements Movable{
 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
+        int numberOfPlayers = flightBoard.getPlayerOrderList().size();
+        int enginePowerChosen;
+        List<Player> players = flightBoard.getPlayerOrderList();
 
+        for(int i = 0; i < numberOfPlayers; i++){
+
+            enginePowerChosen = chooseEnginePower(players.get(i), flightView);
+            changePlayerPosition(players.get(i), enginePowerChosen, flightBoard);
+
+            message = "Player " + players.get(i).getNickName() + " has moved " +
+                    enginePowerChosen + " position forward!";
+
+            flightView.sendMessageToAll(message);
+
+        }
 
     }
 }

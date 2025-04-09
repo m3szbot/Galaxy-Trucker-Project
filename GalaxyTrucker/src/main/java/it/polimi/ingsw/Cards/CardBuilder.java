@@ -75,6 +75,8 @@ public class CardBuilder {
         return this;
     }
 
+    //If a planet is not present on the card, just pass the null value
+
     public CardBuilder buildPlanets(int[] planet1, int[] planet2, int[] planet3, int[] planet4) {
         this.planet1 = planet1;
         this.planet2 = planet2;

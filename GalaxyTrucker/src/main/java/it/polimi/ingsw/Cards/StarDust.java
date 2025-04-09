@@ -6,6 +6,8 @@ import it.polimi.ingsw.Shipboard.Player;
 
 import java.util.List;
 
+//check that the count external junctions method in shipBoard does what it is supposed to do
+
 /**
  * class that represent the card StarDust.
  *
@@ -26,9 +28,11 @@ public class StarDust extends Card implements Movable{
 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
+        List<Player> players = flightBoard.getPlayerOrderList();
+
         for(int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--){
 
-            changePlayerPosition(flightBoard.getPlayerOrderList().get(i), -flightBoard.getPlayerOrderList().get(i).getShipBoard().countExternalJunctions(), flightBoard);
+            changePlayerPosition(players.get(i), -players.get(i).getShipBoard().countExternalJunctions(), flightBoard);
 
         }
 

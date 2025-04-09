@@ -36,6 +36,8 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
         for(Player player : flightBoard.getPlayerOrderList()){
 
+            //player can afford to lose some crew members to solve the card if he wants to
+
             if(player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= lossNumber){
 
                 message = "Do you want to solve the card ? ";
@@ -44,7 +46,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                     //player decide to solve the card
 
                     inflictLoss(player, lossType, lossNumber, flightView);
-                    give(player, gainedCredit);
+                    giveCredits(player, gainedCredit);
                     changePlayerPosition(player, daysLost, flightBoard);
 
                     message = player.getNickName() + "has solved the card!";

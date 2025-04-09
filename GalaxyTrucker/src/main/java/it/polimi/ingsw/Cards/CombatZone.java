@@ -4,15 +4,13 @@ import it.polimi.ingsw.Application.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
-import java.util.List;
-
 /**
  * Class that represent the card combat
  *
  * @author carlo
  */
 
-public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movable, TokenLoss{
+public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movable, TokenLoss, EnginePowerChoice, FirePowerChoice {
 
     private int daysLost;
     private int lossNumber;
@@ -36,30 +34,80 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
+        int numberOfPlayers = flightBoard.getPlayerOrderList().size();
+        int[] enginePowers = new int[numberOfPlayers];
+        float[] firePowers = new float[numberOfPlayers];
+        Player lowestInhabitantNumberPlayer, weakestEnginePowerPlayer, weakestFirePowerPlayer;
+        String message;
+
+        //calculating player with the lowest inhabitant number
+
+        lowestInhabitantNumberPlayer = calculateSmallestCrew(flightBoard);
+
+        //letting the players choose their firePower, from the leader backwards
+
+        for(int i = 0; i < numberOfPlayers; i++){
+
+            firePowers[i] = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
+
+        }
+
+        //letting the players choose their enginePower, from the leader backwards
+
+        for(int i = 0; i < numberOfPlayers; i++){
+
+            enginePowers[i] = chooseEnginePower(flightBoard.getPlayerOrderList().get(i), flightView);
+
+        }
+
+        //calculating the index with the lowest firePower.
+
+        int minIndex = 0;
+
+        for(int i = 0; i < numberOfPlayers; i++){
+
+           if(firePowers[i] < firePowers[minIndex]){
+               minIndex = i;
+           }
+
+        }
+
+        weakestFirePowerPlayer = flightBoard.getPlayerOrderList().get(minIndex);
+
+        //calculating the index with the lowest enginePower.
+
+        minIndex = 0;
+
+        for(int i = 0; i < numberOfPlayers; i++){
+
+            if(enginePowers[i] < enginePowers[minIndex]){
+                minIndex = i;
+            }
+
+        }
+
+        weakestEnginePowerPlayer = flightBoard.getPlayerOrderList().get(minIndex);
+
+        //giving the various penalties to players
+
+        changePlayerPosition(lowestInhabitantNumberPlayer, -daysLost, flightBoard);
+
+        message = "Player " + lowestInhabitantNumberPlayer.getNickName() + " lost " + daysLost +
+                " flight days as he is the one with the lowest number of inhabitants!";
+        flightView.sendMessageToAll(message);
+
+        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, flightView);
+
+        message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
+                " crew members as he is the one with the weakest engine power!";
+        flightView.sendMessageToAll(message);
+
+        //rolling the dice for each shot and then hitting
+        for(int i = 0; i < blows.length; i++){
+            blows[i].rollDice();
+        }
+        hit(weakestFirePowerPlayer, blows, blowType, flightView);
+
     }
-
-    /**
-     * private method that is used in the resolve method
-     *
-     * @return the player with the weakest engine power
-     */
-
-    private Player calculateWeakestEnginePower() {
-
-
-
-    }
-
-    /**
-     * private method that is used in the resolve method
-     *
-     * @return the player with the weakest fire power
-     */
-
-    private Player calculateWeakestFirePower() {
-
-
-    }
-
 
 }
