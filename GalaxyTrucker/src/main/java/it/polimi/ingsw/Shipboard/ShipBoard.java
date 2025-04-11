@@ -14,6 +14,13 @@ public class ShipBoard {
     private boolean[][] matr;
     private ShipBoardAttributes shipBoardAttributes;
 
+    public Component[][] getStructureMatrix() {
+        return structureMatrix;
+    }
+    public boolean[][] getMatr() {
+        return matr;
+    }
+
 
     /**
      * Constructs a ShipStructure instance.

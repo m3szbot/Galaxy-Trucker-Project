@@ -96,12 +96,10 @@ public class ShipBoardAttributes {
     /**
      * Updates the battery power of the ship.
      *
-     * @param value Amount to increase the battery power by.
+     * @param value Amount to decrease the battery power by.
      * @author Giacomo
      */
-    public void updateBatteryPower(int value) {
-        this.batteryPower = this.batteryPower + value;
-    }
+    public void updateBatteryPower(int value) {this.batteryPower = this.batteryPower - value;}
 
     /**
      * Updates the coverage status of a specific side of the ship.

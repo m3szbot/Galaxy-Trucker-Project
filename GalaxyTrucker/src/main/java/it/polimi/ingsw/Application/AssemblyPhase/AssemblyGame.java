@@ -104,7 +104,9 @@ public class AssemblyGame {
      * Temporary main method for standalone testing.
      * Should be moved into a class where GameInformation is initialized.
      */
-    public static void main(String[] args) {
+
+
+    /*public static void main(String[] args) {
         new AssemblyGame().start();
-    }
+    }*/
 }

@@ -32,7 +32,7 @@ public class EvaluationPhase {
         ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getGameType(), gameInformation.getPlayerList());
         for (Player player : gameInformation.getPlayerList()) {
             // TODO shipboard not done
-            player.shipBoard.shipBoardAttributes.modifyCredits(scoreCounter.calculatePlayerScore(player));
+            player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.calculatePlayerScore(player));
         }
     }
 
