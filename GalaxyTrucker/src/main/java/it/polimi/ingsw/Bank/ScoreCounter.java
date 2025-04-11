@@ -97,7 +97,7 @@ public class ScoreCounter {
      * @param player Player whose score is to be calculated
      * @return Score of the given player
      */
-    private int calculatePlayerScore(Player player, List<Player> playerOrderList) {
+    public int calculatePlayerScore(Player player, List<Player> playerOrderList) {
         int playerPoints = 0;
         playerPoints += calculateFinishOrderPoints(player, playerOrderList);
         playerPoints += calculateLeastExposedLinksPoints(player);

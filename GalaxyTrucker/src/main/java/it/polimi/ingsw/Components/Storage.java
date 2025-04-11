@@ -23,15 +23,19 @@ public class Storage extends Component {
     //Todo
 
     public boolean isEmpty(){
-
-
+        if(goods[0] == 0 && goods[1] == 0 && goods[2] == 0 && goods[3] == 0){
+            return true;
+        }
+        return false;
     }
 
     //Todo
 
     public boolean isFull(){
-
-
+        if(goods[0] + goods[1] + goods[2] + goods[3] == numberOfMaximumElements){
+            return true;
+        }
+        return false;
     }
 
     public int getNumberOfMaximumElements() {
