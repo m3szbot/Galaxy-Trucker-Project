@@ -81,7 +81,7 @@ public class GameInformation {
         String cardName, elementType;
         JsonNode tempValues;
 
-        if (gameType == gameType.TestGame) {
+        if (gameType == GameType.TestGame) {
 
             for (JsonNode node : rootNode) {
 
