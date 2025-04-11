@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.A.SetUpPhase;
 
 /**
  * setup controller class (calls the setup methods)
@@ -6,12 +6,11 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
+import it.polimi.ingsw.Application.*;
 import it.polimi.ingsw.Shipboard.Color;
 import it.polimi.ingsw.Shipboard.Player;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Scanner;
 
 public class SetUpPhase implements Startable {
 

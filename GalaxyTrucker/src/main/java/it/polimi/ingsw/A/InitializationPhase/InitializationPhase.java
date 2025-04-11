@@ -1,10 +1,13 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.A.InitializationPhase;
 
 /**
  * initialization controller class (calls the initialization methods)
  *
  * @author Ludo
  */
+
+import it.polimi.ingsw.Application.GameInformation;
+import it.polimi.ingsw.Application.Startable;
 
 import java.io.IOException;
 
