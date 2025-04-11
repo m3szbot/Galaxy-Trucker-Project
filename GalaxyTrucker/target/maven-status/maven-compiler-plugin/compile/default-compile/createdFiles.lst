@@ -1,9 +1,4 @@
 it/polimi/ingsw/Application/AssemblyPhase/AssemblyGame.class
-it/polimi/ingsw/Application/AssemblyPhase/AssemblyState.class
 it/polimi/ingsw/Application/AssemblyPhase/GameState.class
-it/polimi/ingsw/Application/AssemblyPhase/PlaceBookedComponentState.class
 it/polimi/ingsw/App.class
 it/polimi/ingsw/Application/AssemblyPhase/AssemblyView.class
-it/polimi/ingsw/Application/AssemblyPhase/ShowDeckState.class
-it/polimi/ingsw/Application/AssemblyPhase/ComponentChoice.class
-it/polimi/ingsw/Application/AssemblyPhase/ComponentPlacingState.class

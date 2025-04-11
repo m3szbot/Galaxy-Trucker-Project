@@ -33,7 +33,7 @@ public class Deck {
             // Attempt to add the first level 2 card
             do {
                 Collections.shuffle(allCards); // Shuffle the deck randomly
-            } while (allCards.getFirst().getLevel() != 2); // Ensure the first card is level 2
+            } while (allCards.getFirst().getCardLevel() != 2); // Ensure the first card is level 2
             cards.add(allCards.getFirst()); // Add the selected card to the deck
             numCards++; // Increase the card count
             allCards.removeFirst(); // Remove the selected card from the available list
@@ -41,7 +41,7 @@ public class Deck {
             // Attempt to add the second level 2 card
             do {
                 Collections.shuffle(allCards); // Shuffle again to randomize selection
-            } while (allCards.getFirst().getLevel() != 2); // Ensure the first card is level 2
+            } while (allCards.getFirst().getCardLevel() != 2); // Ensure the first card is level 2
             cards.add(allCards.getFirst()); // Add the second level 2 card
             numCards++;
             allCards.removeFirst();
@@ -49,7 +49,7 @@ public class Deck {
             // Attempt to add the level 1 card
             do {
                 Collections.shuffle(allCards); // Shuffle once more
-            } while (allCards.getFirst().getLevel() != 1); // Ensure the first card is level 1
+            } while (allCards.getFirst().getCardLevel() != 1); // Ensure the first card is level 1
             cards.add(allCards.getFirst()); // Add the selected level 1 card
             numCards++;
             allCards.removeFirst();
