@@ -94,10 +94,10 @@ public class FlightBoard {
     /**
      * Return playerOrderList
      *
-     * @return playerOrderList
+     * @return a copy of playerOrderList
      */
     public List<Player> getPlayerOrderList() {
-        return playerOrderList;
+        return new ArrayList<Player>(playerOrderList);
     }
 
     /**

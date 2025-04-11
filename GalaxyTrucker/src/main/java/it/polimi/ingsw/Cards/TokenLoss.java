@@ -14,6 +14,8 @@ import it.polimi.ingsw.Shipboard.Player;
  * @author carlo
  */
 
+//Player can lose the game if the inhabitants are 0.
+
 
 public interface TokenLoss {
 
@@ -87,7 +89,7 @@ public interface TokenLoss {
            //removing goods
             int goodsOnShip[] = player.getShipBoard().getShipBoardAttributes().getGoods();
             int numberOfGoodsToRemove = 0, numberOfBatteriesToRemove = 0;
-            String goodColor = "";
+            String goodColor;
 
             if(goodsOnShip[0] + goodsOnShip[1] + goodsOnShip[2] + goodsOnShip[3] > 0){
                 //there are some goods that can be removed

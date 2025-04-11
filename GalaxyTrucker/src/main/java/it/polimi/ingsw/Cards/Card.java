@@ -28,7 +28,6 @@ public abstract class Card {
      * MVC.
      */
 
-
     public abstract void resolve(FlightBoard flightBoard, FlightView flightView);
 
 

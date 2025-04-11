@@ -25,10 +25,51 @@ public class Sabotage extends Card implements SmallestCrew{
 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
+        Player smallestCrewPlayer = calculateSmallestCrew(flightBoard);
+        String message;
+
+        if(destroyRandomComponent(smallestCrewPlayer)){
+
+            message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
+            flightView.sendMessageToAll(message);
+
+        }
+        else{
+
+            message = "Player " + smallestCrewPlayer.getNickName() +
+                    "was lucky enough to not get hit!";
+            flightView.sendMessageToAll(message);
+        }
+
     }
 
-    private void destroyRandomComponent(Player player) {
+    /**
+     *
+     * @param player target
+     * @return true if the player was hit, false otherwise
+     */
 
+    private boolean destroyRandomComponent(Player player) {
+
+        int i, x, y;
+
+        for(i = 0; i < 3; i++){
+
+
+            x = (int) (Math.random() * 13);
+            y = (int) (Math.random() * 13);
+
+            if(player.getShipBoard().getComponent(x, y) != null){
+
+                player.getShipBoard().removeComponent(x, y);
+                player.getShipBoard().getShipBoardAttributes().updateDestroyedComponents(1);
+                return true;
+
+            }
+
+        }
+
+        return false;
 
     }
 }

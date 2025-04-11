@@ -10,10 +10,16 @@ import it.polimi.ingsw.Shipboard.Color;
 import it.polimi.ingsw.Shipboard.Player;
 
 import java.io.IOException;
+import java.util.Scanner;
 
-public class SetUpPhase implements Startable {
+public class SetUpPhase implements Startable, Runnable {
 
     public SetUpPhase() {
+    }
+
+    @Override
+    public void run() {
+
     }
 
     /**
@@ -23,30 +29,47 @@ public class SetUpPhase implements Startable {
      */
     @Override
     public void start(GameInformation gameInformation, SetUpView setUpView) throws IOException {
-        //credo che qui vada lanciato un thread per ciascun player
-        //e poi un thread per la gestione concorrente degli imput?
-        String nickName = setUpView.askNickName();
-        ViewType viewType = setUpView.askViewType();
-        if (gameInformation.getPlayerList().isEmpty()) {
-            Player player = new Player(nickName, Color.RED, gameInformation);
-            int maxNumberOfPlayers = setUpView.askMaxNumberOfPlayers();
-            gameInformation.setUpPlayers(player, maxNumberOfPlayers);
-            GameType gameType = setUpView.askGameType();
-            gameInformation.setGameType(gameType);
-            gameInformation.setPlayerViewType(player, viewType);
-        } else {
-            Color color = gameInformation.getPlayerList().getLast().getColor();
-            if (color == Color.RED) {
-                color = Color.BLUE;
-            } else if (color == Color.BLUE) {
-                color = Color.YELLOW;
-            } else if (color == Color.YELLOW) {
-                color = Color.GREEN;
+        //Per lasciare questo thread per ciascun giocatore, ad ogni connessione di un giocatore
+        //dobbiamo chiamare SetUpPhase.start(...);
+        Thread thread = new Thread(() -> {
+            String message;
+            message = "\"Insert your nickname:\"";
+            String nickName = null;
+            try {
+                nickName = setUpView.askNickName(message);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            Player player = new Player(nickName, color, gameInformation);
-            gameInformation.addPlayers(player);
-            gameInformation.setPlayerViewType(player, viewType);
-        }
+            message = "\"What type of view do you want to play with? (CLI, GUI)\"";
+            ViewType viewType = setUpView.askViewType(message);
+            if (gameInformation.getPlayerList().isEmpty()) {
+                Player player = new Player(nickName, Color.RED, gameInformation);
+                message = "\"How many players do you want the match to be played with?\"";
+                int maxNumberOfPlayers = 0;
+                try {
+                    maxNumberOfPlayers = setUpView.askMaxNumberOfPlayers(player, message);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                gameInformation.setUpPlayers(player, maxNumberOfPlayers);
+                message = "\"What type of game do you want to play? (TestGame, Normalgame) \"";
+                GameType gameType = setUpView.askGameType(message);
+                gameInformation.setGameType(gameType);
+                gameInformation.setPlayerViewType(player, viewType);
+            } else {
+                Color color = gameInformation.getPlayerList().getLast().getColor();
+                if (color == Color.RED) {
+                    color = Color.BLUE;
+                } else if (color == Color.BLUE) {
+                    color = Color.YELLOW;
+                } else if (color == Color.YELLOW) {
+                    color = Color.GREEN;
+                }
+                Player player = new Player(nickName, color, gameInformation);
+                gameInformation.addPlayers(player);
+                gameInformation.setPlayerViewType(player, viewType);
+            }
+        });
+        thread.start();
     }
-
 }

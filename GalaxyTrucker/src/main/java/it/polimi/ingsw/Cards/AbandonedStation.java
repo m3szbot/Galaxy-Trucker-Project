@@ -14,10 +14,9 @@ import java.util.List;
 
 //check that the adding of requirementNumber doesn't compromise json file
 
-public class AbandonedStation extends Card implements Movable, Requirement, GoodsGain{
+public class AbandonedStation extends Card implements Movable, GoodsGain{
 
     private int daysLost, requirementNumber;
-    private ElementType requirementType;
     private int[] goods;
 
     public AbandonedStation(CardBuilder cardBuilder) {
@@ -25,7 +24,6 @@ public class AbandonedStation extends Card implements Movable, Requirement, Good
         this.cardLevel = cardBuilder.cardLevel;
         this.cardName = cardBuilder.cardName;
         this.daysLost = cardBuilder.daysLost;
-        this.requirementType = cardBuilder.requirementType;
         this.goods = cardBuilder.goods;
         this.requirementNumber = cardBuilder.requirementNumber;
 
@@ -37,7 +35,8 @@ public class AbandonedStation extends Card implements Movable, Requirement, Good
 
         for(Player player : flightBoard.getPlayerOrderList()){
 
-            if(isSatisfying(player, requirementType, requirementNumber)){
+            if(isCrewSatisfying(player, requirementNumber, flightView)){
+                //player has the possibility to solve the card
 
                 message = "Do you want to solve the card ?";
 
@@ -56,5 +55,27 @@ public class AbandonedStation extends Card implements Movable, Requirement, Good
 
         message = "Nobody solved the card!";
         flightView.sendMessageToAll(message);
+    }
+
+    /**
+     *
+     * @param player target player
+     * @param quantity quantity of the specified requirement that you want to verify
+     * @return true if the player has met the requirement in the specified quantity,
+     * false otherwise
+     *
+     * @author Carlo
+     */
+
+    private boolean isCrewSatisfying(Player player, int quantity, FlightView flightView) {
+        int addedPower = 0;
+        String message;
+
+        if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= quantity) {
+            return true;
+        }
+
+        return false;
+
     }
 }

@@ -10,8 +10,9 @@ import it.polimi.ingsw.Shipboard.Player;
 Check that availableXSlots in ShipBoardAttributes is updated everytime a good is added, i.e,
 it behaves in real time.
 Add a method in Storage called isEmpty and isFull which return a boolean.
-Method addGoods in shipboard can be removed
  */
+
+//remember to modify the bank
 
 /**
  * Interface that define a method which handles a player receiving
@@ -354,7 +355,6 @@ public interface GoodsGain {
              }
 
          }
-
 
     }
 }

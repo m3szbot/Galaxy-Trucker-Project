@@ -8,8 +8,8 @@ package it.polimi.ingsw.Cards;
 
 public class Blow {
 
-    int direction;
-    boolean big;
+    private int direction, roll;
+    private boolean big;
 
     /*
     The direction is as follows: 0 front, 1 right, 2 back, 3 left.
@@ -25,7 +25,17 @@ public class Blow {
         return direction;
     }
 
+    public int getRoll() {
+        return roll;
+    }
+
     public boolean isBig() {
         return big;
+    }
+
+    public void rollDice() {
+
+        roll = (int) (Math.random() * 13);
+
     }
 }
