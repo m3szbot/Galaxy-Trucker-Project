@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.SetUpPhase;
 
 /**
  * set up view class
@@ -6,6 +6,8 @@ package it.polimi.ingsw.Application;
  * @author Ludo
  */
 
+import it.polimi.ingsw.Application.GameType;
+import it.polimi.ingsw.Application.ViewType;
 import it.polimi.ingsw.Shipboard.Color;
 import it.polimi.ingsw.Shipboard.Player;
 
@@ -14,7 +16,7 @@ import java.util.Scanner;
 
 
 public class SetUpView {
-    
+
     public int askMaxNumberOfPlayers(Player player, String message) throws IOException {
         int temp = 0;
         System.out.println(message);
