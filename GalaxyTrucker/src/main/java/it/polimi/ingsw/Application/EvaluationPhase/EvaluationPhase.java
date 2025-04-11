@@ -10,7 +10,8 @@ public class EvaluationPhase {
     }
 
     // TODO refactor into smaller methods
-    public void start(GameInformation gameInformation, EvaluationView evaluationView) {
+    public void start(GameInformation gameInformation) {
+        EvaluationView evaluationView = new EvaluationView();
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
