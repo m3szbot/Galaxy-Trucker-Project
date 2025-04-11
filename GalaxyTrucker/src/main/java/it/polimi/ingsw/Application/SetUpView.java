@@ -7,15 +7,16 @@ package it.polimi.ingsw.Application;
  */
 
 import it.polimi.ingsw.Shipboard.Color;
+import it.polimi.ingsw.Shipboard.Player;
 
 import java.io.IOException;
 import java.util.Scanner;
 
 
 public class SetUpView {
-    public int askMaxNumberOfPlayers() throws IOException {
+    public int askMaxNumberOfPlayers(Player player, String message) throws IOException {
         int temp = 0;
-        System.out.println("How many players do you want the match to be played with?");
+        System.out.println(message);
         temp = System.in.read();
         while (temp < 2 || temp > 4) {
             System.out.println("Please enter a number between 2 and 4:");
@@ -29,12 +30,12 @@ public class SetUpView {
      *
      * @return GameType
      */
-    public GameType askGameType() {
+    public GameType askGameType(String message) {
         Scanner scanner = new Scanner(System.in);
         String type;
 
         while (true) {
-            System.out.println("What type of game do you want to play?");
+            System.out.println(message);
             type = scanner.nextLine().toUpperCase();
 
             try {
@@ -55,12 +56,12 @@ public class SetUpView {
      *
      * @return ViewType
      */
-    public ViewType askViewType() {
+    public ViewType askViewType(String message) {
         Scanner scanner = new Scanner(System.in);
         String type;
 
         while (true) {
-            System.out.println("What type of view do you want to play with? (CLI, GUI)");
+            System.out.println(message);
             type = scanner.nextLine().toUpperCase();
 
             try {
@@ -75,7 +76,8 @@ public class SetUpView {
         return ViewType.valueOf(type);
     }
 
-    public String askNickName() throws IOException {
+    public String askNickName(String message) throws IOException {
+        System.out.println(message);
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
