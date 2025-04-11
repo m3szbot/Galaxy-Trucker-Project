@@ -17,6 +17,14 @@ public class FlightBoard {
     // numberOfTiles, startingTiles selected based on gameType
     private final int numberOfTiles;
     private final int[] startingTiles;
+
+    /**
+     * Player lists:
+     * Both need to contain the same players, must be updated together
+     * Contain only players still in game
+     * Eliminated/DNF players are not in the Player lists
+     */
+
     // HashMap - unordered
     private Map<Player, Integer> playerTilesMap;
     // Arraylist

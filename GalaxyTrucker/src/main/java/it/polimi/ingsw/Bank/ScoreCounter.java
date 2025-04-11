@@ -25,11 +25,14 @@ public class ScoreCounter {
 
     /**
      * Constructor, populates playerScoresMap
+     * playerList needed to calculate score for all players
+     * playerOrderList needed to calculate finishOrderPoints
      *
      * @param gameType        Game type that determines scoring
-     * @param playerOrderList List of player orders from FlightBoard!
+     * @param playerList      List of all players
+     * @param playerOrderList Finish order of players (only players still in game)
      */
-    public ScoreCounter(GameType gameType, List<Player> playerOrderList) {
+    public ScoreCounter(GameType gameType, List<Player> playerList, List<Player> playerOrderList) {
         // set scoring based on game type
         // normal game values
         int leastExposedLinksPoints = 4;
@@ -51,10 +54,10 @@ public class ScoreCounter {
         System.arraycopy(goodsPoints, 0, this.goodsPoints, 0, goodsPoints.length);
         // create and fill leastExposedLinksList with players
         this.leastExposedLinksList = new ArrayList<>();
-        calculateLeastExposedLinks(playerOrderList);
+        calculateLeastExposedLinks(playerList);
         // populate playerScoresMap
         this.playerScoresMap = new HashMap<>();
-        for (Player player : playerOrderList) {
+        for (Player player : playerList) {
             playerScoresMap.put(player, calculatePlayerScore(player, playerOrderList));
         }
     }
@@ -72,13 +75,13 @@ public class ScoreCounter {
     /**
      * Populate leastExposedLinksList with players
      *
-     * @param playerOrderList List of players
+     * @param playerList List of all players
      */
-    private void calculateLeastExposedLinks(List<Player> playerOrderList) {
+    private void calculateLeastExposedLinks(List<Player> playerList) {
         // Map: player - player exposed links
         Map<Player, Integer> playerExposedLinks = new Hashtable<>();
         // calculate exposed links of player and add to temporary Map
-        for (Player player : playerOrderList) {
+        for (Player player : playerList) {
             playerExposedLinks.put(player, player.getShipBoard().countExternalJunctions());
         }
         // find minimum value
@@ -94,10 +97,11 @@ public class ScoreCounter {
     /**
      * Calculate score of a player (credits assigned by controller)
      *
-     * @param player Player whose score is to be calculated
+     * @param player          Player whose score is to be calculated
+     * @param playerOrderList Finish order of players (only players still in game)
      * @return Score of the given player
      */
-    public int calculatePlayerScore(Player player, List<Player> playerOrderList) {
+    private int calculatePlayerScore(Player player, List<Player> playerOrderList) {
         int playerPoints = 0;
         playerPoints += calculateFinishOrderPoints(player, playerOrderList);
         playerPoints += calculateLeastExposedLinksPoints(player);
