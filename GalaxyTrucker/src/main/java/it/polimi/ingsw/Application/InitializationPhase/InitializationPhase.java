@@ -1,4 +1,4 @@
-package it.polimi.ingsw.A.InitializationPhase;
+package it.polimi.ingsw.Application.InitializationPhase;
 
 /**
  * initialization controller class (calls the initialization methods)

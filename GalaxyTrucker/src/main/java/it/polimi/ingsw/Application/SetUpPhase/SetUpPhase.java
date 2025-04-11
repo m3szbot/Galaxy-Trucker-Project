@@ -1,4 +1,4 @@
-package it.polimi.ingsw.A.SetUpPhase;
+package it.polimi.ingsw.Application.SetUpPhase;
 
 /**
  * setup controller class (calls the setup methods)
