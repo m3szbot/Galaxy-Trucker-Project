@@ -34,7 +34,7 @@ public class EvaluationPhase {
     private void assignPlayerCredits(GameInformation gameInformation) {
         ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getGameType(), gameInformation.getPlayerList(), gameInformation.getFlightBoard().getPlayerOrderList());
         for (Player player : gameInformation.getPlayerList()) {
-            player.shipBoard.shipBoardAttributes.modifyCredits(scoreCounter.getPlayerScore(player));
+            player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
         }
     }
 
