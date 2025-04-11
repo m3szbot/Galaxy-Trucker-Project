@@ -1,31 +1,39 @@
 package it.polimi.ingsw.Application.EvaluationPhase;
 
+import java.util.*;
+
 import it.polimi.ingsw.Application.GameInformation;
+import it.polimi.ingsw.Application.Startable;
 import it.polimi.ingsw.Bank.ScoreCounter;
 import it.polimi.ingsw.Shipboard.Player;
 
-public class EvaluationPhase {
+import java.util.HashMap;
+
+public class EvaluationPhase implements Startable {
 
     public EvaluationPhase() {
     }
 
-    // TODO refactor into smaller methods
     public void start(GameInformation gameInformation) {
         EvaluationView evaluationView = new EvaluationView();
+        String message;
+
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
-        // TODO show player credits
-        evaluationView.ShowFinalScores();
+        // Show player credits
+        // (no sorting - maps can't be sorted by value, hassle)
+        message = getPlayerCreditsMessage(gameInformation);
+        evaluationView.ShowPlayerCredits(message);
 
         // TODO ask another game
-        if (evaluationView.AskAnotherGame()) {
+        message = "Do you want to play another game with the same players?[y/n]";
+        if (evaluationView.AskAnotherGame(message)) {
             // TODO start another game
-        } else {
-            // TODO terminate game
         }
-
+        // end evaluationPhase
     }
+
 
     /**
      * Calculate final points for each player
@@ -37,6 +45,23 @@ public class EvaluationPhase {
         for (Player player : gameInformation.getPlayerList()) {
             player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
         }
+    }
+
+    private String getPlayerCreditsMessage(GameInformation gameInformation) {
+        // extract player credits into creditsMap
+        Map<Player, Integer> creditsMap = new HashMap<>();
+        for (Player player : gameInformation.getPlayerList()) {
+            creditsMap.put(player, player.getShipBoard().getShipBoardAttributes().getCredits());
+        }
+        StringBuilder result = new StringBuilder();
+        for (Map.Entry<Player, Integer> entry : creditsMap.entrySet()) {
+            result.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        // remove ", " from the end
+        if (result.isEmpty()) {
+            result.setLength(result.length() - 2);
+        }
+        return result.toString();
     }
 
 }
