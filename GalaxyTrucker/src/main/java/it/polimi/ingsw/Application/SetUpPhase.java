@@ -10,27 +10,22 @@ import it.polimi.ingsw.Shipboard.Color;
 import it.polimi.ingsw.Shipboard.Player;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Scanner;
 
-public class SetUpPhase implements Startable, Runnable {
+public class SetUpPhase implements Startable {
 
     public SetUpPhase() {
     }
 
-    @Override
-    public void run() {
-
-    }
-
     /**
      * start is the method to be called from main in order to set up the game, it operates differently based on who calls it (the first player or the subsequent ones)
-     *
-     * @param gameInformation
      */
     @Override
-    public void start(GameInformation gameInformation, SetUpView setUpView) throws IOException {
+    public void start(GameInformation gameInformation) throws IOException {
         //Per lasciare questo thread per ciascun giocatore, ad ogni connessione di un giocatore
         //dobbiamo chiamare SetUpPhase.start(...);
+        SetUpView setUpView = new SetUpView();
         Thread thread = new Thread(() -> {
             String message;
             message = "\"Insert your nickname:\"";

@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 
 public class SetUpView {
+    
     public int askMaxNumberOfPlayers(Player player, String message) throws IOException {
         int temp = 0;
         System.out.println(message);

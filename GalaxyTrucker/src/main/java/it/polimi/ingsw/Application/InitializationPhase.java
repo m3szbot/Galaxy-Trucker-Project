@@ -20,7 +20,7 @@ public class InitializationPhase implements Startable {
      * @throws IOException
      */
     @Override
-    public void start(GameInformation gameInformation, SetUpView setUpView) throws IOException {
+    public void start(GameInformation gameInformation) throws IOException {
         gameInformation.setUpCards(gameInformation.getGameType());
         gameInformation.setUpBank();
         gameInformation.setUpComponents();
