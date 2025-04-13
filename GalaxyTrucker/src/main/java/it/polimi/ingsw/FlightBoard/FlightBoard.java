@@ -149,14 +149,15 @@ public class FlightBoard {
         if (isPresent(player)) {
             int nextTile = this.getPlayerTile(player) + tiles;
             // if tile to move to is occupied, jump before/behind
+            // circular board (% numberOftTiles)
             List<Integer> tilesList = new ArrayList<>();
             for (Map.Entry<Player, Integer> entry : playerTilesMap.entrySet()) {
                 if (!player.equals(entry.getKey())) {
-                    tilesList.add(entry.getValue());
+                    tilesList.add(entry.getValue() % numberOfTiles);
                 }
             }
             // tile is occupied
-            while (tilesList.contains(nextTile)) {
+            while (tilesList.contains(nextTile % numberOfTiles)) {
                 if (tiles < 0) {
                     nextTile--;
                 } else {
@@ -202,7 +203,7 @@ public class FlightBoard {
         List<Player> toRemove = new ArrayList<>();
         Player low, high;
         // start from low as it gets removed
-        for (int i = playerOrderList.size() - 1; i > 1; i--) {
+        for (int i = playerOrderList.size() - 1; i > 0; i--) {
             low = playerOrderList.get(i);
             for (int j = 0; j < i; j++) {
                 high = playerOrderList.get(j);
