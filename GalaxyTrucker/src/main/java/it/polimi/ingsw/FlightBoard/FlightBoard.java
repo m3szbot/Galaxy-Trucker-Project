@@ -17,6 +17,8 @@ public class FlightBoard {
     // numberOfTiles, startingTiles selected based on gameType
     private final int numberOfTiles;
     private final int[] startingTiles;
+    // Goods: red yellow green blue
+    private int[] goodsNumber;
 
     /**
      * Player lists:
@@ -38,6 +40,7 @@ public class FlightBoard {
      * @param gameType Game type to set tiles
      */
     public FlightBoard(GameType gameType, List<Card> cardsList) {
+        this.goodsNumber = new int[]{12, 17, 13, 14};
         // normal game
         int cardCount = 12;
         int numberOfTiles = 24;
@@ -49,6 +52,7 @@ public class FlightBoard {
             startingTiles = new int[]{1, 2, 3, 5};
         }
         // assign attributes
+        // (final - can be assigned once)
         this.numberOfTiles = numberOfTiles;
         this.startingTiles = new int[startingTiles.length];
         System.arraycopy(startingTiles, 0, this.startingTiles, 0, startingTiles.length);
@@ -222,5 +226,33 @@ public class FlightBoard {
             throw new IllegalStateException("player is present in playerOrderList but not in playerTilesMap");
         }
         return (playerTilesMap.containsKey(player) && playerOrderList.contains(player));
+    }
+
+    /**
+     * Remove goods from bank inventory
+     *
+     * @param goods Array of the 4 good types containing the quantities to remove
+     * @return returned Array of quantity violations of each good type - change to exceptions
+     */
+    public boolean[] removeGoods(int[] goods) {
+        boolean[] returned = {true, true, true, true};
+        for (int i = 0; i < 4; i++) {
+            if (this.goodsNumber[i] - goods[i] < 0)
+                returned[i] = false;
+            else
+                this.goodsNumber[i] -= goods[i];
+        }
+        return returned;
+    }
+
+    /**
+     * Add goods to bank inventory
+     *
+     * @param goods Array of number of goods to add to bank inventory
+     */
+    public void addGoods(int[] goods) {
+        for (int i = 0; i < 4; i++) {
+            this.goodsNumber[i] += goods[i];
+        }
     }
 }
