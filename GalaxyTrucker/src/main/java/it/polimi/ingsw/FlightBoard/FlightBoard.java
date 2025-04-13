@@ -147,7 +147,24 @@ public class FlightBoard {
      */
     public void incrementPlayerTile(Player player, int tiles) {
         if (isPresent(player)) {
-            this.playerTilesMap.compute(player, (_, value) -> (value + tiles));
+            int nextTile = this.getPlayerTile(player) + tiles;
+            // if tile to move to is occupied, jump before/behind
+            List<Integer> tilesList = new ArrayList<>();
+            for (Map.Entry<Player, Integer> entry : playerTilesMap.entrySet()) {
+                if (!player.equals(entry.getKey())) {
+                    tilesList.add(entry.getValue());
+                }
+            }
+            // tile is occupied
+            if (tilesList.contains(nextTile)) {
+                if (tiles < 0) {
+                    nextTile--;
+                } else {
+                    nextTile++;
+                }
+            }
+            // update player tile
+            this.playerTilesMap.put(player, nextTile);
             checkFlightBoard();
         } else {
             // throw exception
