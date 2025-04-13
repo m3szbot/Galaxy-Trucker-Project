@@ -156,7 +156,7 @@ public class FlightBoard {
                 }
             }
             // tile is occupied
-            if (tilesList.contains(nextTile)) {
+            while (tilesList.contains(nextTile)) {
                 if (tiles < 0) {
                     nextTile--;
                 } else {
