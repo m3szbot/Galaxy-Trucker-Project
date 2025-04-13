@@ -123,7 +123,18 @@ class FlightBoardTest {
     }
 
     @Test
-    void exhaustGoods() {
+    void AddExhaustGoods() {
+        // {12, 17, 13, 14}
+        flightBoard.addGoods(new int[]{1, 1, 1, 1});
+        // nothing is removed if limit exceeded
+        assertThrows(IllegalArgumentException.class, () -> {
+            flightBoard.removeGoods(new int[]{0, 0, 0, 100});
+        });
+        // set every good to 0 (fails on Exception)
+        flightBoard.removeGoods(new int[]{13, 18, 14, 15});
+        assertThrows(IllegalArgumentException.class, () -> {
+            flightBoard.removeGoods(new int[]{0, 1, 0, 0});
+        });
     }
 
 }

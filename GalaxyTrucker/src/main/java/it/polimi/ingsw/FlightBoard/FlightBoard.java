@@ -109,7 +109,7 @@ public class FlightBoard {
      * @return Copy of playerOrderList (safe)
      */
     public List<Player> getPlayerOrderList() {
-        return new ArrayList<Player>(playerOrderList);
+        return new ArrayList<>(playerOrderList);
     }
 
     /**
@@ -247,7 +247,7 @@ public class FlightBoard {
     }
 
     /**
-     * Remove goods from bank inventory
+     * Remove goods from inventory
      *
      * @param goods Array of the 4 good types containing the quantities to remove
      */
@@ -255,7 +255,7 @@ public class FlightBoard {
         // first check for depletion
         for (int i = 0; i < 4; i++) {
             if (this.goodsNumber[i] - goods[i] < 0)
-                throw new IllegalArgumentException("Not enough goods left");
+                throw new IllegalArgumentException(String.format("Not enough goods left in inventory (%d) ", i));
         }
         // then remove elements
         for (int i = 0; i < 4; i++) {
@@ -264,7 +264,7 @@ public class FlightBoard {
     }
 
     /**
-     * Add goods to bank inventory
+     * Add goods to inventory
      *
      * @param goods Array of number of goods to add to bank inventory
      */
