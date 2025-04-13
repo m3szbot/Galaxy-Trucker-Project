@@ -250,17 +250,17 @@ public class FlightBoard {
      * Remove goods from bank inventory
      *
      * @param goods Array of the 4 good types containing the quantities to remove
-     * @return returned Array of quantity violations of each good type - change to exceptions
      */
-    public boolean[] removeGoods(int[] goods) {
-        boolean[] returned = {true, true, true, true};
+    public void removeGoods(int[] goods) {
+        // first check for depletion
         for (int i = 0; i < 4; i++) {
             if (this.goodsNumber[i] - goods[i] < 0)
-                returned[i] = false;
-            else
-                this.goodsNumber[i] -= goods[i];
+                throw new IllegalArgumentException("Not enough goods left");
         }
-        return returned;
+        // then remove elements
+        for (int i = 0; i < 4; i++) {
+            this.goodsNumber[i] -= goods[i];
+        }
     }
 
     /**
