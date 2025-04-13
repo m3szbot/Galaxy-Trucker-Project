@@ -9,7 +9,6 @@ package it.polimi.ingsw.Application;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Cards.*;
-import it.polimi.ingsw.Bank.*;
 import it.polimi.ingsw.Shipboard.*;
 import it.polimi.ingsw.FlightBoard.*;
 
