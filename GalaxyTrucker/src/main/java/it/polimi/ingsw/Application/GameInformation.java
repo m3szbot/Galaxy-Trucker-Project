@@ -26,7 +26,6 @@ public class GameInformation {
     private List<Component> componentList;
     private List<Player> playerList;
     private int maxNumberOfPlayers;
-    private Bank bank;
     private FlightBoard flightBoard;
     private GameType gameType;
     private HashMap<Player, ViewType> playerViewMap;
@@ -45,10 +44,6 @@ public class GameInformation {
 
     public int getMaxNumberOfPlayers() {
         return maxNumberOfPlayers;
-    }
-
-    public Bank getBank() {
-        return bank;
     }
 
     public FlightBoard getFlightBoard() {
@@ -372,13 +367,6 @@ public class GameInformation {
      */
     public void removePlayers(Player player) {
         playerList.remove(player);
-    }
-
-    /**
-     * creates bank
-     */
-    public void setUpBank() {
-        this.bank = new Bank(gameType);
     }
 
     /**
