@@ -32,7 +32,7 @@ class FlightBoardTest {
 
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);
-        playerB = new Player("C", Color.YELLOW, gameInformation);
+        playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
 
         List<Card> cardList = new ArrayList<>();

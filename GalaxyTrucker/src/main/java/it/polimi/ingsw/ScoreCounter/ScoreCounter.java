@@ -18,10 +18,10 @@ public class ScoreCounter {
     // more players can have the minimum and both receive points
     private List<Player> leastExposedLinksList;
     // constants
-    private final int leastExposedLinksPoints;
-    private final int lostComponentsPoints;
     private final int[] finishOrderPoints;
+    private final int leastExposedLinksPoints;
     private final int[] goodsPoints;
+    private final int lostComponentsPoints;
 
     /**
      * Constructor, populates playerScoresMap
@@ -35,15 +35,14 @@ public class ScoreCounter {
     public ScoreCounter(GameType gameType, List<Player> playerList, List<Player> playerOrderList) {
         // set scoring based on game type
         // normal game values
-        int leastExposedLinksPoints = 4;
-        int lostComponentsPoints = -1;
         int[] finishOrderPoints = {8, 6, 4, 2};
-        int[] goodsPoints = {8, 6, 4, 2};
+        int leastExposedLinksPoints = 4;
+        int[] goodsPoints = {4, 3, 2, 1};
+        int lostComponentsPoints = -1;
         // test game values
         if (gameType == GameType.TestGame) {
-            leastExposedLinksPoints = 2;
             finishOrderPoints = new int[]{4, 3, 2, 1};
-            goodsPoints = new int[]{4, 3, 2, 1};
+            leastExposedLinksPoints = 2;
         }
         // set scoring attributes
         this.leastExposedLinksPoints = leastExposedLinksPoints;
