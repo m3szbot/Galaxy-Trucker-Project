@@ -8,14 +8,14 @@
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/AssemblyPhase/PlaceBookedComponentState.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/AssemblyPhase/ShowDeckState.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/EvaluationPhase/EvaluationPhase.java
-/Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/EvaluationView.java
+/Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/EvaluationPhase/EvaluationView.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/FlightPhase.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/FlightView.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/GameInformation.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/GameType.java
-/Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/InitializationPhase.java
+/Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/InitializationPhase/InitializationPhase.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/PlayerThread.java
-/Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/SetUpPhase.java
+/Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/SetUpPhase/SetUpPhase.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/SetUpView.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/Startable.java
 /Users/giacomomerlo/Documents/GitHub/ing-sw-2025-Maggi-Meloni-Merlo-Meszaros/GalaxyTrucker/src/main/java/it/polimi/ingsw/Application/ViewType.java

@@ -136,7 +136,7 @@ public class ShipBoard {
         shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
         boolean[] sides = (boolean[]) list.get(4);
         for (int i = 0; i < 4; i++) {
-            shipBoardAttributes.updateCoveredSides(i, sides[i]);
+            shipBoardAttributes.updateCoveredSides(i, sides[i], true);
         }
         shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
         shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
@@ -152,6 +152,8 @@ public class ShipBoard {
      */
     public void removeComponent(int x, int y) {
         boolean flag = true;
+        x = x - 1;
+        y = y - 1;
 
         if (matr[x][y] == true && structureMatrix[x][y] != null) {
             Component component = structureMatrix[x][y];
@@ -173,7 +175,7 @@ public class ShipBoard {
             shipBoardAttributes.updateBatteryPower(-(Integer) list.get(3));
             boolean[] sides = (boolean[]) list.get(4);
             for (int i = 0; i < 4; i++) {
-                shipBoardAttributes.updateCoveredSides(i, sides[i]);
+                shipBoardAttributes.updateCoveredSides(i, sides[i], false);
             }
             shipBoardAttributes.updateAvailableSlots(1, -(Integer) list.get(5));
             shipBoardAttributes.updateAvailableSlots(2, -(Integer) list.get(6));

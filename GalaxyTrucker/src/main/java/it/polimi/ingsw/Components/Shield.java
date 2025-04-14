@@ -67,7 +67,7 @@ public class Shield extends Component {
             if (i == coveredSide1 || i == coveredSide2) {
                 sides[i] = true;
             } else {
-                sides[i] = true;
+                sides[i] = false;
             }
         }
         return sides;
