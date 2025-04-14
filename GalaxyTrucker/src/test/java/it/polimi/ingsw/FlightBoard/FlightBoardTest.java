@@ -24,7 +24,10 @@ class FlightBoardTest {
     List<Player> playerOrderList;
     Player playerA, playerB, playerC, playerD;
 
-    // reassigns field before each test
+    /* reassigns field before each test
+     base case: NormalGame
+     reassign setUp for TestGame
+    */
     @BeforeEach
     void setUp() {
         gameInformation = new GameInformation();
@@ -115,6 +118,28 @@ class FlightBoardTest {
     }
 
     @Test
+    void removeLappedPlayerTestGame() {
+        // test game: 18 tiles
+        // playerA steps on playerB lapping him
+        List<Card> cardList = new ArrayList<>();
+        Card card = new Sabotage(new CardBuilder());
+        for (int i = 0; i < 15; i++) {
+            cardList.add(card);
+        }
+        flightBoard = new FlightBoard(GameType.TestGame, cardList);
+        flightBoard.addPlayer(playerA, 1);
+        flightBoard.addPlayer(playerB, 2);
+        flightBoard.incrementPlayerTile(playerA, 19);
+        assertEquals(21, flightBoard.getPlayerTile(playerA));
+        assertThrows(NoSuchElementException.class, () -> {
+            flightBoard.getPlayerTile(playerB);
+        });
+        assertThrows(NoSuchElementException.class, () -> {
+            flightBoard.getPlayerOrder(playerB);
+        });
+    }
+
+    @Test
     void addDuplicatePlayers() {
         flightBoard.addPlayer(playerA, 1);
         assertThrows(IllegalArgumentException.class, () -> {
@@ -134,6 +159,20 @@ class FlightBoardTest {
         flightBoard.removeGoods(new int[]{13, 18, 14, 15});
         assertThrows(IllegalArgumentException.class, () -> {
             flightBoard.removeGoods(new int[]{0, 1, 0, 0});
+        });
+    }
+
+    @Test
+    void incrementNonPresentPlayer() {
+        assertThrows(NoSuchElementException.class, () -> {
+            flightBoard.incrementPlayerTile(playerA, 1);
+        });
+    }
+
+    @Test
+    void removeNonPresentPlayer() {
+        assertThrows(NoSuchElementException.class, () -> {
+            flightBoard.removePlayer(playerA);
         });
     }
 

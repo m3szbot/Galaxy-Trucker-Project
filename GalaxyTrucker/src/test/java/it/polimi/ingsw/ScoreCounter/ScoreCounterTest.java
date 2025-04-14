@@ -44,4 +44,22 @@ class ScoreCounterTest {
         assertEquals(12, scoreCounter.getPlayerScore(playerA));
     }
 
+    @Test
+    void fourPLayersEmptyShip() {
+        playerList.add(playerA);
+        playerList.add(playerB);
+        playerList.add(playerC);
+        playerList.add(playerD);
+        playerOrderList.add(playerA);
+        playerOrderList.add(playerB);
+        playerOrderList.add(playerC);
+        playerOrderList.add(playerD);
+        scoreCounter = new ScoreCounter(GameType.NormalGame, playerList, playerOrderList);
+        assertEquals(12, scoreCounter.getPlayerScore(playerA));
+        assertEquals(10, scoreCounter.getPlayerScore(playerB));
+        assertEquals(8, scoreCounter.getPlayerScore(playerC));
+        assertEquals(6, scoreCounter.getPlayerScore(playerD));
+
+    }
+
 }
