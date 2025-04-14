@@ -12,10 +12,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// TODO players with shipBoards (goods, exposed links, lost components)
 class ScoreCounterTest {
     /* 1 public method: getPlayerScore (+ constructor)
-     scoreCounter must be initialized in each test
+
      after assigning custom playerList and playerOrderList
+     scoreCounter must be initialized in each test
+
+     Base case: NormalGame
+     reassign setUp for TestGame
      */
     ScoreCounter scoreCounter;
     List<Player> playerList;
@@ -24,6 +29,7 @@ class ScoreCounterTest {
 
     @BeforeEach
     void setUp() {
+        // gameInformation necessary for player
         GameInformation gameInformation = new GameInformation();
         gameInformation.setGameType(GameType.NormalGame);
         playerA = new Player("A", Color.BLUE, gameInformation);
@@ -59,6 +65,30 @@ class ScoreCounterTest {
         assertEquals(10, scoreCounter.getPlayerScore(playerB));
         assertEquals(8, scoreCounter.getPlayerScore(playerC));
         assertEquals(6, scoreCounter.getPlayerScore(playerD));
+
+    }
+
+    @Test
+    void DNFPlayerEmptyShip() {
+        playerList.add(playerA);
+        scoreCounter = new ScoreCounter(GameType.NormalGame, playerList, playerOrderList);
+        assertEquals(4, scoreCounter.getPlayerScore(playerA));
+    }
+
+    @Test
+    void getNonPresentPlayer() {
+        scoreCounter = new ScoreCounter(GameType.NormalGame, playerList, playerOrderList);
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreCounter.getPlayerScore(playerA);
+        });
+    }
+
+    @Test
+    void testGameOnePlayerEmptyShip() {
+        playerList.add(playerA);
+        playerOrderList.add(playerA);
+        scoreCounter = new ScoreCounter(GameType.TestGame, playerList, playerOrderList);
+        assertEquals(6, scoreCounter.getPlayerScore(playerA));
 
     }
 

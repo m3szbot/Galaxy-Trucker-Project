@@ -68,7 +68,10 @@ public class ScoreCounter {
      * @return Score of given player
      */
     public int getPlayerScore(Player player) {
-        return playerScoresMap.get(player);
+        if (playerScoresMap.containsKey(player)) {
+            return playerScoresMap.get(player);
+        } else
+            throw new IllegalArgumentException("Player not present");
     }
 
     /**
@@ -118,9 +121,11 @@ public class ScoreCounter {
      * @return Score of player given for finish position
      */
     private int calculateFinishOrderPoints(Player player, List<Player> playerOrderList) {
-        int finishPoints = 0;
-        finishPoints += finishOrderPoints[playerOrderList.indexOf(player)];
-        return finishPoints;
+        if (playerOrderList.contains(player)) {
+            return finishOrderPoints[playerOrderList.indexOf(player)];
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -130,10 +135,11 @@ public class ScoreCounter {
      * @return Earned points
      */
     private int calculateLeastExposedLinksPoints(Player player) {
-        if (leastExposedLinksList.contains(player))
+        if (leastExposedLinksList.contains(player)) {
             return this.leastExposedLinksPoints;
-        else
+        } else {
             return 0;
+        }
     }
 
     /**
