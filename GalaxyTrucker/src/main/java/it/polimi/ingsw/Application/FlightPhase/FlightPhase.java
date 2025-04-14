@@ -1,5 +1,7 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Application.FlightPhase;
 
+import it.polimi.ingsw.Application.GameInformation;
+import it.polimi.ingsw.Application.GameType;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 
 public class FlightPhase {

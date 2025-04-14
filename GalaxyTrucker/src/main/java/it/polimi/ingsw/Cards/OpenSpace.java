@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 

@@ -1,10 +1,8 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
-
-import java.util.List;
 
 /**
  * class that represent the card abbandonedStation
@@ -43,7 +41,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain{
                 if(flightView.askPlayerGenericQuestion(player, message)){
                     //player decides to solve the card
 
-                    giveGoods(player, goods, flightView);
+                    giveGoods(player, goods, flightBoard, flightView);
                     changePlayerPosition(player, daysLost, flightBoard);
 
                     message = player.getNickName() + "has solved the card!";

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
@@ -128,22 +128,22 @@ public class Planets extends Card implements GoodsGain, Movable{
 
                             if(planetChosen == 1){
 
-                                giveGoods(players.get(i), planet1, flightView);
+                                giveGoods(players.get(i), planet1, flightBoard, flightView);
 
                             }
                             else if(planetChosen == 2){
 
-                                giveGoods(players.get(i), planet2, flightView);
+                                giveGoods(players.get(i), planet2, flightBoard, flightView);
 
                             }
                             else if(planetChosen == 3){
 
-                                giveGoods(players.get(i), planet3, flightView);
+                                giveGoods(players.get(i), planet3, flightBoard, flightView);
 
                             }
                             else{
 
-                                giveGoods(players.get(i), planet4, flightView);
+                                giveGoods(players.get(i), planet4, flightBoard, flightView);
 
                             }
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
@@ -96,7 +96,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                 " flight days as he is the one with the lowest number of inhabitants!";
         flightView.sendMessageToAll(message);
 
-        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, flightView);
+        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, flightBoard, flightView);
 
         message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
                 " crew members as he is the one with the weakest engine power!";

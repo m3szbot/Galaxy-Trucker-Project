@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 
 /**
@@ -99,7 +99,7 @@ public class Slavers extends Card implements CreditsGain, Movable, TokenLoss, Fi
             }
             else if(results[i] == AttackStates.PlayerDefeated){
 
-                inflictLoss(flightBoard.getPlayerOrderList().get(i), lossType, lossNumber, flightView);
+                inflictLoss(flightBoard.getPlayerOrderList().get(i), lossType, lossNumber, flightBoard, flightView);
 
             }
 
