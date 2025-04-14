@@ -17,6 +17,8 @@ public class FlightBoard {
     // numberOfTiles, startingTiles selected based on gameType
     private final int numberOfTiles;
     private final int[] startingTiles;
+    // Goods: red yellow green blue
+    private int[] goodsNumber;
 
     /**
      * Player lists:
@@ -38,6 +40,7 @@ public class FlightBoard {
      * @param gameType Game type to set tiles
      */
     public FlightBoard(GameType gameType, List<Card> cardsList) {
+        this.goodsNumber = new int[]{12, 17, 13, 14};
         // normal game
         int cardCount = 12;
         int numberOfTiles = 24;
@@ -49,6 +52,7 @@ public class FlightBoard {
             startingTiles = new int[]{1, 2, 3, 5};
         }
         // assign attributes
+        // (final - can be assigned once)
         this.numberOfTiles = numberOfTiles;
         this.startingTiles = new int[startingTiles.length];
         System.arraycopy(startingTiles, 0, this.startingTiles, 0, startingTiles.length);
@@ -105,7 +109,7 @@ public class FlightBoard {
      * @return Copy of playerOrderList (safe)
      */
     public List<Player> getPlayerOrderList() {
-        return new ArrayList<Player>(playerOrderList);
+        return new ArrayList<>(playerOrderList);
     }
 
     /**
@@ -143,7 +147,25 @@ public class FlightBoard {
      */
     public void incrementPlayerTile(Player player, int tiles) {
         if (isPresent(player)) {
-            this.playerTilesMap.compute(player, (_, value) -> (value + tiles));
+            int nextTile = this.getPlayerTile(player) + tiles;
+            // if tile to move to is occupied, jump before/behind
+            // circular board (% numberOftTiles)
+            List<Integer> tilesList = new ArrayList<>();
+            for (Map.Entry<Player, Integer> entry : playerTilesMap.entrySet()) {
+                if (!player.equals(entry.getKey())) {
+                    tilesList.add(entry.getValue() % numberOfTiles);
+                }
+            }
+            // tile is occupied
+            while (tilesList.contains(nextTile % numberOfTiles)) {
+                if (tiles < 0) {
+                    nextTile--;
+                } else {
+                    nextTile++;
+                }
+            }
+            // update player tile
+            this.playerTilesMap.put(player, nextTile);
             checkFlightBoard();
         } else {
             // throw exception
@@ -181,7 +203,7 @@ public class FlightBoard {
         List<Player> toRemove = new ArrayList<>();
         Player low, high;
         // start from low as it gets removed
-        for (int i = playerOrderList.size() - 1; i > 1; i--) {
+        for (int i = playerOrderList.size() - 1; i > 0; i--) {
             low = playerOrderList.get(i);
             for (int j = 0; j < i; j++) {
                 high = playerOrderList.get(j);
@@ -222,5 +244,33 @@ public class FlightBoard {
             throw new IllegalStateException("player is present in playerOrderList but not in playerTilesMap");
         }
         return (playerTilesMap.containsKey(player) && playerOrderList.contains(player));
+    }
+
+    /**
+     * Remove goods from inventory
+     *
+     * @param goods Array of the 4 good types containing the quantities to remove
+     */
+    public void removeGoods(int[] goods) {
+        // first check for depletion
+        for (int i = 0; i < 4; i++) {
+            if (this.goodsNumber[i] - goods[i] < 0)
+                throw new IllegalArgumentException(String.format("Not enough goods left in inventory (%d) ", i));
+        }
+        // then remove elements
+        for (int i = 0; i < 4; i++) {
+            this.goodsNumber[i] -= goods[i];
+        }
+    }
+
+    /**
+     * Add goods to inventory
+     *
+     * @param goods Array of number of goods to add to bank inventory
+     */
+    public void addGoods(int[] goods) {
+        for (int i = 0; i < 4; i++) {
+            this.goodsNumber[i] += goods[i];
+        }
     }
 }

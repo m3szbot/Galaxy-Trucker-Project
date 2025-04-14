@@ -9,7 +9,6 @@ package it.polimi.ingsw.Application;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Cards.*;
-import it.polimi.ingsw.Bank.*;
 import it.polimi.ingsw.Shipboard.*;
 import it.polimi.ingsw.FlightBoard.*;
 
@@ -26,7 +25,6 @@ public class GameInformation {
     private List<Component> componentList;
     private List<Player> playerList;
     private int maxNumberOfPlayers;
-    private Bank bank;
     private FlightBoard flightBoard;
     private GameType gameType;
     private HashMap<Player, ViewType> playerViewMap;
@@ -45,10 +43,6 @@ public class GameInformation {
 
     public int getMaxNumberOfPlayers() {
         return maxNumberOfPlayers;
-    }
-
-    public Bank getBank() {
-        return bank;
     }
 
     public FlightBoard getFlightBoard() {
@@ -372,13 +366,6 @@ public class GameInformation {
      */
     public void removePlayers(Player player) {
         playerList.remove(player);
-    }
-
-    /**
-     * creates bank
-     */
-    public void setUpBank() {
-        this.bank = new Bank(gameType);
     }
 
     /**

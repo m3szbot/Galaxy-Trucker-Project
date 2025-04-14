@@ -4,7 +4,7 @@ import java.util.*;
 
 import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Application.Startable;
-import it.polimi.ingsw.Bank.ScoreCounter;
+import it.polimi.ingsw.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Shipboard.Player;
 
 import java.util.HashMap;
