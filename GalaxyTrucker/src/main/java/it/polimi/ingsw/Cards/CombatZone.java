@@ -46,7 +46,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         //letting the players choose their firePower, from the leader backwards
 
-        for(int i = 0; i < numberOfPlayers; i++){
+        for (int i = 0; i < numberOfPlayers; i++) {
 
             firePowers[i] = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
 
@@ -54,7 +54,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         //letting the players choose their enginePower, from the leader backwards
 
-        for(int i = 0; i < numberOfPlayers; i++){
+        for (int i = 0; i < numberOfPlayers; i++) {
 
             enginePowers[i] = chooseEnginePower(flightBoard.getPlayerOrderList().get(i), flightView);
 
@@ -64,11 +64,11 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         int minIndex = 0;
 
-        for(int i = 0; i < numberOfPlayers; i++){
+        for (int i = 0; i < numberOfPlayers; i++) {
 
-           if(firePowers[i] < firePowers[minIndex]){
-               minIndex = i;
-           }
+            if (firePowers[i] < firePowers[minIndex]) {
+                minIndex = i;
+            }
 
         }
 
@@ -78,9 +78,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         minIndex = 0;
 
-        for(int i = 0; i < numberOfPlayers; i++){
+        for (int i = 0; i < numberOfPlayers; i++) {
 
-            if(enginePowers[i] < enginePowers[minIndex]){
+            if (enginePowers[i] < enginePowers[minIndex]) {
                 minIndex = i;
             }
 
@@ -103,10 +103,10 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         flightView.sendMessageToAll(message);
 
         //rolling the dice for each shot and then hitting
-        for(int i = 0; i < blows.length; i++){
+        for (int i = 0; i < blows.length; i++) {
             blows[i].rollDice();
         }
-        hit(weakestFirePowerPlayer, blows, blowType, flightView);
+        hit(weakestFirePowerPlayer, blows, blowType, flightBoard, flightView);
 
     }
 
