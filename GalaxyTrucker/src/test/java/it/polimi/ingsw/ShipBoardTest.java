@@ -70,6 +70,39 @@ public class ShipBoardTest {
 
     @Test
     void addComponent5(){
-        shipBoard.addComponent();
+        shipBoard.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, 2), 7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getBatteryPower(),  2);
+        shipBoard.removeComponent(7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getBatteryPower(),  0);
     }
+
+    @Test
+    void addComponent6(){
+        shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 20), 7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(),  20);
+        shipBoard.removeComponent(7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(),  0);
+    }
+
+    @Test
+    void addComponent7(){
+        shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, false, 20), 7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(),  20);
+        shipBoard.removeComponent(7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(),  0);
+    }
+
+    @Test
+    void addComponent8(){
+        shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(),  2);
+        shipBoard.addComponent(new AlienSupport(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true), 8, 8);
+        shipBoard.setCrewType(CrewType.Purple, 7,8);
+        assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(),  1);
+        assertEquals(shipBoard.getShipBoardAttributes().getAlienType(), 2);
+        shipBoard.removeComponent(8, 8);
+        shipBoard.removeComponent(7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(),  0);
+    }
+
 }

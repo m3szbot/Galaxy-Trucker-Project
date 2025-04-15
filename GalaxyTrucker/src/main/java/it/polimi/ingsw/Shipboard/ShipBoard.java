@@ -326,13 +326,14 @@ public class ShipBoard {
             }
 
             goDownChecking(6, 6, mat);
+            mat[6][6] = true;
             for (int i = 0; i < 12; i++) {
                 for (int j = 0; j < 12; j++) {
                     if (structureMatrix[i][j] != null) {
                         if (!mat[i][j]) {
                             flag = 1;
                             result = true;
-                            removeComponent(i, j);
+                            removeComponent(i+1, j+1);
                             shipBoardAttributes.updateDestroyedComponents(1);
                         }
                     }
@@ -421,10 +422,10 @@ public class ShipBoard {
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         if (structureMatrix[x][y] != null && structureMatrix[x][y].getComponentName().equals("Cabin")) {
             if (crewType.equals(CrewType.Brown)) {
-                if (((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
-                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
-                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
-                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
+                if (( structureMatrix[x-1][y] != null && (Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
+                        (structureMatrix[x+1][y] != null && (Boolean) structureMatrix[x + 1][y].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
+                        (structureMatrix[x][y-1] != null && (Boolean) structureMatrix[x][y - 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
+                        (structureMatrix[x][y+1] != null && (Boolean) structureMatrix[x][y + 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
                     ((Cabin) structureMatrix[x][y]).setCrewType(crewType);
                     shipBoardAttributes.updateAlien(CrewType.Brown);
                     shipBoardAttributes.updateCrewMembers(-1);
@@ -432,12 +433,12 @@ public class ShipBoard {
                     System.out.println("CrewType not permitted");
                 }
             } else {
-                if (((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
-                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
-                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
-                        ((Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
+                if ((structureMatrix[x-1][y] != null && (Boolean) structureMatrix[x - 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x - 1][y]).isPurple()) ||
+                        (structureMatrix[x+1][y] != null && (Boolean) structureMatrix[x + 1][y].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x + 1][y]).isPurple()) ||
+                        (structureMatrix[x][y-1] != null && (Boolean) structureMatrix[x][y-1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
+                        (structureMatrix[x][y-1] != null && (Boolean) structureMatrix[x][y+1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
                     ((Cabin) structureMatrix[x][y]).setCrewType(crewType);
-                    shipBoardAttributes.updateAlien(CrewType.Brown);
+                    shipBoardAttributes.updateAlien(CrewType.Purple);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
                     System.out.println("CrewType not permitted");
