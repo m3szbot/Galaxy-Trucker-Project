@@ -59,19 +59,18 @@ public class AssemblyProtocol {
      * @param num the deck index (1 to 3), 0 is blocked
      * @return the selected deck, or null if blocked
      */
-    public Deck showDeck(int num){
+    public List<Card> showDeck(int num){
 
-        if(num == 1){
+        if(num == 1 && !decksList[0].isInUse()){
             deck[num] = true;
-            return decksList[0];
+            return decksList[0].getCards();
         }
-        else if(num == 2){
-            deck[num] = true;
-            return decksList[1];
+        else if(num == 2 && !decksList[1].isInUse()){
+            return decksList[1].getCards();
         }
-        else if(num == 3){
+        else if(num == 3 && !decksList[2].isInUse()){
             deck[num] = true;
-            return decksList[2];
+            return decksList[2].getCards();
         }
         else {
             System.out.println("The Deck in 0 position is blocked");

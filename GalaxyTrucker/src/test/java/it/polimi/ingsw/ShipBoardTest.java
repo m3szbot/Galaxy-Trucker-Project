@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-//already tested: addComponent, removeComponent, goDownChecking, isCompatible,
+//already tested: addComponent, removeComponent, goDownChecking, isCompatible, countExternalJunctions, setCrewType, checkNotReachable
+//remaining methods: checkErrors, addGoods, checkSlots
 
 public class ShipBoardTest {
     ShipBoard shipBoard;
