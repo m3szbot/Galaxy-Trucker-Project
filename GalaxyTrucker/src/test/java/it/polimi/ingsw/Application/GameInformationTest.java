@@ -77,4 +77,57 @@ class GameInformationTest {
             System.out.println(component.getFront());
         }
     }
+
+    @Test
+    void testAddPlayers() {
+        Player player1 = new Player("Ludo", Color.RED, gameInformation);
+        Player player2 = new Player("Boti", Color.BLUE, gameInformation);
+        Player player3 = new Player("Carlo", Color.YELLOW, gameInformation);
+        Player player4 = new Player("Gecky", Color.GREEN, gameInformation);
+        gameInformation.setUpPlayers(player1, 3);
+
+        gameInformation.addPlayers(player2);
+        gameInformation.addPlayers(player3);
+        gameInformation.addPlayers(player4);
+        assertNotNull(gameInformation.getPlayerList());
+        assertEquals(3, gameInformation.getPlayerList().size());
+        assertEquals(player1, gameInformation.getPlayerList().getFirst());
+        assertEquals(player2, gameInformation.getPlayerList().get(1));
+        assertEquals(player3, gameInformation.getPlayerList().getLast());
+    }
+
+    @Test
+    void testRemovePlayers() {
+        Player player1 = new Player("Ludo", Color.RED, gameInformation);
+        Player player2 = new Player("Boti", Color.BLUE, gameInformation);
+        gameInformation.setUpPlayers(player1, 3);
+        gameInformation.addPlayers(player2);
+
+        gameInformation.removePlayers(player1);
+        assertNotNull(gameInformation.getPlayerList());
+        assertEquals(player2, gameInformation.getPlayerList().getFirst());
+        gameInformation.removePlayers(player2);
+        assertNull(gameInformation.getPlayerList());
+    }
+
+    @Test
+    void testSetUpFlightBoard() throws IOException {
+        GameType gameType1 = GameType.NormalGame;
+        gameInformation.setUpCards(gameType1);
+        assertNotNull(gameInformation.getCardsList());
+
+        gameInformation.setUpFlightBoard();
+        assertNotNull(gameInformation.getFlightBoard());
+    }
+
+    @Test
+    void testSetGameType() {
+        GameType gameType1 = GameType.TestGame;
+        GameType gameType2 = GameType.NormalGame;
+
+        gameInformation.setGameType(gameType1);
+        assertEquals(gameType1, gameInformation.getGameType());
+        gameInformation.setGameType(gameType2);
+        assertEquals(gameType2, gameInformation.getGameType());
+    }
 }
