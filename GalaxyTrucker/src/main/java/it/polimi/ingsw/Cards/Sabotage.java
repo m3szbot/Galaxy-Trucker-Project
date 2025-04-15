@@ -59,7 +59,7 @@ public class Sabotage extends Card implements SmallestCrew{
 
             if(player.getShipBoard().getComponent(x, y) != null){
 
-                player.getShipBoard().removeComponent(x, y);
+                player.getShipBoard().removeComponent(x, y, true);
                 player.getShipBoard().getShipBoardAttributes().updateDestroyedComponents(1);
                 return true;
 

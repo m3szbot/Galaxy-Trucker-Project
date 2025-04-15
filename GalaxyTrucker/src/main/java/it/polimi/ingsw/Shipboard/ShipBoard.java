@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Shipboard;
 
-
 import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Application.*;
@@ -81,6 +80,8 @@ public class ShipBoard {
             matr[9][4] = false;
             matr[9][5] = false;
         }
+
+        addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 7);
     }
 
     public Component getComponent(int x, int y){
@@ -150,7 +151,7 @@ public class ShipBoard {
      * @param y The y-coordinate of the component.
      * @author Giacomo
      */
-    public void removeComponent(int x, int y) {
+    public void removeComponent(int x, int y, boolean checkTrigger) {
         boolean flag = true;
         x = x - 1;
         y = y - 1;
@@ -180,8 +181,8 @@ public class ShipBoard {
             shipBoardAttributes.updateAvailableSlots(1, -(Integer) list.get(5));
             shipBoardAttributes.updateAvailableSlots(2, -(Integer) list.get(6));
             structureMatrix[x][y] = null;
-            while (flag) {
-                flag = checkNotReachable(this.shipBoardAttributes);
+            if (checkTrigger) {
+                while (checkNotReachable(this.shipBoardAttributes));
             }
         }
     }
@@ -200,16 +201,16 @@ public class ShipBoard {
             for (int j = 1; j < 11; j++) {
                 if (structureMatrix[i][j] != null) {
                     //va sistemato il fatto che qualora si volesse davvero usare un enum allora dovrebbe essere messo tipodiverso da vuoto e diverso da shield
-                    if (!(structureMatrix[i][j].getLeft().equals(SideType.Smooth) && structureMatrix[i - 1][j] == null)) {
+                    if ((!structureMatrix[i][j].getLeft().equals(SideType.Smooth) && structureMatrix[i - 1][j] == null)) {
                         externalJunctions++;
                     }
-                    if (!(structureMatrix[i][j].getRight().equals(SideType.Smooth) && structureMatrix[i + 1][j] == null)) {
+                    if ((!structureMatrix[i][j].getRight().equals(SideType.Smooth) && structureMatrix[i + 1][j] == null)) {
                         externalJunctions++;
                     }
-                    if (!(structureMatrix[i][j].getFront().equals(SideType.Smooth) && structureMatrix[i][j - 1] == null)) {
+                    if ((!structureMatrix[i][j].getFront().equals(SideType.Smooth) && structureMatrix[i][j - 1] == null)) {
                         externalJunctions++;
                     }
-                    if (!(structureMatrix[i][j].getBack().equals(SideType.Smooth) && structureMatrix[i][j + 1] == null)) {
+                    if ((!structureMatrix[i][j].getBack().equals(SideType.Smooth) && structureMatrix[i][j + 1] == null)) {
                         externalJunctions++;
                     }
                 }
@@ -326,14 +327,13 @@ public class ShipBoard {
             }
 
             goDownChecking(6, 6, mat);
-            mat[6][6] = true;
             for (int i = 0; i < 12; i++) {
                 for (int j = 0; j < 12; j++) {
                     if (structureMatrix[i][j] != null) {
                         if (!mat[i][j]) {
                             flag = 1;
                             result = true;
-                            removeComponent(i+1, j+1);
+                            removeComponent(i+1, j+1, true);
                             shipBoardAttributes.updateDestroyedComponents(1);
                         }
                     }
@@ -352,21 +352,37 @@ public class ShipBoard {
      * @author Giacomo
      */
     private void goDownChecking(int x, int y, boolean[][] mat) {
+        if (x < 0 || x >= 12 || y < 0 || y >= 12) return;
+        if (structureMatrix[x][y] == null || mat[x][y]) return;
         mat[x][y] = true;
-        if (structureMatrix[x + 1][y] != null) {
-            if ((structureMatrix[x][y].getRight().equals(SideType.Single) && (structureMatrix[x + 1][y].getLeft().equals(SideType.Single) || structureMatrix[x + 1][y].getLeft().equals(SideType.Universal))) || (structureMatrix[x][y].getRight().equals(SideType.Double) && (structureMatrix[x + 1][y].getLeft().equals(SideType.Double) || structureMatrix[x + 1][y].getLeft().equals(SideType.Universal)))) {
-                goDownChecking(x + 1, y, mat);
-            }
-            if ((structureMatrix[x][y].getLeft().equals(SideType.Single) && (structureMatrix[x - 1][y].getRight().equals(SideType.Single) || structureMatrix[x - 1][y].getRight().equals(SideType.Universal))) || (structureMatrix[x][y].getLeft().equals(SideType.Double) && (structureMatrix[x - 1][y].getRight().equals(SideType.Double) || structureMatrix[x - 1][y].getRight().equals(SideType.Universal)))) {
-                goDownChecking(x - 1, y, mat);
-            }
-            if ((structureMatrix[x][y].getBack().equals(SideType.Single) && (structureMatrix[x][y + 1].getFront().equals(SideType.Single) || structureMatrix[x][y + 1].getFront().equals(SideType.Universal))) || (structureMatrix[x][y].getBack().equals(SideType.Double) && (structureMatrix[x][y + 1].getFront().equals(SideType.Double) || structureMatrix[x][y + 1].getFront().equals(SideType.Universal)))) {
-                goDownChecking(x, y + 1, mat);
-            }
-            if ((structureMatrix[x][y].getFront().equals(SideType.Single) && (structureMatrix[x][y - 1].getBack().equals(SideType.Single) || structureMatrix[x][y - 1].getBack().equals(SideType.Universal))) || (structureMatrix[x][y].getFront().equals(SideType.Double) && (structureMatrix[x][y - 1].getBack().equals(SideType.Double) || structureMatrix[x][y - 1].getBack().equals(SideType.Universal)))) {
-                goDownChecking(x, y - 1, mat);
-            }
+        // Down
+        if (x + 1 < 12 && structureMatrix[x + 1][y] != null &&
+                isCompatible(structureMatrix[x][y].getRight(), structureMatrix[x + 1][y].getLeft())) {
+            goDownChecking(x + 1, y, mat);
         }
+
+        // Up
+        if (x - 1 >= 0 && structureMatrix[x - 1][y] != null &&
+                isCompatible(structureMatrix[x][y].getLeft(), structureMatrix[x - 1][y].getRight())) {
+            goDownChecking(x - 1, y, mat);
+        }
+
+        // Right
+        if (y + 1 < 12 && structureMatrix[x][y + 1] != null &&
+                isCompatible(structureMatrix[x][y].getBack(), structureMatrix[x][y + 1].getFront())) {
+            goDownChecking(x, y + 1, mat);
+        }
+
+        // Left
+        if (y - 1 >= 0 && structureMatrix[x][y - 1] != null &&
+                isCompatible(structureMatrix[x][y].getFront(), structureMatrix[x][y - 1].getBack())) {
+            goDownChecking(x, y - 1, mat);
+        }
+    }
+
+    private boolean isCompatible(SideType a, SideType b) {
+        return (a == SideType.Single && (b == SideType.Single || b == SideType.Universal)) ||
+                (a == SideType.Double && (b == SideType.Double || b == SideType.Universal));
     }
 
     /**
