@@ -23,6 +23,7 @@ class GameInformationTest {
     @BeforeEach
     void setUp() {
         this.gameInformation = new GameInformation();
+        gameInformation.setGameType(GameType.NormalGame);
     }
 
     @AfterEach
@@ -111,14 +112,16 @@ class GameInformationTest {
     void testRemovePlayers() {
         Player player1 = new Player("Ludo", Color.RED, gameInformation);
         Player player2 = new Player("Boti", Color.BLUE, gameInformation);
+        gameInformation.setGameType(GameType.NormalGame);
         gameInformation.setUpPlayers(player1, 3);
         gameInformation.addPlayers(player2);
 
         gameInformation.removePlayers(player1);
         assertNotNull(gameInformation.getPlayerList());
-        assertEquals(player2, gameInformation.getPlayerList().getFirst());
+        assertNotNull(gameInformation.getPlayerList().get(0));
+        assertEquals(player2, gameInformation.getPlayerList().get(0));
         gameInformation.removePlayers(player2);
-        assertNull(gameInformation.getPlayerList());
+        assertEquals(0, gameInformation.getPlayerList().size());
     }
 
     @Test
