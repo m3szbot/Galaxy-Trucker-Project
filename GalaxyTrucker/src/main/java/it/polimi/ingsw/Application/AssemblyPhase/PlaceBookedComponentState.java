@@ -53,8 +53,7 @@ public class PlaceBookedComponentState implements GameState{
         int index = Integer.parseInt(input);
         index = index - 1;
         if(index == 0 || index == 1){
-            assemblyGame.getAssemblyProtocol().getUncoveredList().add(assemblyGame.getAssemblyProtocol().getViewMap().get(player));
-            assemblyGame.getAssemblyProtocol().getViewMap().put(player, assemblyGame.getAssemblyProtocol().takeBookedComponentToPlace(player, index));
+            assemblyGame.getAssemblyProtocol().takeBookedComponentToPlace(player, index);
             assemblyGame.setState(new ComponentPlacingState(view, assemblyProtocol, player));
         }
         else{

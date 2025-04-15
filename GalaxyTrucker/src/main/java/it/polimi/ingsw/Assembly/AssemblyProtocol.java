@@ -191,10 +191,11 @@ public class AssemblyProtocol {
      * @param num the index of the component to take
      * @return the component removed, or null if not found
      */
-    public Component takeBookedComponentToPlace(Player player, int num){
+    public void takeBookedComponentToPlace(Player player, int num){
         Component component = bookedMap.get(player).filter(list -> num >= 0 && num < list.size())
                 .map(list -> list.remove(num))
                 .orElse(null);
-        return component;
+        uncoveredList.add(viewMap.get(player));
+        viewMap.put(player, component);
     }
 }
