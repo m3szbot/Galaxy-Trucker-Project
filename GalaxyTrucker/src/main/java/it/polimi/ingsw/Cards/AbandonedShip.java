@@ -1,10 +1,8 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
-
-import java.util.List;
 
 /**
  * class that represent the card abbandonedShip
@@ -45,7 +43,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                 if(flightView.askPlayerGenericQuestion(player, message)){
                     //player decide to solve the card
 
-                    inflictLoss(player, lossType, lossNumber, flightView);
+                    inflictLoss(player, lossType, lossNumber, flightBoard, flightView);
                     giveCredits(player, gainedCredit);
                     changePlayerPosition(player, daysLost, flightBoard);
 

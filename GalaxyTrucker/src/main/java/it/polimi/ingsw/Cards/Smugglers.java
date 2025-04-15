@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Shipboard.Player;
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
-
-import java.util.List;
 
 /**
  * class that represent the card smugglers
@@ -84,7 +81,7 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
                     message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() +
                             "has collected the reward!";
 
-                    giveGoods(flightBoard.getPlayerOrderList().get(i), goods, flightView);
+                    giveGoods(flightBoard.getPlayerOrderList().get(i), goods, flightBoard, flightView);
                     changePlayerPosition(flightBoard.getPlayerOrderList().get(i), daysLost, flightBoard);
                     flightView.sendMessageToAll(message);
 
@@ -101,7 +98,7 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
             }
             else if(results[i] == AttackStates.PlayerDefeated){
 
-                inflictLoss(flightBoard.getPlayerOrderList().get(i), lossType, lossNumber, flightView);
+                inflictLoss(flightBoard.getPlayerOrderList().get(i), lossType, lossNumber, flightBoard, flightView);
 
             }
 

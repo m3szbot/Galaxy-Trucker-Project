@@ -1,18 +1,10 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Components.Storage;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
-
-//NOTE
-/*
-Check that availableXSlots in ShipBoardAttributes is updated everytime a good is added, i.e,
-it behaves in real time.
-Add a method in Storage called isEmpty and isFull which return a boolean.
- */
-
-//remember to modify the bank
 
 /**
  * Interface that define a method which handles a player receiving
@@ -32,7 +24,7 @@ public interface GoodsGain {
      * @author Carlo
      */
 
-    default void giveGoods(Player player, int[] goods, FlightView flightView) {
+    default void giveGoods(Player player, int[] goods, FlightBoard flightBoard, FlightView flightView) {
 
         int i, j;
         int[] coordinates;
@@ -102,6 +94,7 @@ public interface GoodsGain {
                            //value entered are correct
 
                            ((Storage) component).removeGoods(goodsToRemove);
+                           flightBoard.addGoods(goodsToRemove);
                            player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, goodsToRemove[0]);
                            player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, goodsToRemove[1] + goodsToRemove[2] + goodsToRemove[3]);
 
@@ -235,7 +228,7 @@ public interface GoodsGain {
                  message = "Enter coordinates of storage component: ";
                  coordinates = flightView.askPlayerCoordinates(player, message);
                  component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
-                 int redGoodsToAdd = 0;
+                 int redGoodsToAdd;
                  errorFlag = true;
 
                  if(component.getComponentName().equals("Storage")){
@@ -250,8 +243,21 @@ public interface GoodsGain {
 
                                  errorFlag = false;
                                  goods[0] -= redGoodsToAdd;
-                                 ((Storage)component).addGoods(new int[]{redGoodsToAdd, 0, 0, 0});
-                                 player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -redGoodsToAdd);
+
+                                 try {
+
+                                     flightBoard.removeGoods(new int[]{redGoodsToAdd, 0, 0, 0});
+                                     ((Storage)component).addGoods(new int[]{redGoodsToAdd, 0, 0, 0});
+                                     player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -redGoodsToAdd);
+
+                                 }
+                                 catch (IllegalArgumentException e){
+                                     //Error management will be developed later, for now this is enough
+
+                                     System.out.println(e.getMessage());
+
+                                 }
+
                              }
 
                          }
@@ -326,8 +332,14 @@ public interface GoodsGain {
                                  goods[1] -= goodsToAdd[1];
                                  goods[2] -= goodsToAdd[2];
                                  goods[3] -= goodsToAdd[3];
-                                 ((Storage)component).addGoods(goodsToAdd);
-                                 player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -(goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]));
+                                 try {
+                                     flightBoard.removeGoods(goodsToAdd);
+                                     ((Storage) component).addGoods(goodsToAdd);
+                                     player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -(goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]));
+                                 }
+                                 catch (IllegalArgumentException e){
+                                     System.out.println(e.getMessage());
+                                 }
                              }
 
                          }

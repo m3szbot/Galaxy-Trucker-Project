@@ -70,7 +70,7 @@ public class FlightBoard {
      * @return startingTiles
      */
     public int[] getStartingTiles() {
-        return startingTiles;
+        return Arrays.copyOf(startingTiles, startingTiles.length);
     }
 
     /**

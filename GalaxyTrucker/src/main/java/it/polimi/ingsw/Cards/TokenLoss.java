@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.Components.Battery;
 import it.polimi.ingsw.Components.Cabin;
 import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Components.Storage;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
 /**
@@ -29,7 +30,7 @@ public interface TokenLoss {
      * @author Carlo
      */
 
-    default void inflictLoss(Player player, ElementType lossType, int quantity, FlightView flightView) {
+    default void inflictLoss(Player player, ElementType lossType, int quantity, FlightBoard flightBoard, FlightView flightView) {
 
         int coordinates[];
         String message;
@@ -130,6 +131,8 @@ public interface TokenLoss {
                             numberOfGoodsToRemove = goodsOnShip[i];
                         }
 
+
+
                         if(i == 0){
                             player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, numberOfGoodsToRemove);
                         }
@@ -141,7 +144,7 @@ public interface TokenLoss {
                             //if only one error occur, the loop is repeated, can be improved.
 
                             int[] availableGoods;
-                            int numberOfRemovedGoods = 0;
+                            int numberOfRemovedGoods;
                             int[] goodsRemoved = {0, 0, 0, 0};
 
                             message = "You must remove " + numberOfGoodsToRemove + goodColor + " goods, " +
@@ -163,6 +166,7 @@ public interface TokenLoss {
                                    if(numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove){
 
                                        numberOfGoodsToRemove -= numberOfRemovedGoods;
+                                       flightBoard.addGoods(goodsRemoved);
                                        ((Storage)component).removeGoods(goodsRemoved);
 
                                    }

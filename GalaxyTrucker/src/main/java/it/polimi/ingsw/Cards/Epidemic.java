@@ -1,12 +1,10 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.Components.Cabin;
 import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
-
-import java.util.List;
 
 /**
  * class that represent the card epidemic

@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightView;
+import it.polimi.ingsw.Application.FlightPhase.FlightView;
 import it.polimi.ingsw.Components.Battery;
 import it.polimi.ingsw.Components.Cannon;
 import it.polimi.ingsw.Components.SideType;
+import it.polimi.ingsw.Components.Storage;
+import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
 /**
@@ -28,7 +30,7 @@ public interface SufferBlows {
      * @author Carlo
      */
 
-    default void hit(Player player, Blow[] blows, ElementType blowType, FlightView flightView) {
+    default void hit(Player player, Blow[] blows, ElementType blowType, FlightBoard flightBoard, FlightView flightView) {
 
         int i, leftCoord = 0, rightCoord = 0;
         int rows = player.getShipBoard().getMatrixRows();
@@ -113,6 +115,16 @@ public interface SufferBlows {
                     if (blow.isBig()) {
                         //player cannot defend itself
 
+                        //checking if the component is a storage component
+
+                        if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                            int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                            flightBoard.addGoods(goodsToRemove);
+
+                        }
+
                         player.getShipBoard().removeComponent(leftCoord, rightCoord);
                         hitFlag = true;
 
@@ -153,12 +165,28 @@ public interface SufferBlows {
 
                             } else { //player decide to not defend itself
 
+                                if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                                    int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                                    flightBoard.addGoods(goodsToRemove);
+
+                                }
+
                                 player.getShipBoard().removeComponent(leftCoord, rightCoord);
                                 hitFlag = true;
 
                             }
 
                         } else { //player cannot defent itself
+
+                            if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                                int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                                flightBoard.addGoods(goodsToRemove);
+
+                            }
 
                             player.getShipBoard().removeComponent(leftCoord, rightCoord);
                             hitFlag = true;
@@ -335,6 +363,14 @@ public interface SufferBlows {
                                     }
                                     else{ //player decide to not defend itself
 
+                                        if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                                            int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                                            flightBoard.addGoods(goodsToRemove);
+
+                                        }
+
                                         player.getShipBoard().removeComponent(leftCoord, rightCoord);
                                         hitFlag = true;
 
@@ -342,6 +378,14 @@ public interface SufferBlows {
 
                                 }
                                 else{ //player don't have batteries
+
+                                    if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                                        int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                                        flightBoard.addGoods(goodsToRemove);
+
+                                    }
 
                                     player.getShipBoard().removeComponent(leftCoord, rightCoord);
                                     hitFlag = true;
@@ -353,6 +397,14 @@ public interface SufferBlows {
                             //player has a single cannon, which doesn't require any batteries.
 
                         } else { //player dont have the cannon
+
+                            if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                                int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                                flightBoard.addGoods(goodsToRemove);
+
+                            }
 
                             player.getShipBoard().removeComponent(leftCoord, rightCoord);
                             hitFlag = true;
@@ -405,12 +457,28 @@ public interface SufferBlows {
                                 }
                                 else{
 
+                                    if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                                        int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                                        flightBoard.addGoods(goodsToRemove);
+
+                                    }
+
                                     hitFlag = true;
                                     player.getShipBoard().removeComponent(leftCoord, rightCoord);
 
                                 }
                             }
                             else{
+
+                                if(player.getShipBoard().getComponent(leftCoord, rightCoord).getComponentName().equals("Storage")){
+
+                                    int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(leftCoord, rightCoord)).getGoods();
+
+                                    flightBoard.addGoods(goodsToRemove);
+
+                                }
 
                                 hitFlag = true;
                                 player.getShipBoard().removeComponent(leftCoord, rightCoord);

@@ -18,10 +18,10 @@ public class ScoreCounter {
     // more players can have the minimum and both receive points
     private List<Player> leastExposedLinksList;
     // constants
-    private final int leastExposedLinksPoints;
-    private final int lostComponentsPoints;
     private final int[] finishOrderPoints;
+    private final int leastExposedLinksPoints;
     private final int[] goodsPoints;
+    private final int lostComponentsPoints;
 
     /**
      * Constructor, populates playerScoresMap
@@ -35,15 +35,14 @@ public class ScoreCounter {
     public ScoreCounter(GameType gameType, List<Player> playerList, List<Player> playerOrderList) {
         // set scoring based on game type
         // normal game values
-        int leastExposedLinksPoints = 4;
-        int lostComponentsPoints = -1;
         int[] finishOrderPoints = {8, 6, 4, 2};
-        int[] goodsPoints = {8, 6, 4, 2};
+        int leastExposedLinksPoints = 4;
+        int[] goodsPoints = {4, 3, 2, 1};
+        int lostComponentsPoints = -1;
         // test game values
         if (gameType == GameType.TestGame) {
-            leastExposedLinksPoints = 2;
             finishOrderPoints = new int[]{4, 3, 2, 1};
-            goodsPoints = new int[]{4, 3, 2, 1};
+            leastExposedLinksPoints = 2;
         }
         // set scoring attributes
         this.leastExposedLinksPoints = leastExposedLinksPoints;
@@ -69,7 +68,10 @@ public class ScoreCounter {
      * @return Score of given player
      */
     public int getPlayerScore(Player player) {
-        return playerScoresMap.get(player);
+        if (playerScoresMap.containsKey(player)) {
+            return playerScoresMap.get(player);
+        } else
+            throw new IllegalArgumentException("Player not present");
     }
 
     /**
@@ -119,9 +121,11 @@ public class ScoreCounter {
      * @return Score of player given for finish position
      */
     private int calculateFinishOrderPoints(Player player, List<Player> playerOrderList) {
-        int finishPoints = 0;
-        finishPoints += finishOrderPoints[playerOrderList.indexOf(player)];
-        return finishPoints;
+        if (playerOrderList.contains(player)) {
+            return finishOrderPoints[playerOrderList.indexOf(player)];
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -131,10 +135,11 @@ public class ScoreCounter {
      * @return Earned points
      */
     private int calculateLeastExposedLinksPoints(Player player) {
-        if (leastExposedLinksList.contains(player))
+        if (leastExposedLinksList.contains(player)) {
             return this.leastExposedLinksPoints;
-        else
+        } else {
             return 0;
+        }
     }
 
     /**

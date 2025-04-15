@@ -1,7 +1,95 @@
 package it.polimi.ingsw.ScoreCounter;
 
+import it.polimi.ingsw.Application.GameInformation;
+import it.polimi.ingsw.Application.GameType;
+import it.polimi.ingsw.Shipboard.Color;
+import it.polimi.ingsw.Shipboard.Player;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+// TODO players with shipBoards (goods, exposed links, lost components)
 class ScoreCounterTest {
+    /* 1 public method: getPlayerScore (+ constructor)
+
+     after assigning custom playerList and playerOrderList
+     scoreCounter must be initialized in each test
+
+     Base case: NormalGame
+     reassign setUp for TestGame
+     */
+    ScoreCounter scoreCounter;
+    List<Player> playerList;
+    List<Player> playerOrderList;
+    Player playerA, playerB, playerC, playerD;
+
+    @BeforeEach
+    void setUp() {
+        // gameInformation necessary for player
+        GameInformation gameInformation = new GameInformation();
+        gameInformation.setGameType(GameType.NormalGame);
+        playerA = new Player("A", Color.BLUE, gameInformation);
+        playerB = new Player("B", Color.RED, gameInformation);
+        playerC = new Player("C", Color.YELLOW, gameInformation);
+        playerD = new Player("D", Color.GREEN, gameInformation);
+
+        playerList = new ArrayList<>();
+        playerOrderList = new ArrayList<>();
+    }
+
+    @Test
+    void onePlayerEmptyShip() {
+        playerList.add(playerA);
+        playerOrderList.add(playerA);
+        scoreCounter = new ScoreCounter(GameType.NormalGame, playerList, playerOrderList);
+        // score: 4 + 8
+        assertEquals(12, scoreCounter.getPlayerScore(playerA));
+    }
+
+    @Test
+    void fourPLayersEmptyShip() {
+        playerList.add(playerA);
+        playerList.add(playerB);
+        playerList.add(playerC);
+        playerList.add(playerD);
+        playerOrderList.add(playerA);
+        playerOrderList.add(playerB);
+        playerOrderList.add(playerC);
+        playerOrderList.add(playerD);
+        scoreCounter = new ScoreCounter(GameType.NormalGame, playerList, playerOrderList);
+        assertEquals(12, scoreCounter.getPlayerScore(playerA));
+        assertEquals(10, scoreCounter.getPlayerScore(playerB));
+        assertEquals(8, scoreCounter.getPlayerScore(playerC));
+        assertEquals(6, scoreCounter.getPlayerScore(playerD));
+
+    }
+
+    @Test
+    void DNFPlayerEmptyShip() {
+        playerList.add(playerA);
+        scoreCounter = new ScoreCounter(GameType.NormalGame, playerList, playerOrderList);
+        assertEquals(4, scoreCounter.getPlayerScore(playerA));
+    }
+
+    @Test
+    void getNonPresentPlayer() {
+        scoreCounter = new ScoreCounter(GameType.NormalGame, playerList, playerOrderList);
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreCounter.getPlayerScore(playerA);
+        });
+    }
+
+    @Test
+    void testGameOnePlayerEmptyShip() {
+        playerList.add(playerA);
+        playerOrderList.add(playerA);
+        scoreCounter = new ScoreCounter(GameType.TestGame, playerList, playerOrderList);
+        assertEquals(6, scoreCounter.getPlayerScore(playerA));
+
+    }
 
 }
