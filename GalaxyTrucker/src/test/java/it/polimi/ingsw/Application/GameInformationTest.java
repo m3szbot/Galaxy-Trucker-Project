@@ -9,6 +9,7 @@ import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Components.SideType;
 import it.polimi.ingsw.Shipboard.Color;
 import it.polimi.ingsw.Shipboard.Player;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameInformationTest {
     GameInformation gameInformation;
+
+    @BeforeEach
+    void setUp() {
+        this.gameInformation = new GameInformation();
+    }
+
+    @AfterEach
+    void tearDown() {
+        this.gameInformation = null;
+    }
 
     @Test
     void testSetUpPlayers() {
