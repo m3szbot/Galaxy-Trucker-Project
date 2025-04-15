@@ -29,6 +29,13 @@ public class GameInformation {
     private GameType gameType;
     private HashMap<Player, ViewType> playerViewMap;
 
+    public GameInformation() {
+        cardsList = new ArrayList<>();
+        componentList = new ArrayList<>();
+        playerList = new ArrayList<>();
+        playerViewMap = new HashMap<>();
+    }
+
     public List<Card> getCardsList() {
         return cardsList;
     }
@@ -65,7 +72,7 @@ public class GameInformation {
     public void setUpCards(GameType gameType) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(new File("Cards.json"));
+        JsonNode rootNode = objectMapper.readTree(new File("src/main/resources/Cards.json"));
         CardBuilder cardBuilder = new CardBuilder();
 
         ElementType blowType, requirementType, lossType;
@@ -321,7 +328,7 @@ public class GameInformation {
     public void setUpComponents() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        componentList = mapper.readValue(new File("Components.json"),
+        componentList = mapper.readValue(new File("src/main/resources/Components.json"),
                 mapper.getTypeFactory().constructCollectionType(List.class, Component.class));
 
     }
@@ -351,7 +358,7 @@ public class GameInformation {
      */
     public void addPlayers(Player player) {
 
-        if (playerList.contains(player) && playerList.size() < maxNumberOfPlayers) {
+        if (!playerList.isEmpty() && playerList.size() < maxNumberOfPlayers) {
             playerList.add(player);
 
         } else {

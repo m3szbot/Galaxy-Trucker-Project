@@ -60,7 +60,7 @@ public class Storage extends Component {
         }
     }
 
-    public Storage(SideType[] sides, boolean type, int numberOfMaximumElements, int goods) {
+    public Storage(SideType[] sides, boolean type, int numberOfMaximumElements) {
 
         super(sides);
         int i;
