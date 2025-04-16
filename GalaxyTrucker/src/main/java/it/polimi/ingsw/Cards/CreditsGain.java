@@ -19,6 +19,9 @@ public interface CreditsGain {
      * @author Carlo
      */
 
+    //note that the method doesn't have to be tested as it calls another method.
+    //updateCredits must be tested.
+
     default void giveCredits(Player player, int creditNumber) {
 
         player.getShipBoard().getShipBoardAttributes().updateCredits(creditNumber);

@@ -23,7 +23,7 @@ public class Battery extends Component {
         numberOfCurrentBatteries--;
     }
 
-    public String getName() {
+    public String getComponentName() {
         return "Battery";
     }
 

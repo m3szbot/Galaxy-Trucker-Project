@@ -34,7 +34,7 @@ public interface EnginePowerChoice {
             //player have the possibility to increase his engine power with batteries
 
             message = "You're engine power is " + defaultEnginePower +
-            ", but you still have " + player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() + "." +
+            ", but you still have " + player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() + " double engine." +
             " Would you like to use double engines to increase you're engine power ?";
 
             if(flightView.askPlayerGenericQuestion(player, message)){
