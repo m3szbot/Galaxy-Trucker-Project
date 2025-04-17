@@ -21,6 +21,10 @@ public interface Movable {
      * @author Carlo
      */
 
+    /*
+    Method doesn't have to be tested as it calls directly another method. The that is calls must be tested.
+     */
+
     default void changePlayerPosition(Player player, int numberOfDays, FlightBoard flightBoard) {
 
         flightBoard.incrementPlayerTile(player, numberOfDays);

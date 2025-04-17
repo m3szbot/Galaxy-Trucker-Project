@@ -36,7 +36,7 @@ public interface FirePowerChoice {
 
             if(flightView.askPlayerGenericQuestion(player, message)){
 
-                message = "Double cannons will be automatically chose from the ones that gives more fire power" +
+                message = "Double cannons will be automatically chosen from the ones that gives more fire power" +
                         "to the ones that gives less. Please enter the number of double cannons you want to" +
                         "activate: ";
 
@@ -44,7 +44,7 @@ public interface FirePowerChoice {
 
                     doubleCannonsToActivate = flightView.askPlayerValue(player, message);
 
-                    if(doubleCannonsToActivate >= 0 && doubleCannonsToActivate <= player.getShipBoard().getShipBoardAttributes().getBatteryPower()
+                    if(doubleCannonsToActivate > 0 && doubleCannonsToActivate <= player.getShipBoard().getShipBoardAttributes().getBatteryPower()
                             && doubleCannonsToActivate <= forwardDoubleCannons + notForwardDoubleCannons){
                         break;
                     }

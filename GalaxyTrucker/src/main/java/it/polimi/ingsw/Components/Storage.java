@@ -71,15 +71,16 @@ public class Storage extends Component {
     @Override
     public int getAvailableRedSlots(){
         if(isRed){
-            //qua sta cosa va sistemata, forse devo fare get number of maximumElements e basta perchè quando va a zero come faccio a capire che è uno Storage
-            return numberOfMaximumElements - goods[0];
+
+            return numberOfMaximumElements - goods[0] - goods[1] - goods[2] - goods[3];
+
         }
         return 0;
     }
 
     @Override
     public int  getAvailableBlueSlots(){
-        if(isRed == false) {
+        if(!isRed) {
             return numberOfMaximumElements - goods[1] - goods[2] - goods[3];
         }
         return 0;
