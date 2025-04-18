@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Class that represent a cannon
  *
@@ -10,11 +13,20 @@ public class Cannon extends Component {
 
     private boolean single;
 
-    public Cannon(SideType[] sides, boolean single) {
+    public Cannon() {
+    }
+
+    @JsonCreator
+    public Cannon(@JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
 
         super(sides);
         this.single = single;
 
+    }
+
+    @JsonProperty("single")
+    public void setSingle(boolean single) {
+        this.single = single;
     }
 
     /**
@@ -33,16 +45,15 @@ public class Cannon extends Component {
     //aggiunte
 
     @Override
-    public float getFirePower(){
-       if (single){
-           if(this.getFront().equals(SideType.Special)){
-               return 1;
-           }else{
-               return 0.5f;
-           }
-       }
-       else{
-           return 2;
-       }
+    public float getFirePower() {
+        if (single) {
+            if (this.getFront().equals(SideType.Special)) {
+                return 1;
+            } else {
+                return 0.5f;
+            }
+        } else {
+            return 2;
+        }
     }
 }

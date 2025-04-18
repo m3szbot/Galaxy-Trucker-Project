@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Components;
 //not finished
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Class that represents an alien support component
  *
@@ -11,8 +14,17 @@ public class AlienSupport extends Component {
 
     private boolean purple;
 
-    public AlienSupport(SideType[] sides, boolean purple) {
+    public AlienSupport() {
+    }
+
+    @JsonCreator
+    public AlienSupport(@JsonProperty("sides") SideType[] sides, @JsonProperty("purple") boolean purple) {
         super(sides);
+        this.purple = purple;
+    }
+
+    @JsonProperty("purple")
+    public void setPurple(boolean purple) {
         this.purple = purple;
     }
 
@@ -30,7 +42,7 @@ public class AlienSupport extends Component {
     }
 
     @Override
-    public boolean amIASupport(){
+    public boolean amIASupport() {
         return true;
     }
 }
