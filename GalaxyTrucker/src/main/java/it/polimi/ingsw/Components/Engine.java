@@ -2,6 +2,7 @@ package it.polimi.ingsw.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.beans.DefaultProperty;
 
 /**
  * Class that represents an Engine
@@ -54,7 +55,11 @@ public class Engine extends Component {
 
     @Override
     public void rotate() {
-        System.out.println("Cannot rotate an engine!!");
+        if (this.getBack() == SideType.Special) {
+            System.out.println("Cannot rotate an engine!!");
+        } else {
+            super.rotate();
+        }
     }
 }
 
