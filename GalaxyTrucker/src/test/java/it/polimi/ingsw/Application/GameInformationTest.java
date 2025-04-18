@@ -87,6 +87,10 @@ class GameInformationTest {
             assertNotNull(component.getComponentName());
             System.out.println(component.getComponentName());
             System.out.println(component.getFront());
+            System.out.println(component.getLeft());
+            System.out.println(component.getBack());
+            System.out.println(component.getRight());
+            System.out.println(i);
         }
     }
 

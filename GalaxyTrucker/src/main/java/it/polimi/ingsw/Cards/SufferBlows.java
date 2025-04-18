@@ -125,7 +125,7 @@ public interface SufferBlows {
 
                         }
 
-                        player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                        player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
                         hitFlag = true;
 
                     } else {
@@ -173,7 +173,7 @@ public interface SufferBlows {
 
                                 }
 
-                                player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                                player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
                                 hitFlag = true;
 
                             }
@@ -188,7 +188,7 @@ public interface SufferBlows {
 
                             }
 
-                            player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                            player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
                             hitFlag = true;
 
                         }
@@ -371,7 +371,7 @@ public interface SufferBlows {
 
                                         }
 
-                                        player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                                        player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
                                         hitFlag = true;
 
                                     }
@@ -387,7 +387,7 @@ public interface SufferBlows {
 
                                     }
 
-                                    player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                                    player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
                                     hitFlag = true;
 
                                 }
@@ -406,7 +406,7 @@ public interface SufferBlows {
 
                             }
 
-                            player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                            player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
                             hitFlag = true;
                         }
 
@@ -466,7 +466,7 @@ public interface SufferBlows {
                                     }
 
                                     hitFlag = true;
-                                    player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                                    player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
 
                                 }
                             }
@@ -481,7 +481,7 @@ public interface SufferBlows {
                                 }
 
                                 hitFlag = true;
-                                player.getShipBoard().removeComponent(leftCoord, rightCoord);
+                                player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
 
                             }
 

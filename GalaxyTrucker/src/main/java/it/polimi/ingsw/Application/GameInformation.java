@@ -328,8 +328,24 @@ public class GameInformation {
     public void setUpComponents() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
+        // Serve ad ignorare le proprietà(campi) sconosciuti degli oggetti json con campi aggiuntivi
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Registrazione esplicita dei subtypes
+        mapper.registerSubtypes(
+                AlienSupport.class,
+                Battery.class,
+                Cabin.class,
+                Cannon.class,
+                Component.class,
+                Engine.class,
+                Shield.class,
+                Storage.class
+        );
+
         componentList = mapper.readValue(new File("src/main/resources/Components.json"),
-                mapper.getTypeFactory().constructCollectionType(List.class, Component.class));
+                mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
+        );
 
     }
 
