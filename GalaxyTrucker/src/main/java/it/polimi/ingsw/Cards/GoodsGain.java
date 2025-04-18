@@ -318,11 +318,19 @@ public interface GoodsGain {
                          }
                      }
                      else{
+
+                         message = "The storage you entered is either full or is not red, do you still want to add red goods to your ship ? ";
+                         placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+
                          continue;
                      }
 
                  }
                  else{
+
+                     message = "The selected component is not a storage! Do you still want to add red goods to your ship? ";
+                     placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+
                      continue;
                  }
 
@@ -350,14 +358,20 @@ public interface GoodsGain {
                  message = "Enter coordinates of storage component: ";
                  coordinates = flightView.askPlayerCoordinates(player, message);
                  component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
-                 int[] goodsToAdd = {0, 0, 0, 0};
-                 int totalGoodsAdded = 0;
                  errorFlag = true;
+                 boolean redFlag = false;
 
                  if(component.getComponentName().equals("Storage")){
-                     if(((Storage)component).isRed() && !((Storage)component).isFull()){
+                     if(!((Storage)component).isFull()){
+
+                         if(((Storage)component).isRed()){
+                             redFlag = true;
+                         }
 
                          while(errorFlag){
+
+                             int[] goodsToAdd = {0, 0, 0, 0};
+                             int totalGoodsAdded = 0;
 
                              if(goods[1] > 0){
 
@@ -390,7 +404,17 @@ public interface GoodsGain {
                                  try {
                                      flightBoard.removeGoods(goodsToAdd);
                                      ((Storage) component).addGoods(goodsToAdd);
-                                     player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -(goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]));
+
+                                     if(redFlag) {
+
+                                         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -(goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]));
+
+                                     }
+                                     else{
+
+                                         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -(goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]));
+
+                                     }
                                  }
                                  catch (IllegalArgumentException e){
                                      System.out.println(e.getMessage());
@@ -400,11 +424,19 @@ public interface GoodsGain {
                          }
                      }
                      else{
+
+                         message = "The storage component you entered is already full! Do you still want to add non red goods to your ship? ";
+                         placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+
                          continue;
                      }
 
                  }
                  else{
+
+                     message = "The selected component is not a storage! Do you still want to add non red goods to your ship? ";
+                     placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+
                      continue;
                  }
 

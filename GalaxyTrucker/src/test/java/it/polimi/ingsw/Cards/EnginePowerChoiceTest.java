@@ -17,6 +17,10 @@ import java.io.ByteArrayInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author carlo
+ */
+
 class EnginePowerChoiceTest {
 
     class Operator implements EnginePowerChoice{};

@@ -13,10 +13,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * @author carlo
+ */
 
 class GoodsGainTest {
 
@@ -127,6 +133,77 @@ class GoodsGainTest {
 
     }
 
+    @Test
+    void addingRedGoodsWithWrongEnteredValues(){
 
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 5, 5);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 3, 3);
+
+        //Av.RedSlots = 10; Av.BlueSlots = 5
+
+        //making it full
+
+        ((Storage)player.getShipBoard().getComponent(2, 2)).addGoods(new int[]{5, 0, 0, 0});
+
+        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
+        //Av.RedSlots = 5
+
+        String inputString = "false\nfalse\ntrue\n3 3\ntrue\n2 2\ntrue\n4 4\ntrue\n" +
+                "5 5\n2\ntrue\n5 5\n3\nfalse\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(in);
+
+        flightView = new FlightView(gameInformation);
+
+        operator.giveGoods(player, new int[]{5, 0, 0, 0}, flightBoard, flightView);
+
+        assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 0);
+        assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).isFull());
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 5);
+
+    }
+
+    @Test
+    void addingNonRedGoodsWithWrongEnteredValues(){
+
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 5, 5);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 3, 3);
+
+        //Av.RedSlots = 10; Av.BlueSlots = 5
+
+        //making it full
+
+        ((Storage)player.getShipBoard().getComponent(2, 2)).addGoods(new int[]{5, 0, 0, 0});
+
+        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
+        //Av.RedSlots = 5
+
+        String inputString = "false\nfalse\ntrue\n3 3\ntrue\n2 2\ntrue\n4 4\n3\n0\n0\n" +
+                "true\n5 5\n2\n0\nfalse\n";
+
+        /*
+        I have added 3 yellow goods to a blue storage and 2 green goods to a red storage, therefore
+        I should have 3 available red slots and 2 available blue slots.
+         */
+
+        ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(in);
+
+        flightView = new FlightView(gameInformation);
+
+        operator.giveGoods(player, new int[]{0, 3, 2, 1}, flightBoard, flightView);
+
+        assertTrue(((Storage)player.getShipBoard().getComponent(4, 4)).getAvailableBlueSlots() == 2);
+        assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 3);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 2);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 3);
+
+
+    }
 
 }

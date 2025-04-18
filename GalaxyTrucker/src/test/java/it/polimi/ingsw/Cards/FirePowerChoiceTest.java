@@ -18,6 +18,10 @@ import java.io.ByteArrayInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author carlo
+ */
+
 class FirePowerChoiceTest {
 
     class Operator implements FirePowerChoice{}
