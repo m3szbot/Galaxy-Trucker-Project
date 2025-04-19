@@ -17,7 +17,7 @@ import it.polimi.ingsw.Application.*;
  */
 public class Deck {
     private int numCards; // Number of cards currently in the deck
-    private boolean inUse = false; // Indicates if the deck is in use
+    private boolean inUse; // Indicates if the deck is in use
     private List<Card> cards; // List storing the deck's cards
 
     /**
@@ -28,33 +28,29 @@ public class Deck {
      * @param gameType The type of game being played.
      */
     public Deck(List<Card> allCards, GameType gameType) {
-        cards = new ArrayList<Card>();
+        numCards = 0;
+        inUse = false;
+        cards = new ArrayList<>();
         if (gameType.equals(GameType.NormalGame)) {
-            // Attempt to add the first level 2 card
-            do {
-                Collections.shuffle(allCards); // Shuffle the deck randomly
-            } while (allCards.getFirst().getCardLevel() != 2); // Ensure the first card is level 2
-            cards.add(allCards.getFirst()); // Add the selected card to the deck
-            numCards++; // Increase the card count
-            allCards.removeFirst(); // Remove the selected card from the available list
-
-            // Attempt to add the second level 2 card
-            do {
-                Collections.shuffle(allCards); // Shuffle again to randomize selection
-            } while (allCards.getFirst().getCardLevel() != 2); // Ensure the first card is level 2
-            cards.add(allCards.getFirst()); // Add the second level 2 card
-            numCards++;
-            allCards.removeFirst();
-
-            // Attempt to add the level 1 card
-            do {
-                Collections.shuffle(allCards); // Shuffle once more
-            } while (allCards.getFirst().getCardLevel() != 1); // Ensure the first card is level 1
-            cards.add(allCards.getFirst()); // Add the selected level 1 card
-            numCards++;
-            allCards.removeFirst();
+            addCardToDeck(allCards, 2);
+            addCardToDeck(allCards, 2);
+            addCardToDeck(allCards, 1);
+        }
+        // TestGame
+        else {
         }
     }
+
+    private void addCardToDeck(List<Card> allCards, int level) {
+        int i = 0;
+        Collections.shuffle(allCards);
+        do {
+            i++;
+        } while (allCards.get(i).getCardLevel() != level);
+        this.cards.add(allCards.remove(i));
+        this.numCards++;
+    }
+
 
     /**
      * Returns the number of cards currently in the deck.
@@ -75,17 +71,20 @@ public class Deck {
     }
 
     /**
+     * Sets inUsed field of current deck
+     *
+     * @param used true if deck is used
+     */
+    public void setInUse(boolean used) {
+        this.inUse = used;
+    }
+
+    /**
      * Returns the list of cards in the deck.
      *
      * @return The deck's card list.
      */
     public List<Card> getCards() {
-        return cards;
-    }
-
-    //da implementare ma devo ancora capire come poichè questo metodo sarà legato principalmente all'azione del controllore e della view
-    public List<Card> showCards() {
-        inUse = true;
         return cards;
     }
 }
