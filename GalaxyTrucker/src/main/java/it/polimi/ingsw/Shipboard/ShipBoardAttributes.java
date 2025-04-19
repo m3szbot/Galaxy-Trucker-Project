@@ -343,11 +343,5 @@ public class ShipBoardAttributes {
         this.numberDoubleEngines = this.numberDoubleEngines + number;
     }
 
-    public void updateGoods(int[] goods) {
-        this.goods[0] = goods[0];
-        this.goods[1] = goods[1];
-        this.goods[2] = goods[2];
-        this.goods[3] = goods[3];
-    }
 }
 

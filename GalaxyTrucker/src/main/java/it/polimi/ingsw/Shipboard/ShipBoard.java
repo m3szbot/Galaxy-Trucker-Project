@@ -181,7 +181,12 @@ public class ShipBoard {
             shipBoardAttributes.updateAvailableSlots(1, -(Integer) list.get(5));
             shipBoardAttributes.updateAvailableSlots(2, -(Integer) list.get(6));
             if((Boolean) list.get(8) != true){
-                shipBoardAttributes.updateGoods(((Storage) component).getGoods());
+                int[] update = ((Storage) component).getGoods();
+                update[0] = -update[0];
+                update[1] = -update[1];
+                update[2] = -update[2];
+                update[3] = -update[3];
+                shipBoardAttributes.updateGoods(update);
             }
             structureMatrix[x][y] = null;
             if (checkTrigger) {
