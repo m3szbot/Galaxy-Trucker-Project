@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Cards;
 
 import it.polimi.ingsw.Application.FlightPhase.FlightView;
-import it.polimi.ingsw.Components.Battery;
-import it.polimi.ingsw.Components.Cabin;
-import it.polimi.ingsw.Components.Component;
-import it.polimi.ingsw.Components.Storage;
+import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
@@ -25,6 +22,7 @@ public interface TokenLoss {
      * @param player target player
      * @param lossType can be either inhabitants or goods
      * @param quantity quantity of the loss
+     * @param flightBoard flightboard of the actual game
      * @param flightView class to comunicate with the player
      *
      * @author Carlo
@@ -51,13 +49,27 @@ public interface TokenLoss {
 
             while(numberOfCrewToRemove > 0){
 
-                message = "You must remove " + numberOfCrewToRemove + "inhabitants." +
-                        "Enter coordinates of cabin: ";
+                message = "You must remove " + numberOfCrewToRemove + " inhabitants." +
+                        " Enter coordinates of cabin: ";
                 coordinates = flightView.askPlayerCoordinates(player, message);
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
                 if(component.getComponentName().equals("Cabin")){
+
                     if(((Cabin)component).getCrewMembers() == 1){
+                        //cabin with aliens have one 1 inhabitant, i.e, the alien.
+
+                        if(((Cabin)component).getCrewType() == CrewType.Brown){
+
+                            player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.Brown, true);
+
+                        }
+                        else if(((Cabin)component).getCrewType() == CrewType.Purple){
+
+                            player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.Purple, true);
+
+                        }
+
                        //immediately remove crew member
                         numberOfCrewToRemove--;
                         ((Cabin)component).removeInhabitant();
@@ -70,7 +82,7 @@ public interface TokenLoss {
                         message = "Enter number of inhabitants to remove: ";
                         int numberOfRemovedCrew = flightView.askPlayerValue(player, message);
 
-                        if(numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove){
+                        if(numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove && numberOfRemovedCrew > 0){
 
                             numberOfCrewToRemove -= numberOfRemovedCrew;
 
@@ -82,7 +94,6 @@ public interface TokenLoss {
 
                     }
                 }
-
             }
 
         }

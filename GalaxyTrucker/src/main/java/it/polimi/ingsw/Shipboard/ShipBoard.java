@@ -406,25 +406,6 @@ public class ShipBoard {
     }
 
     /**
-     * Adds goods to a component at a given position if it is a storage component.
-     *
-     * @param x     The x-coordinate of the component.
-     * @param y     The y-coordinate of the component.
-     * @param goods An array representing the goods to be added.
-     * @author Giacomo
-     */
-    public void addGoods(int x, int y, int[] goods) {
-        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (structureMatrix[x][y] != null && ((Integer) structureMatrix[x][y].accept(visitor).get(5) > 0 || (Integer) structureMatrix[x][y].accept(visitor).get(6) > 0)) {
-            x = x - 1;
-            y = y - 1;
-            checkSlots(goods, x, y);
-            ((Storage) structureMatrix[x][y]).addGoods(goods);
-        }
-    }
-
-
-    /**
      * Sets the crew type in a cabin component, ensuring compatibility with alien support components.
      *
      * @param crewType The type of crew to assign.
@@ -443,7 +424,7 @@ public class ShipBoard {
                         (structureMatrix[x][y-1] != null && (Boolean) structureMatrix[x][y - 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
                         (structureMatrix[x][y+1] != null && (Boolean) structureMatrix[x][y + 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
                     ((Cabin) structureMatrix[x][y]).setCrewType(crewType);
-                    shipBoardAttributes.updateAlien(CrewType.Brown);
+                    shipBoardAttributes.updateAlien(CrewType.Brown, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
                     System.out.println("CrewType not permitted");
@@ -454,7 +435,7 @@ public class ShipBoard {
                         (structureMatrix[x][y-1] != null && (Boolean) structureMatrix[x][y-1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y - 1]).isPurple()) ||
                         (structureMatrix[x][y-1] != null && (Boolean) structureMatrix[x][y+1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[x][y + 1]).isPurple())) {
                     ((Cabin) structureMatrix[x][y]).setCrewType(crewType);
-                    shipBoardAttributes.updateAlien(CrewType.Purple);
+                    shipBoardAttributes.updateAlien(CrewType.Purple, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
                     System.out.println("CrewType not permitted");

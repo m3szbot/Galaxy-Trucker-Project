@@ -26,6 +26,13 @@ public interface FirePowerChoice {
         int doubleCannonsToActivate = 0;
         float addedFirePower = 0;
 
+        //checking if purple alien is present
+        if(defaultFirePower > 0 && (player.getShipBoard().getShipBoardAttributes().getAlienType() == 1 || player.getShipBoard().getShipBoardAttributes().getAlienType() == 2)){
+
+            defaultFirePower += 2;
+
+        }
+
         if(forwardDoubleCannons + notForwardDoubleCannons > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0){
             //player can increase firePower.
 

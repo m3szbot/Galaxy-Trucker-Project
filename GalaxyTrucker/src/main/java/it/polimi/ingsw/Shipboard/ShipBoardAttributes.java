@@ -85,11 +85,28 @@ public class ShipBoardAttributes {
      * @param crewType The type of alien crew member (purple or brown).
      * @author Giacomo
      */
-    public void updateAlien(CrewType crewType) {
-        if (crewType == CrewType.Purple) {
-            this.purpleAlien = true;
-        } else if (crewType == CrewType.Brown) {
-            this.brownAlien = true;
+
+    //I added the option to remove an alien. (author carlo)
+    //therefore giacomo have to modify method removeComponent of shipBoard to check if the
+    //removed component is a cabin with an alien in it and if yes, use the following method to
+    //update the aliens.
+    public void updateAlien(CrewType crewType, boolean removeFlag) {
+
+        if(!removeFlag) {
+
+            if (crewType == CrewType.Purple) {
+                this.purpleAlien = true;
+            } else if (crewType == CrewType.Brown) {
+                this.brownAlien = true;
+            }
+        }
+        else{
+
+            if (crewType == CrewType.Purple) {
+                this.purpleAlien = false;
+            } else if (crewType == CrewType.Brown) {
+                this.brownAlien = false;
+            }
         }
     }
 
