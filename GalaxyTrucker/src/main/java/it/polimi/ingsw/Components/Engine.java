@@ -52,14 +52,5 @@ public class Engine extends Component {
             return 2;
         }
     }
-
-    @Override
-    public void rotate() {
-        if (this.getBack() == SideType.Special) {
-            System.out.println("Cannot rotate an engine!!");
-        } else {
-            super.rotate();
-        }
-    }
 }
 
