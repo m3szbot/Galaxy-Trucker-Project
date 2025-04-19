@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Class that represents storage component
  *
@@ -22,8 +25,8 @@ public class Storage extends Component {
 
     //Todo
 
-    public boolean isEmpty(){
-        if(goods[0] == 0 && goods[1] == 0 && goods[2] == 0 && goods[3] == 0){
+    public boolean isEmpty() {
+        if (goods[0] == 0 && goods[1] == 0 && goods[2] == 0 && goods[3] == 0) {
             return true;
         }
         return false;
@@ -31,8 +34,8 @@ public class Storage extends Component {
 
     //Todo
 
-    public boolean isFull(){
-        if(goods[0] + goods[1] + goods[2] + goods[3] == numberOfMaximumElements){
+    public boolean isFull() {
+        if (goods[0] + goods[1] + goods[2] + goods[3] == numberOfMaximumElements) {
             return true;
         }
         return false;
@@ -60,17 +63,20 @@ public class Storage extends Component {
         }
     }
 
-    public Storage(SideType[] sides, boolean type, int numberOfMaximumElements) {
+    public Storage() {
+    }
+
+    @JsonCreator
+    public Storage(@JsonProperty("sides") SideType[] sides, @JsonProperty("isRed") boolean isRed, @JsonProperty("numberOfMaximumElements") int numberOfMaximumElements) {
 
         super(sides);
-        int i;
-        this.isRed = type;
+        this.isRed = isRed;
         this.numberOfMaximumElements = numberOfMaximumElements;
     }
 
     @Override
-    public int getAvailableRedSlots(){
-        if(isRed){
+    public int getAvailableRedSlots() {
+        if (isRed) {
 
             return numberOfMaximumElements - goods[0] - goods[1] - goods[2] - goods[3];
 
@@ -79,8 +85,8 @@ public class Storage extends Component {
     }
 
     @Override
-    public int  getAvailableBlueSlots(){
-        if(!isRed) {
+    public int getAvailableBlueSlots() {
+        if (!isRed) {
             return numberOfMaximumElements - goods[1] - goods[2] - goods[3];
         }
         return 0;

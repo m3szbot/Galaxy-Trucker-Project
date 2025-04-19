@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Class that represent the shield component
  *
@@ -10,7 +13,11 @@ public class Shield extends Component {
 
     private int coveredSide1, coveredSide2;
 
-    public Shield(SideType[] sides) {
+    public Shield() {
+    }
+
+    @JsonCreator
+    public Shield(@JsonProperty("sides") SideType[] sides) {
         super(sides);
         setCoveredSides();
     }

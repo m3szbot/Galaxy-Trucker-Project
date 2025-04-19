@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Class that represent the cabin component
  *
@@ -11,7 +14,11 @@ public class Cabin extends Component {
     private CrewType crewType;
     private int numberOfCurrentInhabitant = 2;
 
-    public Cabin(SideType[] sides) {
+    public Cabin() {
+    }
+
+    @JsonCreator
+    public Cabin(@JsonProperty("sides") SideType[] sides) {
         super(sides);
     }
 
@@ -21,6 +28,7 @@ public class Cabin extends Component {
      * @param crewType represent the crew type
      */
 
+    @JsonProperty("crewType")
     public void setCrewType(CrewType crewType) {
         this.crewType = crewType;
 
@@ -29,7 +37,7 @@ public class Cabin extends Component {
         }
     }
 
-    public CrewType getCrewType(){
+    public CrewType getCrewType() {
         return crewType;
     }
 
@@ -39,7 +47,9 @@ public class Cabin extends Component {
     }
 
     public void removeInhabitant() {
-        numberOfCurrentInhabitant--;
+        if (numberOfCurrentInhabitant > 0) {
+            numberOfCurrentInhabitant--;
+        }
     }
 
     public String getComponentName() {
@@ -47,7 +57,7 @@ public class Cabin extends Component {
     }
 
     @Override
-    public int getCrewMembers(){
+    public int getCrewMembers() {
         return numberOfCurrentInhabitant;
     }
 }

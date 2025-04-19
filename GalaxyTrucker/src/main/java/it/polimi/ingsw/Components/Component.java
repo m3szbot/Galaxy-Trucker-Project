@@ -1,9 +1,6 @@
 package it.polimi.ingsw.Components;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotation;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.Shipboard.Visitor;
 
 import java.io.Serializable;
@@ -19,7 +16,6 @@ import java.util.List;
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
         property = "name",
         defaultImpl = Component.class
 )
@@ -41,8 +37,19 @@ public class Component implements Visitable {
     private SideType back;
     private SideType left;
 
+
+    public Component() {
+    }
+
     @JsonCreator
-    public Component(SideType[] sides) {
+    public Component(@JsonProperty("sides") SideType[] sides) {
+        this.front = sides[0];
+        this.right = sides[1];
+        this.back = sides[2];
+        this.left = sides[3];
+    }
+
+    public void setSides(SideType[] sides) {
         this.front = sides[0];
         this.right = sides[1];
         this.back = sides[2];

@@ -1,5 +1,9 @@
 package it.polimi.ingsw.Components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.beans.DefaultProperty;
+
 /**
  * Class that represents an Engine
  *
@@ -10,12 +14,21 @@ public class Engine extends Component {
 
     private boolean single;
 
-    public Engine(SideType[] sides, boolean single) {
+    public Engine() {
+    }
+
+    @JsonCreator
+    public Engine(@JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
         super(sides);
         this.single = single;
         while (this.getBack() != SideType.Special) {
             this.rotate();
         }
+    }
+
+    @JsonProperty("single")
+    public void setSingle(boolean single) {
+        this.single = single;
     }
 
     /**
@@ -42,7 +55,11 @@ public class Engine extends Component {
 
     @Override
     public void rotate() {
-        System.out.println("Cannot rotate an engine!!");
+        if (this.getBack() == SideType.Special) {
+            System.out.println("Cannot rotate an engine!!");
+        } else {
+            super.rotate();
+        }
     }
 }
 
