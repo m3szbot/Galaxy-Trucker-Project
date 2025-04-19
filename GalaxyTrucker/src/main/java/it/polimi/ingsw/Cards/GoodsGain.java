@@ -96,6 +96,7 @@ public interface GoodsGain {
 
                            ((Storage) component).removeGoods(goodsToRemove);
                            flightBoard.addGoods(goodsToRemove);
+                           player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{-goodsToRemove[0], -goodsToRemove[1], -goodsToRemove[2], -goodsToRemove[3]});
 
                            if(((Storage)component).isRed()){
 
@@ -303,6 +304,7 @@ public interface GoodsGain {
 
                                      flightBoard.removeGoods(new int[]{redGoodsToAdd, 0, 0, 0});
                                      ((Storage)component).addGoods(new int[]{redGoodsToAdd, 0, 0, 0});
+                                     player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{redGoodsToAdd, 0, 0, 0});
                                      player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -redGoodsToAdd);
 
                                  }
@@ -403,6 +405,7 @@ public interface GoodsGain {
                                  goods[3] -= goodsToAdd[3];
                                  try {
                                      flightBoard.removeGoods(goodsToAdd);
+                                     player.getShipBoard().getShipBoardAttributes().updateGoods(goodsToAdd);
                                      ((Storage) component).addGoods(goodsToAdd);
 
                                      if(redFlag) {

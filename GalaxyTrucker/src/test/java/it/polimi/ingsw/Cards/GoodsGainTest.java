@@ -75,6 +75,7 @@ class GoodsGainTest {
         //available red slots are 10 in total. Now 5 were occupied so I must update it to 5
 
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
+        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 2, 0, 0});
 
         String inputString = "true\n3 3\ntrue\n4 4\ntrue\n5 5\ntrue\n3\nfalse\nfalse\nfalse\n" +
                 "true\n5 5\nfalse\ntrue\n2\nfalse\nfalse\nfalse\nfalse";
@@ -86,6 +87,10 @@ class GoodsGainTest {
         operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
 
         assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).isEmpty());
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[3] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 10);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 0);
 
@@ -109,6 +114,7 @@ class GoodsGainTest {
 
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -1);
+        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{1, 3, 1, 1});
 
         /*
         BlueAvailableSlots are 4
@@ -128,6 +134,10 @@ class GoodsGainTest {
 
         assertTrue(sourceStorage.getAvailableRedSlots() == 4);
         assertTrue(destStorage.getAvailableBlueSlots() == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 1);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 3);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 1);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[3] == 1);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 9);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 0);
 
@@ -149,6 +159,7 @@ class GoodsGainTest {
 
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
         //Av.RedSlots = 5
+        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{5, 0, 0, 0});
 
         String inputString = "false\nfalse\ntrue\n3 3\ntrue\n2 2\ntrue\n4 4\ntrue\n" +
                 "5 5\n2\ntrue\n5 5\n3\nfalse\n";
@@ -161,6 +172,10 @@ class GoodsGainTest {
 
         assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 0);
         assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).isFull());
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 10);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[3] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 5);
 
@@ -183,6 +198,8 @@ class GoodsGainTest {
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
         //Av.RedSlots = 5
 
+        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{5, 0, 0, 0});
+
         String inputString = "false\nfalse\ntrue\n3 3\ntrue\n2 2\ntrue\n4 4\n3\n0\n0\n" +
                 "true\n5 5\n2\n0\nfalse\n";
 
@@ -202,6 +219,10 @@ class GoodsGainTest {
         assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 3);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 2);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 3);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 5);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 3);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 2);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[3] == 0);
 
 
     }

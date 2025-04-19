@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Cards;
 
 import it.polimi.ingsw.Application.FlightPhase.FlightView;
-import it.polimi.ingsw.Components.Battery;
-import it.polimi.ingsw.Components.Cabin;
-import it.polimi.ingsw.Components.Component;
-import it.polimi.ingsw.Components.Storage;
+import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Shipboard.Player;
 
@@ -25,6 +22,7 @@ public interface TokenLoss {
      * @param player target player
      * @param lossType can be either inhabitants or goods
      * @param quantity quantity of the loss
+     * @param flightBoard flightboard of the actual game
      * @param flightView class to comunicate with the player
      *
      * @author Carlo
@@ -51,13 +49,27 @@ public interface TokenLoss {
 
             while(numberOfCrewToRemove > 0){
 
-                message = "You must remove " + numberOfCrewToRemove + "inhabitants." +
-                        "Enter coordinates of cabin: ";
+                message = "You must remove " + numberOfCrewToRemove + " inhabitants." +
+                        " Enter coordinates of cabin: ";
                 coordinates = flightView.askPlayerCoordinates(player, message);
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
                 if(component.getComponentName().equals("Cabin")){
+
                     if(((Cabin)component).getCrewMembers() == 1){
+                        //cabin with aliens have one 1 inhabitant, i.e, the alien.
+
+                        if(((Cabin)component).getCrewType() == CrewType.Brown){
+
+                            player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.Brown, true);
+
+                        }
+                        else if(((Cabin)component).getCrewType() == CrewType.Purple){
+
+                            player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.Purple, true);
+
+                        }
+
                        //immediately remove crew member
                         numberOfCrewToRemove--;
                         ((Cabin)component).removeInhabitant();
@@ -70,7 +82,7 @@ public interface TokenLoss {
                         message = "Enter number of inhabitants to remove: ";
                         int numberOfRemovedCrew = flightView.askPlayerValue(player, message);
 
-                        if(numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove){
+                        if(numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove && numberOfRemovedCrew > 0){
 
                             numberOfCrewToRemove -= numberOfRemovedCrew;
 
@@ -82,7 +94,6 @@ public interface TokenLoss {
 
                     }
                 }
-
             }
 
         }
@@ -122,8 +133,10 @@ public interface TokenLoss {
 
                         if(goodsOnShip[i] >= quantity){
 
-                            quantity = 0;
+
                             numberOfGoodsToRemove = quantity;
+                            quantity = 0;
+
                         }
                         else{
 
@@ -133,12 +146,7 @@ public interface TokenLoss {
 
 
 
-                        if(i == 0){
-                            player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, numberOfGoodsToRemove);
-                        }
-                        else{
-                            player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, numberOfGoodsToRemove);
-                        }
+
 
                         while(numberOfGoodsToRemove > 0) {
                             //if only one error occur, the loop is repeated, can be improved.
@@ -147,7 +155,7 @@ public interface TokenLoss {
                             int numberOfRemovedGoods;
                             int[] goodsRemoved = {0, 0, 0, 0};
 
-                            message = "You must remove " + numberOfGoodsToRemove + goodColor + " goods, " +
+                            message = "You must remove " + numberOfGoodsToRemove + " " + goodColor + " goods, " +
                                     "enter coordinate of storage component: ";
 
                             coordinates = flightView.askPlayerCoordinates(player, message);
@@ -159,15 +167,23 @@ public interface TokenLoss {
 
                                 if(availableGoods[i] > 0){
 
-                                   message = "Enter number of " + goodColor + " that you want to remove: ";
+                                   message = "Enter number of " + goodColor + " goods that you want to remove: ";
                                    numberOfRemovedGoods = flightView.askPlayerValue(player, message);
                                    goodsRemoved[i] = numberOfRemovedGoods;
 
-                                   if(numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove){
+                                   if(numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove && numberOfRemovedGoods > 0){
 
                                        numberOfGoodsToRemove -= numberOfRemovedGoods;
                                        flightBoard.addGoods(goodsRemoved);
                                        ((Storage)component).removeGoods(goodsRemoved);
+                                       player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{-goodsRemoved[0], -goodsRemoved[1], -goodsRemoved[2], -goodsRemoved[3]});
+
+                                       if(((Storage) component).isRed()){
+                                           player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, numberOfRemovedGoods);
+                                       }
+                                       else{
+                                           player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, numberOfRemovedGoods);
+                                       }
 
                                    }
 
@@ -198,7 +214,7 @@ public interface TokenLoss {
                         numberOfBatteriesToRemove = batteriesAvailable;
                     }
 
-                    player.getShipBoard().getShipBoardAttributes().updateBatteryPower(numberOfBatteriesToRemove);
+                    player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-numberOfBatteriesToRemove);
 
                     while(numberOfBatteriesToRemove > 0){
                         //the loop is repeated if only one error occur
@@ -214,7 +230,7 @@ public interface TokenLoss {
                                message = "Enter number of batteries you want to remove: ";
                                numberOfRemovedBatteries = flightView.askPlayerValue(player, message);
 
-                               if(numberOfRemovedBatteries <= ((Battery)component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove){
+                               if(numberOfRemovedBatteries <= ((Battery)component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove && numberOfRemovedBatteries > 0){
 
                                    numberOfBatteriesToRemove -= numberOfRemovedBatteries;
 

@@ -29,6 +29,11 @@ public interface EnginePowerChoice {
         int defaultEnginePower = player.getShipBoard().getShipBoardAttributes().getDrivingPower();
         int doubleEnginesToActivate = 0;
 
+        //Checking if the brown alien is present
+        if(defaultEnginePower > 0 && (player.getShipBoard().getShipBoardAttributes().getAlienType() == 1 || player.getShipBoard().getShipBoardAttributes().getAlienType() == 3)){
+            defaultEnginePower += 2;
+        }
+
 
         if(player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0){
             //player have the possibility to increase his engine power with batteries

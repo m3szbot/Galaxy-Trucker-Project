@@ -32,7 +32,9 @@ public class Battery extends Component {
     }
 
     public void removeBattery() {
-        numberOfCurrentBatteries--;
+        if (numberOfCurrentBatteries > 0) {
+            numberOfCurrentBatteries--;
+        }
     }
 
     public String getComponentName() {
