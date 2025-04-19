@@ -133,8 +133,10 @@ public interface TokenLoss {
 
                         if(goodsOnShip[i] >= quantity){
 
-                            quantity = 0;
+
                             numberOfGoodsToRemove = quantity;
+                            quantity = 0;
+
                         }
                         else{
 
@@ -144,12 +146,7 @@ public interface TokenLoss {
 
 
 
-                        if(i == 0){
-                            player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, numberOfGoodsToRemove);
-                        }
-                        else{
-                            player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, numberOfGoodsToRemove);
-                        }
+
 
                         while(numberOfGoodsToRemove > 0) {
                             //if only one error occur, the loop is repeated, can be improved.
@@ -158,7 +155,7 @@ public interface TokenLoss {
                             int numberOfRemovedGoods;
                             int[] goodsRemoved = {0, 0, 0, 0};
 
-                            message = "You must remove " + numberOfGoodsToRemove + goodColor + " goods, " +
+                            message = "You must remove " + numberOfGoodsToRemove + " " + goodColor + " goods, " +
                                     "enter coordinate of storage component: ";
 
                             coordinates = flightView.askPlayerCoordinates(player, message);
@@ -170,15 +167,23 @@ public interface TokenLoss {
 
                                 if(availableGoods[i] > 0){
 
-                                   message = "Enter number of " + goodColor + " that you want to remove: ";
+                                   message = "Enter number of " + goodColor + " goods that you want to remove: ";
                                    numberOfRemovedGoods = flightView.askPlayerValue(player, message);
                                    goodsRemoved[i] = numberOfRemovedGoods;
 
-                                   if(numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove){
+                                   if(numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove && numberOfRemovedGoods > 0){
 
                                        numberOfGoodsToRemove -= numberOfRemovedGoods;
                                        flightBoard.addGoods(goodsRemoved);
                                        ((Storage)component).removeGoods(goodsRemoved);
+                                       player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{-goodsRemoved[0], -goodsRemoved[1], -goodsRemoved[2], -goodsRemoved[3]});
+
+                                       if(((Storage) component).isRed()){
+                                           player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, numberOfRemovedGoods);
+                                       }
+                                       else{
+                                           player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, numberOfRemovedGoods);
+                                       }
 
                                    }
 
@@ -209,7 +214,7 @@ public interface TokenLoss {
                         numberOfBatteriesToRemove = batteriesAvailable;
                     }
 
-                    player.getShipBoard().getShipBoardAttributes().updateBatteryPower(numberOfBatteriesToRemove);
+                    player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-numberOfBatteriesToRemove);
 
                     while(numberOfBatteriesToRemove > 0){
                         //the loop is repeated if only one error occur
@@ -225,7 +230,7 @@ public interface TokenLoss {
                                message = "Enter number of batteries you want to remove: ";
                                numberOfRemovedBatteries = flightView.askPlayerValue(player, message);
 
-                               if(numberOfRemovedBatteries <= ((Battery)component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove){
+                               if(numberOfRemovedBatteries <= ((Battery)component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove && numberOfRemovedBatteries > 0){
 
                                    numberOfBatteriesToRemove -= numberOfRemovedBatteries;
 
