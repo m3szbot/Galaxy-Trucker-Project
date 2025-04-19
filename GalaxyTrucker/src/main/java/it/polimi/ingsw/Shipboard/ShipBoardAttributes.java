@@ -302,6 +302,18 @@ public class ShipBoardAttributes {
     }
 
     /**
+     * @author carlo
+     */
+
+    public void updateGoods(int[] goods){
+        for(int i = 0; i < goods.length; i++){
+
+            this.goods[i] += goods[i];
+
+        }
+    }
+
+    /**
      * @return Goods[4] array
      * @author Boti
      */
