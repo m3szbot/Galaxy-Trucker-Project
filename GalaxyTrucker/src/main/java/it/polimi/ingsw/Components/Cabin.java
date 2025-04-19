@@ -47,7 +47,9 @@ public class Cabin extends Component {
     }
 
     public void removeInhabitant() {
-        numberOfCurrentInhabitant--;
+        if (numberOfCurrentInhabitant > 0) {
+            numberOfCurrentInhabitant--;
+        }
     }
 
     public String getComponentName() {
