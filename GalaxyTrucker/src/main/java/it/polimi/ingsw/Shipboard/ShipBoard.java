@@ -256,15 +256,20 @@ public class ShipBoard {
                             flag = checkNotReachable(shipBoardAttributes);
                         }
                         if ((Integer) structureMatrix[i][j].accept(visitor).get(0) > 0) {
-                            boolean check = false;
-                            for (int k = j + 1; k < 12; k++) {
-                                if (structureMatrix[i][k] != null) {
-                                    check = true;
-                                    errors++;
-                                }
+                            if(!structureMatrix[i][j].getBack().equals(SideType.Special)){
+                                errors++;
                             }
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
+                            else {
+                                boolean check = false;
+                                for (int k = j + 1; k < 12; k++) {
+                                    if (structureMatrix[i][k] != null) {
+                                        check = true;
+                                        errors++;
+                                    }
+                                }
+                                if (check) {
+                                    System.out.println("Error, in component" + i + ' ' + j);
+                                }
                             }
                         }
                         if ((Float) structureMatrix[i][j].accept(visitor).get(1) > 0) {
