@@ -1,7 +1,6 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.Shipboard;
 import it.polimi.ingsw.Application.GameType;
 import it.polimi.ingsw.Components.*;
-import it.polimi.ingsw.Shipboard.ShipBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

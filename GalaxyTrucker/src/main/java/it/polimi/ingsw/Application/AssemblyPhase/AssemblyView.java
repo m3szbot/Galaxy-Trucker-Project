@@ -21,9 +21,9 @@ public class AssemblyView {
     public void printRotateMessage(Component component){
         System.out.println("Component rotated:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft());
     }
-    public void printUncoveredComponentsMessage(AssemblyGame assemblyGame){
-        for(int i = 0; i < assemblyGame.getAssemblyProtocol().getUncoveredList().size(); i++){
-            Component component = assemblyGame.getAssemblyProtocol().getUncoveredList().get(i);
+    public void printUncoveredComponentsMessage(AssemblyPhase assemblyPhase){
+        for(int i = 0; i < assemblyPhase.getAssemblyProtocol().getUncoveredList().size(); i++){
+            Component component = assemblyPhase.getAssemblyProtocol().getUncoveredList().get(i);
             System.out.println("Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft());
         }
     }

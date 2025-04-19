@@ -44,4 +44,5 @@ public class VisitorAttributesUpdater implements Visitor<List<Object>> {
     public List<Object> visit(Storage storage) {
         return storage.getAllIndexes();
     }
+
 }

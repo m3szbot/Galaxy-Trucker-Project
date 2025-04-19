@@ -29,11 +29,11 @@ public class ComponentChoice implements GameState {
     /**
      * Displays the message prompting the player to choose a component.
      *
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      * @param view the view used to show the message
      */
     @Override
-    public void enter(AssemblyGame assemblyGame, AssemblyView view) {
+    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
         view.printComponentChoice();
     }
 
@@ -42,17 +42,17 @@ public class ComponentChoice implements GameState {
      * If the choice is valid, the component is assigned to the player.
      *
      * @param input the index of the component
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyGame assemblyGame) {
+    public void handleInput(String input, AssemblyPhase assemblyPhase) {
         String imput = input.toLowerCase();
         int caseManagement = -1;
         try {caseManagement = Integer.parseInt(input);}
         catch(NumberFormatException e) {
             e.printStackTrace();
         }
-        if(caseManagement >= 0 && caseManagement < assemblyGame.getAssemblyProtocol().getUncoveredList().size()){
+        if(caseManagement >= 0 && caseManagement < assemblyPhase.getAssemblyProtocol().getUncoveredList().size()){
             caseManagement = 1;
         }
         else{
@@ -60,15 +60,15 @@ public class ComponentChoice implements GameState {
         }
         switch (caseManagement) {
             case 1:
-                view.printUncoveredComponentsMessage(assemblyGame);
-                assemblyGame.getAssemblyProtocol().chooseComponent(player, Integer.parseInt(input));
-                view.printNewComponentMessage(assemblyGame.getAssemblyProtocol().getViewMap().get(player));
+                view.printUncoveredComponentsMessage(assemblyPhase);
+                assemblyPhase.getAssemblyProtocol().chooseComponent(player, Integer.parseInt(input));
+                view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getViewMap().get(player));
                 break;
             case 2:
                 view.printErrorComponentChoiceMessage();
                 break;
         }
-        assemblyGame.setState(new AssemblyState(view, assemblyProtocol, player));
+        assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
     }
 
 }

@@ -32,11 +32,11 @@ public class ComponentPlacingState implements GameState {
      * Called when this state becomes active. Displays a prompt to the player
      * asking where to place the component.
      *
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      * @param view the view used for messaging
      */
     @Override
-    public void enter(AssemblyGame assemblyGame, AssemblyView view) {
+    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
         view.printComponentPlacingMessage();
     }
 
@@ -46,16 +46,16 @@ public class ComponentPlacingState implements GameState {
      * to the AssemblyState.
      *
      * @param input the coordinates as a string (e.g., "3 4" or "3,4")
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyGame assemblyGame){
+    public void handleInput(String input, AssemblyPhase assemblyPhase){
         String[] parts = input.split("[ ,]");
         int num1 = Integer.parseInt(parts[0]);
         int num2 = Integer.parseInt(parts[1]);
 
-        assemblyGame.getGameInformation().getPlayerList().get(assemblyGame.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyGame.getAssemblyProtocol().getViewMap().get(player), num1, num2);
-        assemblyGame.getAssemblyProtocol().newComponent(player);
-        assemblyGame.setState(new AssemblyState(view, assemblyProtocol, player));
+        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getViewMap().get(player), num1, num2);
+        assemblyPhase.getAssemblyProtocol().newComponent(player);
+        assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
     }
 }

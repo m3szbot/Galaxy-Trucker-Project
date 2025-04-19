@@ -128,16 +128,19 @@ public class Component implements Visitable {
         return false;
     }
 
+    public boolean amIAStorage(){ return false; }
+
     public List<Object> getAllIndexes() {
         ArrayList<Object> indexes = new ArrayList<>();
-        indexes.add(getDrivingPower());
-        indexes.add(getFirePower());
-        indexes.add(getCrewMembers());
-        indexes.add(getBatteryPower());
-        indexes.add(getCoveredSides());
-        indexes.add(getAvailableRedSlots());
-        indexes.add(getAvailableBlueSlots());
-        indexes.add(amIASupport());
+        indexes.add(getDrivingPower()); //0
+        indexes.add(getFirePower()); //1
+        indexes.add(getCrewMembers()); //2
+        indexes.add(getBatteryPower()); //3
+        indexes.add(getCoveredSides()); //4
+        indexes.add(getAvailableRedSlots()); //5
+        indexes.add(getAvailableBlueSlots()); //6
+        indexes.add(amIASupport()); //7
+        indexes.add(amIAStorage()); //8
         return indexes;
     }
 

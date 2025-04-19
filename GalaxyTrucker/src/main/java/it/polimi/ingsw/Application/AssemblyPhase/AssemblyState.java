@@ -29,7 +29,7 @@ public class AssemblyState implements GameState {
      * Called when this state becomes active. Initializes the timer and resets the action flag.
      */
     @Override
-    public void enter(AssemblyGame assemblyGame, AssemblyView view) {
+    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
         startTime = System.currentTimeMillis();
         actionTaken = false;
         view = view;
@@ -39,63 +39,63 @@ public class AssemblyState implements GameState {
      * Handles user input commands during the assembly phase.
      */
     @Override
-    public void handleInput(String input, AssemblyGame assemblyGame) {
+    public void handleInput(String input, AssemblyPhase assemblyPhase) {
         if (actionTaken) return; // Ignore input after an action is taken
         view.printAssemblyMessage();
         switch (input.toLowerCase()) {
             case "place":
                 actionTaken = true;
-                assemblyGame.setState(new ComponentPlacingState(view, protocol,player));
+                assemblyPhase.setState(new ComponentPlacingState(view, protocol,player));
                 break;
             case "draw":
                 actionTaken = true;
-                assemblyGame.getAssemblyProtocol().newComponent(player);
-                assemblyGame.setState(new AssemblyState(view, protocol, player));
+                assemblyPhase.getAssemblyProtocol().newComponent(player);
+                assemblyPhase.setState(new AssemblyState(view, protocol, player));
                 break;
             case "choose":
                 actionTaken = true;
-                assemblyGame.setState(new ComponentChoice(view, protocol, player));
+                assemblyPhase.setState(new ComponentChoice(view, protocol, player));
                 break;
             case "rotate":
-                assemblyGame.getAssemblyProtocol().getViewMap().get(player).rotate();
-                view.printRotateMessage(assemblyGame.getAssemblyProtocol().getViewMap().get(player));
-                assemblyGame.setState(new AssemblyState(view, protocol, player));
+                assemblyPhase.getAssemblyProtocol().getViewMap().get(player).rotate();
+                view.printRotateMessage(assemblyPhase.getAssemblyProtocol().getViewMap().get(player));
+                assemblyPhase.setState(new AssemblyState(view, protocol, player));
                 break;
             case "turn":
                 actionTaken = true;
                 view.printTurnMessage();
-                assemblyGame.getAssemblyProtocol().getHourGlass().twist();
-                assemblyGame.setState(new AssemblyState(view, protocol, player));
+                assemblyPhase.getAssemblyProtocol().getHourGlass().twist();
+                assemblyPhase.setState(new AssemblyState(view, protocol, player));
                 break;
             case "show":
                 actionTaken = true;
-                assemblyGame.setState(new ShowDeckState(view, protocol, player));
+                assemblyPhase.setState(new ShowDeckState(view, protocol, player));
                 break;
             case "book":
                 actionTaken = true;
-                assemblyGame.getAssemblyProtocol().bookComponent(player);
-                assemblyGame.setState(new AssemblyState(view, protocol, player));
+                assemblyPhase.getAssemblyProtocol().bookComponent(player);
+                assemblyPhase.setState(new AssemblyState(view, protocol, player));
                 break;
             case "place booked":
                 actionTaken = true;
-                assemblyGame.setState(new PlaceBookedComponentState(view, protocol, player));
+                assemblyPhase.setState(new PlaceBookedComponentState(view, protocol, player));
                 break;
             default:
                 view.printErrorInCommandMessage();
-                assemblyGame.setState(new AssemblyState(view, protocol, player));
+                assemblyPhase.setState(new AssemblyState(view, protocol, player));
         }
     }
 
     /**
      * Periodically called to check if the player has timed out.
      */
-    public void update(AssemblyGame assemblyGame) {
+    public void update(AssemblyPhase assemblyPhase) {
         if (!actionTaken) {
             long now = System.currentTimeMillis();
             if (now - startTime >= 50000) { // 50 seconds timeout
                 view.printAssemblyMessage();
                 actionTaken = true;
-                assemblyGame.setState(new AssemblyState(view, protocol, player));
+                assemblyPhase.setState(new AssemblyState(view, protocol, player));
             }
         }
     }

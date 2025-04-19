@@ -30,11 +30,11 @@ public class ShowDeckState implements GameState {
     /**
      * Displays the message asking the player to choose a deck.
      *
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      * @param assemblyView the view used to print the prompt
      */
     @Override
-    public void enter(AssemblyGame assemblyGame, AssemblyView assemblyView) {
+    public void enter(AssemblyPhase assemblyPhase, AssemblyView assemblyView) {
         assemblyView.printChooseDeckMessage();
     }
 
@@ -43,17 +43,17 @@ public class ShowDeckState implements GameState {
      * and triggers the protocol logic to show the deck.
      *
      * @param input the user's typed input
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyGame assemblyGame) {
+    public void handleInput(String input, AssemblyPhase assemblyPhase) {
         int index = Integer.parseInt(input);
         if (index >= 0 && index <4){
-            assemblyGame.getAssemblyProtocol().showDeck(index);
+            assemblyPhase.getAssemblyProtocol().showDeck(index);
         }
         else{
             view.printNotValidDeckNumberMessage();
         }
-        assemblyGame.setState(new AssemblyState(view, assemblyProtocol, player));
+        assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
     }
 }

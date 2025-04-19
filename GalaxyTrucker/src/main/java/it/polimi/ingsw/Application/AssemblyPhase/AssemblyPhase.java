@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author Giacomo
  */
-public class AssemblyGame {
+public class AssemblyPhase {
     private GameState currentState;
     private boolean running = true;
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
@@ -27,7 +27,7 @@ public class AssemblyGame {
      *
      * @param gameInformation contains players and initial setup
      */
-    public AssemblyGame(GameInformation gameInformation) {
+    public AssemblyPhase(GameInformation gameInformation) {
         this.gameInformation = gameInformation;
         assemblyProtocol = new AssemblyProtocol(gameInformation);
         assemblyView = new AssemblyView();

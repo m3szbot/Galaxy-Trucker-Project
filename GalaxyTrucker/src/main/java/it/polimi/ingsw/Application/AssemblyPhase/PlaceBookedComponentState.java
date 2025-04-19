@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Application.AssemblyPhase;
 
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
-import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Shipboard.Player;
 
 /**
@@ -32,11 +31,11 @@ public class PlaceBookedComponentState implements GameState{
     /**
      * Displays the prompt asking the player to choose a booked component.
      *
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      * @param assemblyView the view used for messages
      */
     @Override
-    public void enter(AssemblyGame assemblyGame, AssemblyView assemblyView) {
+    public void enter(AssemblyPhase assemblyPhase, AssemblyView assemblyView) {
         view.printChooseBookedComponentMessage(assemblyProtocol.getBookedMap().get(player).orElse(null));
     }
 
@@ -46,15 +45,15 @@ public class PlaceBookedComponentState implements GameState{
      * and moves the selected one to the active slot.
      *
      * @param input the player's input (should be 1 or 2)
-     * @param assemblyGame the current game instance
+     * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyGame assemblyGame) {
+    public void handleInput(String input, AssemblyPhase assemblyPhase) {
         int index = Integer.parseInt(input);
         index = index - 1;
         if(index == 0 || index == 1){
-            assemblyGame.getAssemblyProtocol().takeBookedComponentToPlace(player, index);
-            assemblyGame.setState(new ComponentPlacingState(view, assemblyProtocol, player));
+            assemblyPhase.getAssemblyProtocol().takeBookedComponentToPlace(player, index);
+            assemblyPhase.setState(new ComponentPlacingState(view, assemblyProtocol, player));
         }
         else{
             view.printErrorChoosingBookedComponentMessage();
