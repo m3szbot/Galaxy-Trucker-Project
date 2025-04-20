@@ -86,7 +86,7 @@ public class AssemblyProtocol {
      */
     public List<Card> showDeck(int num) {
         if (num >= 1 && num <= 3) {
-            if (!decksList[num - 1].isInUse()) {
+            if (!decksList[num - 1].getInUse()) {
                 decksList[num - 1].setInUse(true);
                 return decksList[num - 1].getCards();
             } else {
