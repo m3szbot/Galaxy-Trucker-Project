@@ -181,7 +181,12 @@ public class ShipBoard {
             shipBoardAttributes.updateAvailableSlots(1, -(Integer) list.get(5));
             shipBoardAttributes.updateAvailableSlots(2, -(Integer) list.get(6));
             if((Boolean) list.get(8) != true){
-                shipBoardAttributes.updateGoods(((Storage) component).getGoods());
+                int[] update = ((Storage) component).getGoods();
+                update[0] = -update[0];
+                update[1] = -update[1];
+                update[2] = -update[2];
+                update[3] = -update[3];
+                shipBoardAttributes.updateGoods(update);
             }
             structureMatrix[x][y] = null;
             if (checkTrigger) {
@@ -251,15 +256,20 @@ public class ShipBoard {
                             flag = checkNotReachable(shipBoardAttributes);
                         }
                         if ((Integer) structureMatrix[i][j].accept(visitor).get(0) > 0) {
-                            boolean check = false;
-                            for (int k = j + 1; k < 12; k++) {
-                                if (structureMatrix[i][k] != null) {
-                                    check = true;
-                                    errors++;
-                                }
+                            if(!structureMatrix[i][j].getBack().equals(SideType.Special)){
+                                errors++;
                             }
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
+                            else {
+                                boolean check = false;
+                                for (int k = j + 1; k < 12; k++) {
+                                    if (structureMatrix[i][k] != null) {
+                                        check = true;
+                                        errors++;
+                                    }
+                                }
+                                if (check) {
+                                    System.out.println("Error, in component" + i + ' ' + j);
+                                }
                             }
                         }
                         if ((Float) structureMatrix[i][j].accept(visitor).get(1) > 0) {
