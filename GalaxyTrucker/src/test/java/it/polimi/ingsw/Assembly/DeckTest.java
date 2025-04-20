@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Assembly;
 
+import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Application.GameType;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardBuilder;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.Cards.Sabotage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -35,6 +37,15 @@ class DeckTest {
             cardList.add(card);
         }
         deck = new Deck(cardList, GameType.NormalGame);
+        /*
+        GameInformation gameInformation = new GameInformation();
+        try {
+            gameInformation.setUpCards(GameType.NormalGame);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        deck = new Deck(gameInformation.getCardsList(), GameType.NormalGame);
+        */
     }
 
     @Test

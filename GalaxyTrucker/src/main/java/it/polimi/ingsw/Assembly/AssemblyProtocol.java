@@ -103,7 +103,7 @@ public class AssemblyProtocol {
      *
      * @return a shuffled list of all cards
      */
-    public List<Card> shuffleDeck() {
+    public List<Card> mergeDecks() {
         List<Card> mainDeck = new ArrayList<>();
         mainDeck.addAll(blockedDeck.getCards());
         mainDeck.addAll(decksList[0].getCards());
