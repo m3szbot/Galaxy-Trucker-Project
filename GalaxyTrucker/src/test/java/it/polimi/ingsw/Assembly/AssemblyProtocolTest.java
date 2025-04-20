@@ -47,11 +47,19 @@ class AssemblyProtocolTest {
     @Test
     void checkSetup() {
         assertEquals(0, assemblyProtocol.getUncoveredList().size());
+        assertNull(assemblyProtocol.getViewMap().get(playerA));
+        assertEquals(0, assemblyProtocol.getBookedMap().get(playerA).size());
     }
 
     @Test
-    void oneNewComponent() {
+    void drawTwoNewComponents() {
+        // draw first component
         assemblyProtocol.newComponent(playerA);
+        assertNotNull(assemblyProtocol.getViewMap().get(playerA));
+        // draw second component
+        assemblyProtocol.newComponent(playerA);
+        assertNotNull(assemblyProtocol.getViewMap().get(playerA));
+        assertEquals(1, assemblyProtocol.getUncoveredList().size());
     }
 
 }

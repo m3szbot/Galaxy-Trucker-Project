@@ -44,8 +44,8 @@ public class AssemblyProtocol {
         uncoveredList = new ArrayList<>();
         viewMap = new HashMap<>();
         bookedMap = new HashMap<>();
-        for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
-            bookedMap.put(gameInformation.getPlayerList().get(i), new ArrayList<>());
+        for (Player player : gameInformation.getPlayerList()) {
+            bookedMap.put(player, new ArrayList<>());
         }
     }
 
