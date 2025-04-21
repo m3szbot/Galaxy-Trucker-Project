@@ -16,7 +16,7 @@ import it.polimi.ingsw.Shipboard.Player;
  */
 
 //Check that the remove method in shipboard does everything else, including checking if the ship was destroyed
-//in 2 different pieces.
+//in 2 different pieces. REMEMBER THIS
 
 public interface SufferBlows {
 
@@ -35,10 +35,13 @@ public interface SufferBlows {
         int i, leftCoord = 0, rightCoord = 0;
         int rows = player.getShipBoard().getMatrixRows();
         int cols = player.getShipBoard().getMatrixCols();
-        boolean componentFlag = false, hitFlag = false;
+        boolean componentFlag, hitFlag;
         String direction, message;
 
         for(Blow blow: blows) {
+
+            hitFlag = false;
+            componentFlag = false;
 
             //blow coming from front
             if (blow.getDirection() == 0) {
@@ -507,9 +510,15 @@ public interface SufferBlows {
 
                 flightView.sendMessageToAll(message);
             }
-            else{
+            else if(componentFlag && !hitFlag){
 
                 message = "Player " + player.getNickName() + " wasn't damaged by the " +
+                        blowType.toString().toLowerCase() + " coming at him!";
+                flightView.sendMessageToAll(message);
+            }
+            else{
+
+                message = "Player " + player.getNickName() + " dodged the " +
                         blowType.toString().toLowerCase() + " coming at him!";
                 flightView.sendMessageToAll(message);
             }
