@@ -44,8 +44,8 @@ public class AssemblyProtocol {
         uncoveredList = new ArrayList<>();
         viewMap = new HashMap<>();
         bookedMap = new HashMap<>();
-        for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
-            bookedMap.put(gameInformation.getPlayerList().get(i), new ArrayList<>());
+        for (Player player : gameInformation.getPlayerList()) {
+            bookedMap.put(player, new ArrayList<>());
         }
     }
 
@@ -86,7 +86,7 @@ public class AssemblyProtocol {
      */
     public List<Card> showDeck(int num) {
         if (num >= 1 && num <= 3) {
-            if (!decksList[num - 1].isInUse()) {
+            if (!decksList[num - 1].getInUse()) {
                 decksList[num - 1].setInUse(true);
                 return decksList[num - 1].getCards();
             } else {
@@ -103,7 +103,7 @@ public class AssemblyProtocol {
      *
      * @return a shuffled list of all cards
      */
-    public List<Card> shuffleDeck() {
+    public List<Card> mergeDecks() {
         List<Card> mainDeck = new ArrayList<>();
         mainDeck.addAll(blockedDeck.getCards());
         mainDeck.addAll(decksList[0].getCards());

@@ -35,6 +35,7 @@ public class Deck {
             addCardToDeck(allCards, 2);
             addCardToDeck(allCards, 2);
             addCardToDeck(allCards, 1);
+            Collections.shuffle(cards);
         }
         // TestGame
         else {
@@ -66,7 +67,7 @@ public class Deck {
      *
      * @return True if the deck is in use, false otherwise.
      */
-    public boolean isInUse() {
+    public boolean getInUse() {
         return inUse;
     }
 

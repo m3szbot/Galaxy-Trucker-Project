@@ -36,7 +36,7 @@ public class PlaceBookedComponentState implements GameState{
      */
     @Override
     public void enter(AssemblyPhase assemblyPhase, AssemblyView assemblyView) {
-        view.printChooseBookedComponentMessage(assemblyProtocol.getBookedMap().get(player).orElse(null));
+        view.printChooseBookedComponentMessage(assemblyProtocol.getBookedMap().get(player));
     }
 
     /**
