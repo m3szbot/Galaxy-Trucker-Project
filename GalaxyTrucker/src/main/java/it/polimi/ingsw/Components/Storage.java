@@ -93,5 +93,5 @@ public class Storage extends Component {
     }
 
     @Override
-    public boolean amIAStorage(){ return false; }
+    public boolean amIAStorage(){ return true; }
 }

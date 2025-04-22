@@ -180,7 +180,7 @@ public class ShipBoard {
             }
             shipBoardAttributes.updateAvailableSlots(1, -(Integer) list.get(5));
             shipBoardAttributes.updateAvailableSlots(2, -(Integer) list.get(6));
-            if((Boolean) list.get(8) != true){
+            if((Boolean) list.get(8) == true){
                 int[] update = ((Storage) component).getGoods();
                 update[0] = -update[0];
                 update[1] = -update[1];
