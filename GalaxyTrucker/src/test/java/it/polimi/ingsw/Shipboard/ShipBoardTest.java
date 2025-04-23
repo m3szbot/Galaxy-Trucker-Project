@@ -116,4 +116,18 @@ public class ShipBoardTest {
         assertEquals(shipBoard.countExternalJunctions(), 4);
     }
 
+    @Test
+    void testError(){ //Correct junctions
+        int errors;
+        shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 7, 8);
+        shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);
+        shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
+        errors = shipBoard.checkErrors();
+        assertEquals(errors, 3);
+
+        assertTrue(shipBoard.getMatrErrors()[7][5]);
+        assertTrue(shipBoard.getMatrErrors()[7][6]);
+        assertTrue(shipBoard.getMatrErrors()[7][6]);
+    }
+
 }
