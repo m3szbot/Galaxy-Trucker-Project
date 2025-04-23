@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Application.AssemblyPhase;
+
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Shipboard.*;
 
@@ -16,9 +17,9 @@ public class ComponentChoice implements GameState {
     /**
      * Constructs a ComponentChoice state.
      *
-     * @param view the game view for showing messages
+     * @param view     the game view for showing messages
      * @param protocol the game logic handler
-     * @param player the current player
+     * @param player   the current player
      */
     public ComponentChoice(AssemblyView view, AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
@@ -30,7 +31,7 @@ public class ComponentChoice implements GameState {
      * Displays the message prompting the player to choose a component.
      *
      * @param assemblyPhase the current game instance
-     * @param view the view used to show the message
+     * @param view          the view used to show the message
      */
     @Override
     public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
@@ -41,28 +42,28 @@ public class ComponentChoice implements GameState {
      * Handles the input used to choose a component from the uncovered list.
      * If the choice is valid, the component is assigned to the player.
      *
-     * @param input the index of the component
+     * @param input         the index of the component
      * @param assemblyPhase the current game instance
      */
     @Override
     public void handleInput(String input, AssemblyPhase assemblyPhase) {
         String imput = input.toLowerCase();
         int caseManagement = -1;
-        try {caseManagement = Integer.parseInt(input);}
-        catch(NumberFormatException e) {
+        try {
+            caseManagement = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        if(caseManagement >= 0 && caseManagement < assemblyPhase.getAssemblyProtocol().getUncoveredList().size()){
+        if (caseManagement >= 0 && caseManagement < assemblyPhase.getAssemblyProtocol().getUncoveredList().size()) {
             caseManagement = 1;
-        }
-        else{
+        } else {
             caseManagement = 0;
         }
         switch (caseManagement) {
             case 1:
                 view.printUncoveredComponentsMessage(assemblyPhase);
-                assemblyPhase.getAssemblyProtocol().chooseComponent(player, Integer.parseInt(input));
-                view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getViewMap().get(player));
+                assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
+                view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
                 view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
                 break;

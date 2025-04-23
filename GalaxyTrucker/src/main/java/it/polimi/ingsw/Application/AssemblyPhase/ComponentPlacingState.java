@@ -18,9 +18,9 @@ public class ComponentPlacingState implements GameState {
     /**
      * Constructs a ComponentPlacingState for the current player.
      *
-     * @param view the game view used for displaying messages
+     * @param view     the game view used for displaying messages
      * @param protocol the game logic handler
-     * @param player the current player placing the component
+     * @param player   the current player placing the component
      */
     public ComponentPlacingState(AssemblyView view, AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
@@ -33,7 +33,7 @@ public class ComponentPlacingState implements GameState {
      * asking where to place the component.
      *
      * @param assemblyPhase the current game instance
-     * @param view the view used for messaging
+     * @param view          the view used for messaging
      */
     @Override
     public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
@@ -45,16 +45,16 @@ public class ComponentPlacingState implements GameState {
      * to the ship board at the specified position, draws a new component, and returns
      * to the AssemblyState.
      *
-     * @param input the coordinates as a string (e.g., "3 4" or "3,4")
+     * @param input         the coordinates as a string (e.g., "3 4" or "3,4")
      * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyPhase assemblyPhase){
+    public void handleInput(String input, AssemblyPhase assemblyPhase) {
         String[] parts = input.split("[ ,]");
         int num1 = Integer.parseInt(parts[0]);
         int num2 = Integer.parseInt(parts[1]);
 
-        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getViewMap().get(player), num1, num2);
+        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
         assemblyPhase.getAssemblyProtocol().newComponent(player);
         assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
     }
