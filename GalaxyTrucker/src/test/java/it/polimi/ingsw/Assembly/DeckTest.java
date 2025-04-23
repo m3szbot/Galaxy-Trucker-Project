@@ -3,14 +3,10 @@ package it.polimi.ingsw.Assembly;
 import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Application.GameType;
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardBuilder;
-import it.polimi.ingsw.Cards.Epidemic;
-import it.polimi.ingsw.Cards.Sabotage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,31 +17,15 @@ class DeckTest {
 
     @BeforeEach
     void setUp() {
-        // set up cards
-        List<Card> cardList = new ArrayList<>();
-        CardBuilder cardBuilder = new CardBuilder();
-        // add level 2 cards to cardList
-        cardBuilder.buildCardLevel(2);
-        Card card = new Sabotage(cardBuilder);
-        for (int i = 0; i < 10; i++) {
-            cardList.add(card);
-        }
-        // add level 1 cards to cardList
-        cardBuilder.buildCardLevel(1);
-        card = new Epidemic(cardBuilder);
-        for (int i = 0; i < 10; i++) {
-            cardList.add(card);
-        }
-        deck = new Deck(cardList, GameType.NormalGame);
-        /*
+        // set up gameInformation
         GameInformation gameInformation = new GameInformation();
+        gameInformation.setGameType(GameType.NormalGame);
         try {
             gameInformation.setUpCards(GameType.NormalGame);
         } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-        deck = new Deck(gameInformation.getCardsList(), GameType.NormalGame);
-        */
+        // set up deck
+        deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
     }
 
     @Test
