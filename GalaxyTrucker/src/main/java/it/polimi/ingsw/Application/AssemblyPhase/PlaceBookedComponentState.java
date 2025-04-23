@@ -53,6 +53,8 @@ public class PlaceBookedComponentState implements GameState{
         index = index - 1;
         if(index == 0 || index == 1){
             assemblyPhase.getAssemblyProtocol().takeBookedComponentToPlace(player, index);
+        if (index == 0 || index == 1) {
+            assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
             assemblyPhase.setState(new ComponentPlacingState(view, assemblyProtocol, player));
         }
         else{
