@@ -63,6 +63,8 @@ public class ComponentChoice implements GameState {
                 view.printUncoveredComponentsMessage(assemblyPhase);
                 assemblyPhase.getAssemblyProtocol().chooseComponent(player, Integer.parseInt(input));
                 view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getViewMap().get(player));
+                assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
+                view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
                 break;
             case 2:
                 view.printErrorComponentChoiceMessage();
