@@ -9,7 +9,7 @@ import it.polimi.ingsw.Shipboard.Player;
  *
  * @author Giacomo
  */
-public class PlaceBookedComponentState implements GameState{
+public class PlaceBookedComponentState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private AssemblyView view;
@@ -18,9 +18,9 @@ public class PlaceBookedComponentState implements GameState{
      * Constructs a new state for allowing the player to place one of their
      * previously booked components.
      *
-     * @param view the game view used to display prompts and messages
+     * @param view     the game view used to display prompts and messages
      * @param protocol the logic handler that manages components and booking
-     * @param player the player currently placing a booked component
+     * @param player   the player currently placing a booked component
      */
     public PlaceBookedComponentState(AssemblyView view, AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
@@ -32,7 +32,7 @@ public class PlaceBookedComponentState implements GameState{
      * Displays the prompt asking the player to choose a booked component.
      *
      * @param assemblyPhase the current game instance
-     * @param assemblyView the view used for messages
+     * @param assemblyView  the view used for messages
      */
     @Override
     public void enter(AssemblyPhase assemblyPhase, AssemblyView assemblyView) {
@@ -44,22 +44,22 @@ public class PlaceBookedComponentState implements GameState{
      * booked component (if valid), places the current component in the uncovered list,
      * and moves the selected one to the active slot.
      *
-     * @param input the player's input (should be 1 or 2)
+     * @param input         the player's input (should be 1 or 2)
      * @param assemblyPhase the current game instance
      */
     @Override
     public void handleInput(String input, AssemblyPhase assemblyPhase) {
         int index = Integer.parseInt(input);
         index = index - 1;
-        if(index == 0 || index == 1){
-            assemblyPhase.getAssemblyProtocol().takeBookedComponentToPlace(player, index);
         if (index == 0 || index == 1) {
             assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
-            assemblyPhase.setState(new ComponentPlacingState(view, assemblyProtocol, player));
+            if (index == 0 || index == 1) {
+                assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+                assemblyPhase.setState(new ComponentPlacingState(view, assemblyProtocol, player));
+            } else {
+                view.printErrorChoosingBookedComponentMessage();
+            }
         }
-        else{
-            view.printErrorChoosingBookedComponentMessage();
-        }
-    }
 
+    }
 }
