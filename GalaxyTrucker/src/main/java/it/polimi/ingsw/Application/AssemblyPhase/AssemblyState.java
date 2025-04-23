@@ -45,7 +45,7 @@ public class AssemblyState implements GameState {
         switch (input.toLowerCase()) {
             case "place":
                 actionTaken = true;
-                assemblyPhase.setState(new ComponentPlacingState(view, protocol,player));
+                assemblyPhase.setState(new ComponentPlacingState(view, protocol, player));
                 break;
             case "draw":
                 actionTaken = true;
@@ -57,8 +57,8 @@ public class AssemblyState implements GameState {
                 assemblyPhase.setState(new ComponentChoice(view, protocol, player));
                 break;
             case "rotate":
-                assemblyPhase.getAssemblyProtocol().getViewMap().get(player).rotate();
-                view.printRotateMessage(assemblyPhase.getAssemblyProtocol().getViewMap().get(player));
+                assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).rotate();
+                view.printRotateMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
                 assemblyPhase.setState(new AssemblyState(view, protocol, player));
                 break;
             case "turn":
