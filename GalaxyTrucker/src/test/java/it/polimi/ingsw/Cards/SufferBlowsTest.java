@@ -120,7 +120,7 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 5);
         player.getShipBoard().addComponent(new Cabin(), 4, 4);
-        ((Cabin)player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
+        ((Cabin) player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, 3);
@@ -198,7 +198,7 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 4, 4);
 
 
-         Blow blow = new Blow(0, false);
+        Blow blow = new Blow(0, false);
 
         Field rollField = Blow.class.getDeclaredField("roll");
         rollField.setAccessible(true);
@@ -214,7 +214,7 @@ class SufferBlowsTest {
         operator.hit(player, new Blow[]{blow}, ElementType.CannonBlow, flightBoard, flightView);
 
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(2, ((Battery)player.getShipBoard().getComponent(3, 3)).getBatteryPower());
+        assertEquals(2, ((Battery) player.getShipBoard().getComponent(3, 3)).getBatteryPower());
         assertNotNull(player.getShipBoard().getComponent(5, 5));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
 
@@ -226,7 +226,7 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 5);
         player.getShipBoard().addComponent(new Cabin(), 4, 4);
-        ((Cabin)player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
+        ((Cabin) player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, 3);
@@ -249,7 +249,7 @@ class SufferBlowsTest {
 
         flightView = new FlightView(gameInformation);
 
-        operator.hit(player, blows, ElementType.Metoteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
         assertNull(player.getShipBoard().getComponent(5, 5));
         assertNull(player.getShipBoard().getComponent(4, 4));
@@ -302,7 +302,7 @@ class SufferBlowsTest {
 
         flightView = new FlightView(gameInformation);
 
-        operator.hit(player, blows, ElementType.Metoteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
         assertNull(player.getShipBoard().getComponent(5, 5));
         assertNull(player.getShipBoard().getComponent(4, 4));
@@ -310,7 +310,7 @@ class SufferBlowsTest {
         assertNull(player.getShipBoard().getComponent(2, 2));
 
         assertEquals(5, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(5, ((Battery)player.getShipBoard().getComponent(1, 1)).getBatteryPower());
+        assertEquals(5, ((Battery) player.getShipBoard().getComponent(1, 1)).getBatteryPower());
     }
 
     @Test
@@ -348,11 +348,11 @@ class SufferBlowsTest {
 
         flightView = new FlightView(gameInformation);
 
-        operator.hit(player, blows, ElementType.Metoteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
         assertNotNull(player.getShipBoard().getComponent(5, 5));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(0, ((Battery)player.getShipBoard().getComponent(1, 1)).getBatteryPower());
+        assertEquals(0, ((Battery) player.getShipBoard().getComponent(1, 1)).getBatteryPower());
 
     }
 
@@ -378,7 +378,7 @@ class SufferBlowsTest {
 
         flightView = new FlightView(gameInformation);
 
-        operator.hit(player, blows, ElementType.Metoteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
         assertNotNull(player.getShipBoard().getComponent(5, 5));
 
@@ -412,11 +412,11 @@ class SufferBlowsTest {
 
         flightView = new FlightView(gameInformation);
 
-        operator.hit(player, blows, ElementType.Metoteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
         assertNotNull(player.getShipBoard().getComponent(5, 5));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(0, ((Battery)player.getShipBoard().getComponent(5, 5)).getBatteryPower());
+        assertEquals(0, ((Battery) player.getShipBoard().getComponent(5, 5)).getBatteryPower());
 
     }
 
@@ -426,7 +426,7 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 5);
         player.getShipBoard().addComponent(new Cabin(), 4, 4);
-        ((Cabin)player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
+        ((Cabin) player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, 3);
@@ -449,7 +449,7 @@ class SufferBlowsTest {
 
         flightView = new FlightView(gameInformation);
 
-        operator.hit(player, blows, ElementType.Metoteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
         assertNull(player.getShipBoard().getComponent(5, 5));
         assertNull(player.getShipBoard().getComponent(4, 4));

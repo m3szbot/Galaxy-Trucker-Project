@@ -7,5 +7,5 @@ package it.polimi.ingsw.Cards;
  */
 
 public enum ElementType {
-    CrewMember, Metoteorite, CannonBlow, Goods, FirePower, EnginePower;
+    CrewMember, Meteorite, CannonBlow, Goods, FirePower, EnginePower;
 }
