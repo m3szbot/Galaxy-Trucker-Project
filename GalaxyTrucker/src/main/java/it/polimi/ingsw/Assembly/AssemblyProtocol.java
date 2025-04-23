@@ -21,7 +21,9 @@ public class AssemblyProtocol {
     // components
     private List<Component> coveredList;
     private List<Component> uncoveredList;
-    private Map<Player, Component> viewMap;
+    // components currently in hand (viewMap)
+    private Map<Player, Component> inHandMap;
+    // booked components
     private Map<Player, List<Component>> bookedMap;
 
 
@@ -42,11 +44,18 @@ public class AssemblyProtocol {
         coveredList = new ArrayList<>();
         coveredList.addAll(gameInformation.getComponentList());
         uncoveredList = new ArrayList<>();
-        viewMap = new HashMap<>();
+        inHandMap = new HashMap<>();
         bookedMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
             bookedMap.put(player, new ArrayList<>());
         }
+    }
+
+    /**
+     * Returns the list of covered components on the table.
+     */
+    public List<Component> getCoveredList() {
+        return coveredList;
     }
 
     /**
@@ -66,8 +75,8 @@ public class AssemblyProtocol {
     /**
      * Returns the current visible component for each player.
      */
-    public Map<Player, Component> getViewMap() {
-        return viewMap;
+    public Map<Player, Component> getInHandMap() {
+        return inHandMap;
     }
 
 
@@ -82,13 +91,13 @@ public class AssemblyProtocol {
      * Marks a deck as revealed and returns it.
      *
      * @param num the deck index (1 to 3), 0 is blocked
-     * @return the selected deck, or null if blocked
+     * @return the selected deck
      */
-    public List<Card> showDeck(int num) {
+    public Deck showDeck(int num) {
         if (num >= 1 && num <= 3) {
             if (!decksList[num - 1].getInUse()) {
                 decksList[num - 1].setInUse(true);
-                return decksList[num - 1].getCards();
+                return decksList[num - 1];
             } else {
                 throw new IllegalStateException("Deck is in use by others");
             }
@@ -121,8 +130,8 @@ public class AssemblyProtocol {
      */
     private void addComponentInHandToUncoveredList(Player player) {
         // remove card from player's hand
-        if (viewMap.get(player) != null) {
-            uncoveredList.add(viewMap.get(player));
+        if (inHandMap.get(player) != null) {
+            uncoveredList.add(inHandMap.get(player));
         }
     }
 
@@ -136,7 +145,7 @@ public class AssemblyProtocol {
         addComponentInHandToUncoveredList(player);
         // add new card to player's hand
         if (!coveredList.isEmpty()) {
-            viewMap.put(player, coveredList.removeFirst());
+            inHandMap.put(player, coveredList.removeFirst());
         } else {
             throw new IndexOutOfBoundsException("Covered list empty");
         }
@@ -148,14 +157,14 @@ public class AssemblyProtocol {
      * and the selected component replaces it in the player's view.
      *
      * @param player the player making the selection
-     * @param num    the index of the component in the uncovered list
+     * @param index  the index of the component in the uncovered list
      */
-    public void chooseComponent(Player player, int num) {
+    public void chooseUncoveredComponent(Player player, int index) {
         // size: 0-size
         // index: 0-(size-1)
-        if (uncoveredList.size() > num) {
+        if (uncoveredList.size() > index) {
             addComponentInHandToUncoveredList(player);
-            viewMap.put(player, uncoveredList.remove(num));
+            inHandMap.put(player, uncoveredList.remove(index));
         } else {
             throw new IndexOutOfBoundsException("Uncovered list does not have enough elements");
         }
@@ -163,18 +172,20 @@ public class AssemblyProtocol {
 
     /**
      * Books the player's current component if they haven't reached the max (3).
-     * Replaces it with a new one.
      *
      * @param player the player booking the component
      */
     public void bookComponent(Player player) {
-        if (bookedMap.get(player).size() < 3) {
-            bookedMap.get(player).add(viewMap.get(player));
-            // remove component from hand (newComponent places component in hand in uncovered list)
-            viewMap.put(player, null);
-            newComponent(player);
+        if (inHandMap.get(player) != null) {
+            if (bookedMap.get(player).size() < 3) {
+                bookedMap.get(player).add(inHandMap.get(player));
+                // remove component from hand (newComponent places component in hand in uncovered list)
+                inHandMap.put(player, null);
+            } else {
+                throw new IllegalStateException("Too many components booked");
+            }
         } else {
-            throw new IllegalStateException("Too many components booked");
+            throw new NoSuchElementException("No component in hand");
         }
     }
 
@@ -182,12 +193,12 @@ public class AssemblyProtocol {
      * Takes and removes a booked component from the player's list based on index.
      *
      * @param player the player retrieving a booked component
-     * @param num    the index of the component to take
+     * @param index  the index of the component to take
      */
-    public void takeBookedComponentToPlace(Player player, int num) {
-        if (bookedMap.get(player).size() > num) {
+    public void chooseBookedComponent(Player player, int index) {
+        if (bookedMap.get(player).size() > index) {
             addComponentInHandToUncoveredList(player);
-            viewMap.put(player, bookedMap.get(player).remove(num));
+            inHandMap.put(player, bookedMap.get(player).remove(index));
         } else {
             throw new IndexOutOfBoundsException("Not enough booked components");
         }
