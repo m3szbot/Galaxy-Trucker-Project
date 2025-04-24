@@ -19,13 +19,13 @@ public class Pirates extends Card implements SufferBlows, CreditsGain, Movable, 
 
     public Pirates(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
-        this.daysLost = cardBuilder.daysLost;
-        this.gainedCredit = cardBuilder.gainedCredit;
-        this.requirementNumber = cardBuilder.requirementNumber;
-        this.blowType = cardBuilder.blowType;
-        this.blows = cardBuilder.blows;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
+        this.gainedCredit = cardBuilder.getGainedCredit();
+        this.requirementNumber = cardBuilder.getRequirementNumber();
+        this.blowType = cardBuilder.getBlowType();
+        this.blows = cardBuilder.getBlows();
 
     }
 

@@ -14,8 +14,8 @@ public class Sabotage extends Card implements SmallestCrew{
 
     public Sabotage(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
 
     }
 

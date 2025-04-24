@@ -19,13 +19,13 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
 
     public Smugglers(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
-        this.daysLost = cardBuilder.daysLost;
-        this.lossType = cardBuilder.lossType;
-        this.lossNumber = cardBuilder.lossNumber;
-        this.goods = cardBuilder.goods;
-        this.requirementNumber = cardBuilder.requirementNumber;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
+        this.lossType = cardBuilder.getLossType();
+        this.lossNumber = cardBuilder.getLossNumber();
+        this.goods = cardBuilder.getGoods();
+        this.requirementNumber = cardBuilder.getRequirementNumber();
 
 
     }

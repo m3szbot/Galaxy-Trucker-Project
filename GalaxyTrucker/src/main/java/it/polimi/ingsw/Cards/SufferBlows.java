@@ -128,7 +128,7 @@ public interface SufferBlows {
 
                         }
 
-                        player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                        player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
                         hitFlag = true;
 
                     } else {
@@ -179,7 +179,7 @@ public interface SufferBlows {
 
                                 }
 
-                                player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                                player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
                                 hitFlag = true;
 
                             }
@@ -194,7 +194,7 @@ public interface SufferBlows {
 
                             }
 
-                            player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                            player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
                             hitFlag = true;
 
                         }
@@ -403,7 +403,7 @@ public interface SufferBlows {
 
                                         }
 
-                                        player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                                        player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
                                         hitFlag = true;
 
                                     }
@@ -419,7 +419,7 @@ public interface SufferBlows {
 
                                     }
 
-                                    player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                                    player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
                                     hitFlag = true;
 
                                 }
@@ -438,7 +438,7 @@ public interface SufferBlows {
 
                             }
 
-                            player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                            player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
                             hitFlag = true;
                         }
 
@@ -501,7 +501,7 @@ public interface SufferBlows {
                                     }
 
                                     hitFlag = true;
-                                    player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                                    player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
 
                                 }
                             }
@@ -516,7 +516,7 @@ public interface SufferBlows {
                                 }
 
                                 hitFlag = true;
-                                player.getShipBoard().removeComponent(leftCoord, rightCoord, true);
+                                player.getShipBoard().removeComponent(leftCoord + 1, rightCoord + 1, true);
 
                             }
 
@@ -542,7 +542,7 @@ public interface SufferBlows {
 
                 flightView.sendMessageToAll(message);
             }
-            else if(componentFlag && !hitFlag){
+            else if(componentFlag){
 
                 message = "Player " + player.getNickName() + " wasn't damaged by the " +
                         blowType.toString().toLowerCase() + " coming at him!";

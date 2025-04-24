@@ -20,13 +20,13 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     public CombatZone(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
-        this.daysLost = cardBuilder.daysLost;
-        this.lossNumber = cardBuilder.lossNumber;
-        this.blows = cardBuilder.blows;
-        this.blowType = cardBuilder.blowType;
-        this.lossType = cardBuilder.lossType;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
+        this.lossNumber = cardBuilder.getLossNumber();
+        this.blows = cardBuilder.getBlows();
+        this.blowType = cardBuilder.getBlowType();
+        this.lossType = cardBuilder.getLossType();
 
     }
 

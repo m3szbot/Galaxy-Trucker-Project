@@ -120,14 +120,21 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 5);
         player.getShipBoard().addComponent(new Cabin(), 4, 4);
+        player.getShipBoard().addComponent(new Cabin(), 3, 3);
         ((Cabin) player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
+        ((Cabin) player.getShipBoard().getComponent(2, 2)).setCrewType(CrewType.Purple);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, 3);
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, 2);
+        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 
-        //Av.RedSlots = 0
-
+        //should be 4
+        System.out.println("Crew number: " + player.getShipBoard().getShipBoardAttributes().getCrewMembers());
+        //should be 0
+        System.out.println("Red slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        //should be 0
+        System.out.println("Blue slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        //should be 3
+        System.out.println("Number of batteries on board: " + player.getShipBoard().getShipBoardAttributes().getBatteryPower());
 
         Blow blows[] = new Blow[3];
 
@@ -145,15 +152,25 @@ class SufferBlowsTest {
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
+
+        //should be 4
+        System.out.println("Crew number: " + player.getShipBoard().getShipBoardAttributes().getCrewMembers());
+        //should be 0
+        System.out.println("Red slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        //should be 0
+        System.out.println("Blue slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        //should be 3
+        System.out.println("Number of batteries on board: " + player.getShipBoard().getShipBoardAttributes().getBatteryPower());
+
+
         assertNull(player.getShipBoard().getComponent(5, 5));
         assertNull(player.getShipBoard().getComponent(4, 4));
         assertNull(player.getShipBoard().getComponent(3, 3));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(5, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getCrewMembers());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers()); //only the main cabin crew remains
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
         assertEquals(new int[]{0, 0, 0, 0}, player.getShipBoard().getShipBoardAttributes().getGoods());
-
 
     }
 
