@@ -356,8 +356,7 @@ public class ShipBoard {
                         if (!mat[i][j]) {
                             flag = 1;
                             result = true;
-                            removeComponent(i+1, j+1, true);
-                            shipBoardAttributes.updateDestroyedComponents(1);
+                            removeComponent(j+1, i+1, false);
                         }
                     }
                 }
@@ -378,25 +377,25 @@ public class ShipBoard {
         if (x < 0 || x >= 12 || y < 0 || y >= 12) return;
         if (structureMatrix[x][y] == null || mat[x][y]) return;
         mat[x][y] = true;
-        // Down
+        // Right
         if (y + 1 < 12 && structureMatrix[x][y+1] != null &&
                 isCompatible(structureMatrix[x][y].getRight(), structureMatrix[x][y+1].getLeft())) {
             goDownChecking(x, y+1, mat);
         }
 
-        // Up
+        // Left
         if (y - 1 >= 0 && structureMatrix[x][y-1] != null &&
                 isCompatible(structureMatrix[x][y].getLeft(), structureMatrix[x][y-1].getRight())) {
             goDownChecking(x , y-1, mat);
         }
 
-        // Right
+        // Down
         if (x + 1 < 12 && structureMatrix[x+1][y] != null &&
                 isCompatible(structureMatrix[x][y].getBack(), structureMatrix[x+1][y].getFront())) {
             goDownChecking(x+1, y , mat);
         }
 
-        // Left
+        // Up
         if (x - 1 >= 0 && structureMatrix[x-1][y] != null &&
                 isCompatible(structureMatrix[x][y].getFront(), structureMatrix[x-1][y].getBack())) {
             goDownChecking(x-1, y, mat);
@@ -405,7 +404,8 @@ public class ShipBoard {
 
     private boolean isCompatible(SideType a, SideType b) {
         return (a == SideType.Single && (b == SideType.Single || b == SideType.Universal)) ||
-                (a == SideType.Double && (b == SideType.Double || b == SideType.Universal));
+                (a == SideType.Double && (b == SideType.Double || b == SideType.Universal)) ||
+                (a == SideType.Universal && (b == SideType.Double || b == SideType.Universal || b == SideType.Single));
     }
 
     /**

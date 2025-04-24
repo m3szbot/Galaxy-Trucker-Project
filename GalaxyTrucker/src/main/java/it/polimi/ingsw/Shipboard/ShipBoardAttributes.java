@@ -307,9 +307,7 @@ public class ShipBoardAttributes {
 
     public void updateGoods(int[] goods){
         for(int i = 0; i < goods.length; i++){
-
             this.goods[i] += goods[i];
-
         }
     }
 
