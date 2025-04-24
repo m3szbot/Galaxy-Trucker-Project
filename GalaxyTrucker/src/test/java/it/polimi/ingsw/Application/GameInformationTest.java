@@ -1,12 +1,7 @@
 package it.polimi.ingsw.Application;
 
-import it.polimi.ingsw.Application.GameInformation.*;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardBuilder;
-import it.polimi.ingsw.Cards.Sabotage;
+import it.polimi.ingsw.Cards.*;
 import it.polimi.ingsw.Components.Component;
-import it.polimi.ingsw.Components.SideType;
 import it.polimi.ingsw.Shipboard.Color;
 import it.polimi.ingsw.Shipboard.Player;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,6 +71,22 @@ class GameInformationTest {
             assertNotNull(card.getCardName());
             System.out.println(card.getCardName());
         }
+    }
+
+    @Test
+    void test2SetUpCards() throws IOException {
+        // Test with TestGame type
+        gameInformation.setUpCards(GameType.TestGame);
+        List<Card> cards = gameInformation.getCardsList();
+        assertNotNull(cards, "Cards list should not be null");
+        assertFalse(cards.isEmpty(), "Cards list should not be empty");
+
+        // Verify NormalGame contains mixed levels
+        gameInformation.getCardsList().clear();
+        gameInformation.setUpCards(GameType.NormalGame);
+        cards = gameInformation.getCardsList();
+        assertNotNull(cards, "Cards list should not be null");
+        assertFalse(cards.isEmpty(), "Cards list should not be empty");
     }
 
     @Test
