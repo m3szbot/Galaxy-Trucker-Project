@@ -19,11 +19,11 @@ public class AbandonedStation extends Card implements Movable, GoodsGain{
 
     public AbandonedStation(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
-        this.daysLost = cardBuilder.daysLost;
-        this.goods = cardBuilder.goods;
-        this.requirementNumber = cardBuilder.requirementNumber;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
+        this.goods = cardBuilder.getGoods();
+        this.requirementNumber = cardBuilder.getRequirementNumber();
 
     }
 

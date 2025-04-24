@@ -19,13 +19,13 @@ public class Slavers extends Card implements CreditsGain, Movable, TokenLoss, Fi
 
     public Slavers(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
-        this.daysLost = cardBuilder.daysLost;
-        this.gainedCredit = cardBuilder.gainedCredit;
-        this.lossType = cardBuilder.lossType;
-        this.requirementNumber = cardBuilder.requirementNumber;
-        this.lossNumber = cardBuilder.lossNumber;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
+        this.gainedCredit = cardBuilder.getGainedCredit();
+        this.lossType = cardBuilder.getLossType();
+        this.requirementNumber = cardBuilder.getRequirementNumber();
+        this.lossNumber = cardBuilder.getLossNumber();
 
     }
 

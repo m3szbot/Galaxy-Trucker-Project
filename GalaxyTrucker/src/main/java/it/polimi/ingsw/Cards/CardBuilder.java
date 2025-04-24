@@ -12,11 +12,11 @@ package it.polimi.ingsw.Cards;
 public class CardBuilder {
 
     private Card builtCard;
-    public ElementType blowType, requirementType, lossType;
-    public int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
-    public int[] goods, planet1, planet2, planet3, planet4;
-    public Blow blows[];
-    public String cardName;
+    private ElementType blowType, requirementType, lossType;
+    private int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
+    private int[] goods, planet1, planet2, planet3, planet4;
+    private Blow blows[];
+    private String cardName;
 
 
     public CardBuilder buildCardLevel(int cardLevel) {
@@ -117,4 +117,62 @@ public class CardBuilder {
 
     }
 
+    public ElementType getBlowType() {
+        return blowType;
+    }
+    public ElementType getRequirementType() {
+        return requirementType;
+    }
+
+    public ElementType getLossType() {
+        return lossType;
+    }
+
+    public int getDaysLost() {
+        return daysLost;
+    }
+
+    public int getGainedCredit() {
+        return gainedCredit;
+    }
+
+    public int getRequirementNumber() {
+        return requirementNumber;
+    }
+
+    public int getCardLevel() {
+        return cardLevel;
+    }
+
+    public int getLossNumber() {
+        return lossNumber;
+    }
+
+    public int[] getGoods() {
+        return goods;
+    }
+
+    public int[] getPlanet1() {
+        return planet1;
+    }
+
+    public int[] getPlanet2() {
+        return planet2;
+    }
+
+    public int[] getPlanet3() {
+        return planet3;
+    }
+
+    public int[] getPlanet4() {
+        return planet4;
+    }
+
+    public Blow[] getBlows() {
+        return blows;
+    }
+
+    public String getCardName() {
+        return cardName;
+    }
 }

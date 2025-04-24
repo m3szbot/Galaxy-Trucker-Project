@@ -17,10 +17,10 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
     public MeteorSwarm(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
-        this.blows = cardBuilder.blows;
-        this.blowType = cardBuilder.blowType;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
+        this.blows = cardBuilder.getBlows();
+        this.blowType = cardBuilder.getBlowType();
 
     }
 

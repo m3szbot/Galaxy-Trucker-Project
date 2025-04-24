@@ -16,8 +16,8 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
     public OpenSpace(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
 
     }
 

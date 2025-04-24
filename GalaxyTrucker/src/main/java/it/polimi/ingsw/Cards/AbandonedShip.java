@@ -19,12 +19,12 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
     public AbandonedShip(CardBuilder cardBuilder) {
 
-        this.cardLevel = cardBuilder.cardLevel;
-        this.cardName = cardBuilder.cardName;
-        this.daysLost = cardBuilder.daysLost;
-        this.lossType = cardBuilder.lossType;
-        this.lossNumber = cardBuilder.lossNumber;
-        this.gainedCredit = cardBuilder.gainedCredit;
+        this.cardLevel = cardBuilder.getCardLevel();
+        this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
+        this.lossType = cardBuilder.getLossType();
+        this.lossNumber = cardBuilder.getLossNumber();
+        this.gainedCredit = cardBuilder.getGainedCredit();
 
     }
 
