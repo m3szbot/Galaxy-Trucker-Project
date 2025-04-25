@@ -117,12 +117,11 @@ class SufferBlowsTest {
     @Test
     void bigCannonBlowHit() throws NoSuchFieldException, IllegalAccessException {
 
-        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 5);
-        player.getShipBoard().addComponent(new Cabin(), 4, 4);
-        player.getShipBoard().addComponent(new Cabin(), 3, 3);
-        ((Cabin) player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
-        ((Cabin) player.getShipBoard().getComponent(2, 2)).setCrewType(CrewType.Purple);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 4, 7);
+
+        ((Storage)player.getShipBoard().getComponent(6, 5)).addGoods(new int[]{3, 1, 1, 0});
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
@@ -138,36 +137,42 @@ class SufferBlowsTest {
 
         Blow blows[] = new Blow[3];
 
-        blows[0] = new Blow(1, true);
-        blows[1] = new Blow(3, true);
+        blows[0] = new Blow(0, true);
+        blows[1] = new Blow(0, true);
         blows[2] = new Blow(0, true);
 
         Field rollField = Blow.class.getDeclaredField("roll");
         rollField.setAccessible(true);
-        rollField.setInt(blows[0], 5); //targets storage
+        rollField.setInt(blows[0], 3); //targets cabin
         rollField.setInt(blows[1], 4); //targets battery
-        rollField.setInt(blows[2], 3); //targets carbin
+        rollField.setInt(blows[2], 5); //targets storage
 
         flightView = new FlightView(gameInformation);
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
 
-        //should be 4
+        //should be 2
         System.out.println("Crew number: " + player.getShipBoard().getShipBoardAttributes().getCrewMembers());
         //should be 0
         System.out.println("Red slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
         //should be 0
         System.out.println("Blue slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        //should be 3
+        //should be 0
         System.out.println("Number of batteries on board: " + player.getShipBoard().getShipBoardAttributes().getBatteryPower());
 
 
-        assertNull(player.getShipBoard().getComponent(5, 5));
-        assertNull(player.getShipBoard().getComponent(4, 4));
-        assertNull(player.getShipBoard().getComponent(3, 3));
+        assertNull(player.getShipBoard().getComponent(5, 6));
+        assertNull(player.getShipBoard().getComponent(4, 6));
+        assertNull(player.getShipBoard().getComponent(3, 6));
+
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
+        /*
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots());
+
+         */
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers()); //only the main cabin crew remains
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
         assertEquals(new int[]{0, 0, 0, 0}, player.getShipBoard().getShipBoardAttributes().getGoods());

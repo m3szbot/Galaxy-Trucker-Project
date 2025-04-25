@@ -3,6 +3,7 @@ package it.polimi.ingsw.Shipboard;
 import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Application.*;
+import javafx.scene.SubScene;
 
 import java.util.List;
 

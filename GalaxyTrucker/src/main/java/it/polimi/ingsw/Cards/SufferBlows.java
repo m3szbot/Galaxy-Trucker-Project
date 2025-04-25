@@ -32,7 +32,7 @@ public interface SufferBlows {
 
     default void hit(Player player, Blow[] blows, ElementType blowType, FlightBoard flightBoard, FlightView flightView) {
 
-        int i, leftCoord = 0, rightCoord = 0;
+        int i, leftCoord, rightCoord;
         int rows = player.getShipBoard().getMatrixRows();
         int cols = player.getShipBoard().getMatrixCols();
         boolean componentFlag, hitFlag;
@@ -40,6 +40,8 @@ public interface SufferBlows {
 
         for(Blow blow: blows) {
 
+            leftCoord = 0;
+            rightCoord = 0;
             hitFlag = false;
             componentFlag = false;
 
@@ -535,23 +537,24 @@ public interface SufferBlows {
 
             if(hitFlag){
 
-                player.getShipBoard().getShipBoardAttributes().updateDestroyedComponents(1);
-
                 message = "Player " + player.getNickName() + " has been hit by a " +
-                        blowType.toString().toLowerCase() + "!";
+                        blowType.toString().toLowerCase() + " at position " +
+                        "[" + (leftCoord + 1) + "," + (rightCoord + 1) + "]!";
 
                 flightView.sendMessageToAll(message);
             }
             else if(componentFlag){
 
                 message = "Player " + player.getNickName() + " wasn't damaged by the " +
-                        blowType.toString().toLowerCase() + " coming at him!";
+                        blowType.toString().toLowerCase() + " that hit position " +
+                "[" + (leftCoord + 1) + "," + (rightCoord + 1) + "]!";
+
                 flightView.sendMessageToAll(message);
             }
             else{
 
                 message = "Player " + player.getNickName() + " dodged the " +
-                        blowType.toString().toLowerCase() + " coming at him!";
+                        blowType.toString().toLowerCase() + " coming at him from the " + direction + "!";
                 flightView.sendMessageToAll(message);
             }
         }
