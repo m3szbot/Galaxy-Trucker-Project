@@ -96,7 +96,7 @@ public class ShipBoard {
     }
 
     public Component getComponent(int x, int y){
-        return structureMatrix[x][y];
+        return structureMatrix[y][x];
     }
 
     public int getMatrixRows(){

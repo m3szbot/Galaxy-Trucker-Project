@@ -121,19 +121,10 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
         player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 4, 7);
 
-        ((Storage)player.getShipBoard().getComponent(6, 5)).addGoods(new int[]{3, 1, 1, 0});
+        ((Storage)player.getShipBoard().getComponent(5, 6)).addGoods(new int[]{3, 1, 1, 0});
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
-
-        //should be 4
-        System.out.println("Crew number: " + player.getShipBoard().getShipBoardAttributes().getCrewMembers());
-        //should be 0
-        System.out.println("Red slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        //should be 0
-        System.out.println("Blue slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        //should be 3
-        System.out.println("Number of batteries on board: " + player.getShipBoard().getShipBoardAttributes().getBatteryPower());
 
         Blow blows[] = new Blow[3];
 
@@ -151,54 +142,42 @@ class SufferBlowsTest {
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
-
-        //should be 2
-        System.out.println("Crew number: " + player.getShipBoard().getShipBoardAttributes().getCrewMembers());
-        //should be 0
-        System.out.println("Red slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        //should be 0
-        System.out.println("Blue slots available: " + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        //should be 0
-        System.out.println("Number of batteries on board: " + player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-
-
-        assertNull(player.getShipBoard().getComponent(5, 6));
-        assertNull(player.getShipBoard().getComponent(4, 6));
-        assertNull(player.getShipBoard().getComponent(3, 6));
+        assertNull(player.getShipBoard().getComponent(6, 5));
+        assertNull(player.getShipBoard().getComponent(6, 4));
+        assertNull(player.getShipBoard().getComponent(6, 3));
 
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        /*
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots());
-
-         */
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers()); //only the main cabin crew remains
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
-        assertEquals(new int[]{0, 0, 0, 0}, player.getShipBoard().getShipBoardAttributes().getGoods());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getGoods()[0]);
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getGoods()[1]);
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getGoods()[2]);
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getGoods()[3]);
 
     }
 
     @Test
     void smallCannonBlowHitTarget() throws NoSuchFieldException, IllegalAccessException {
 
-        player.getShipBoard().addComponent(new Component(), 6, 6); //target component
-        player.getShipBoard().addComponent(new Component(), 5, 5); //target component
-        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}), 4, 4);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 5, 7); //target component
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 6, 7); //target component
+        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}), 8, 7);
 
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
+        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(2);
 
         Blow blows[] = new Blow[2];
 
-        blows[0] = new Blow(3, false);
+        blows[0] = new Blow(0, false);
         blows[1] = new Blow(0, false);
 
         Field rollField = Blow.class.getDeclaredField("roll");
         rollField.setAccessible(true);
-        rollField.setInt(blows[0], 5);
-        rollField.setInt(blows[1], 4);
+        rollField.setInt(blows[0], 4);
+        rollField.setInt(blows[1], 5);
 
-        String inputString = "false\n";
+        String inputString = "false\nfalse\n";
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
@@ -206,8 +185,10 @@ class SufferBlowsTest {
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
-        assertNull(player.getShipBoard().getComponent(5, 5));
-        assertNull(player.getShipBoard().getComponent(4, 4));
+        assertNull(player.getShipBoard().getComponent(5, 7));
+        assertNull(player.getShipBoard().getComponent(6, 7));
+        assertNotNull(player.getShipBoard().getComponent(7, 6));
+        assertNotNull(player.getShipBoard().getComponent(6, 6));
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
 
     }
@@ -245,64 +226,64 @@ class SufferBlowsTest {
     @Test
     void bigMeteorBlowHitTarget() throws NoSuchFieldException, IllegalAccessException {
 
-        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 5);
-        player.getShipBoard().addComponent(new Cabin(), 4, 4);
-        ((Cabin) player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 4, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, 3);
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, 2);
+        ((Storage)player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
-        //Av.RedSlots = 0
-
+        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 
         Blow blows[] = new Blow[3];
 
-        blows[0] = new Blow(1, true);
+        blows[0] = new Blow(3, true);
         blows[1] = new Blow(3, true);
-        blows[2] = new Blow(0, true);
+        blows[2] = new Blow(3, true);
 
         Field rollField = Blow.class.getDeclaredField("roll");
         rollField.setAccessible(true);
-        rollField.setInt(blows[0], 5);
-        rollField.setInt(blows[1], 4);
-        rollField.setInt(blows[2], 3);
+        rollField.setInt(blows[0], 6);
+        rollField.setInt(blows[1], 6);
+        rollField.setInt(blows[2], 6);
 
         flightView = new FlightView(gameInformation);
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
-        assertNull(player.getShipBoard().getComponent(5, 5));
-        assertNull(player.getShipBoard().getComponent(4, 4));
-        assertNull(player.getShipBoard().getComponent(3, 3));
+        assertNull(player.getShipBoard().getComponent(3, 6));
+        assertNull(player.getShipBoard().getComponent(4, 6));
+        assertNull(player.getShipBoard().getComponent(5, 6));
+        assertNotNull(player.getShipBoard().getComponent(6, 6));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(5, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getCrewMembers());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers());
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
-        assertEquals(new int[]{0, 0, 0, 0}, player.getShipBoard().getShipBoardAttributes().getGoods());
 
     }
 
     @Test
     void bigMeteorBlowWithCannonNotActivated() throws NoSuchFieldException, IllegalAccessException {
 
-        player.getShipBoard().addComponent(new Component(), 6, 6);
-        player.getShipBoard().addComponent(new Component(), 5, 5);
-        player.getShipBoard().addComponent(new Component(), 4, 4);
-        player.getShipBoard().addComponent(new Component(), 3, 3);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 5), 2, 2);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 6, 7);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 6);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 8, 8);
+
         //front pointing cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, false), 4, 6);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, false), 7, 8);
 
         //right pointing cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Single, SideType.Special, SideType.Single, SideType.Single}, false), 5, 3);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 8, 9);
 
         //back pointing cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Single}, false), 6, 4);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 8, 7);
 
         //left pointing cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Special}, false), 3, 5);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal}, false), 9, 7);
+
+        //fictitious battery
+
+        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
 
         Blow blows[] = new Blow[4];
 
@@ -313,10 +294,10 @@ class SufferBlowsTest {
 
         Field rollField = Blow.class.getDeclaredField("roll");
         rollField.setAccessible(true);
-        rollField.setInt(blows[0], 5);
-        rollField.setInt(blows[1], 4);
-        rollField.setInt(blows[2], 3);
-        rollField.setInt(blows[3], 2);
+        rollField.setInt(blows[0], 7);
+        rollField.setInt(blows[1], 7);
+        rollField.setInt(blows[2], 6);
+        rollField.setInt(blows[3], 6);
 
         String inputString = "false\nfalse\nfalse\nfalse\n";
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
@@ -326,45 +307,40 @@ class SufferBlowsTest {
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
-        assertNull(player.getShipBoard().getComponent(5, 5));
-        assertNull(player.getShipBoard().getComponent(4, 4));
-        assertNull(player.getShipBoard().getComponent(3, 3));
-        assertNull(player.getShipBoard().getComponent(2, 2));
+        System.out.println("Components destroyed: " + player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
 
-        assertEquals(5, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(5, ((Battery) player.getShipBoard().getComponent(1, 1)).getBatteryPower());
+        assertNull(player.getShipBoard().getComponent(5, 6));
+        assertNull(player.getShipBoard().getComponent(6, 5));
+        assertNull(player.getShipBoard().getComponent(7, 7));
+        assertNull(player.getShipBoard().getComponent(7, 8));
+        assertNotNull(player.getShipBoard().getComponent(6, 6));
+        assertNotNull(player.getShipBoard().getComponent(6, 7));
+        assertNotNull(player.getShipBoard().getComponent(7, 6));
+        assertNotNull(player.getShipBoard().getComponent(8, 6));
+
+
+        assertEquals(1, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
+        assertEquals(4, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
     }
 
     @Test
     void bigMeteorBlowWithCannonActivated() throws NoSuchFieldException, IllegalAccessException {
 
-        //target component
-        player.getShipBoard().addComponent(new Component(), 6, 6);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 7, 8);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, 1), 8, 7);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal}, false), 8, 6);
 
-        //single cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Single, SideType.Special, SideType.Single, SideType.Single}, true), 6, 4);
+        Blow blows[] = new Blow[2];
 
-        //double cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, false), 4, 6);
-
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 1), 2, 2);
-
-
-        Blow blows[] = new Blow[4];
-
-        blows[3] = new Blow(0, true);
+        blows[0] = new Blow(0, true);
         blows[1] = new Blow(1, true);
-        blows[2] = new Blow(1, true);
-        blows[0] = new Blow(1, true);
 
         Field rollField = Blow.class.getDeclaredField("roll");
         rollField.setAccessible(true);
         rollField.setInt(blows[0], 6);
-        rollField.setInt(blows[1], 5);
-        rollField.setInt(blows[2], 4);
-        rollField.setInt(blows[3], 5);
+        rollField.setInt(blows[1], 6);
 
-        String inputString = "true\n3 5\n1 1\n";
+        String inputString = "true\n1 1\n7 6\n";
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
@@ -372,9 +348,12 @@ class SufferBlowsTest {
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
-        assertNotNull(player.getShipBoard().getComponent(5, 5));
+        assertNotNull(player.getShipBoard().getComponent(6, 6));
+        assertNotNull(player.getShipBoard().getComponent(6, 7));
+        assertNotNull(player.getShipBoard().getComponent(7, 6));
+        assertNotNull(player.getShipBoard().getComponent(7, 5));
+
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(0, ((Battery) player.getShipBoard().getComponent(1, 1)).getBatteryPower());
 
     }
 
@@ -445,43 +424,39 @@ class SufferBlowsTest {
     @Test
     void smallMeteorBlowHit() throws NoSuchFieldException, IllegalAccessException {
 
-        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 5);
-        player.getShipBoard().addComponent(new Cabin(), 4, 4);
-        ((Cabin) player.getShipBoard().getComponent(3, 3)).setCrewType(CrewType.Human);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 4, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, 3);
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, 2);
+        ((Storage)player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
-        //Av.RedSlots = 0
-
+        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 
         Blow blows[] = new Blow[3];
 
-        blows[0] = new Blow(1, false);
+        blows[0] = new Blow(3, false);
         blows[1] = new Blow(3, false);
-        blows[2] = new Blow(0, false);
+        blows[2] = new Blow(3, false);
 
         Field rollField = Blow.class.getDeclaredField("roll");
         rollField.setAccessible(true);
-        rollField.setInt(blows[0], 5); //targets storage
-        rollField.setInt(blows[1], 4); //targets battery
-        rollField.setInt(blows[2], 3); //targets carbin
+        rollField.setInt(blows[0], 6);
+        rollField.setInt(blows[1], 6);
+        rollField.setInt(blows[2], 6);
 
         flightView = new FlightView(gameInformation);
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
-        assertNull(player.getShipBoard().getComponent(5, 5));
-        assertNull(player.getShipBoard().getComponent(4, 4));
-        assertNull(player.getShipBoard().getComponent(3, 3));
+        assertNull(player.getShipBoard().getComponent(3, 6));
+        assertNull(player.getShipBoard().getComponent(4, 6));
+        assertNull(player.getShipBoard().getComponent(5, 6));
+        assertNotNull(player.getShipBoard().getComponent(6, 6));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(5, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getCrewMembers());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers());
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
-        assertEquals(new int[]{0, 0, 0, 0}, player.getShipBoard().getShipBoardAttributes().getGoods());
-
     }
 
 }
