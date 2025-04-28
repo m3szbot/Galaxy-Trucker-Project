@@ -28,9 +28,8 @@ public class AssemblyPhase {
     /**
      * Initializes the game with provided game information.
      *
-     * @param gameInformation contains players and initial setup
      */
-    public AssemblyPhase(GameInformation gameInformation) {
+    public AssemblyPhase() {
         assemblyProtocol = new AssemblyProtocol(gameInformation);
         assemblyView = new AssemblyView();
     }
