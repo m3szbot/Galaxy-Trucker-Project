@@ -54,4 +54,7 @@ public class AssemblyView {
     public void printErrorChoosingBookedComponentMessage(){
         System.out.println("The Booked Component chose doesn't exist");
     }
+    public void printEmptyHandErrorMessage(){
+        System.out.println("Your hand is empty");
+    }
 }
