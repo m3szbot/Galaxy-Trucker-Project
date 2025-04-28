@@ -18,17 +18,20 @@ public class EvaluationPhase implements Startable {
         EvaluationView evaluationView = new EvaluationView();
         String message;
 
+        // print welcome message
+        evaluationView.printEvaluationMessage();
+
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
         // Show player credits
         // (no sorting - maps can't be sorted by value, hassle)
         message = getPlayerCreditsMessage(gameInformation);
-        evaluationView.ShowPlayerCredits(message);
+        evaluationView.showPlayerCredits(message);
 
         // TODO ask another game
         message = "Do you want to play another game with the same players?[y/n]";
-        if (evaluationView.AskAnotherGame(message)) {
+        if (evaluationView.askAnotherGame(message)) {
             // TODO start another game
         }
         // end evaluationPhase
