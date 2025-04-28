@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.*;
 public class GameInformation {
     private List<Card> cardsList;
     private List<Component> componentList;
-    private List<Player> playerList;
+    private List<Player> playerList = new ArrayList<>();
     private int maxNumberOfPlayers;
     private FlightBoard flightBoard;
     private GameType gameType;
@@ -265,22 +265,9 @@ public class GameInformation {
 
     }
 
-    /**
-     * creates playerList and adds new player
-     *
-     * @param player
-     * @param maxNumberOfPlayers
-     */
-    public void setUpPlayers(Player player, int maxNumberOfPlayers) {
-        if (playerList.isEmpty()) {
 
-            this.maxNumberOfPlayers = maxNumberOfPlayers;
-            playerList = new ArrayList<>();
-            playerList.add(player);
-
-        } else {
-            addPlayers(player);
-        }
+    public void setMaxNumberOfPlayers(int maxNumberOfPlayers) {
+        this.maxNumberOfPlayers = maxNumberOfPlayers;
     }
 
     /**
