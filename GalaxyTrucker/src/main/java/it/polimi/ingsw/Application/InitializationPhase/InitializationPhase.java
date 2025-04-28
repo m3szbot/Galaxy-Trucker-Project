@@ -20,12 +20,15 @@ public class InitializationPhase implements Startable {
      * start is to be called in the main in order to initialize the objects of the game
      *
      * @param gameInformation
-     * @throws IOException
      */
     @Override
-    public void start(GameInformation gameInformation) throws IOException {
-        gameInformation.setUpCards(gameInformation.getGameType());
-        gameInformation.setUpComponents();
+    public void start(GameInformation gameInformation) {
+        try {
+            gameInformation.setUpCards(gameInformation.getGameType());
+            gameInformation.setUpComponents();
+        } catch (Exception e) {
+            System.out.println("Setup error");
+        }
         gameInformation.setUpFlightBoard();
     }
 
