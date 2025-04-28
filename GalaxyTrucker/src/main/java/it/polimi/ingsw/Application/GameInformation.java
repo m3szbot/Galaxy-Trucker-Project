@@ -27,6 +27,7 @@ public class GameInformation {
     private FlightBoard flightBoard;
     private GameType gameType;
     private HashMap<Player, ViewType> playerViewMap;
+    private HashMap<Player, ConnectionType> playerConnectionMap;
 
     public GameInformation() {
         cardsList = new ArrayList<>();
@@ -63,6 +64,8 @@ public class GameInformation {
         return playerViewMap.get(player);
     }
 
+    public ConnectionType getPlayerConnectionType(Player player) {return playerConnectionMap.get(player);}
+
     /**
      * creates the complete list of cards based on the type of game
      *
@@ -90,7 +93,7 @@ public class GameInformation {
                 // present for all
                 cardLevel = node.get("level").asInt();
                 cardName = node.get("cardName").asText();
-                // optional (can be null!)
+                // optional (can be null)
                 daysLost = getSafeInt(node, "daysLost");
                 gainedCredit = getSafeInt(node, "gainedCredit");
                 requirementNumber = getSafeInt(node, "requirementNumber");
@@ -324,4 +327,14 @@ public class GameInformation {
     public void setPlayerViewType(Player player, ViewType viewType) {
         playerViewMap.put(player, viewType);
     }
+
+    /**
+     * set up the connection type for the specified player
+     * @param player
+     * @param connectionType
+     *
+     * @author carlo
+     */
+
+    public void setPlayerConnectionType(Player player, ConnectionType connectionType) {playerConnectionMap.put(player, connectionType);}
 }
