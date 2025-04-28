@@ -524,7 +524,6 @@ public class ShipBoard {
         return false;
     }
 
-    //Is this useful?
 
     private int getDrivingPower(VisitorAttributesUpdater visitor, Component component) {
         return (Integer) component.accept(visitor).get(0);

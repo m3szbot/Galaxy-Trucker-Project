@@ -6,8 +6,9 @@ import it.polimi.ingsw.FlightBoard.FlightBoard;
 
 public class FlightPhase {
 
-    public void start(GameInformation gameInformation, FlightView flightView){
+    public void start(GameInformation gameInformation){
 
+        FlightView flightView = new FlightView(gameInformation);
         FlightBoard flightBoard = gameInformation.getFlightBoard();
         int numberOfCards;
 
