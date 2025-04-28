@@ -57,8 +57,12 @@ public class AssemblyState implements GameState {
                 assemblyPhase.setState(new ComponentChoiceState(view, protocol, player));
                 break;
             case "rotate":
-                assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).rotate();
-                view.printRotateMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
+                if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+                    assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).rotate();
+                    view.printRotateMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
+                }else{
+                    assemblyPhase.getAssemblyView().printEmptyHandErrorMessage();
+                }
                 assemblyPhase.setState(new AssemblyState(view, protocol, player));
                 break;
             case "turn":
@@ -73,7 +77,11 @@ public class AssemblyState implements GameState {
                 break;
             case "book":
                 actionTaken = true;
-                assemblyPhase.getAssemblyProtocol().bookComponent(player);
+                if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+                    assemblyPhase.getAssemblyProtocol().bookComponent(player);
+                }else{
+                    assemblyPhase.getAssemblyView().printEmptyHandErrorMessage();
+                }
                 assemblyPhase.setState(new AssemblyState(view, protocol, player));
                 break;
             case "place booked":

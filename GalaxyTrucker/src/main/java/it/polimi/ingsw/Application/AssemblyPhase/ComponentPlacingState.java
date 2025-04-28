@@ -54,8 +54,15 @@ public class ComponentPlacingState implements GameState {
         int num1 = Integer.parseInt(parts[0]);
         int num2 = Integer.parseInt(parts[1]);
 
-        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
-        assemblyPhase.getAssemblyProtocol().newComponent(player);
-        assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
+
+        if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+            assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
+            assemblyPhase.getAssemblyProtocol().newComponent(player);
+            assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
+        }
+        else{
+            assemblyPhase.getAssemblyView().printEmptyHandErrorMessage();
+            assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
+        }
     }
 }
