@@ -19,7 +19,7 @@ public class AssemblyPhaseTest {
         gameInformation.setUpPlayers(gecky = new Player("Gecky", Color.RED, gameInformation), 1);
         try {gameInformation.setUpCards(GameType.NormalGame);} catch (Exception e){e.printStackTrace();}
         try  {gameInformation.setUpComponents();} catch (Exception e){e.printStackTrace();}
-        ass = new AssemblyPhase(gameInformation);
+        ass = new AssemblyPhase();
         view = new AssemblyView();
     }
 
