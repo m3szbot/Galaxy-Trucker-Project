@@ -1,7 +1,10 @@
 package it.polimi.ingsw.Application.AssemblyPhase;
 
 import it.polimi.ingsw.Application.GameInformation;
+import it.polimi.ingsw.Application.GameType;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
+import it.polimi.ingsw.Shipboard.Color;
+import it.polimi.ingsw.Shipboard.Player;
 
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
@@ -28,7 +31,6 @@ public class AssemblyPhase {
      * @param gameInformation contains players and initial setup
      */
     public AssemblyPhase(GameInformation gameInformation) {
-        this.gameInformation = gameInformation;
         assemblyProtocol = new AssemblyProtocol(gameInformation);
         assemblyView = new AssemblyView();
     }
@@ -72,7 +74,8 @@ public class AssemblyPhase {
      * Starts the game, initializes the state, sets up user input thread,
      * and runs the main non-blocking game loop.
      */
-    public void start() {
+    public void start(GameInformation gameInformation) {
+        this.gameInformation = gameInformation;
         // For now, the initial state is set using only the first player.
         // Later, threads should be launched for all players.
         setState(new AssemblyState(assemblyView,assemblyProtocol, gameInformation.getPlayerList().getFirst()));
@@ -103,7 +106,20 @@ public class AssemblyPhase {
 
         assemblyView.printGameOverMessage();
     }
-
+/*
+      //main fatto a caso da gecky per fare test
+    public static void main(String[] args) {
+        AssemblyPhase ass;
+        Player gecky;
+        GameInformation gameInformation = new GameInformation();
+        gameInformation.setGameType(GameType.NormalGame);
+        gameInformation.setUpPlayers(gecky = new Player("Gecky", Color.RED, gameInformation), 1);
+        try {gameInformation.setUpCards(GameType.NormalGame);} catch (Exception e){e.printStackTrace();}
+        try  {gameInformation.setUpComponents();} catch (Exception e){e.printStackTrace();}
+        ass = new AssemblyPhase(gameInformation);
+        ass.start();
+    }
+*/
     /**
      * Temporary main method for standalone testing.
      * Should be moved into a class where GameInformation is initialized.
