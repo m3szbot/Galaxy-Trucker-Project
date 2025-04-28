@@ -3,6 +3,7 @@ package it.polimi.ingsw.Shipboard;
 
 import it.polimi.ingsw.Application.GameInformation;
 
+import it.polimi.ingsw.Application.GameType;
 import it.polimi.ingsw.Application.ViewType;
 
 public class Player {

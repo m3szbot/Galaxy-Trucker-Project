@@ -9,7 +9,7 @@ import it.polimi.ingsw.Shipboard.*;
  *
  * @author Giacomo
  */
-public class ComponentChoice implements GameState {
+public class ComponentChoiceState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private AssemblyView view;
@@ -21,7 +21,7 @@ public class ComponentChoice implements GameState {
      * @param protocol the game logic handler
      * @param player   the current player
      */
-    public ComponentChoice(AssemblyView view, AssemblyProtocol protocol, Player player) {
+    public ComponentChoiceState(AssemblyView view, AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
         this.view = view;
         this.player = player;
@@ -36,6 +36,7 @@ public class ComponentChoice implements GameState {
     @Override
     public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
         view.printComponentChoice();
+        view.printUncoveredComponentsMessage(assemblyPhase);
     }
 
     /**
@@ -61,7 +62,6 @@ public class ComponentChoice implements GameState {
         }
         switch (caseManagement) {
             case 1:
-                view.printUncoveredComponentsMessage(assemblyPhase);
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
                 view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));

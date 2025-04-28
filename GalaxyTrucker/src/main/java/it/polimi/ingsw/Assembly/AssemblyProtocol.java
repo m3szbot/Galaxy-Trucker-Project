@@ -43,6 +43,7 @@ public class AssemblyProtocol {
         }
         coveredList = new ArrayList<>();
         coveredList.addAll(gameInformation.getComponentList());
+        Collections.shuffle(coveredList);
         uncoveredList = new ArrayList<>();
         inHandMap = new HashMap<>();
         bookedMap = new HashMap<>();

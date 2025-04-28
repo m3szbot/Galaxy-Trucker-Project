@@ -54,7 +54,7 @@ public class AssemblyState implements GameState {
                 break;
             case "choose":
                 actionTaken = true;
-                assemblyPhase.setState(new ComponentChoice(view, protocol, player));
+                assemblyPhase.setState(new ComponentChoiceState(view, protocol, player));
                 break;
             case "rotate":
                 assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).rotate();

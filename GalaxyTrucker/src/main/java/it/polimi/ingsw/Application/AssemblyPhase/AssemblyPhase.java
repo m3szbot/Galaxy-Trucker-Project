@@ -33,6 +33,10 @@ public class AssemblyPhase {
         assemblyView = new AssemblyView();
     }
 
+    public AssemblyView getAssemblyView() {
+        return assemblyView;
+    }
+
     /**
      * Returns the protocol managing component booking and placement.
      */
