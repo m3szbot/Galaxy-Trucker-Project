@@ -23,11 +23,6 @@ public class AlienSupport extends Component {
         this.purple = purple;
     }
 
-    @JsonProperty("purple")
-    public void setPurple(boolean purple) {
-        this.purple = purple;
-    }
-
     /**
      * @return boolean that is true if the alienSupport is for purple aliens
      */
