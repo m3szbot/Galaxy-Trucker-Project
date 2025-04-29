@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection;
+package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Application.ConnectionType;
 import it.polimi.ingsw.Application.ViewType;
@@ -11,6 +11,8 @@ public class ClientInfo implements Serializable {
     private ConnectionType connectionType;
     private ViewType viewType;
     private int gameCode;
+    private String serverIp;
+    private final static int serverPort = 5000;
 
     public ConnectionType getConnectionType() {
         return connectionType;
@@ -42,5 +44,17 @@ public class ClientInfo implements Serializable {
 
     public void setViewType(ViewType viewType) {
         this.viewType = viewType;
+    }
+
+    public static int getServerPort() {
+        return serverPort;
+    }
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
     }
 }
