@@ -29,7 +29,7 @@ public class AssemblyState implements GameState {
      * Called when this state becomes active. Initializes the timer and resets the action flag.
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase, AssemblyView view) {
+    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
         startTime = System.currentTimeMillis();
         actionTaken = false;
         view = view;
@@ -39,9 +39,10 @@ public class AssemblyState implements GameState {
      * Handles user input commands during the assembly phase.
      */
     @Override
-    public void handleInput(String input, AssemblyThread assemblyPhase) {
+    public void handleInput(String input, AssemblyPhase assemblyPhase) {
         if (actionTaken) return; // Ignore input after an action is taken
-        view.printAssemblyMessage();
+        String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component)";
+        view.sendMessageToPlayer(message, player);
         switch (input.toLowerCase()) {
             case "place":
                 actionTaken = true;
@@ -97,7 +98,7 @@ public class AssemblyState implements GameState {
     /**
      * Periodically called to check if the player has timed out.
      */
-    public void update(AssemblyThread assemblyPhase) {
+    public void update(AssemblyPhase assemblyPhase) {
         if (!actionTaken) {
             long now = System.currentTimeMillis();
             if (now - startTime >= 50000) { // 50 seconds timeout

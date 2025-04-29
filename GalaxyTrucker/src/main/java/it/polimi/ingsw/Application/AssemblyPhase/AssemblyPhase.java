@@ -17,9 +17,13 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author Giacomo
  */
 public class AssemblyPhase {
+    private GameState currentState;
+    private boolean running = true;
+    private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private GameInformation gameInformation;
     private AssemblyProtocol assemblyProtocol;
     private AssemblyView assemblyView;
+    private String message;
 
 
     /**
@@ -42,6 +46,15 @@ public class AssemblyPhase {
         return assemblyProtocol;
     }
 
+    /**
+     * Sets the current state of the game and triggers its enter logic.
+     *
+     * @param newState the new state to switch to
+     */
+    public void setState(GameState newState) {
+        this.currentState = newState;
+        currentState.enter(this, assemblyView);
+    }
 
     /**
      * Returns the game information object containing all players.
@@ -50,6 +63,12 @@ public class AssemblyPhase {
         return gameInformation;
     }
 
+    /**
+     * Updates the running flag that controls the game loop.
+     */
+    public void setRunning(boolean value) {
+        running = value;
+    }
 
     /**
      * Starts the game, initializes the state, sets up user input thread,
@@ -65,6 +84,9 @@ public class AssemblyPhase {
         }
     }
 
+        message = "Assembly phase has ended";
+        assemblyView.sendMessageToAll(message);
+    }
 /*
       //main fatto a caso da gecky per fare test
     public static void main(String[] args) {

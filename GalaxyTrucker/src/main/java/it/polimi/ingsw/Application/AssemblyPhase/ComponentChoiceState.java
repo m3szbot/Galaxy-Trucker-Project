@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Application.AssemblyPhase;
 
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
+import it.polimi.ingsw.Components.Component;
 import it.polimi.ingsw.Shipboard.*;
 
 /**
@@ -13,6 +14,7 @@ public class ComponentChoiceState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private AssemblyView view;
+    private String message;
 
     /**
      * Constructs a ComponentChoice state.
@@ -34,8 +36,9 @@ public class ComponentChoiceState implements GameState {
      * @param view          the view used to show the message
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase, AssemblyView view) {
-        view.printComponentChoice();
+    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
+        message = "Enter the number of the component you would like:";
+        view.sendMessageToPlayer(message, player);
         view.printUncoveredComponentsMessage(assemblyPhase);
     }
 
@@ -47,7 +50,8 @@ public class ComponentChoiceState implements GameState {
      * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyThread assemblyPhase) {
+    public void handleInput(String input, AssemblyPhase assemblyPhase) {
+        Component component;
         String imput = input.toLowerCase();
         int caseManagement = -1;
         try {
@@ -63,9 +67,13 @@ public class ComponentChoiceState implements GameState {
         switch (caseManagement) {
             case 1:
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
-                view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
+                component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
+                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft()
+                view.sendComponentMessageToPlayer(message, player, component);
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
-                view.printNewComponentMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
+                component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
+                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft()
+                view.sendComponentMessageToPlayer(message, player, component);
                 break;
             case 2:
                 view.printErrorComponentChoiceMessage();
