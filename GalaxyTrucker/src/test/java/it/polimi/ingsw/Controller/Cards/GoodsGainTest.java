@@ -1,18 +1,14 @@
-package it.polimi.ingsw.Cards;
+package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.View.FlightView.FlightView;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Controller.Cards.CardBuilder;
-import it.polimi.ingsw.Controller.Cards.Epidemic;
-import it.polimi.ingsw.Controller.Cards.GoodsGain;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.FlightView.FlightView;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author carlo

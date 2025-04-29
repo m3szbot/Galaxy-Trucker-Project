@@ -1,9 +1,8 @@
-package it.polimi.ingsw.Assembly;
+package it.polimi.ingsw.Model.AssemblyModel;
 
+import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.Components.Component;
-import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,6 @@
-package it.polimi.ingsw.Application;
+package it.polimi.ingsw.Model.GameInformation;
 
 import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;

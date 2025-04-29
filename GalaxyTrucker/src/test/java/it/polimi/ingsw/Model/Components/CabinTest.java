@@ -1,9 +1,6 @@
-package it.polimi.ingsw.Components;
+package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.Model.Components.Cabin;
-import it.polimi.ingsw.Model.Components.CrewType;
-import it.polimi.ingsw.Model.Components.SideType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,5 +115,5 @@ class CabinTest {
         assertNull(cabin.getCrewType());
         assertEquals(2, cabin.getNumberOfCurrentInhabitant());
     }
-    
+
 }

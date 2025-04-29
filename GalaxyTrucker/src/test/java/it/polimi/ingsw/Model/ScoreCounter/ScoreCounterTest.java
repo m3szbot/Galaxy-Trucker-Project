@@ -1,8 +1,7 @@
-package it.polimi.ingsw.ScoreCounter;
+package it.polimi.ingsw.Model.ScoreCounter;
 
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 // TODO players with shipBoards (goods, exposed links, lost components)
 class ScoreCounterTest {

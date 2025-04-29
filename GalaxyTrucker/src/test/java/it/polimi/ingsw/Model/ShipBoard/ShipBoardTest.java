@@ -1,12 +1,12 @@
-package it.polimi.ingsw.Shipboard;
+package it.polimi.ingsw.Model.ShipBoard;
 
-import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 //already tested: addComponent, removeComponent, goDownChecking, isCompatible, countExternalJunctions, setCrewType, checkNotReachable

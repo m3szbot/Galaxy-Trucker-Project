@@ -1,9 +1,8 @@
-package it.polimi.ingsw.Assembly;
+package it.polimi.ingsw.Model.AssemblyModel;
 
+import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +10,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DeckTest {
     Deck deck;

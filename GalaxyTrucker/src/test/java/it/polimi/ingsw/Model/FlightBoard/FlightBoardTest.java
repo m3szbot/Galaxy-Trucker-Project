@@ -1,22 +1,21 @@
-package it.polimi.ingsw.FlightBoard;
+package it.polimi.ingsw.Model.FlightBoard;
 
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Cards.CardBuilder;
 import it.polimi.ingsw.Controller.Cards.Sabotage;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FlightBoardTest {
     // common fields
