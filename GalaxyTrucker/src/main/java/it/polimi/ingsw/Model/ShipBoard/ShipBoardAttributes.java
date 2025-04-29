@@ -1,7 +1,6 @@
 
 package it.polimi.ingsw.Model.ShipBoard;
 
-import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Model.Components.CrewType;
 
 public class ShipBoardAttributes {
@@ -93,15 +92,14 @@ public class ShipBoardAttributes {
     //update the aliens.
     public void updateAlien(CrewType crewType, boolean removeFlag) {
 
-        if(!removeFlag) {
+        if (!removeFlag) {
 
             if (crewType == CrewType.Purple) {
                 this.purpleAlien = true;
             } else if (crewType == CrewType.Brown) {
                 this.brownAlien = true;
             }
-        }
-        else{
+        } else {
 
             if (crewType == CrewType.Purple) {
                 this.purpleAlien = false;
@@ -117,7 +115,9 @@ public class ShipBoardAttributes {
      * @param value Amount to increase the battery power by.
      * @author Giacomo
      */
-    public void updateBatteryPower(int value) {this.batteryPower = this.batteryPower + value;}
+    public void updateBatteryPower(int value) {
+        this.batteryPower = this.batteryPower + value;
+    }
 
     /**
      * Updates the coverage status of a specific side of the ship.
@@ -128,10 +128,9 @@ public class ShipBoardAttributes {
      * @author Giacomo
      */
     public void updateCoveredSides(int side, boolean cover, boolean type) {
-        if(cover && type ){
+        if (cover && type) {
             this.coveredSides[side]++;
-        }
-        else if(cover && !type ){
+        } else if (cover && !type) {
             this.coveredSides[side]--;
         }
     }
@@ -204,8 +203,7 @@ public class ShipBoardAttributes {
             return 1;
         } else if (purpleAlien == true) {
             return 2;
-        }
-        else if(brownAlien == true){
+        } else if (brownAlien == true) {
             return 3;
         }
         return 0;
@@ -306,8 +304,8 @@ public class ShipBoardAttributes {
      * @author carlo
      */
 
-    public void updateGoods(int[] goods){
-        for(int i = 0; i < goods.length; i++){
+    public void updateGoods(int[] goods) {
+        for (int i = 0; i < goods.length; i++) {
             this.goods[i] += goods[i];
         }
     }
@@ -333,11 +331,13 @@ public class ShipBoardAttributes {
     }
 
     public void updateNumberForwardDoubleCannons(int number) {
-        this.numberForwardDoubleCannons = this.numberForwardDoubleCannons +  number;
+        this.numberForwardDoubleCannons = this.numberForwardDoubleCannons + number;
     }
+
     public void updateNumberNotForwardDoubleCannons(int number) {
         this.numberNotForwardDoubleCannons = this.numberNotForwardDoubleCannons + number;
     }
+
     public void updateNumberDoubleEngines(int number) {
         this.numberDoubleEngines = this.numberDoubleEngines + number;
     }

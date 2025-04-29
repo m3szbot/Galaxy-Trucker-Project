@@ -1,9 +1,7 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
-import it.polimi.ingsw.Components.*;
-import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Application.*;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.util.List;
 

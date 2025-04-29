@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.EvaluationPhase;
+package it.polimi.ingsw.View.EvaluationView;
 
 
 public class EvaluationView {

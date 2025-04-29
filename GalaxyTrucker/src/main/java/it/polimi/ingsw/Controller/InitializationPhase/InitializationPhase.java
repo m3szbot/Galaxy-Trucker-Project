@@ -6,8 +6,8 @@ package it.polimi.ingsw.Controller.InitializationPhase;
  * @author Ludo
  */
 
+import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.Startable;
 
 public class InitializationPhase implements Startable {
 

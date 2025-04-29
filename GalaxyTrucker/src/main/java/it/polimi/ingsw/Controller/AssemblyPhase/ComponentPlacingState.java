@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 /**
  * ComponentPlacingState handles the logic for placing a component
@@ -55,12 +56,11 @@ public class ComponentPlacingState implements GameState {
         int num2 = Integer.parseInt(parts[1]);
 
 
-        if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+        if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
             assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
             assemblyPhase.getAssemblyProtocol().newComponent(player);
             assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
-        }
-        else{
+        } else {
             assemblyPhase.getAssemblyView().printEmptyHandErrorMessage();
             assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
         }

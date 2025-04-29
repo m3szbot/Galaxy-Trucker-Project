@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.FlightPhase.FlightView;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Class that represent the card meteorswarm

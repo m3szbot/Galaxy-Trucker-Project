@@ -1,14 +1,11 @@
 package it.polimi.ingsw.Model.AssemblyModel;
 
-import java.util.*;
-
-import it.polimi.ingsw.Cards.*;
-import it.polimi.ingsw.Components.*;
 import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Application.*;
+
+import java.util.*;
 
 /**
  * AssemblyProtocol handles the logic behind deck selection, component

@@ -6,13 +6,13 @@ package it.polimi.ingsw.Controller.SetUpPhase;
  * @author Ludo
  */
 
-import it.polimi.ingsw.Application.*;
+import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.GameInformation.Startable;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.SetUpView.SetUpView;
 
 import java.io.IOException;
 

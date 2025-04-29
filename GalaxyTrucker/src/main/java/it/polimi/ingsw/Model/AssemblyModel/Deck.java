@@ -1,14 +1,12 @@
 package it.polimi.ingsw.Model.AssemblyModel;
 
 
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import it.polimi.ingsw.Cards.*;
-import it.polimi.ingsw.Application.*;
-import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.GameInformation.GameType;
 
 /**
  * Represents one of the decks of cards used in the assembly phase of the game.

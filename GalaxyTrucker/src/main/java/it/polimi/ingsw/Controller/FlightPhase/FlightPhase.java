@@ -1,10 +1,12 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
+import it.polimi.ingsw.Controller.Game.Startable;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
-public class FlightPhase {
+public class FlightPhase implements Startable {
 
     public void start(GameInformation gameInformation) {
 

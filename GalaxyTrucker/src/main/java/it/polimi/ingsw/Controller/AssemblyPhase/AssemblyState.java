@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 /**
  * AssemblyState handles the player's turn during the assembly phase,
@@ -58,10 +59,10 @@ public class AssemblyState implements GameState {
                 assemblyPhase.setState(new ComponentChoiceState(view, protocol, player));
                 break;
             case "rotate":
-                if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+                if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
                     assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).rotate();
                     view.printRotateMessage(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
-                }else{
+                } else {
                     assemblyPhase.getAssemblyView().printEmptyHandErrorMessage();
                 }
                 assemblyPhase.setState(new AssemblyState(view, protocol, player));
@@ -78,9 +79,9 @@ public class AssemblyState implements GameState {
                 break;
             case "book":
                 actionTaken = true;
-                if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+                if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
                     assemblyPhase.getAssemblyProtocol().bookComponent(player);
-                }else{
+                } else {
                     assemblyPhase.getAssemblyView().printEmptyHandErrorMessage();
                 }
                 assemblyPhase.setState(new AssemblyState(view, protocol, player));

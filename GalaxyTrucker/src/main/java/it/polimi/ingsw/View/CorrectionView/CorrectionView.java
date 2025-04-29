@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.CorrectionPhase;
+package it.polimi.ingsw.View.CorrectionView;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.FlightPhase.FlightView;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * class that represent the card sabotage
@@ -10,7 +10,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  * @author carlo
  */
 
-public class Sabotage extends Card implements SmallestCrew{
+public class Sabotage extends Card implements SmallestCrew {
 
     public Sabotage(CardBuilder cardBuilder) {
 
@@ -26,13 +26,12 @@ public class Sabotage extends Card implements SmallestCrew{
         Player smallestCrewPlayer = calculateSmallestCrew(flightBoard);
         String message;
 
-        if(destroyRandomComponent(smallestCrewPlayer)){
+        if (destroyRandomComponent(smallestCrewPlayer)) {
 
             message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
             flightView.sendMessageToAll(message);
 
-        }
-        else{
+        } else {
 
             message = "Player " + smallestCrewPlayer.getNickName() +
                     "was lucky enough to not get hit!";
@@ -42,7 +41,6 @@ public class Sabotage extends Card implements SmallestCrew{
     }
 
     /**
-     *
      * @param player target
      * @return true if the player was hit, false otherwise
      */
@@ -51,13 +49,13 @@ public class Sabotage extends Card implements SmallestCrew{
 
         int i, x, y;
 
-        for(i = 0; i < 3; i++){
+        for (i = 0; i < 3; i++) {
 
 
             x = (int) (Math.random() * 13);
             y = (int) (Math.random() * 13);
 
-            if(player.getShipBoard().getComponent(x, y) != null){
+            if (player.getShipBoard().getComponent(x, y) != null) {
 
                 player.getShipBoard().removeComponent(x, y, true);
                 player.getShipBoard().getShipBoardAttributes().updateDestroyedComponents(1);

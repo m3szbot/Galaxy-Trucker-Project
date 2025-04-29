@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.FlightPhase.FlightView;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
         int enginePowerChosen;
         List<Player> players = flightBoard.getPlayerOrderList();
 
-        for(int i = 0; i < numberOfPlayers; i++){
+        for (int i = 0; i < numberOfPlayers; i++) {
 
             enginePowerChosen = chooseEnginePower(players.get(i), flightView);
             changePlayerPosition(players.get(i), enginePowerChosen, flightBoard);

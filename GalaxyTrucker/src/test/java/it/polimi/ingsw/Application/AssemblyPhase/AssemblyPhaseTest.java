@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Application.AssemblyPhase;
+
 import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyPhase;
-import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyView;
+import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class AssemblyPhaseTest {

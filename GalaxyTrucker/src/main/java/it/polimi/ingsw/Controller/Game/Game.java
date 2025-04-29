@@ -5,7 +5,10 @@ import it.polimi.ingsw.Controller.CorrectionPhase.CorrectionPhase;
 import it.polimi.ingsw.Controller.EvaluationPhase.EvaluationPhase;
 import it.polimi.ingsw.Controller.FlightPhase.FlightPhase;
 import it.polimi.ingsw.Controller.InitializationPhase.InitializationPhase;
-import it.polimi.ingsw.Model.GameInformation.*;
+import it.polimi.ingsw.Model.GameInformation.ConnectionType;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class Game implements Runnable {

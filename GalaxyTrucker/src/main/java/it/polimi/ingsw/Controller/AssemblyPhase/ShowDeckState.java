@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 /**
  * ShowDeckState prompts the player to select a deck to reveal.
@@ -17,9 +18,9 @@ public class ShowDeckState implements GameState {
     /**
      * Constructs a ShowDeckState with the necessary protocol, view, and player.
      *
-     * @param view the game view for user interaction
+     * @param view     the game view for user interaction
      * @param protocol the game logic handler
-     * @param player the current player
+     * @param player   the current player
      */
     public ShowDeckState(AssemblyView view, AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
@@ -31,7 +32,7 @@ public class ShowDeckState implements GameState {
      * Displays the message asking the player to choose a deck.
      *
      * @param assemblyPhase the current game instance
-     * @param assemblyView the view used to print the prompt
+     * @param assemblyView  the view used to print the prompt
      */
     @Override
     public void enter(AssemblyThread assemblyPhase, AssemblyView assemblyView) {
@@ -42,16 +43,15 @@ public class ShowDeckState implements GameState {
      * Handles the user's input to select a deck, validates the index,
      * and triggers the protocol logic to show the deck.
      *
-     * @param input the user's typed input
+     * @param input         the user's typed input
      * @param assemblyPhase the current game instance
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyPhase) {
         int index = Integer.parseInt(input);
-        if (index >= 0 && index <4){
+        if (index >= 0 && index < 4) {
             assemblyPhase.getAssemblyProtocol().showDeck(index);
-        }
-        else{
+        } else {
             view.printNotValidDeckNumberMessage();
         }
         assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));

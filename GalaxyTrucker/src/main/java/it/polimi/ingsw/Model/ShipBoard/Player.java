@@ -2,7 +2,6 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
-
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 
 public class Player {

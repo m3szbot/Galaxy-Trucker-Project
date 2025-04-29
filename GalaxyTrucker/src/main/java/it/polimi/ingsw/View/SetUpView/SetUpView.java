@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.SetUpPhase;
+package it.polimi.ingsw.View.SetUpView;
 
 /**
  * set up view class

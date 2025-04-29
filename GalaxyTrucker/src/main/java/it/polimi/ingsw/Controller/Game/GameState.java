@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Model.GameInformation;
+package it.polimi.ingsw.Controller.Game;
 
 public enum GameState {
 

@@ -6,8 +6,9 @@ package it.polimi.ingsw.Model.GameInformation;
  * @author Ludo
  */
 
-import it.polimi.ingsw.Components.*;
-import it.polimi.ingsw.Cards.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.Controller.Cards.Blow;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Cards.CardBuilder;
@@ -15,8 +16,6 @@ import it.polimi.ingsw.Controller.Cards.ElementType;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Shipboard.*;
-import it.polimi.ingsw.FlightBoard.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +23,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.*;
 
 public class GameInformation {
     private List<Card> cardsList;

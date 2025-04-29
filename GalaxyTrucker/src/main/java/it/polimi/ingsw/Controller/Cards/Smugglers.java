@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.FlightPhase.FlightView;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * class that represent the card smugglers
@@ -9,7 +9,7 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
  * @author carlo
  */
 
-public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, FirePowerChoice{
+public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, FirePowerChoice {
 
     private int daysLost;
     private ElementType lossType;
@@ -38,11 +38,11 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
         String message;
         AttackStates[] results = new AttackStates[numberOfPlayers];
 
-        for(i = 0; i < numberOfPlayers; i++){
+        for (i = 0; i < numberOfPlayers; i++) {
 
             chosenFirePower = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
 
-            if(chosenFirePower > requirementNumber){
+            if (chosenFirePower > requirementNumber) {
 
                 message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has defeated the" +
                         "enemies!";
@@ -50,16 +50,14 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
                 results[i] = AttackStates.EnemyDefeated;
                 break;
 
-            }
-            else if(chosenFirePower == requirementNumber){
+            } else if (chosenFirePower == requirementNumber) {
 
                 message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " equalized the" +
                         "enemies!";
                 results[i] = AttackStates.Equalized;
                 flightView.sendMessageToAll(message);
 
-            }
-            else{
+            } else {
 
                 message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has been" +
                         " defeated by the enemies!";
@@ -70,13 +68,13 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
 
         }
 
-        for(i = 0; i < numberOfPlayers; i++){
+        for (i = 0; i < numberOfPlayers; i++) {
 
-            if(results[i] == AttackStates.EnemyDefeated){
+            if (results[i] == AttackStates.EnemyDefeated) {
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
 
-                if(flightView.askPlayerGenericQuestion(flightBoard.getPlayerOrderList().get(i), message)){
+                if (flightView.askPlayerGenericQuestion(flightBoard.getPlayerOrderList().get(i), message)) {
 
                     message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() +
                             "has collected the reward!";
@@ -85,8 +83,7 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
                     changePlayerPosition(flightBoard.getPlayerOrderList().get(i), daysLost, flightBoard);
                     flightView.sendMessageToAll(message);
 
-                }
-                else{
+                } else {
 
                     message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() +
                             "hasn't collected the reward!";
@@ -95,8 +92,7 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
                 }
 
                 break;
-            }
-            else if(results[i] == AttackStates.PlayerDefeated){
+            } else if (results[i] == AttackStates.PlayerDefeated) {
 
                 inflictLoss(flightBoard.getPlayerOrderList().get(i), lossType, lossNumber, flightBoard, flightView);
 

@@ -1,8 +1,9 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 import java.io.DataInputStream;
 import java.util.concurrent.BlockingQueue;

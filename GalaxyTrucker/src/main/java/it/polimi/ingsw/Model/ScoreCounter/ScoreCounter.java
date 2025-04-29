@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Model.ScoreCounter;
 
-import java.util.*;
-
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+
+import java.util.*;
 
 /**
  * ScoreCounter class to evaluate player score at end of flight

@@ -1,11 +1,14 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
-import java.util.*;
-
+import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.Startable;
 import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.EvaluationView.EvaluationView;
+
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Map;
 
 
 public class EvaluationPhase implements Startable {

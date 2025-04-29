@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Controller.FlightPhase.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Controller.Cards.*;

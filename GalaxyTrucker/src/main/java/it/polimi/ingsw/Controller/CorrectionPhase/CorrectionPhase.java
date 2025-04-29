@@ -1,8 +1,9 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
+import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.Startable;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.CorrectionView.CorrectionView;
 
 public class CorrectionPhase implements Startable {
     CorrectionView correctionView;

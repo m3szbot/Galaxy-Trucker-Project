@@ -1,4 +1,6 @@
-package it.polimi.ingsw.Model.GameInformation;
+package it.polimi.ingsw.Controller.Game;
+
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 
 import java.io.IOException;
 

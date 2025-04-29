@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Model.Components;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.Model.ShipBoard.Visitor;
 
 import java.util.ArrayList;
@@ -127,7 +130,9 @@ public class Component implements Visitable {
         return false;
     }
 
-    public boolean amIAStorage(){ return false; }
+    public boolean amIAStorage() {
+        return false;
+    }
 
     public List<Object> getAllIndexes() {
         ArrayList<Object> indexes = new ArrayList<>();
