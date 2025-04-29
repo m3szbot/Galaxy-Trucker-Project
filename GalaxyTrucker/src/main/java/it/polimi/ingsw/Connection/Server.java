@@ -20,6 +20,10 @@ public class Server {
         games.add(game);
     }
 
+    public int getGameCode(){
+        return gameCode;
+    }
+
     public GameState getCurrentGameState(){
         return currentStartingGame.getGameState();
     }
@@ -66,6 +70,7 @@ public class Server {
     public void startCurrentStartingGame(){
         currentStartingGame.run();
         gameCode++;
+        addGame(currentStartingGame);
         //new game
         currentStartingGame = new Game(gameCode);
     }

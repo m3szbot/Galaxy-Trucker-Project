@@ -22,6 +22,7 @@ public class ClientHandler extends Thread{
     private DataInputStream dataReceiver;
     private DataOutputStream dataSender;
     private ObjectInputStream clientInfoReceiver;
+    private ObjectOutputStream clientInfoSender;
     private static Color currentColor = Color.RED;
 
 
@@ -34,6 +35,7 @@ public class ClientHandler extends Thread{
             dataReceiver = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
             dataSender = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
             clientInfoReceiver = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+            clientInfoSender = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
 
         } catch (IOException e) {
             //TODO
@@ -139,7 +141,8 @@ public class ClientHandler extends Thread{
                         }
 
                         Player player = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
-
+                        clientInfo.setGameCode(centralServer.getGameCode());
+                        clientInfoSender.writeObject(clientInfo);
                         centralServer.addPlayerToCurrentGame(player, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
 
                         message = "You have been added to the game!";
@@ -159,6 +162,8 @@ public class ClientHandler extends Thread{
                     try {
 
                         Player player = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
+                        clientInfo.setGameCode(centralServer.getGameCode());
+                        clientInfoSender.writeObject(clientInfo);
                         centralServer.addPlayerToCurrentGame(player, clientInfo.getViewType(), clientInfo.getConnectionType());
                         currentColor = getNextColor();
 
