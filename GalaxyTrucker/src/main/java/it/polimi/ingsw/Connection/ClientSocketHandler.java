@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Connection;
 
-import it.polimi.ingsw.Application.Game;
 import it.polimi.ingsw.Application.GameState;
 import it.polimi.ingsw.Application.GameType;
 import it.polimi.ingsw.Shipboard.Color;
@@ -15,7 +14,7 @@ import java.net.Socket;
  * @author carlo
  */
 
-public class ClientHandler extends Thread{
+public class ClientSocketHandler extends Thread{
 
     private Socket clientSocket;
     private Server centralServer;
@@ -26,7 +25,7 @@ public class ClientHandler extends Thread{
     private static Color currentColor = Color.RED;
 
 
-    public ClientHandler(Socket clientSocket, Server centralServer){
+    public ClientSocketHandler(Socket clientSocket, Server centralServer){
         this.clientSocket = clientSocket;
         this.centralServer = centralServer;
 
@@ -59,6 +58,20 @@ public class ClientHandler extends Thread{
         }
 
         return null;
+    }
+
+    private boolean isNickNameRepeated(String nickname){
+
+        for(Player player: centralServer.getPlayersInGame()){
+
+            if(player.getNickName().equals(nickname)){
+                return true;
+            }
+
+        }
+
+        return false;
+
     }
 
     @Override
@@ -140,10 +153,32 @@ public class ClientHandler extends Thread{
 
                         }
 
+                        if(isNickNameRepeated(clientInfo.getNickname())){
+
+                            while(true) {
+
+                                message = "You're nickname has already been chosen, please enter a new one: ";
+
+                                dataSender.writeChars(message);
+
+                                input = dataReceiver.readUTF();
+
+                                if(!isNickNameRepeated(input)){
+                                    message = "You're nickname is now " + input;
+                                    dataSender.writeChars(message);
+                                    clientInfo.setNickname(input);
+                                    break;
+                                }
+
+                            }
+
+                        }
+
                         Player player = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
                         clientInfo.setGameCode(centralServer.getGameCode());
                         clientInfoSender.writeObject(clientInfo);
                         centralServer.addPlayerToCurrentGame(player, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
+                        centralServer.getCurrentGameInformation().setPlayerSocketMap(player, clientSocket);
 
                         message = "You have been added to the game!";
                         dataSender.writeChars(message);
@@ -161,11 +196,35 @@ public class ClientHandler extends Thread{
 
                     try {
 
+
+                        if(isNickNameRepeated(clientInfo.getNickname())){
+
+                            while(true) {
+
+                                message = "You're nickname has already been chosen, please enter a new one: ";
+
+                                dataSender.writeChars(message);
+
+                                input = dataReceiver.readUTF();
+
+                                if(!isNickNameRepeated(input)){
+                                    message = "You're nickname is now " + input;
+                                    dataSender.writeChars(message);
+                                    clientInfo.setNickname(input);
+                                    break;
+                                }
+
+                            }
+
+                        }
+
+
                         Player player = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
                         clientInfo.setGameCode(centralServer.getGameCode());
                         clientInfoSender.writeObject(clientInfo);
                         centralServer.addPlayerToCurrentGame(player, clientInfo.getViewType(), clientInfo.getConnectionType());
                         currentColor = getNextColor();
+                        centralServer.getCurrentGameInformation().setPlayerSocketMap(player, clientSocket);
 
                         message = "You have joined the game of " + centralServer.getCurrentGameCreator();
                         dataSender.writeChars(message);

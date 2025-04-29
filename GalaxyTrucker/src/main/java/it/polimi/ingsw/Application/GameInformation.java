@@ -13,6 +13,7 @@ import it.polimi.ingsw.FlightBoard.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ public class GameInformation {
     private GameType gameType;
     private HashMap<Player, ViewType> playerViewMap;
     private HashMap<Player, ConnectionType> playerConnectionMap;
+    private HashMap<Player, Socket> playerSocketMap;
 
     public GameInformation() {
         cardsList = new ArrayList<>();
@@ -324,4 +326,25 @@ public class GameInformation {
      */
 
     public void setPlayerConnectionType(Player player, ConnectionType connectionType) {playerConnectionMap.put(player, connectionType);}
+
+    public void setPlayerSocketMap(Player player, Socket socket){
+        playerSocketMap.put(player, socket);
+
+    }
+
+    /**
+     * @param player
+     * @return player socket, null if player has chosen RMI to comunicate.
+     */
+
+    public Socket getPlayerSocket(Player player){
+
+        if(playerSocketMap.containsKey(player)){
+            return playerSocketMap.get(player);
+        }
+        else{
+            return null;
+        }
+
+    }
 }
