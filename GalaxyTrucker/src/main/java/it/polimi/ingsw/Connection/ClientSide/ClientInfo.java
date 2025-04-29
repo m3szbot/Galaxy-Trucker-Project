@@ -46,7 +46,7 @@ public class ClientInfo implements Serializable {
         this.viewType = viewType;
     }
 
-    public static int getServerPort() {
+    public int getServerPort() {
         return serverPort;
     }
 

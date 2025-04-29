@@ -17,17 +17,25 @@ public class SocketListener implements Runnable{
     @Override
     public void run() {
 
+        try {
+            serverSocket = new ServerSocket(5000);
+
+        }catch (IOException e){
+            //TODO
+        }
+
         try{
             while(true) {
 
-                serverSocket = new ServerSocket(5000);
                 clientSocket = serverSocket.accept();
+                //setting a 1-minute timeout
+                clientSocket.setSoTimeout(60000);
 
                 new ClientSocketHandler(clientSocket, centralServer).start();
             }
 
         }catch (IOException e){
-            e.printStackTrace();
+           //TODO
         }
     }
 }
