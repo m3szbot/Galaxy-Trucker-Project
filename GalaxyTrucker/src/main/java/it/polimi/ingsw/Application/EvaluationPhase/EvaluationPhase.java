@@ -22,8 +22,14 @@ public class EvaluationPhase implements Startable {
 
         // Show player credits
         // (no sorting - maps can't be sorted by value, hassle)
-        message = getPlayerCreditsMessage(gameInformation);
-        evaluationView.printPlayerCreditsMessage(message);
+        message = getLeaderboardMessage(gameInformation);
+        evaluationView.printLeaderboardMessage(message);
+        // suspend main thread so that players have time to read the leaderboard
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            System.out.println("Sleep was interrupted");
+        }
         // end evaluationPhase
     }
 
@@ -43,7 +49,7 @@ public class EvaluationPhase implements Startable {
     /*
     creates message string containing players and their credits in descending order
      */
-    private String getPlayerCreditsMessage(GameInformation gameInformation) {
+    private String getLeaderboardMessage(GameInformation gameInformation) {
         ArrayList<Map.Entry<Player, Integer>> creditsList = new ArrayList<>();
         // extract player credits into creditsList
         for (Player player : gameInformation.getPlayerList()) {
