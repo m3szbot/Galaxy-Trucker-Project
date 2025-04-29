@@ -34,7 +34,7 @@ public class ComponentChoiceState implements GameState {
      * @param view          the view used to show the message
      */
     @Override
-    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
+    public void enter(AssemblyThread assemblyPhase, AssemblyView view) {
         view.printComponentChoice();
         view.printUncoveredComponentsMessage(assemblyPhase);
     }
@@ -47,7 +47,7 @@ public class ComponentChoiceState implements GameState {
      * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyPhase assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyPhase) {
         String imput = input.toLowerCase();
         int caseManagement = -1;
         try {

@@ -8,7 +8,7 @@ public class EvaluationView {
     same for all players
     // TODO
      */
-    public void printPlayerCreditsMessage(String message) {
+    public void printLeaderboardMessage(String message) {
         System.out.println(message);
     }
 }
