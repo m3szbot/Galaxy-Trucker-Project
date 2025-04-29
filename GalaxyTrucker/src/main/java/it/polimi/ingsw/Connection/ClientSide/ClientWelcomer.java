@@ -1,22 +1,20 @@
-package it.polimi.ingsw.Connection;
+package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Application.ConnectionType;
 import it.polimi.ingsw.Application.ViewType;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class Client {
+public class ClientWelcomer {
 
-    private ClientInfo clientInfo = new ClientInfo();
-    private String serverIp;
-    private String input;
-    private Socket socket;
-    private static final int port = 5000;
+    ClientInfo clientInfo = new ClientInfo();
+    String input;
 
-    public void welcomeTheClient(){
+    public ClientInfo getClientInfo(){
+        return clientInfo;
+    }
+
+    private void start(){
 
         Scanner scanner = new Scanner(System.in);
 
@@ -63,48 +61,8 @@ public class Client {
         System.out.println("You're connection type is now " + input);
 
         System.out.print("Enter the IP adress of the server: ");
-        serverIp = scanner.nextLine();
+        clientInfo.setServerIp(scanner.nextLine());
 
 
     }
-
-    public void connectTheClient(){
-
-        if(clientInfo.getConnectionType() == ConnectionType.Socket){
-            //socket connection
-
-            connectWithSocket();
-
-        }
-        else{
-            //RMI connection
-
-            connectWithRMI();
-
-        }
-
-    }
-
-    private void connectWithRMI(){
-
-
-
-    }
-
-    private void connectWithSocket(){
-
-        try {
-
-            Socket socket = new Socket(serverIp, port);
-
-        } catch (Exception e) {
-
-            //TODO
-
-        }
-
-        
-
-    }
-
 }

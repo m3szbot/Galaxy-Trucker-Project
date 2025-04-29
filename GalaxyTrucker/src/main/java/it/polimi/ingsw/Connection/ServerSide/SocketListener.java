@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection;
+package it.polimi.ingsw.Connection.ServerSide;
 
 import java.io.IOException;
 import java.net.ServerSocket;

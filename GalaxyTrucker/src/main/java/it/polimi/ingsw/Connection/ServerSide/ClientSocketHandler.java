@@ -1,7 +1,8 @@
-package it.polimi.ingsw.Connection;
+package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Application.GameState;
 import it.polimi.ingsw.Application.GameType;
+import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
 import it.polimi.ingsw.Shipboard.Color;
 import it.polimi.ingsw.Shipboard.Player;
 
@@ -55,14 +56,16 @@ public class ClientSocketHandler extends Thread{
             case Color.GREEN -> {
                 return Color.YELLOW;
             }
-        }
 
-        return null;
+            default -> {
+                return Color.RED;
+            }
+        }
     }
 
     private boolean isNickNameRepeated(String nickname){
 
-        for(Player player: centralServer.getPlayersInGame()){
+        for(Player player: centralServer.getCurrentGameInformation().getPlayerList()){
 
             if(player.getNickName().equals(nickname)){
                 return true;
