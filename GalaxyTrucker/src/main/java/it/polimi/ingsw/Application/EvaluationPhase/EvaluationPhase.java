@@ -7,33 +7,23 @@ import it.polimi.ingsw.Application.Startable;
 import it.polimi.ingsw.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Shipboard.Player;
 
-import java.util.HashMap;
 
 public class EvaluationPhase implements Startable {
+    EvaluationView evaluationView;
 
     public EvaluationPhase() {
+        evaluationView = new EvaluationView();
     }
 
     public void start(GameInformation gameInformation) {
-        EvaluationView evaluationView = new EvaluationView();
         String message;
-
-        // print welcome message
-        evaluationView.printEvaluationMessage();
-
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
         // Show player credits
         // (no sorting - maps can't be sorted by value, hassle)
         message = getPlayerCreditsMessage(gameInformation);
-        evaluationView.showPlayerCredits(message);
-
-        // TODO ask another game
-        message = "Do you want to play another game with the same players?[y/n]";
-        if (evaluationView.askAnotherGame(message)) {
-            // TODO start another game
-        }
+        evaluationView.printPlayerCreditsMessage(message);
         // end evaluationPhase
     }
 
@@ -50,14 +40,21 @@ public class EvaluationPhase implements Startable {
         }
     }
 
+    /*
+    creates message string containing players and their credits in descending order
+     */
     private String getPlayerCreditsMessage(GameInformation gameInformation) {
-        // extract player credits into creditsMap
-        Map<Player, Integer> creditsMap = new HashMap<>();
+        ArrayList<Map.Entry<Player, Integer>> creditsList = new ArrayList<>();
+        // extract player credits into creditsList
         for (Player player : gameInformation.getPlayerList()) {
-            creditsMap.put(player, player.getShipBoard().getShipBoardAttributes().getCredits());
+            Map.Entry<Player, Integer> entry = new AbstractMap.SimpleEntry<>(player, player.getShipBoard().getShipBoardAttributes().getCredits());
+            creditsList.add(entry);
         }
+        // sort players based on credits in descending order
+        creditsList.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+        // create message string
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<Player, Integer> entry : creditsMap.entrySet()) {
+        for (Map.Entry<Player, Integer> entry : creditsList) {
             result.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
         }
         // remove ", " from the end
