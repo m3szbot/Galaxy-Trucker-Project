@@ -1,15 +1,13 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
-import it.polimi.ingsw.Application.GameState;
-import it.polimi.ingsw.Application.GameType;
+import it.polimi.ingsw.Model.GameInformation.GameState;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 
 /**
  * Handles the connected client with socket protocol
@@ -17,7 +15,7 @@ import java.net.SocketTimeoutException;
  * @author carlo
  */
 
-public class ClientSocketHandler extends Thread{
+public class ClientSocketHandler extends Thread {
 
     private Socket clientSocket;
     private Server centralServer;
@@ -45,8 +43,8 @@ public class ClientSocketHandler extends Thread{
 
     }
 
-    private Color getNextColor(){
-        switch (currentColor){
+    private Color getNextColor() {
+        switch (currentColor) {
             case Color.RED -> {
                 return Color.BLUE;
             }
@@ -65,11 +63,11 @@ public class ClientSocketHandler extends Thread{
         }
     }
 
-    private boolean isNickNameRepeated(String nickname){
+    private boolean isNickNameRepeated(String nickname) {
 
-        for(Player player: centralServer.getCurrentGameInformation().getPlayerList()){
+        for (Player player : centralServer.getCurrentGameInformation().getPlayerList()) {
 
-            if(player.getNickName().equals(nickname)){
+            if (player.getNickName().equals(nickname)) {
                 return true;
             }
 
@@ -95,7 +93,7 @@ public class ClientSocketHandler extends Thread{
             //TODO
         }
 
-        while(true){
+        while (true) {
 
             try {
 
@@ -197,7 +195,6 @@ public class ClientSocketHandler extends Thread{
                             centralServer.changeCurrentGameState(GameState.Starting);
 
 
-
                         } else {
                             //not first player
 
@@ -256,11 +253,10 @@ public class ClientSocketHandler extends Thread{
                     dataSender.writeUTF(message);
 
 
-
                 }
 
 
-            }catch (IOException e){
+            } catch (IOException e) {
 
                 //TODO
 

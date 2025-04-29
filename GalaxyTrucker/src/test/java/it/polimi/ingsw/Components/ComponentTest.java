@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.SideType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

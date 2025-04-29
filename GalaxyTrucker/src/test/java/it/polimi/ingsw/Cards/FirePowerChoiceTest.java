@@ -1,19 +1,18 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightPhase.FlightView;
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Components.Battery;
-import it.polimi.ingsw.Components.Component;
-import it.polimi.ingsw.Components.SideType;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Controller.FlightPhase.FlightView;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.FirePowerChoice;
+import it.polimi.ingsw.Model.Components.Battery;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.SideType;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FirePowerChoiceTest {
 
-    class Operator implements FirePowerChoice{}
+    class Operator implements FirePowerChoice {
+    }
 
     Operator operator = new Operator();
 
@@ -35,7 +35,7 @@ class FirePowerChoiceTest {
     FlightView flightView;
 
     @BeforeEach
-    void initialize(){
+    void initialize() {
 
         gameInformation = new GameInformation();
         gameInformation.setGameType(GameType.TestGame);
@@ -44,25 +44,25 @@ class FirePowerChoiceTest {
     }
 
     @AfterEach
-    void reestablishStdin(){
+    void reestablishStdin() {
         System.setIn(System.in);
     }
 
 
     @Test
-    void noDoubleCannonsAvailable(){
+    void noDoubleCannonsAvailable() {
 
-       player.getShipBoard().getShipBoardAttributes().updateFirePower(5);
-       player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
+        player.getShipBoard().getShipBoardAttributes().updateFirePower(5);
+        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
 
-       flightView = new FlightView(gameInformation);
+        flightView = new FlightView(gameInformation);
 
-       assertTrue(operator.chooseFirePower(player, flightView) == 5);
+        assertTrue(operator.chooseFirePower(player, flightView) == 5);
 
     }
 
     @Test
-    void noBatteriesAvailable(){
+    void noBatteriesAvailable() {
 
         player.getShipBoard().getShipBoardAttributes().updateFirePower(2);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(3);
@@ -74,7 +74,7 @@ class FirePowerChoiceTest {
     }
 
     @Test
-    void playerRefuseToUseDoubleCannons(){
+    void playerRefuseToUseDoubleCannons() {
 
         player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);
@@ -90,7 +90,7 @@ class FirePowerChoiceTest {
     }
 
     @Test
-    void threeDoubleCannonsActivated(){
+    void threeDoubleCannonsActivated() {
 
         player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);
@@ -110,7 +110,7 @@ class FirePowerChoiceTest {
     }
 
     @Test
-    void threeDoubleCannonsActivatedWithIncorrectValues(){
+    void threeDoubleCannonsActivatedWithIncorrectValues() {
 
         player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);

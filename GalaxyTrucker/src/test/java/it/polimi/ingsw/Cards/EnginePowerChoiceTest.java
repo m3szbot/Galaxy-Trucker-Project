@@ -1,14 +1,14 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightPhase.FlightView;
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Components.Battery;
-import it.polimi.ingsw.Components.Component;
-import it.polimi.ingsw.Components.SideType;
-import it.polimi.ingsw.Components.Storage;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Controller.FlightPhase.FlightView;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.EnginePowerChoice;
+import it.polimi.ingsw.Model.Components.Battery;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.SideType;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EnginePowerChoiceTest {
 
-    class Operator implements EnginePowerChoice{};
+    class Operator implements EnginePowerChoice {
+    }
+
+    ;
 
     Operator operator = new Operator();
 
@@ -34,7 +37,7 @@ class EnginePowerChoiceTest {
     FlightView flightView;
 
     @BeforeEach
-    void initialize(){
+    void initialize() {
 
         gameInformation = new GameInformation();
         gameInformation.setGameType(GameType.TestGame);
@@ -43,12 +46,12 @@ class EnginePowerChoiceTest {
     }
 
     @AfterEach
-    void reestablishStdin(){
+    void reestablishStdin() {
         System.setIn(System.in);
     }
 
     @Test
-    void noDoubleEngines(){
+    void noDoubleEngines() {
 
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
         player.getShipBoard().getShipBoardAttributes().updateBatteryPower(4);
@@ -58,7 +61,7 @@ class EnginePowerChoiceTest {
     }
 
     @Test
-    void noBatteriesAvailable(){
+    void noBatteriesAvailable() {
 
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
         player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(1);
@@ -68,7 +71,7 @@ class EnginePowerChoiceTest {
     }
 
     @Test
-    void playerRefuseToUseDoubleEngines(){
+    void playerRefuseToUseDoubleEngines() {
 
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(3);
         player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(1);
@@ -85,7 +88,7 @@ class EnginePowerChoiceTest {
     }
 
     @Test
-    void twoDoubleEnginesActivated(){
+    void twoDoubleEnginesActivated() {
 
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(1);
         player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(2);
@@ -101,7 +104,7 @@ class EnginePowerChoiceTest {
     }
 
     @Test
-    void threeEnginesActivatedWithIncorrectValues(){
+    void threeEnginesActivatedWithIncorrectValues() {
 
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
         player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(4);

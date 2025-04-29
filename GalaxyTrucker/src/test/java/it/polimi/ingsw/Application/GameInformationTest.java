@@ -1,9 +1,12 @@
 package it.polimi.ingsw.Application;
 
-import it.polimi.ingsw.Cards.*;
-import it.polimi.ingsw.Components.Component;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.GameInformation.ViewType;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

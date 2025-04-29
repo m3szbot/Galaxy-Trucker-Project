@@ -1,12 +1,13 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightPhase.FlightView;
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Components.*;
-import it.polimi.ingsw.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Controller.FlightPhase.FlightView;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.*;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.Components.*;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,7 +122,7 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
         player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 4, 7);
 
-        ((Storage)player.getShipBoard().getComponent(5, 6)).addGoods(new int[]{3, 1, 1, 0});
+        ((Storage) player.getShipBoard().getComponent(5, 6)).addGoods(new int[]{3, 1, 1, 0});
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
@@ -231,7 +232,7 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
-        ((Storage)player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
+        ((Storage) player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 
@@ -429,7 +430,7 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
 
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
-        ((Storage)player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
+        ((Storage) player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 

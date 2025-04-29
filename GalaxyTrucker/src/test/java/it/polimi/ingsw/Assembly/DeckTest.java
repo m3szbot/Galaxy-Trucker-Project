@@ -1,8 +1,9 @@
 package it.polimi.ingsw.Assembly;
 
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

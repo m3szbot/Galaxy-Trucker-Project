@@ -1,12 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Application.ConnectionType;
-import it.polimi.ingsw.Application.Game;
-import it.polimi.ingsw.Application.ViewType;
-
 import java.io.IOException;
-import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
 

@@ -1,12 +1,13 @@
 package it.polimi.ingsw.FlightBoard;
 
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardBuilder;
-import it.polimi.ingsw.Cards.Sabotage;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.Cards.CardBuilder;
+import it.polimi.ingsw.Controller.Cards.Sabotage;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

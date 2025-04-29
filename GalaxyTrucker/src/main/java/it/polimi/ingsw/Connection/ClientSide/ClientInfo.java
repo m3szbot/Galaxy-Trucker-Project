@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Application.ConnectionType;
-import it.polimi.ingsw.Application.ViewType;
+import it.polimi.ingsw.Model.GameInformation.ConnectionType;
+import it.polimi.ingsw.Model.GameInformation.ViewType;
 
 import java.io.Serializable;
 

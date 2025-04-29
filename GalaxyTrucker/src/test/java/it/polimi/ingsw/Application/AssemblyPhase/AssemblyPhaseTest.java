@@ -1,11 +1,7 @@
 package it.polimi.ingsw.Application.AssemblyPhase;
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyPhase;
+import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyView;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class AssemblyPhaseTest {
     AssemblyPhase ass;

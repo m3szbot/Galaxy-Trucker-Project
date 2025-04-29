@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Application.ConnectionType;
-import it.polimi.ingsw.Application.ViewType;
+import it.polimi.ingsw.Model.GameInformation.ConnectionType;
+import it.polimi.ingsw.Model.GameInformation.ViewType;
 
 import java.util.Scanner;
 
@@ -10,11 +10,11 @@ public class ClientWelcomer {
     ClientInfo clientInfo = new ClientInfo();
     String input;
 
-    public ClientInfo getClientInfo(){
+    public ClientInfo getClientInfo() {
         return clientInfo;
     }
 
-    public void start(){
+    public void start() {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -34,7 +34,7 @@ public class ClientWelcomer {
         input = scanner.nextLine();
         input.toUpperCase();
 
-        while(!input.equals("GUI") && !input.equals("TUI")){
+        while (!input.equals("GUI") && !input.equals("TUI")) {
 
             System.out.print("The string you entered is not valid, please enter a valid one (GUI/TUI): ");
             input = scanner.nextLine();
@@ -50,7 +50,7 @@ public class ClientWelcomer {
         input = scanner.nextLine();
         input.toUpperCase();
 
-        while(!input.equals("RMI") && !input.equals("SOCKET")){
+        while (!input.equals("RMI") && !input.equals("SOCKET")) {
 
             System.out.print("The string you entered is not valid, please enter a valid one (RMI/SOCKET): ");
             input = scanner.nextLine();

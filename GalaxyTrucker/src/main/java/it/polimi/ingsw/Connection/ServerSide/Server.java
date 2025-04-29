@@ -1,7 +1,9 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Application.*;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Model.GameInformation.*;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,35 +19,35 @@ public class Server {
     RMIListener rmiListener;
     ReentrantLock lock;
 
-    public void addGame(Game game){
+    public void addGame(Game game) {
         games.add(game);
     }
 
-    public int getGameCode(){
+    public int getGameCode() {
         return gameCode;
     }
 
-    public GameState getCurrentGameState(){
+    public GameState getCurrentGameState() {
         return currentStartingGame.getGameState();
     }
 
-    public ReentrantLock getLock(){
+    public ReentrantLock getLock() {
         return lock;
     }
 
-    public boolean isCurrentGameFull(){
+    public boolean isCurrentGameFull() {
         return currentStartingGame.isFull();
     }
 
-    public GameInformation getCurrentGameInformation(){
+    public GameInformation getCurrentGameInformation() {
         return currentStartingGame.getGameInformation();
     }
 
-    public String getCurrentGameCreator(){
+    public String getCurrentGameCreator() {
         return currentStartingGame.getCreator();
     }
 
-    public void changeCurrentGameState(GameState gameState){
+    public void changeCurrentGameState(GameState gameState) {
 
         currentStartingGame.changeGameState(gameState);
 
@@ -53,13 +55,13 @@ public class Server {
 
     //Method overloading, the second one is used to connect the first player.
 
-    public void addPlayerToCurrentGame(Player player, ViewType viewType, ConnectionType connectionType){
+    public void addPlayerToCurrentGame(Player player, ViewType viewType, ConnectionType connectionType) {
 
         currentStartingGame.addPlayer(player, viewType, connectionType, false);
 
     }
 
-    public void addPlayerToCurrentGame(Player player, ViewType viewType, ConnectionType connectionType, GameType gameType, int numberOfPlayers){
+    public void addPlayerToCurrentGame(Player player, ViewType viewType, ConnectionType connectionType, GameType gameType, int numberOfPlayers) {
 
         currentStartingGame.setNumberOfPlayers(numberOfPlayers);
         currentStartingGame.setGameType(gameType);
@@ -68,7 +70,7 @@ public class Server {
 
     }
 
-    public void startCurrentGame(){
+    public void startCurrentGame() {
         currentStartingGame.run();
         gameCode++;
         addGame(currentStartingGame);
@@ -76,7 +78,7 @@ public class Server {
         currentStartingGame = new Game(gameCode);
     }
 
-    public void start(){
+    public void start() {
 
         socketListener.run();
         rmiListener.run();

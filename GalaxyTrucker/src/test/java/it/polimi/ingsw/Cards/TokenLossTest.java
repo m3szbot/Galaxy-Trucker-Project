@@ -1,12 +1,13 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightPhase.FlightView;
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Components.*;
-import it.polimi.ingsw.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Controller.FlightPhase.FlightView;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.*;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.Components.*;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TokenLossTest {
 
-    class Operator implements TokenLoss{};
+    class Operator implements TokenLoss {
+    }
+
+    ;
 
     Operator operator = new Operator();
     GameInformation gameInformation;
@@ -31,7 +35,7 @@ class TokenLossTest {
     FlightBoard flightBoard;
 
     @BeforeEach
-    void initialize(){
+    void initialize() {
 
         gameInformation = new GameInformation();
         gameInformation.setGameType(GameType.TestGame);
@@ -43,7 +47,7 @@ class TokenLossTest {
 
         //8 is the size of a test game deck
 
-        for(int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i++) {
 
             cardsList.add(new Epidemic(cardBuilder));
 
@@ -55,12 +59,12 @@ class TokenLossTest {
     }
 
     @AfterEach
-    void reestablishStdin(){
+    void reestablishStdin() {
         System.setIn(System.in);
     }
 
     @Test
-    void removingInhabitantsWithWrongEnteredValues(){
+    void removingInhabitantsWithWrongEnteredValues() {
 
         Cabin humanCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single});
         humanCabin.setCrewType(CrewType.Human);
@@ -96,23 +100,23 @@ class TokenLossTest {
 
         operator.inflictLoss(player, ElementType.CrewMember, 3, flightBoard, flightView);
 
-        assertTrue(((Cabin)player.getShipBoard().getComponent(5, 5)).getCrewMembers() == 0);
-        assertTrue(((Cabin)player.getShipBoard().getComponent(4, 4)).getCrewMembers() == 0);
+        assertTrue(((Cabin) player.getShipBoard().getComponent(5, 5)).getCrewMembers() == 0);
+        assertTrue(((Cabin) player.getShipBoard().getComponent(4, 4)).getCrewMembers() == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getCrewMembers() == initialCrewNumber - 3);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAlienType() == 0);
     }
 
     @Test
-    void removingGoodsWithWrongEnteredValues(){
+    void removingGoodsWithWrongEnteredValues() {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 5, 5);
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 4, 4);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 3, 3);
 
-        Storage redStorage = (Storage)player.getShipBoard().getComponent(5, 5);
-        Storage blueStorage1 = (Storage)player.getShipBoard().getComponent(4, 4);
-        Storage blueStorage2 = (Storage)player.getShipBoard().getComponent(3, 3);
+        Storage redStorage = (Storage) player.getShipBoard().getComponent(5, 5);
+        Storage blueStorage1 = (Storage) player.getShipBoard().getComponent(4, 4);
+        Storage blueStorage2 = (Storage) player.getShipBoard().getComponent(3, 3);
 
         /*
         Av.RedSlots = 5
@@ -174,7 +178,7 @@ class TokenLossTest {
     }
 
     @Test
-    void remvovingBatteries(){
+    void remvovingBatteries() {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 5, 5);
@@ -183,9 +187,9 @@ class TokenLossTest {
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Double, SideType.Double}, 2), 9, 9);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Double, SideType.Double}, 3), 10, 10);
 
-        Storage redStorage = (Storage)player.getShipBoard().getComponent(5, 5);
-        Storage blueStorage1 = (Storage)player.getShipBoard().getComponent(4, 4);
-        Storage blueStorage2 = (Storage)player.getShipBoard().getComponent(3, 3);
+        Storage redStorage = (Storage) player.getShipBoard().getComponent(5, 5);
+        Storage blueStorage1 = (Storage) player.getShipBoard().getComponent(4, 4);
+        Storage blueStorage2 = (Storage) player.getShipBoard().getComponent(3, 3);
 
         /*
         Av.RedSlots = 5
@@ -217,13 +221,13 @@ class TokenLossTest {
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 5);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 10);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getBatteryPower() == 2);
-        assertTrue(((Battery)player.getShipBoard().getComponent(8, 8)).getBatteryPower() == 1);
-        assertTrue(((Battery)player.getShipBoard().getComponent(9, 9)).getBatteryPower() == 1);
+        assertTrue(((Battery) player.getShipBoard().getComponent(8, 8)).getBatteryPower() == 1);
+        assertTrue(((Battery) player.getShipBoard().getComponent(9, 9)).getBatteryPower() == 1);
 
     }
 
     @Test
-    void notEnoughBatteries(){
+    void notEnoughBatteries() {
 
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Double, SideType.Double}, 2), 9, 9);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Double, SideType.Double}, 3), 10, 10);
@@ -237,8 +241,8 @@ class TokenLossTest {
         operator.inflictLoss(player, ElementType.Goods, 10, flightBoard, flightView);
 
         assertTrue(player.getShipBoard().getShipBoardAttributes().getBatteryPower() == 0);
-        assertTrue(((Battery)player.getShipBoard().getComponent(8, 8)).getBatteryPower() == 0);
-        assertTrue(((Battery)player.getShipBoard().getComponent(9, 9)).getBatteryPower() == 0);
+        assertTrue(((Battery) player.getShipBoard().getComponent(8, 8)).getBatteryPower() == 0);
+        assertTrue(((Battery) player.getShipBoard().getComponent(9, 9)).getBatteryPower() == 0);
 
     }
 

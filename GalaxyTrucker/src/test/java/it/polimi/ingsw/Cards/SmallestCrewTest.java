@@ -1,10 +1,14 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.Cards.CardBuilder;
+import it.polimi.ingsw.Controller.Cards.Epidemic;
+import it.polimi.ingsw.Controller.Cards.SmallestCrew;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +30,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SmallestCrewTest {
 
-    class Operator implements SmallestCrew{};
+    class Operator implements SmallestCrew {
+    }
+
+    ;
 
     Operator operator = new Operator();
 
@@ -41,7 +48,7 @@ public class SmallestCrewTest {
     //each test is isolated and independent of the orhers
 
     @BeforeEach
-    void initialize(){
+    void initialize() {
 
         //creating a fictitious game model
         GameInformation gameInformation = new GameInformation();
@@ -57,7 +64,7 @@ public class SmallestCrewTest {
 
         //8 is the size of a test game deck
 
-        for(int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i++) {
 
             cardsList.add(new Epidemic(cardBuilder));
 
@@ -80,7 +87,7 @@ public class SmallestCrewTest {
     }
 
     @Test
-    void firstPlayerSmallestCrew(){
+    void firstPlayerSmallestCrew() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(1);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(4);
@@ -93,7 +100,7 @@ public class SmallestCrewTest {
     }
 
     @Test
-    void secondPlayerSmallestCrew(){
+    void secondPlayerSmallestCrew() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(3);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(2);
@@ -106,7 +113,7 @@ public class SmallestCrewTest {
     }
 
     @Test
-    void thirdPlayerSmallestCrew(){
+    void thirdPlayerSmallestCrew() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(3);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(2);
@@ -119,7 +126,7 @@ public class SmallestCrewTest {
     }
 
     @Test
-    void lastPlayerSmallestCrew(){
+    void lastPlayerSmallestCrew() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(3);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(6);
@@ -132,7 +139,7 @@ public class SmallestCrewTest {
     }
 
     @Test
-    void firstTieTest(){
+    void firstTieTest() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(1);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(1);
@@ -144,7 +151,7 @@ public class SmallestCrewTest {
     }
 
     @Test
-    void secondTieTest(){
+    void secondTieTest() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(2);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(2);
@@ -156,7 +163,7 @@ public class SmallestCrewTest {
     }
 
     @Test
-    void thirdTieTest(){
+    void thirdTieTest() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(2);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(2);
@@ -169,7 +176,7 @@ public class SmallestCrewTest {
 
 
     @Test
-    void lastTieTest(){
+    void lastTieTest() {
 
         player1.getShipBoard().getShipBoardAttributes().updateCrewMembers(1);
         player2.getShipBoard().getShipBoardAttributes().updateCrewMembers(1);

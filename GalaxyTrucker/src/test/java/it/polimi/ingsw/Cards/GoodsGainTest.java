@@ -1,20 +1,22 @@
 package it.polimi.ingsw.Cards;
 
-import it.polimi.ingsw.Application.FlightPhase.FlightView;
-import it.polimi.ingsw.Application.GameInformation;
-import it.polimi.ingsw.Application.GameType;
-import it.polimi.ingsw.Components.Component;
-import it.polimi.ingsw.Components.SideType;
-import it.polimi.ingsw.Components.Storage;
-import it.polimi.ingsw.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Shipboard.Color;
-import it.polimi.ingsw.Shipboard.Player;
+import it.polimi.ingsw.Controller.FlightPhase.FlightView;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.Cards.CardBuilder;
+import it.polimi.ingsw.Controller.Cards.Epidemic;
+import it.polimi.ingsw.Controller.Cards.GoodsGain;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.SideType;
+import it.polimi.ingsw.Model.Components.Storage;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
@@ -26,7 +28,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GoodsGainTest {
 
-    class Operator implements GoodsGain{};
+    class Operator implements GoodsGain {
+    }
+
+    ;
 
     Operator operator = new Operator();
     GameInformation gameInformation;
@@ -35,7 +40,7 @@ class GoodsGainTest {
     FlightBoard flightBoard;
 
     @BeforeEach
-    void initialize(){
+    void initialize() {
 
         gameInformation = new GameInformation();
         gameInformation.setGameType(GameType.TestGame);
@@ -47,7 +52,7 @@ class GoodsGainTest {
 
         //8 is the size of a test game deck
 
-        for(int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i++) {
 
             cardsList.add(new Epidemic(cardBuilder));
 
@@ -59,18 +64,18 @@ class GoodsGainTest {
     }
 
     @AfterEach
-    void reestablishStdin(){
+    void reestablishStdin() {
         System.setIn(System.in);
     }
 
     @Test
-    void playerOnlyDiscardGoodsWithWrongEnteredValues(){
+    void playerOnlyDiscardGoodsWithWrongEnteredValues() {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 5, 5);
 
-        ((Storage)player.getShipBoard().getComponent(5, 5)).addGoods(new int[]{3, 2, 0, 0});
+        ((Storage) player.getShipBoard().getComponent(5, 5)).addGoods(new int[]{3, 2, 0, 0});
 
         //available red slots are 10 in total. Now 5 were occupied so I must update it to 5
 
@@ -86,7 +91,7 @@ class GoodsGainTest {
 
         operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
 
-        assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).isEmpty());
+        assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).isEmpty());
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 0);
@@ -97,7 +102,7 @@ class GoodsGainTest {
     }
 
     @Test
-    void playerRearrangeGoodsWithWrongEnteredValues(){
+    void playerRearrangeGoodsWithWrongEnteredValues() {
 
         //source red storage component
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
@@ -106,8 +111,8 @@ class GoodsGainTest {
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 5, 5);
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 3, 3);
 
-        Storage sourceStorage = ((Storage)player.getShipBoard().getComponent(5, 5));
-        Storage destStorage = ((Storage)player.getShipBoard().getComponent(4, 4));
+        Storage sourceStorage = ((Storage) player.getShipBoard().getComponent(5, 5));
+        Storage destStorage = ((Storage) player.getShipBoard().getComponent(4, 4));
 
         sourceStorage.addGoods(new int[]{1, 3, 1, 0});
         destStorage.addGoods(new int[]{0, 0, 0, 1});
@@ -144,7 +149,7 @@ class GoodsGainTest {
     }
 
     @Test
-    void addingRedGoodsWithWrongEnteredValues(){
+    void addingRedGoodsWithWrongEnteredValues() {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
@@ -155,7 +160,7 @@ class GoodsGainTest {
 
         //making it full
 
-        ((Storage)player.getShipBoard().getComponent(2, 2)).addGoods(new int[]{5, 0, 0, 0});
+        ((Storage) player.getShipBoard().getComponent(2, 2)).addGoods(new int[]{5, 0, 0, 0});
 
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
         //Av.RedSlots = 5
@@ -170,8 +175,8 @@ class GoodsGainTest {
 
         operator.giveGoods(player, new int[]{5, 0, 0, 0}, flightBoard, flightView);
 
-        assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 0);
-        assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).isFull());
+        assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 0);
+        assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).isFull());
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 10);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 0);
@@ -182,7 +187,7 @@ class GoodsGainTest {
     }
 
     @Test
-    void addingNonRedGoodsWithWrongEnteredValues(){
+    void addingNonRedGoodsWithWrongEnteredValues() {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
@@ -193,7 +198,7 @@ class GoodsGainTest {
 
         //making it full
 
-        ((Storage)player.getShipBoard().getComponent(2, 2)).addGoods(new int[]{5, 0, 0, 0});
+        ((Storage) player.getShipBoard().getComponent(2, 2)).addGoods(new int[]{5, 0, 0, 0});
 
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
         //Av.RedSlots = 5
@@ -215,8 +220,8 @@ class GoodsGainTest {
 
         operator.giveGoods(player, new int[]{0, 3, 2, 1}, flightBoard, flightView);
 
-        assertTrue(((Storage)player.getShipBoard().getComponent(4, 4)).getAvailableBlueSlots() == 2);
-        assertTrue(((Storage)player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 3);
+        assertTrue(((Storage) player.getShipBoard().getComponent(4, 4)).getAvailableBlueSlots() == 2);
+        assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 3);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 2);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 3);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 5);

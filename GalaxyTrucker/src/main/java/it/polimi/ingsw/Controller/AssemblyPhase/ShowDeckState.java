@@ -1,0 +1,59 @@
+package it.polimi.ingsw.Controller.AssemblyPhase;
+
+import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.ShipBoard.Player;
+
+/**
+ * ShowDeckState prompts the player to select a deck to reveal.
+ * After choosing, the game returns to the AssemblyState.
+ *
+ * @author Giacomo
+ */
+public class ShowDeckState implements GameState {
+    private AssemblyProtocol assemblyProtocol;
+    private Player player;
+    private AssemblyView view;
+
+    /**
+     * Constructs a ShowDeckState with the necessary protocol, view, and player.
+     *
+     * @param view the game view for user interaction
+     * @param protocol the game logic handler
+     * @param player the current player
+     */
+    public ShowDeckState(AssemblyView view, AssemblyProtocol protocol, Player player) {
+        this.assemblyProtocol = protocol;
+        this.view = view;
+        this.player = player;
+    }
+
+    /**
+     * Displays the message asking the player to choose a deck.
+     *
+     * @param assemblyPhase the current game instance
+     * @param assemblyView the view used to print the prompt
+     */
+    @Override
+    public void enter(AssemblyThread assemblyPhase, AssemblyView assemblyView) {
+        assemblyView.printChooseDeckMessage();
+    }
+
+    /**
+     * Handles the user's input to select a deck, validates the index,
+     * and triggers the protocol logic to show the deck.
+     *
+     * @param input the user's typed input
+     * @param assemblyPhase the current game instance
+     */
+    @Override
+    public void handleInput(String input, AssemblyThread assemblyPhase) {
+        int index = Integer.parseInt(input);
+        if (index >= 0 && index <4){
+            assemblyPhase.getAssemblyProtocol().showDeck(index);
+        }
+        else{
+            view.printNotValidDeckNumberMessage();
+        }
+        assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
+    }
+}

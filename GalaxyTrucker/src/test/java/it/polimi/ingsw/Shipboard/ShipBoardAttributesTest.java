@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Shipboard;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoardAttributes;
 import org.junit.jupiter.api.BeforeEach;
 
 public class ShipBoardAttributesTest {
