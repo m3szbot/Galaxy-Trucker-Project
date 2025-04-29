@@ -182,6 +182,7 @@ public class ClientHandler extends Thread{
                 }
 
                 centralServer.getLock().unlock();
+                break;
 
             }
             else{

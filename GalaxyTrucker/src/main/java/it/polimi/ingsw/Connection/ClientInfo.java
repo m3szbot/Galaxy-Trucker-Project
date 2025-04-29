@@ -3,7 +3,9 @@ package it.polimi.ingsw.Connection;
 import it.polimi.ingsw.Application.ConnectionType;
 import it.polimi.ingsw.Application.ViewType;
 
-public class ClientInfo {
+import java.io.Serializable;
+
+public class ClientInfo implements Serializable {
 
     private String nickname;
     private ConnectionType connectionType;
