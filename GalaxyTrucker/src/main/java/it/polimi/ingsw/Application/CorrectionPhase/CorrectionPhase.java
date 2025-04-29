@@ -11,8 +11,8 @@ public class CorrectionPhase implements Startable {
         correctionView = new CorrectionView();
     }
 
-    /*
-    remove components until player ship is valid
+    /**
+     * remove components until shipboard of player is valid
      */
     // TODO: create threads for players
     // TODO state pattern
@@ -27,12 +27,18 @@ public class CorrectionPhase implements Startable {
                 col = correctionView.promptForColumn();
                 row = correctionView.promptForRow();
                 player.getShipBoard().removeComponent(col, row, true);
-                checkErrors(player);
+                errors = checkErrors(player);
             }
             correctionView.printFinishedMessage();
         }
     }
 
+    /**
+     * Checks if there are any incorrectly placed components in shipboard (errors)
+     *
+     * @param player
+     * @return true if there are errors, false if shipboard is valid
+     */
     private boolean checkErrors(Player player) {
         boolean errors = false;
         boolean[][] matr = player.getShipBoard().getMatrErrors();
