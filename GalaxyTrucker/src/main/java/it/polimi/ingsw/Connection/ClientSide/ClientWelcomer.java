@@ -14,7 +14,7 @@ public class ClientWelcomer {
         return clientInfo;
     }
 
-    private void start(){
+    public void start(){
 
         Scanner scanner = new Scanner(System.in);
 

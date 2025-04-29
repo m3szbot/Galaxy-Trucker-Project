@@ -8,6 +8,8 @@ import it.polimi.ingsw.Shipboard.Player;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  * Handles the connected client with socket protocol
@@ -24,14 +26,14 @@ public class ClientSocketHandler extends Thread{
     private ObjectInputStream clientInfoReceiver;
     private ObjectOutputStream clientInfoSender;
     private static Color currentColor = Color.RED;
+    private Player playerToAdd = null;
 
 
-    public ClientSocketHandler(Socket clientSocket, Server centralServer){
+    public ClientSocketHandler(Socket clientSocket, Server centralServer) {
         this.clientSocket = clientSocket;
         this.centralServer = centralServer;
 
         try {
-
             dataReceiver = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
             dataSender = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
             clientInfoReceiver = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
@@ -84,176 +86,184 @@ public class ClientSocketHandler extends Thread{
         String input;
         ClientInfo clientInfo = null;
 
+        try {
+            clientInfo = (ClientInfo) clientInfoReceiver.readObject();
+
+        } catch (IOException e) {
+            //TODO
+        } catch (ClassNotFoundException e) {
+            //TODO
+        }
+
         while(true){
 
-            if(centralServer.getLock().tryLock()){
+            try {
 
-                try {
-                    clientInfo = (ClientInfo) clientInfoReceiver.readObject();
+                message = "Press 'enter' key to enter in a game: ";
 
-                } catch (IOException e) {
-                    //TODO
-                } catch (ClassNotFoundException e) {
-                    //TODO
-                }
+                dataSender.writeUTF(message);
 
-                if(centralServer.getCurrentGameState() == GameState.Empty){
-                    //first player
+                if (dataReceiver.readUTF().isEmpty()) {
 
-                    int numberOfPlayers;
-                    GameType gameType;
+                    if (centralServer.getLock().tryLock()) {
 
-                    message = "You are the first player joining the game!";
+                        if (centralServer.getCurrentGameState() == GameState.Empty) {
+                            //first player
 
-                    try {
+                            int numberOfPlayers;
+                            GameType gameType;
 
-                        dataSender.writeChars(message);
+                            message = "You are the first player joining the game!";
 
-                        message = "Enter the game type (TESTGAME/NORMALGAME): ";
 
-                        dataSender.writeChars(message);
+                            dataSender.writeUTF(message);
 
-                        while (true) {
+                            message = "Enter the game type (TESTGAME/NORMALGAME): ";
 
-                            input = dataReceiver.readUTF();
-                            input.toUpperCase();
+                            dataSender.writeUTF(message);
 
-                            if(!input.equals("TESTGAME") && !input.equals("NORMALGAME")){
-
-                                message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
-                                dataSender.writeChars(message);
-                            }
-                            else{
-
-                                gameType = GameType.valueOf(input);
-                                message = "Game type was set up correctly";
-                                dataSender.writeChars(message);
-
-                                break;
-                            }
-
-                        }
-
-                        message = "Enter the number of players of the game (2-4): ";
-
-                        dataSender.writeChars(message);
-
-                        while(true){
-
-                            numberOfPlayers = dataReceiver.readInt();
-
-                            if(numberOfPlayers < 2 || numberOfPlayers > 4){
-
-                                message = "The number of players you entered is invalid, please enter a valid value (2-4): ";
-                                dataSender.writeChars(message);
-                            }
-                            else{
-
-                                message = "Number of players was set up correctly";
-                                dataSender.writeChars(message);
-                                break;
-                            }
-
-                        }
-
-                        if(isNickNameRepeated(clientInfo.getNickname())){
-
-                            while(true) {
-
-                                message = "You're nickname has already been chosen, please enter a new one: ";
-
-                                dataSender.writeChars(message);
+                            while (true) {
 
                                 input = dataReceiver.readUTF();
+                                input.toUpperCase();
 
-                                if(!isNickNameRepeated(input)){
-                                    message = "You're nickname is now " + input;
-                                    dataSender.writeChars(message);
-                                    clientInfo.setNickname(input);
+                                if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
+
+                                    message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
+                                    dataSender.writeUTF(message);
+                                } else {
+
+                                    gameType = GameType.valueOf(input);
+                                    message = "Game type was set up correctly";
+                                    dataSender.writeUTF(message);
+
                                     break;
                                 }
 
                             }
 
-                        }
+                            message = "Enter the number of players of the game (2-4): ";
 
-                        Player player = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
-                        clientInfo.setGameCode(centralServer.getGameCode());
-                        clientInfoSender.writeObject(clientInfo);
-                        centralServer.addPlayerToCurrentGame(player, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
-                        centralServer.getCurrentGameInformation().setPlayerSocketMap(player, clientSocket);
+                            dataSender.writeUTF(message);
 
-                        message = "You have been added to the game!";
-                        dataSender.writeChars(message);
+                            while (true) {
 
-                        currentColor = getNextColor();
-                        centralServer.changeCurrentGameState(GameState.Starting);
+                                numberOfPlayers = dataReceiver.readInt();
 
-                    }catch (IOException e){
-                        //TODO
-                    }
+                                if (numberOfPlayers < 2 || numberOfPlayers > 4) {
 
-                }
-                else{
-                    //not first player
+                                    message = "The number of players you entered is invalid, please enter a valid value (2-4): ";
+                                    dataSender.writeUTF(message);
+                                } else {
 
-                    try {
-
-
-                        if(isNickNameRepeated(clientInfo.getNickname())){
-
-                            while(true) {
-
-                                message = "You're nickname has already been chosen, please enter a new one: ";
-
-                                dataSender.writeChars(message);
-
-                                input = dataReceiver.readUTF();
-
-                                if(!isNickNameRepeated(input)){
-                                    message = "You're nickname is now " + input;
-                                    dataSender.writeChars(message);
-                                    clientInfo.setNickname(input);
+                                    message = "Number of players was set up correctly";
+                                    dataSender.writeUTF(message);
                                     break;
                                 }
 
                             }
 
+                            if (isNickNameRepeated(clientInfo.getNickname())) {
+
+                                while (true) {
+
+                                    message = "You're nickname has already been chosen, please enter a new one: ";
+
+                                    dataSender.writeUTF(message);
+
+                                    input = dataReceiver.readUTF();
+
+                                    if (!isNickNameRepeated(input)) {
+                                        message = "You're nickname is now " + input;
+                                        dataSender.writeUTF(message);
+                                        clientInfo.setNickname(input);
+                                        break;
+                                    }
+
+                                }
+
+                            }
+
+                            playerToAdd = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
+                            clientInfo.setGameCode(centralServer.getGameCode());
+                            clientInfoSender.writeObject(clientInfo);
+                            centralServer.addPlayerToCurrentGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
+                            centralServer.getCurrentGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+
+                            message = "You have been added to the game!";
+                            dataSender.writeUTF(message);
+
+                            currentColor = getNextColor();
+                            centralServer.changeCurrentGameState(GameState.Starting);
+
+
+
+                        } else {
+                            //not first player
+
+                            if (isNickNameRepeated(clientInfo.getNickname())) {
+
+                                while (true) {
+
+                                    message = "You're nickname has already been chosen, please enter a new one: ";
+
+                                    dataSender.writeUTF(message);
+
+                                    input = dataReceiver.readUTF();
+
+                                    if (!isNickNameRepeated(input)) {
+                                        message = "You're nickname is now " + input;
+                                        dataSender.writeUTF(message);
+                                        clientInfo.setNickname(input);
+                                        break;
+                                    }
+
+                                }
+
+                            }
+
+
+                            playerToAdd = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
+                            clientInfo.setGameCode(centralServer.getGameCode());
+                            clientInfoSender.writeObject(clientInfo);
+                            centralServer.addPlayerToCurrentGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType());
+                            currentColor = getNextColor();
+                            centralServer.getCurrentGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+
+                            message = "You have joined the game of " + centralServer.getCurrentGameCreator();
+                            dataSender.writeUTF(message);
+
+                            if (centralServer.isCurrentGameFull()) {
+                                centralServer.startCurrentGame();
+                            }
+
                         }
 
+                        centralServer.getLock().unlock();
+                        break;
 
-                        Player player = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
-                        clientInfo.setGameCode(centralServer.getGameCode());
-                        clientInfoSender.writeObject(clientInfo);
-                        centralServer.addPlayerToCurrentGame(player, clientInfo.getViewType(), clientInfo.getConnectionType());
-                        currentColor = getNextColor();
-                        centralServer.getCurrentGameInformation().setPlayerSocketMap(player, clientSocket);
+                    } else {
 
-                        message = "You have joined the game of " + centralServer.getCurrentGameCreator();
-                        dataSender.writeChars(message);
+                        message = "Somebody is already joining a new game, please wait.\n";
 
-                        if(centralServer.isCurrentGameFull()){
-                            centralServer.startCurrentStartingGame();
-                        }
+                        dataSender.writeUTF(message);
 
                     }
-                    catch (IOException e){
-                        //TODO
-                    }
+
+                } else {
+
+                    message = "The string you entered is invalid.\n";
+                    dataSender.writeUTF(message);
+
+
 
                 }
 
-                centralServer.getLock().unlock();
-                break;
 
-            }
-            else{
-                System.out.println("Please wait: the game is going to start soon...");
-                try {
-                    this.sleep(5000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            }catch (IOException e){
+
+                //TODO
+
             }
         }
 

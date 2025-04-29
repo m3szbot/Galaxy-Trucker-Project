@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Server {
 
     List<Game> games = new ArrayList<>();
+
     int gameCode = 0;
     Game currentStartingGame = new Game(gameCode);
     SocketListener socketListener = new SocketListener(this);
@@ -67,7 +68,7 @@ public class Server {
 
     }
 
-    public void startCurrentStartingGame(){
+    public void startCurrentGame(){
         currentStartingGame.run();
         gameCode++;
         addGame(currentStartingGame);
