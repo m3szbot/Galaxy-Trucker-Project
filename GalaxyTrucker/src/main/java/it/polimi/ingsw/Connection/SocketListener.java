@@ -23,7 +23,7 @@ public class SocketListener implements Runnable{
                 serverSocket = new ServerSocket(5000);
                 clientSocket = serverSocket.accept();
 
-                new ClientHandler(clientSocket, centralServer).start();
+                new ClientSocketHandler(clientSocket, centralServer).start();
             }
 
         }catch (IOException e){

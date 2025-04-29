@@ -70,12 +70,16 @@ public class Client {
 
     public void connectTheClient(){
 
-        if(){
+        if(clientInfo.getConnectionType() == ConnectionType.Socket){
             //socket connection
+
+            connectWithSocket();
 
         }
         else{
             //RMI connection
+
+            connectWithRMI();
 
         }
 
@@ -83,9 +87,23 @@ public class Client {
 
     private void connectWithRMI(){
 
+
+
     }
 
     private void connectWithSocket(){
+
+        try {
+
+            Socket socket = new Socket(serverIp, port);
+
+        } catch (Exception e) {
+
+            //TODO
+
+        }
+
+        
 
     }
 

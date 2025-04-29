@@ -3,6 +3,7 @@ package it.polimi.ingsw.Connection;
 import it.polimi.ingsw.Application.*;
 import it.polimi.ingsw.Shipboard.Player;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -48,6 +49,10 @@ public class Server {
 
         currentStartingGame.changeGameState(gameState);
 
+    }
+
+    public List<Player> getPlayersInGame(){
+        return currentStartingGame.getGameInformation().getPlayerList();
     }
 
     //Method overloading, the second one is used to connect the first player.
