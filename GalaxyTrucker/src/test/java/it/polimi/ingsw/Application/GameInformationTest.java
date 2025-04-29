@@ -30,8 +30,8 @@ class GameInformationTest {
     @Test
     void testSetUpPlayers() {
         Player player = new Player("Ludo", Color.RED, gameInformation);
-
-        gameInformation.setUpPlayers(player, 3);
+        gameInformation.setMaxNumberOfPlayers(3);
+        gameInformation.addPlayers(player);
 
         assertEquals(3, gameInformation.getMaxNumberOfPlayers());
         assertEquals(player, gameInformation.getPlayerList().getFirst());
@@ -112,7 +112,8 @@ class GameInformationTest {
         Player player2 = new Player("Boti", Color.BLUE, gameInformation);
         Player player3 = new Player("Carlo", Color.YELLOW, gameInformation);
         Player player4 = new Player("Gecky", Color.GREEN, gameInformation);
-        gameInformation.setUpPlayers(player1, 3);
+        gameInformation.setMaxNumberOfPlayers(3);
+        gameInformation.addPlayers(player1);
 
         gameInformation.addPlayers(player2);
         gameInformation.addPlayers(player3);
@@ -129,7 +130,8 @@ class GameInformationTest {
         Player player1 = new Player("Ludo", Color.RED, gameInformation);
         Player player2 = new Player("Boti", Color.BLUE, gameInformation);
         gameInformation.setGameType(GameType.NormalGame);
-        gameInformation.setUpPlayers(player1, 3);
+        gameInformation.setMaxNumberOfPlayers(3);
+        gameInformation.addPlayers(player1);
         gameInformation.addPlayers(player2);
 
         gameInformation.removePlayers(player1);

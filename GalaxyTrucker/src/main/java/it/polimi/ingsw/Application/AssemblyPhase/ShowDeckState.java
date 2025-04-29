@@ -34,7 +34,7 @@ public class ShowDeckState implements GameState {
      * @param assemblyView the view used to print the prompt
      */
     @Override
-    public void enter(AssemblyPhase assemblyPhase, AssemblyView assemblyView) {
+    public void enter(AssemblyThread assemblyPhase, AssemblyView assemblyView) {
         assemblyView.printChooseDeckMessage();
     }
 
@@ -46,7 +46,7 @@ public class ShowDeckState implements GameState {
      * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyPhase assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyPhase) {
         int index = Integer.parseInt(input);
         if (index >= 0 && index <4){
             assemblyPhase.getAssemblyProtocol().showDeck(index);

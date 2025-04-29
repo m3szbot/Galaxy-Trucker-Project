@@ -36,7 +36,7 @@ public class ComponentPlacingState implements GameState {
      * @param view          the view used for messaging
      */
     @Override
-    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
+    public void enter(AssemblyThread assemblyPhase, AssemblyView view) {
         view.printComponentPlacingMessage();
     }
 
@@ -49,7 +49,7 @@ public class ComponentPlacingState implements GameState {
      * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyPhase assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyPhase) {
         String[] parts = input.split("[ ,]");
         int num1 = Integer.parseInt(parts[0]);
         int num2 = Integer.parseInt(parts[1]);

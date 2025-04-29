@@ -45,7 +45,7 @@ public class SetUpPhase implements Startable {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                gameInformation.setUpPlayers(player, maxNumberOfPlayers);
+                //gameInformation.setUpPlayers(player, maxNumberOfPlayers);
                 message = "\"What type of game do you want to play? (TestGame, Normalgame) \"";
                 GameType gameType = setUpView.askGameType(message);
                 gameInformation.setGameType(gameType);
