@@ -5,6 +5,7 @@ import it.polimi.ingsw.Application.GameInformation;
 import it.polimi.ingsw.Assembly.AssemblyProtocol;
 import it.polimi.ingsw.Shipboard.Player;
 
+import java.io.DataInputStream;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -62,9 +63,10 @@ public class AssemblyThread implements Runnable {
 
         // Separate thread for reading user input from the console
         new Thread(() -> {
-            Scanner scanner = new Scanner(System.in);
+            //Scanner scanner = new Scanner(System.in);
             while (running) {
-                String input = scanner.nextLine();
+                //String input = scanner.nextLine();
+                String input = new DataInputStream(socket.getInputStream()).readUTF();
                 inputQueue.offer(input);
             }
         }).start();
