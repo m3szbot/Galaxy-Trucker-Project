@@ -35,7 +35,7 @@ public class PlaceBookedComponentState implements GameState {
      * @param assemblyView  the view used for messages
      */
     @Override
-    public void enter(AssemblyPhase assemblyPhase, AssemblyView assemblyView) {
+    public void enter(AssemblyThread assemblyPhase, AssemblyView assemblyView) {
         view.printChooseBookedComponentMessage(assemblyProtocol.getBookedMap().get(player));
     }
 
@@ -48,7 +48,7 @@ public class PlaceBookedComponentState implements GameState {
      * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyPhase assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyPhase) {
         int index = Integer.parseInt(input);
         index = index - 1;
         if (index == 0 || index == 1) {

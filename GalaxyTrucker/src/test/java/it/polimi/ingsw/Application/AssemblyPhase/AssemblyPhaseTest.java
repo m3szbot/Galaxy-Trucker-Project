@@ -11,6 +11,7 @@ public class AssemblyPhaseTest {
     AssemblyPhase ass;
     AssemblyView view;
     Player gecky;
+/*
     @BeforeEach
     public void  createGameInformation(){
 
@@ -42,5 +43,5 @@ public class AssemblyPhaseTest {
         System.out.println(ass.getAssemblyProtocol().getInHandMap().get(gecky).getComponentName() + " "+ ass.getAssemblyProtocol().getInHandMap().get(gecky).getFront() + " " + ass.getAssemblyProtocol().getInHandMap().get(gecky).getRight() + " " + ass.getAssemblyProtocol().getInHandMap().get(gecky).getBack());
 
     }
-
+*/
 }

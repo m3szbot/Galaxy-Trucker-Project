@@ -33,7 +33,8 @@ class AssemblyProtocolTest {
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
 
-        gameInformation.setUpPlayers(playerA, 4);
+        gameInformation.setMaxNumberOfPlayers(4);
+        gameInformation.addPlayers(playerA);
         gameInformation.addPlayers(playerB);
         gameInformation.addPlayers(playerC);
         gameInformation.addPlayers(playerD);
