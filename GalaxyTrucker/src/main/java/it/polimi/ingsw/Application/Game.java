@@ -17,19 +17,50 @@ public class Game implements Runnable {
     private CorrectionPhase correctionPhase;
     private FlightPhase flightPhase;
     private EvaluationPhase evaluationPhase;
+    private int numberOfJoinedPlayers = 0;
+    private String creator;
 
 
     public Game(int gameCode) {
         this.gameCode = gameCode;
+        this.gameState = GameState.Empty;
         gameInformation = new GameInformation();
+    }
+
+    public boolean isFull(){
+
+        return (gameInformation.getMaxNumberOfPlayers() == numberOfJoinedPlayers);
+    }
+
+    public GameState getGameState(){
+        return gameState;
     }
 
     public void setNumberOfPlayers(int numberOfPlayers) {
         gameInformation.setMaxNumberOfPlayers(numberOfPlayers);
     }
 
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player, ViewType viewType, ConnectionType connectionType, boolean first) {
         gameInformation.addPlayers(player);
+        gameInformation.setPlayerViewType(player, viewType);
+        gameInformation.setPlayerConnectionType(player, connectionType);
+        numberOfJoinedPlayers++;
+
+        if(first){
+            creator = player.getNickName();
+        }
+    }
+
+    public String getCreator(){
+        return creator;
+    }
+
+    public void setGameType(GameType gameType){
+        gameInformation.setGameType(gameType);
+    }
+
+    public GameInformation getGameInformation(){
+        return gameInformation;
     }
 
     public void changeGameState(GameState gameState){
