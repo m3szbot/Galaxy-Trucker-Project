@@ -23,6 +23,7 @@ public class CorrectionThread extends Thread {
         errors = checkErrors(player);
         // correct errors
         while (errors) {
+            playerView.printErrorsMessage(player.getShipBoard());
             col = playerView.promptForColumn();
             row = playerView.promptForRow();
             // no check for col, row value - if out of bounds, nothing happens
