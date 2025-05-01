@@ -69,11 +69,11 @@ public class ComponentChoiceState implements GameState {
             case 1:
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
                 component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
-                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft()
+                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
                 view.sendComponentMessageToPlayer(message, player, component);
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
                 component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
-                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft()
+                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
                 view.sendComponentMessageToPlayer(message, player, component);
                 break;
             case 2:
