@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class CorrectionPhase implements Startable {
     Map<Player, CorrectionView> playerViewMap;
+    Map<Player, CorrectionThread> playerThreadMap;
 
     public CorrectionPhase(GameInformation gameInformation) {
         // create player-specific views
@@ -17,6 +18,7 @@ public class CorrectionPhase implements Startable {
         for (Player player : gameInformation.getPlayerList()) {
             playerViewMap.put(player, new CorrectionView());
         }
+        playerThreadMap = new HashMap<>();
     }
 
     /**
@@ -24,14 +26,24 @@ public class CorrectionPhase implements Startable {
      *
      * @param gameInformation
      */
-    // TODO state pattern
     public void start(GameInformation gameInformation) {
         for (Player player : gameInformation.getPlayerList()) {
-            // thread variable is lost, but the thread itself is not
             CorrectionThread playerThread = new CorrectionThread(player, playerViewMap.get(player));
+            playerThreadMap.put(player, playerThread);
             playerThread.start();
 
         }
+
+        // wait for threads to finish
+        // set common timeout?
+        for (Map.Entry<Player, CorrectionThread> entry : playerThreadMap.entrySet()) {
+            try {
+                entry.getValue().join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // end of correction phase
     }
 
 

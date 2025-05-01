@@ -32,6 +32,7 @@ public class CorrectionThread extends Thread {
         }
         // errors corrected
         playerView.printFinishedMessage();
+        // end of thread
     }
 
     /**
