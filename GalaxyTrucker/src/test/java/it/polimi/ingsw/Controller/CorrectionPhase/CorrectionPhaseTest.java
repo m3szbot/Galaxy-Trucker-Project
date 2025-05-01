@@ -36,8 +36,10 @@ class CorrectionPhaseTest {
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
         gameInformation.setMaxNumberOfPlayers(4);
-        // add only 1 player as starting point
         gameInformation.addPlayers(playerA);
+        gameInformation.addPlayers(playerB);
+        gameInformation.addPlayers(playerC);
+        gameInformation.addPlayers(playerD);
 
         correctionPhase = new CorrectionPhase(gameInformation);
     }
@@ -71,8 +73,6 @@ class CorrectionPhaseTest {
         playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
         errors = playerA.getShipBoard().checkErrors();
         assertEquals(errors, 3);
-
-        inputSimulator("a\n");
         correctionPhase.start(gameInformation);
     }
 
