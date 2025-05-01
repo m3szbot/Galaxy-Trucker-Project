@@ -6,11 +6,14 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import java.util.List;
 
 public class ShipBoard {
+    // x: column
+    // y: row
+    
+    private ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
-    private ShipBoardAttributes shipBoardAttributes;
     private boolean[][] matrErrors;
 
     public Component[][] getStructureMatrix() {
