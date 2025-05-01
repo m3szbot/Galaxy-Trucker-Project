@@ -5,7 +5,6 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
-import java.io.DataInputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -55,7 +54,7 @@ public class AssemblyThread implements Runnable {
     }
 
     @Override
-    public void run() {
+    public void run() {/*
         // For now, the initial state is set using only the first player.
         // Later, threads should be launched for all players.
         setState(new AssemblyState(assemblyView, assemblyProtocol, gameInformation.getPlayerList().getFirst()));
@@ -87,5 +86,6 @@ public class AssemblyThread implements Runnable {
         }
 
         assemblyView.printGameOverMessage();
+        */
     }
 }

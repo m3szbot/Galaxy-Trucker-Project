@@ -7,8 +7,8 @@ import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 public interface GameState {
     void enter(AssemblyThread assemblyPhase, AssemblyView assemblyView);
 
-    void handleInput(String input, AssemblyThread assemblyPhase);
+    void handleInput(String input, AssemblyThread assemblyThread);
 
-    default void update(AssemblyThread assemblyPhase) {
+    default void update(AssemblyThread assemblyThread) {
     } // opzionale, può essere vuoto
 }

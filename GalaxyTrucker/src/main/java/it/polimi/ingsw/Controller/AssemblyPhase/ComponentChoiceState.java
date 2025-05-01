@@ -30,6 +30,11 @@ public class ComponentChoiceState implements GameState {
         this.player = player;
     }
 
+    @Override
+    public void update(AssemblyThread assemblyPhase) {
+        GameState.super.update(assemblyPhase);
+    }
+
     /**
      * Displays the message prompting the player to choose a component.
      *
@@ -37,10 +42,13 @@ public class ComponentChoiceState implements GameState {
      * @param view          the view used to show the message
      */
     @Override
-    public void enter(AssemblyPhase assemblyPhase, AssemblyView view) {
+    public void enter(AssemblyThread assemblyPhase, AssemblyView view) {
+        /*
         message = "Enter the number of the component you would like:";
         view.sendMessageToPlayer(message, player);
         view.printUncoveredComponentsMessage(assemblyPhase);
+
+         */
     }
 
     /**
@@ -51,7 +59,7 @@ public class ComponentChoiceState implements GameState {
      * @param assemblyPhase the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyPhase assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyPhase) {
         Component component;
         String imput = input.toLowerCase();
         int caseManagement = -1;
@@ -67,6 +75,7 @@ public class ComponentChoiceState implements GameState {
         }
         switch (caseManagement) {
             case 1:
+                /*
                 assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
                 component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
                 message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft()
@@ -79,6 +88,8 @@ public class ComponentChoiceState implements GameState {
             case 2:
                 view.printErrorComponentChoiceMessage();
                 break;
+
+                 */
         }
         assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
     }
