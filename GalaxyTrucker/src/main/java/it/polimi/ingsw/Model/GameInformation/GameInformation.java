@@ -27,7 +27,7 @@ import java.util.List;
 public class GameInformation {
     private List<Card> cardsList;
     private List<Component> componentList;
-    private List<Player> playerList = new ArrayList<>();
+    private List<Player> playerList;
     private int maxNumberOfPlayers;
     private FlightBoard flightBoard;
     private GameType gameType;
@@ -285,7 +285,7 @@ public class GameInformation {
      */
     public void addPlayers(Player player) {
 
-        if (!playerList.isEmpty() && playerList.size() < maxNumberOfPlayers) {
+        if (playerList.size() < maxNumberOfPlayers) {
             playerList.add(player);
 
         } else {

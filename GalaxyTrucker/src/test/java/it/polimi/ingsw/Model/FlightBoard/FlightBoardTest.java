@@ -10,6 +10,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,13 +39,16 @@ class FlightBoardTest {
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
 
-        List<Card> cardList = new ArrayList<>();
-        Card card = new Sabotage(new CardBuilder());
-        for (int i = 0; i < 15; i++) {
-            cardList.add(card);
+        // set up gameInformation
+        GameInformation gameInformation = new GameInformation();
+        gameInformation.setGameType(GameType.NormalGame);
+        try {
+            gameInformation.setUpCards(GameType.NormalGame);
+            gameInformation.setUpComponents();
+        } catch (IOException e) {
         }
 
-        flightBoard = new FlightBoard(GameType.NormalGame, cardList);
+        flightBoard = new FlightBoard(GameType.NormalGame, gameInformation.getCardsList());
 
         playerOrderList = new ArrayList<>();
     }

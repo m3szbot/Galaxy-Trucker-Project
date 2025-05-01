@@ -26,7 +26,6 @@ public class AssemblyPhase {
 
     /**
      * Initializes the game with provided game information.
-     *
      */
     public AssemblyPhase() {
         assemblyProtocol = new AssemblyProtocol(gameInformation);
@@ -50,8 +49,9 @@ public class AssemblyPhase {
      * @param newState the new state to switch to
      */
     public void setState(GameState newState) {
+        /*
         this.currentState = newState;
-        currentState.enter(this, assemblyView);
+        currentState.enter(this, assemblyView);*/
     }
 
     /**
@@ -74,16 +74,15 @@ public class AssemblyPhase {
      */
     public void start(GameInformation gameInformation) {
         this.gameInformation = gameInformation;
-        for(int i = 0; i < gameInformation.getPlayerList().size(); i++){
+        for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;
             new Thread(() -> {
                 AssemblyThread assemblyThread = new AssemblyThread(gameInformation, gameInformation.getPlayerList().get(threadInt), assemblyProtocol, assemblyView);
             });
         }
-    }
-
+/*
         message = "Assembly phase has ended";
-        assemblyView.sendMessageToAll(message);
+        assemblyView.sendMessageToAll(message);*/
     }
 /*
       //main fatto a caso da gecky per fare test

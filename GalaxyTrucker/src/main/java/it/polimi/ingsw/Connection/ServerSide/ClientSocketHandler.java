@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
