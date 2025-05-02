@@ -15,7 +15,7 @@ public class CorrectionPhase implements Startable {
     Map<Player, CorrectionView> playerViewMap;
 
     public CorrectionPhase(GameInformation gameInformation) {
-        // create player-specific views
+        // create player-specific correction views
         playerViewMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
             playerViewMap.put(player, new CorrectionView());
