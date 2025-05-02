@@ -7,10 +7,12 @@ import it.polimi.ingsw.View.CorrectionView.CorrectionView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class CorrectionPhase implements Startable {
     Map<Player, CorrectionView> playerViewMap;
-    Map<Player, CorrectionThread> playerThreadMap;
 
     public CorrectionPhase(GameInformation gameInformation) {
         // create player-specific views
@@ -18,7 +20,6 @@ public class CorrectionPhase implements Startable {
         for (Player player : gameInformation.getPlayerList()) {
             playerViewMap.put(player, new CorrectionView());
         }
-        playerThreadMap = new HashMap<>();
     }
 
     /**
@@ -27,22 +28,29 @@ public class CorrectionPhase implements Startable {
      * @param gameInformation
      */
     public void start(GameInformation gameInformation) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
+        // launch player threads
         for (Player player : gameInformation.getPlayerList()) {
             CorrectionThread playerThread = new CorrectionThread(player, playerViewMap.get(player));
-            playerThreadMap.put(player, playerThread);
-            playerThread.start();
-
+            scheduler.submit(playerThread);
         }
+        // no new tasks should be added
+        scheduler.shutdown();
+        // timeout (force shutdown if someone still didn't finish)
+        try {
+            scheduler.awaitTermination(2, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        scheduler.shutdownNow();
 
-        // wait for threads to finish
-        // set common timeout?, remove timeout players?
-        for (Map.Entry<Player, CorrectionThread> entry : playerThreadMap.entrySet()) {
-            try {
-                entry.getValue().join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        // remove players with who timed out with invalid shipboard
+        for (Player player : gameInformation.getPlayerList()) {
+            if (player.getShipBoard().isErroneous()) {
+                gameInformation.removePlayers(player);
             }
         }
+
         // end of correction phase
     }
 
