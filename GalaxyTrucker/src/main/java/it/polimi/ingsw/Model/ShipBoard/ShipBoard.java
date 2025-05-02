@@ -115,6 +115,23 @@ public class ShipBoard {
     }
 
     /**
+     * Checks if there are any incorrectly placed components (errors) in shipboard
+     *
+     * @return true if there are errors, false if shipboard is valid
+     * @author Boti
+     */
+    public boolean checkShipboardErrors() {
+        boolean errors = false;
+        for (int i = 0; i < this.getMatrixCols() && !errors; i++) {
+            for (int j = 0; j < this.getMatrixRows() && !errors; j++) {
+                if (this.matrErrors[i][j])
+                    errors = true;
+            }
+        }
+        return errors;
+    }
+
+    /**
      * Adds a component to the specified position in the structure matrix.
      *
      * @param component The component to add.
