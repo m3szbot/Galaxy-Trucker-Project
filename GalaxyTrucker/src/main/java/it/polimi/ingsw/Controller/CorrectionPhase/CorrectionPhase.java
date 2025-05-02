@@ -12,6 +12,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * players correct their shipboards after assembly
+ */
 public class CorrectionPhase implements Startable {
     Map<Player, CorrectionView> playerViewMap;
 
