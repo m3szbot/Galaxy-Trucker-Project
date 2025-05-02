@@ -16,6 +16,8 @@ import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// TODO test removal of more than 1 components
+
 class CorrectionPhaseTest {
     private final InputStream originalInput = System.in;
     GameInformation gameInformation;
@@ -24,6 +26,7 @@ class CorrectionPhaseTest {
 
     @BeforeEach
     void setUp() {
+        // create correctionPhase after simulating input!
         gameInformation = new GameInformation();
         gameInformation.setGameType(GameType.NormalGame);
         try {
@@ -51,7 +54,8 @@ class CorrectionPhaseTest {
 
     /**
      * Simulates keyboard input for automated tests (inputs not permitted)
-     * To call before scanner is created
+     * The scanner is created only after calling correctionPhase.start()
+     * Works only if there is 1 scanner instance in the method
      *
      * @param input
      */
@@ -65,6 +69,10 @@ class CorrectionPhaseTest {
         correctionPhase.start(gameInformation);
     }
 
+    /**
+     * playerA has 3 erroneous components, removes the one connecting them to the shipboard so others fall of
+     * and shipboard becomes valid - player A doesn't get removed
+     */
     @Test
     void RemoveOneComponent() {
         int errors;
@@ -72,12 +80,48 @@ class CorrectionPhaseTest {
         playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);
         playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
         errors = playerA.getShipBoard().checkErrors();
-        assertEquals(errors, 3);
-        // TODO input not working
-        inputSimulator("8 8");
+        assertEquals(3, errors);
+
+        // correct playerA's shipboard
+        inputSimulator("7\n8\n");
         correctionPhase.start(gameInformation);
-        assertEquals(3, gameInformation.getPlayerList().size());
+        errors = playerA.getShipBoard().checkErrors();
+        assertEquals(0, errors);
+        assertEquals(4, gameInformation.getPlayerList().size());
     }
 
+    // TODO shipboard check errors not working?
+    @Test
+    void RemoveTwoComponents() {
+        int errors;
+        playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 7, 8);
+        playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);
+        playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
+        errors = playerA.getShipBoard().checkErrors();
+        assertEquals(3, errors);
+
+        // correct playerA's shipboard
+        inputSimulator("6\n8\n");
+        correctionPhase.start(gameInformation);
+
+        assertEquals(4, gameInformation.getPlayerList().size());
+    }
+
+    /**
+     * playerA has erroneous shipboard, times out (2 minutes) and gets removed from the game
+     */
+    @Test
+    void kickPlayerErroneousShipboard() {
+        int errors;
+        playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 7, 8);
+        playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);
+        playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
+        errors = playerA.getShipBoard().checkErrors();
+        assertEquals(3, errors);
+
+        correctionPhase.start(gameInformation);
+        assertEquals(3, gameInformation.getPlayerList().size());
+
+    }
 
 }

@@ -47,11 +47,16 @@ public class CorrectionPhase implements Startable {
 
         // remove players with who timed out with invalid shipboard
         ArrayList<Player> toRemove = new ArrayList<>();
+        // find players to remove
         for (Player player : gameInformation.getPlayerList()) {
             if (player.getShipBoard().isErroneous()) {
                 toRemove.add(player);
+                for (Map.Entry<Player, CorrectionView> entry : playerViewMap.entrySet()) {
+                    entry.getValue().printPlayerRemovalMessage(player);
+                }
             }
         }
+        // actual removal of players (avoids conflicts)
         for (Player player : toRemove) {
             gameInformation.removePlayers(player);
         }

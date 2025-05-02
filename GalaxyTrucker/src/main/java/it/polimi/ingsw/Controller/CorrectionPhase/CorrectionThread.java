@@ -18,14 +18,17 @@ public class CorrectionThread implements Runnable {
     @Override
     public void run() {
         boolean errors;
+        int values[];
         int col, row;
         // check if there are errors
         errors = player.getShipBoard().isErroneous();
         // correct errors
         while (errors) {
             playerView.printErrorsMessage(player.getShipBoard());
-            col = playerView.promptForColumn();
-            row = playerView.promptForRow();
+            values = playerView.promptForColumnRow();
+            col = values[0];
+            row = values[1];
+            playerView.printComponentRemovalMessage(col, row);
             // no check for col, row value - if out of bounds, nothing happens
             player.getShipBoard().removeComponent(col, row, true);
             errors = player.getShipBoard().isErroneous();
