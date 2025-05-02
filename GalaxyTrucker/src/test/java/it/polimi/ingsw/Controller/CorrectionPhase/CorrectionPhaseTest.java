@@ -73,7 +73,10 @@ class CorrectionPhaseTest {
         playerA.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
         errors = playerA.getShipBoard().checkErrors();
         assertEquals(errors, 3);
+        // TODO input not working
+        inputSimulator("8 8");
         correctionPhase.start(gameInformation);
+        assertEquals(3, gameInformation.getPlayerList().size());
     }
 
 

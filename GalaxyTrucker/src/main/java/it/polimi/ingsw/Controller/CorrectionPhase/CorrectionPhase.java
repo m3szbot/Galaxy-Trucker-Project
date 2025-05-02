@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.CorrectionView.CorrectionView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -45,10 +46,14 @@ public class CorrectionPhase implements Startable {
         scheduler.shutdownNow();
 
         // remove players with who timed out with invalid shipboard
+        ArrayList<Player> toRemove = new ArrayList<>();
         for (Player player : gameInformation.getPlayerList()) {
             if (player.getShipBoard().isErroneous()) {
-                gameInformation.removePlayers(player);
+                toRemove.add(player);
             }
+        }
+        for (Player player : toRemove) {
+            gameInformation.removePlayers(player);
         }
 
         // end of correction phase
