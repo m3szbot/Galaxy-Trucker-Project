@@ -115,6 +115,18 @@ public class ShipBoard {
     }
 
     /**
+     * Checks if there are errors in the shipboard
+     *
+     * @return true if there are errors, false if correct
+     * @author Boti
+     */
+    public boolean isErroneous() {
+        if (this.checkErrors() > 0)
+            return true;
+        return false;
+    }
+
+    /**
      * Adds a component to the specified position in the structure matrix.
      *
      * @param component The component to add.
