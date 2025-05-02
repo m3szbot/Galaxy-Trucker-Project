@@ -24,7 +24,9 @@ public class CorrectionPhase implements Startable {
     }
 
     /**
-     * start player threads
+     * start correction phase
+     * launches player threads and waits for their termination (player shipboard corrected)
+     * or times out (player shipboard incorrect, player gets removed)
      *
      * @param gameInformation
      */
