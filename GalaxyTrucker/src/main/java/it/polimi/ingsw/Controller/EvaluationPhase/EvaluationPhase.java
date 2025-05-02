@@ -70,11 +70,7 @@ public class EvaluationPhase implements Startable {
         // create message string
         StringBuilder result = new StringBuilder();
         for (Map.Entry<Player, Integer> entry : creditsList) {
-            result.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-        }
-        // remove ", " from the end
-        if (result.isEmpty()) {
-            result.setLength(result.length() - 2);
+            result.append(entry.getKey().getNickName()).append(": ").append(entry.getValue()).append("\n");
         }
         return result.toString();
     }

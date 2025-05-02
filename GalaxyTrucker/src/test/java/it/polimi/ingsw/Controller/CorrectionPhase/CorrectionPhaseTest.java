@@ -26,7 +26,7 @@ class CorrectionPhaseTest {
 
     @BeforeEach
     void setUp() {
-        // create correctionPhase after simulating input!
+        // set up gameInformation
         gameInformation = new GameInformation();
         gameInformation.setGameType(GameType.NormalGame);
         try {
