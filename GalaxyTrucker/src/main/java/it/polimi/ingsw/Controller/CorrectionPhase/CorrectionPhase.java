@@ -35,7 +35,7 @@ public class CorrectionPhase implements Startable {
         }
 
         // wait for threads to finish
-        // set common timeout?
+        // set common timeout?, remove timeout players?
         for (Map.Entry<Player, CorrectionThread> entry : playerThreadMap.entrySet()) {
             try {
                 entry.getValue().join();
