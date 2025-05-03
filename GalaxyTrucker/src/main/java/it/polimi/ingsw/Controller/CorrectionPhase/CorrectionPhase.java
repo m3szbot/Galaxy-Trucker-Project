@@ -5,51 +5,69 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.CorrectionView.CorrectionView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * players correct their shipboards after assembly
+ */
 public class CorrectionPhase implements Startable {
-    CorrectionView correctionView;
+    Map<Player, CorrectionView> playerViewMap;
 
-    public CorrectionPhase() {
-        correctionView = new CorrectionView();
-    }
-
-    /**
-     * remove components until shipboard of player is valid
-     */
-    // TODO: create threads for players
-    // TODO state pattern
-    // TODO refactor into methods
-    public void start(GameInformation gameInformation) {
-        boolean errors;
-        int col, row;
+    public CorrectionPhase(GameInformation gameInformation) {
+        // create player-specific correction views
+        playerViewMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
-            errors = checkErrors(player);
-            // ask to correct errors
-            while (errors) {
-                col = correctionView.promptForColumn();
-                row = correctionView.promptForRow();
-                player.getShipBoard().removeComponent(col, row, true);
-                errors = checkErrors(player);
-            }
-            correctionView.printFinishedMessage();
+            playerViewMap.put(player, new CorrectionView());
         }
     }
 
     /**
-     * Checks if there are any incorrectly placed components in shipboard (errors)
+     * start correction phase
+     * launches player threads and waits for their termination (player shipboard corrected)
+     * or times out (player shipboard incorrect, player gets removed)
      *
-     * @param player
-     * @return true if there are errors, false if shipboard is valid
+     * @param gameInformation
      */
-    private boolean checkErrors(Player player) {
-        boolean errors = false;
-        boolean[][] matr = player.getShipBoard().getMatrErrors();
-        for (int i = 0; i < 12 && !errors; i++) {
-            for (int j = 0; j < 12 && !errors; j++) {
-                if (matr[i][j])
-                    errors = true;
+    public void start(GameInformation gameInformation) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
+        // launch player threads
+        for (Player player : gameInformation.getPlayerList()) {
+            CorrectionThread playerThread = new CorrectionThread(player, playerViewMap.get(player));
+            scheduler.submit(playerThread);
+        }
+        // no new tasks should be added
+        scheduler.shutdown();
+        // timeout (force shutdown if someone still didn't finish)
+        try {
+            scheduler.awaitTermination(2, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        scheduler.shutdownNow();
+
+        // remove players with who timed out with invalid shipboard
+        ArrayList<Player> toRemove = new ArrayList<>();
+        // find players to remove
+        for (Player player : gameInformation.getPlayerList()) {
+            if (player.getShipBoard().isErroneous()) {
+                toRemove.add(player);
+                for (Map.Entry<Player, CorrectionView> entry : playerViewMap.entrySet()) {
+                    entry.getValue().printPlayerRemovalMessage(player);
+                }
             }
         }
-        return errors;
+        // actual removal of players (avoids conflicts)
+        for (Player player : toRemove) {
+            gameInformation.removePlayers(player);
+        }
+
+        // end of correction phase
     }
+
 
 }

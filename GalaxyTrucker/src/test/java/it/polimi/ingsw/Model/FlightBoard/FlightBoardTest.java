@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FlightBoardTest {
     // common fields
@@ -51,6 +50,11 @@ class FlightBoardTest {
         flightBoard = new FlightBoard(GameType.NormalGame, gameInformation.getCardsList());
 
         playerOrderList = new ArrayList<>();
+    }
+
+    @Test
+    void TestSetUp() {
+        assertEquals(12, flightBoard.getCardsNumber());
     }
 
     @Test
@@ -178,6 +182,12 @@ class FlightBoardTest {
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.removePlayer(playerA);
         });
+    }
+
+    @Test
+    void getNewCard() {
+        assertNotNull(flightBoard.getNewCard());
+        assertEquals(11, flightBoard.getCardsNumber());
     }
 
 }

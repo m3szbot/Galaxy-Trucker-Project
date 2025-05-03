@@ -6,11 +6,14 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import java.util.List;
 
 public class ShipBoard {
+    // x: column
+    // y: row
+
+    private ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private Component[][] structureMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] matr;
-    private ShipBoardAttributes shipBoardAttributes;
     private boolean[][] matrErrors;
 
     public Component[][] getStructureMatrix() {
@@ -95,8 +98,8 @@ public class ShipBoard {
         addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 7);
     }
 
-    public Component getComponent(int x, int y) {
-        return structureMatrix[y][x];
+    public Component getComponent(int col, int row) {
+        return structureMatrix[row][col];
     }
 
     public int getMatrixRows() {
@@ -112,19 +115,31 @@ public class ShipBoard {
     }
 
     /**
+     * Checks if there are errors in the shipboard
+     *
+     * @return true if there are errors, false if correct
+     * @author Boti
+     */
+    public boolean isErroneous() {
+        if (this.checkErrors() > 0)
+            return true;
+        return false;
+    }
+
+    /**
      * Adds a component to the specified position in the structure matrix.
      *
      * @param component The component to add.
-     * @param x         The x-coordinate of the component.
-     * @param y         The y-coordinate of the component.
+     * @param col       The x-coordinate of the component.
+     * @param row       The y-coordinate of the component.
      * @author Giacomo
      */
-    public void addComponent(Component component, int x, int y) {
-        x = x - 1;
-        y = y - 1;
+    public void addComponent(Component component, int col, int row) {
+        col = col - 1;
+        row = row - 1;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (matr[y][x] == true) {
-            structureMatrix[y][x] = component;
+        if (matr[row][col] == true) {
+            structureMatrix[row][col] = component;
         }
         //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
         List<Object> list = component.accept(visitor);
@@ -156,17 +171,17 @@ public class ShipBoard {
      * Removes a component from the specified position.
      * Updates the shipBoard to reflect the destroyed components.
      *
-     * @param x The x-coordinate of the component.
-     * @param y The y-coordinate of the component.
+     * @param col The x-coordinate of the component.
+     * @param row The y-coordinate of the component.
      * @author Giacomo
      */
-    public void removeComponent(int x, int y, boolean checkTrigger) {
+    public void removeComponent(int col, int row, boolean checkTrigger) {
         boolean flag = true;
-        x = x - 1;
-        y = y - 1;
+        col = col - 1;
+        row = row - 1;
 
-        if (matr[y][x] == true && structureMatrix[y][x] != null) {
-            Component component = structureMatrix[y][x];
+        if (matr[row][col] == true && structureMatrix[row][col] != null) {
+            Component component = structureMatrix[row][col];
             Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
             List<Object> list = component.accept(visitor);
             shipBoardAttributes.updateDestroyedComponents(1);
@@ -196,7 +211,7 @@ public class ShipBoard {
                 update[3] = -update[3];
                 shipBoardAttributes.updateGoods(update);
             }
-            structureMatrix[y][x] = null;
+            structureMatrix[row][col] = null;
             if (checkTrigger) {
                 while (checkNotReachable(this.shipBoardAttributes)) ;
             }
@@ -456,32 +471,32 @@ public class ShipBoard {
      * Sets the crew type in a cabin component, ensuring compatibility with alien support components.
      *
      * @param crewType The type of crew to assign.
-     * @param x        The x-coordinate of the cabin.
-     * @param y        The y-coordinate of the cabin.
+     * @param col      The x-coordinate of the cabin.
+     * @param row      The y-coordinate of the cabin.
      * @author Giacomo
      */
-    public void setCrewType(CrewType crewType, int x, int y) {
-        x = x - 1;
-        y = y - 1;
+    public void setCrewType(CrewType crewType, int col, int row) {
+        col = col - 1;
+        row = row - 1;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (structureMatrix[y][x] != null && structureMatrix[y][x].getComponentName().equals("Cabin")) {
+        if (structureMatrix[row][col] != null && structureMatrix[row][col].getComponentName().equals("Cabin")) {
             if (crewType.equals(CrewType.Brown)) {
-                if ((structureMatrix[y - 1][x] != null && (Boolean) structureMatrix[y - 1][x].accept(visitor).get(7) && !((AlienSupport) structureMatrix[y - 1][x]).isPurple()) ||
-                        (structureMatrix[y + 1][x] != null && (Boolean) structureMatrix[y + 1][x].accept(visitor).get(7) && !((AlienSupport) structureMatrix[y + 1][x]).isPurple()) ||
-                        (structureMatrix[y][x - 1] != null && (Boolean) structureMatrix[y][x - 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[y][x - 1]).isPurple()) ||
-                        (structureMatrix[y][x + 1] != null && (Boolean) structureMatrix[y][x + 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[y][x + 1]).isPurple())) {
-                    ((Cabin) structureMatrix[y][x]).setCrewType(crewType);
+                if ((structureMatrix[row - 1][col] != null && (Boolean) structureMatrix[row - 1][col].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row - 1][col]).isPurple()) ||
+                        (structureMatrix[row + 1][col] != null && (Boolean) structureMatrix[row + 1][col].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row + 1][col]).isPurple()) ||
+                        (structureMatrix[row][col - 1] != null && (Boolean) structureMatrix[row][col - 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row][col - 1]).isPurple()) ||
+                        (structureMatrix[row][col + 1] != null && (Boolean) structureMatrix[row][col + 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row][col + 1]).isPurple())) {
+                    ((Cabin) structureMatrix[row][col]).setCrewType(crewType);
                     shipBoardAttributes.updateAlien(CrewType.Brown, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
                     System.out.println("CrewType not permitted");
                 }
             } else {
-                if ((structureMatrix[y - 1][x] != null && (Boolean) structureMatrix[y - 1][x].accept(visitor).get(7) && ((AlienSupport) structureMatrix[y - 1][x]).isPurple()) ||
-                        (structureMatrix[y + 1][x] != null && (Boolean) structureMatrix[y + 1][x].accept(visitor).get(7) && ((AlienSupport) structureMatrix[y + 1][x]).isPurple()) ||
-                        (structureMatrix[y][x - 1] != null && (Boolean) structureMatrix[y][x - 1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[y][x - 1]).isPurple()) ||
-                        (structureMatrix[y][x + 1] != null && (Boolean) structureMatrix[y][x + 1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[y][x + 1]).isPurple())) {
-                    ((Cabin) structureMatrix[y][x]).setCrewType(crewType);
+                if ((structureMatrix[row - 1][col] != null && (Boolean) structureMatrix[row - 1][col].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row - 1][col]).isPurple()) ||
+                        (structureMatrix[row + 1][col] != null && (Boolean) structureMatrix[row + 1][col].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row + 1][col]).isPurple()) ||
+                        (structureMatrix[row][col - 1] != null && (Boolean) structureMatrix[row][col - 1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row][col - 1]).isPurple()) ||
+                        (structureMatrix[row][col + 1] != null && (Boolean) structureMatrix[row][col + 1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row][col + 1]).isPurple())) {
+                    ((Cabin) structureMatrix[row][col]).setCrewType(crewType);
                     shipBoardAttributes.updateAlien(CrewType.Purple, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {

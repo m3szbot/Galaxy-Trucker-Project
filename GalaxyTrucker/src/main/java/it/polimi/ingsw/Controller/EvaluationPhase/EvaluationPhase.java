@@ -11,11 +11,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
+/**
+ * calculates final scores of players after flight phase ends
+ */
 public class EvaluationPhase implements Startable {
-    EvaluationView evaluationView;
+    // 1 view in common for all players
+    EvaluationView commonView;
 
     public EvaluationPhase() {
-        evaluationView = new EvaluationView();
+        commonView = new EvaluationView();
     }
 
     public void start(GameInformation gameInformation) {
@@ -23,24 +27,24 @@ public class EvaluationPhase implements Startable {
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
-        // Show player credits
-        // (no sorting - maps can't be sorted by value, hassle)
+        // show leaderboard
         message = getLeaderboardMessage(gameInformation);
-        evaluationView.printLeaderboardMessage(message);
+        commonView.printLeaderboardMessage(message);
         // suspend main thread so that players have time to read the leaderboard
         try {
             Thread.sleep(15000);
         } catch (InterruptedException e) {
-            System.out.println("Sleep was interrupted");
+            e.printStackTrace();
         }
-        // end evaluationPhase
+        // end of evaluationPhase
+        // end of game
     }
 
 
     /**
-     * Calculate final points for each player
+     * Calculate and assign final points for each player
      *
-     * @param gameInformation game information
+     * @param gameInformation
      */
     private void assignPlayerCredits(GameInformation gameInformation) {
         ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getGameType(), gameInformation.getPlayerList(), gameInformation.getFlightBoard().getPlayerOrderList());
@@ -49,8 +53,10 @@ public class EvaluationPhase implements Startable {
         }
     }
 
-    /*
-    creates message string containing players and their credits in descending order
+    /**
+     * creates message string containing players and their credits in descending order
+     *
+     * @return leaderboard string
      */
     private String getLeaderboardMessage(GameInformation gameInformation) {
         ArrayList<Map.Entry<Player, Integer>> creditsList = new ArrayList<>();
@@ -64,11 +70,7 @@ public class EvaluationPhase implements Startable {
         // create message string
         StringBuilder result = new StringBuilder();
         for (Map.Entry<Player, Integer> entry : creditsList) {
-            result.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-        }
-        // remove ", " from the end
-        if (result.isEmpty()) {
-            result.setLength(result.length() - 2);
+            result.append(entry.getKey().getNickName()).append(": ").append(entry.getValue()).append("\n");
         }
         return result.toString();
     }

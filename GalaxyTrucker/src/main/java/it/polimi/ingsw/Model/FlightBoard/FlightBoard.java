@@ -65,6 +65,13 @@ public class FlightBoard {
     }
 
     /**
+     * @return number of unresolved cards
+     */
+    public int getCardsNumber() {
+        return this.cardsStack.size();
+    }
+
+    /**
      * Return possible starting tiles to choose from
      *
      * @return startingTiles

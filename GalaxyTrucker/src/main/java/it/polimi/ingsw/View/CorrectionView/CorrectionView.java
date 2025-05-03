@@ -1,9 +1,26 @@
 package it.polimi.ingsw.View.CorrectionView;
 
+import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CorrectionView {
+
+    /**
+     * Print error message and error indexes
+     */
+    public void printErrorsMessage(ShipBoard shipBoard) {
+        System.out.println("There are errors in your ship, please correct them!");
+        for (int i = 0; i < shipBoard.getMatrixCols(); i++) {
+            for (int j = 0; j < shipBoard.getMatrixCols(); j++) {
+                if (shipBoard.getMatrErrors()[i][j]) {
+                    System.out.printf("Error in: %d %d\n", i + 1, j + 1);
+                }
+            }
+        }
+    }
 
     /**
      * Print finish message if shipboard is valid
@@ -13,43 +30,51 @@ public class CorrectionView {
     }
 
     /**
-     * Get column number from input and return it
+     * Get column and row number from input and return it
      *
-     * @return column number
+     * @return column, row number
      */
-    public int promptForColumn() {
-        int value;
+    public int[] promptForColumnRow() {
         Scanner scanner = new Scanner(System.in);
+        int col, row;
         while (true) {
             System.out.println("Enter column:");
             try {
-                value = scanner.nextInt();
+                col = scanner.nextInt();
                 break;
             } catch (InputMismatchException e) {
                 System.out.println("Please enter a number!");
             }
         }
-        return value;
-    }
-
-    /**
-     * Get row number from input and return it
-     *
-     * @return row number
-     */
-    public int promptForRow() {
-        int value;
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Enter row:");
             try {
-                value = scanner.nextInt();
+                row = scanner.nextInt();
                 break;
             } catch (InputMismatchException e) {
                 System.out.println("Please enter a number!");
             }
         }
-        return value;
+        return new int[]{col, row};
+    }
+
+    /**
+     * Print columnm, row of component selected to be removed
+     *
+     * @param col
+     * @param row
+     */
+    public void printComponentRemovalMessage(int col, int row) {
+        System.out.printf("Removing component %d %d\n", col, row);
+    }
+
+    /**
+     * Print timed out player
+     *
+     * @param player
+     */
+    public void printPlayerRemovalMessage(Player player) {
+        System.out.printf("Player %s timed out and got removed\n", player.getNickName());
     }
 
 }
