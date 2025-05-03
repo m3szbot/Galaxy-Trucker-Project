@@ -5,12 +5,21 @@ import it.polimi.ingsw.Model.GameInformation.ViewType;
 
 import java.io.Serializable;
 
+/**
+ * Bean class which stores the client info, including
+ * the gameCode of the game he is actually playing. If the
+ * gameCode is set before the joining part, it means
+ * that the client wants to resume an interrupted game.
+ *
+ * @author carlo
+ */
+
 public class ClientInfo implements Serializable {
 
     private String nickname;
     private ConnectionType connectionType;
     private ViewType viewType;
-    private int gameCode;
+    private int gameCode = -1;
     private String serverIp;
     private final static int serverPort = 5000;
 

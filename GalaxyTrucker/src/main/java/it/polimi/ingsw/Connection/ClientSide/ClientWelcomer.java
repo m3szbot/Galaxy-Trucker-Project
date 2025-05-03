@@ -3,18 +3,22 @@ package it.polimi.ingsw.Connection.ClientSide;
 import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
+/**
+ * Class that handles the first phase of the client
+ * lifecycle. It stores the client information into the
+ * clientInfo bean.
+ *
+ * @author carlo
+ */
 
 public class ClientWelcomer {
 
-    ClientInfo clientInfo = new ClientInfo();
     String input;
 
-    public ClientInfo getClientInfo() {
-        return clientInfo;
-    }
-
-    public void start() {
+    public void start(ClientInfo clientInfo) {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -27,7 +31,7 @@ public class ClientWelcomer {
         input = scanner.nextLine();
 
         clientInfo.setNickname(input);
-        System.out.println("You're nickname is now " + input);
+        System.out.println("You're nickname is " + input);
 
         System.out.print("Enter the viewType (GUI/TUI): ");
 
@@ -42,7 +46,7 @@ public class ClientWelcomer {
         }
 
         clientInfo.setViewType(ViewType.valueOf(input));
-        System.out.println("You're viewType is now " + input);
+        System.out.println("You're viewType is " + input);
 
 
         System.out.print("Enter the connection type (RMI/SOCKET): ");
@@ -61,8 +65,45 @@ public class ClientWelcomer {
         System.out.println("You're connection type is now " + input);
 
         System.out.print("Enter the IP adress of the server: ");
-        clientInfo.setServerIp(scanner.nextLine());
+        input = scanner.nextLine();
+        clientInfo.setServerIp(input);
+        System.out.println("The ip adress of the server is " + input);
+
+        System.out.println("Do you want to resume an interrupted game ? (y/n)");
+
+        input = scanner.nextLine();
+
+        while(true){
+
+            input.toLowerCase();
+
+            if(input.equals('y')){
+
+                System.out.println("Enter the game code of the interrupted game: ");
+
+                try {
+
+                    int gameCode = scanner.nextInt();
+                    clientInfo.setGameCode(gameCode);
+                    break;
+
+                }catch (InputMismatchException e){
+
+                    System.out.println("The input is incorrect, you must enter an integer.");
+                    continue;
+
+                }
 
 
+            }
+            else if(input.equals('n')){
+
+                break;
+
+            }
+
+            System.out.println("The string you entered is invalid, please reenter it (y/n): ");
+            input = scanner.nextLine();
+        }
     }
 }

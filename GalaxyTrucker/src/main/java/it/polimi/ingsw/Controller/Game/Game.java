@@ -13,7 +13,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class Game implements Runnable {
 
-    private GameState gameState = GameState.Starting;
+    private GameState gameState;
     private GameInformation gameInformation;
     private final int gameCode;
     private InitializationPhase initializationPhase;
@@ -26,9 +26,11 @@ public class Game implements Runnable {
 
 
     public Game(int gameCode) {
+
         this.gameCode = gameCode;
         this.gameState = GameState.Empty;
         gameInformation = new GameInformation();
+
     }
 
     public boolean isFull() {
@@ -44,7 +46,12 @@ public class Game implements Runnable {
         gameInformation.setMaxNumberOfPlayers(numberOfPlayers);
     }
 
+    public int getGameCode(){
+        return gameCode;
+    }
+
     public void addPlayer(Player player, ViewType viewType, ConnectionType connectionType, boolean first) {
+
         gameInformation.addPlayers(player);
         gameInformation.setPlayerViewType(player, viewType);
         gameInformation.setPlayerConnectionType(player, connectionType);
@@ -69,6 +76,18 @@ public class Game implements Runnable {
 
     public void changeGameState(GameState gameState) {
         this.gameState = gameState;
+    }
+
+    public boolean isNickNameRepeated(String nickname){
+
+        for(Player player: gameInformation.getPlayerList()){
+
+            if(nickname.equals(player.getNickName()))
+                return true;
+
+        }
+
+        return false;
     }
 
 

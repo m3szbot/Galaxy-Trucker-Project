@@ -1,16 +1,18 @@
-package it.polimi.ingsw.Connection.ServerSide;
+package it.polimi.ingsw.Connection.ServerSide.socket;
 
 import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
+import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 /**
- * Handles the connected client with socket protocol
+ * Handles the connected client with socket protocol during
+ * the joining part of the client's lifecycle
  *
  * @author carlo
  */
@@ -23,7 +25,6 @@ public class ClientSocketHandler extends Thread {
     private DataOutputStream dataSender;
     private ObjectInputStream clientInfoReceiver;
     private ObjectOutputStream clientInfoSender;
-    private static Color currentColor = Color.RED;
     private Player playerToAdd = null;
 
 
@@ -38,42 +39,8 @@ public class ClientSocketHandler extends Thread {
             clientInfoSender = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
 
         } catch (IOException e) {
-            //TODO
+            System.err.println("Error while opening server side streams");
         }
-
-    }
-
-    private Color getNextColor() {
-        switch (currentColor) {
-            case Color.RED -> {
-                return Color.BLUE;
-            }
-
-            case Color.BLUE -> {
-                return Color.GREEN;
-            }
-
-            case Color.GREEN -> {
-                return Color.YELLOW;
-            }
-
-            default -> {
-                return Color.RED;
-            }
-        }
-    }
-
-    private boolean isNickNameRepeated(String nickname) {
-
-        for (Player player : centralServer.getCurrentGameInformation().getPlayerList()) {
-
-            if (player.getNickName().equals(nickname)) {
-                return true;
-            }
-
-        }
-
-        return false;
 
     }
 
@@ -82,15 +49,15 @@ public class ClientSocketHandler extends Thread {
 
         String message;
         String input;
-        ClientInfo clientInfo = null;
+        ClientInfo clientInfo;
 
         try {
             clientInfo = (ClientInfo) clientInfoReceiver.readObject();
 
         } catch (IOException e) {
-            //TODO
+            throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
-            //TODO
+            throw new RuntimeException(e);
         }
 
         while (true) {
@@ -105,7 +72,7 @@ public class ClientSocketHandler extends Thread {
 
                     if (centralServer.getLock().tryLock()) {
 
-                        if (centralServer.getCurrentGameState() == GameState.Empty) {
+                        if (centralServer.getCurrentStartingGame().getGameState() == GameState.Empty) {
                             //first player
 
                             int numberOfPlayers;
@@ -161,44 +128,23 @@ public class ClientSocketHandler extends Thread {
 
                             }
 
-                            if (isNickNameRepeated(clientInfo.getNickname())) {
+                            //There are no repeated names
 
-                                while (true) {
-
-                                    message = "You're nickname has already been chosen, please enter a new one: ";
-
-                                    dataSender.writeUTF(message);
-
-                                    input = dataReceiver.readUTF();
-
-                                    if (!isNickNameRepeated(input)) {
-                                        message = "You're nickname is now " + input;
-                                        dataSender.writeUTF(message);
-                                        clientInfo.setNickname(input);
-                                        break;
-                                    }
-
-                                }
-
-                            }
-
-                            playerToAdd = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
-                            clientInfo.setGameCode(centralServer.getGameCode());
+                            playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
+                            clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
                             clientInfoSender.writeObject(clientInfo);
-                            centralServer.addPlayerToCurrentGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
-                            centralServer.getCurrentGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+                            centralServer.addPlayerToCurrentStartingGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
+                            centralServer.getCurrentStartingGame().getGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
 
-                            message = "You have been added to the game!";
+                            message = "You have been added to the game (game code " + centralServer.getCurrentStartingGame().getGameCode() + " )";
                             dataSender.writeUTF(message);
-
-                            currentColor = getNextColor();
-                            centralServer.changeCurrentGameState(GameState.Starting);
+                            centralServer.getCurrentStartingGame().changeGameState(GameState.Starting);
 
 
                         } else {
                             //not first player
 
-                            if (isNickNameRepeated(clientInfo.getNickname())) {
+                            if (centralServer.getCurrentStartingGame().isNickNameRepeated(clientInfo.getNickname())) {
 
                                 while (true) {
 
@@ -208,7 +154,7 @@ public class ClientSocketHandler extends Thread {
 
                                     input = dataReceiver.readUTF();
 
-                                    if (!isNickNameRepeated(input)) {
+                                    if (!centralServer.getCurrentStartingGame().isNickNameRepeated(input)) {
                                         message = "You're nickname is now " + input;
                                         dataSender.writeUTF(message);
                                         clientInfo.setNickname(input);
@@ -220,17 +166,16 @@ public class ClientSocketHandler extends Thread {
                             }
 
 
-                            playerToAdd = new Player(clientInfo.getNickname(), currentColor, centralServer.getCurrentGameInformation());
-                            clientInfo.setGameCode(centralServer.getGameCode());
+                            playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
+                            clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
                             clientInfoSender.writeObject(clientInfo);
-                            centralServer.addPlayerToCurrentGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType());
-                            currentColor = getNextColor();
-                            centralServer.getCurrentGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+                            centralServer.addPlayerToCurrentStartingGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType());
+                            centralServer.getCurrentStartingGame().getGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
 
-                            message = "You have joined the game of " + centralServer.getCurrentGameCreator();
+                            message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
                             dataSender.writeUTF(message);
 
-                            if (centralServer.isCurrentGameFull()) {
+                            if (centralServer.getCurrentStartingGame().isFull()) {
                                 centralServer.startCurrentGame();
                             }
 
@@ -241,7 +186,7 @@ public class ClientSocketHandler extends Thread {
 
                     } else {
 
-                        message = "Somebody is already joining a new game, please wait.\n";
+                        message = "Somebody is already joining a new game, please wait.";
 
                         dataSender.writeUTF(message);
 
@@ -249,16 +194,36 @@ public class ClientSocketHandler extends Thread {
 
                 } else {
 
-                    message = "The string you entered is invalid.\n";
+                    message = "The string you entered is invalid!";
                     dataSender.writeUTF(message);
 
 
                 }
 
 
-            } catch (IOException e) {
+            } catch (SocketTimeoutException e) {
 
-                //TODO
+                message = "The server kicked you out because of inactivity!";
+                try {
+                    dataSender.writeUTF(message);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+
+            }catch (IOException e){
+
+                System.err.println("Error while comunicating with " + clientSocket.getInetAddress() + " ,connection closed");
+                try {
+                    clientSocket.close();
+                } catch (IOException ex) {
+                    System.err.println("Error while closing the client socket");
+                }
+
+            }
+            finally {
+
+                centralServer.getLock().unlock();
 
             }
         }

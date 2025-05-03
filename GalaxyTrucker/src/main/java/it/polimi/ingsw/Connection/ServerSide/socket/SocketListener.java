@@ -1,8 +1,17 @@
-package it.polimi.ingsw.Connection.ServerSide;
+package it.polimi.ingsw.Connection.ServerSide.socket;
+
+import it.polimi.ingsw.Connection.ServerSide.Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+/**
+ * Thread that listens for incoming clients. It starts a new
+ * clientSocketHandler for each connected client
+ *
+ * @author carlo
+ */
 
 public class SocketListener implements Runnable{
 
@@ -18,10 +27,12 @@ public class SocketListener implements Runnable{
     public void run() {
 
         try {
-            serverSocket = new ServerSocket(5000);
+            serverSocket = new ServerSocket(centralServer.getPort());
+            System.out.println("Socket listener is activated and is listening...");
 
         }catch (IOException e){
-            //TODO
+            System.err.println("Error while opening the server listening socket");
+            return;
         }
 
         try{
@@ -35,7 +46,7 @@ public class SocketListener implements Runnable{
             }
 
         }catch (IOException e){
-           //TODO
+            System.err.println("Error while accepting the client through sockets");
         }
     }
 }
