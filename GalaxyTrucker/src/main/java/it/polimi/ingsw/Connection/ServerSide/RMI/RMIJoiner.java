@@ -7,7 +7,7 @@ import java.rmi.Remote;
 
 /**
  * Interface defining all the methods that the client
- * can call when using RMI while comunicating with
+ * can call when using RMI while communicating with
  * the server
  *
  * @author carlo

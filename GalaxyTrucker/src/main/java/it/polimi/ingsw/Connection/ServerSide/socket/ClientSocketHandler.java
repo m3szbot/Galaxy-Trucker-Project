@@ -12,7 +12,7 @@ import java.net.SocketTimeoutException;
 
 /**
  * Handles the connected client with socket protocol during
- * the joining part of the client's lifecycle
+ * the joining phase of the client's lifecycle
  *
  * @author carlo
  */
@@ -39,7 +39,7 @@ public class ClientSocketHandler extends Thread {
             clientInfoSender = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
 
         } catch (IOException e) {
-            System.err.println("Error while opening server side streams");
+            System.err.println("Error while opening streams");
         }
 
     }
@@ -55,9 +55,11 @@ public class ClientSocketHandler extends Thread {
             clientInfo = (ClientInfo) clientInfoReceiver.readObject();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error while opening clientInfo");
+            return;
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            System.err.println("Class 'clientInfo' not found");
+            return;
         }
 
         while (true) {
@@ -90,12 +92,14 @@ public class ClientSocketHandler extends Thread {
                             while (true) {
 
                                 input = dataReceiver.readUTF();
-                                input.toUpperCase();
+                                input = input.toUpperCase();
 
                                 if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
 
                                     message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
                                     dataSender.writeUTF(message);
+                                    dataSender.writeUTF("increment trials");
+
                                 } else {
 
                                     gameType = GameType.valueOf(input);
@@ -119,6 +123,7 @@ public class ClientSocketHandler extends Thread {
 
                                     message = "The number of players you entered is invalid, please enter a valid value (2-4): ";
                                     dataSender.writeUTF(message);
+                                    dataSender.writeUTF("increment trials");
                                 } else {
 
                                     message = "Number of players was set up correctly";
@@ -128,7 +133,7 @@ public class ClientSocketHandler extends Thread {
 
                             }
 
-                            //There are no repeated names
+                            //There are no repeated names as he is the first player.
 
                             playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
                             clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
@@ -138,6 +143,7 @@ public class ClientSocketHandler extends Thread {
 
                             message = "You have been added to the game (game code " + centralServer.getCurrentStartingGame().getGameCode() + " )";
                             dataSender.writeUTF(message);
+                            dataSender.writeUTF("added");
                             centralServer.getCurrentStartingGame().changeGameState(GameState.Starting);
 
 
@@ -161,6 +167,8 @@ public class ClientSocketHandler extends Thread {
                                         break;
                                     }
 
+                                    dataSender.writeUTF("increment trials");
+
                                 }
 
                             }
@@ -174,6 +182,7 @@ public class ClientSocketHandler extends Thread {
 
                             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
                             dataSender.writeUTF(message);
+                            dataSender.writeUTF("added");
 
                             if (centralServer.getCurrentStartingGame().isFull()) {
                                 centralServer.startCurrentGame();
@@ -196,7 +205,7 @@ public class ClientSocketHandler extends Thread {
 
                     message = "The string you entered is invalid!";
                     dataSender.writeUTF(message);
-
+                    dataSender.writeUTF("increment trials");
 
                 }
 
@@ -207,7 +216,7 @@ public class ClientSocketHandler extends Thread {
                 try {
                     dataSender.writeUTF(message);
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    System.err.println("Error while sending data to the cliend");
                 }
 
 
@@ -223,7 +232,13 @@ public class ClientSocketHandler extends Thread {
             }
             finally {
 
-                centralServer.getLock().unlock();
+                try {
+
+                    centralServer.getLock().unlock();
+
+                }catch (IllegalMonitorStateException e){
+                    //the client didn't have the lock
+                }
 
             }
         }

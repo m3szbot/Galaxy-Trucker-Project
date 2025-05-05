@@ -4,7 +4,7 @@ package it.polimi.ingsw.Connection.ClientSide;
  * Client class. The client lifecycle is composed of
  * three phases. The welcoming phase consists in asking
  * the client config information that are necessary for the
- * correct comunication with the client during the next phases.
+ * correct communication with the server during the next phases.
  * The joining phase consists in making the client join a game.
  * And the gaming phase consist in the client playing.
  *
@@ -31,16 +31,13 @@ public class Client {
         int resultCode = joiner.start(clientInfo);
 
         if(resultCode == 1){
-            gamehandler.start();
-        }
-        else if(resultCode == 0){
-
-        }
-        else if(resultCode == -1){
-
+            System.out.println("Waiting for other players to join...");
+            gamehandler.start(clientInfo);
         }
 
-
+        /*
+        If the result code is != 1, the program ends.
+         */
 
     }
 

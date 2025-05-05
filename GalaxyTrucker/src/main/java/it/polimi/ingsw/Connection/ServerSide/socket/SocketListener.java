@@ -39,14 +39,14 @@ public class SocketListener implements Runnable{
             while(true) {
 
                 clientSocket = serverSocket.accept();
-                //setting a 1-minute timeout
+                //setting a 1-minute timeout to handle clients inactivity
                 clientSocket.setSoTimeout(60000);
 
                 new ClientSocketHandler(clientSocket, centralServer).start();
             }
 
         }catch (IOException e){
-            System.err.println("Error while accepting the client through sockets");
+            System.err.println("Error while accepting the client through socket");
         }
     }
 }

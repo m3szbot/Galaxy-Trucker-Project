@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  *  Client joiner is responsible for the second phase of the client
  *  lifecyle, i.e, making the client join a game. It returns 1, if the client
- *  join the game correctly, 0 if he is kicked, -1 if he encountered connection
+ *  join the game correctly, 0 if he is kicked, -1 if he encountered a connection
  *  issue.
  */
 
@@ -34,6 +34,7 @@ public class ClientJoiner {
 
         if (clientInfo.getViewType() == ViewType.CLI) {
 
+
             if(clientInfo.getConnectionType() == ConnectionType.Socket) {
 
                 Socket socket;
@@ -45,6 +46,7 @@ public class ClientJoiner {
 
                 try {
                     socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
+                    clientInfo.setServerSocket(socket);
                     dataReceiver = new DataInputStream(socket.getInputStream());
                     dataSender = new DataOutputStream(socket.getOutputStream());
                     objectSender = new ObjectOutputStream(socket.getOutputStream());
@@ -61,20 +63,36 @@ public class ClientJoiner {
                 Thread messageReceiver = new Thread(() -> {
 
                     try{
+                        int trials = 0;
 
                         while(true){
 
-                            String message = dataReceiver.readUTF();
-                            System.out.println(message);
+                            if(checkTrials(trials)){
+                                terminatedFlag.set(true);
+                                isKicked.set(true);
+                                break;
+                            }
 
-                            if(message.equals("You have been added to the game!")){
+                            String message = dataReceiver.readUTF();
+
+                            if(message.equals("added")){
                                 terminatedFlag.set(true);
 
                                 break;
                             }
+                            else if(message.equals("increment trials")){
+                                trials++;
+                            }
                             else if(message.equals("The server kicked you out because of inactivity!")){
+
+                                System.out.println(message);
                                 terminatedFlag.set(true);
                                 isKicked.set(true);
+                                break;
+                            }
+                            else {
+
+                                System.out.println(message);
                             }
 
                         }
@@ -105,6 +123,9 @@ public class ClientJoiner {
 
                 });
 
+                messageReceiver.start();
+                messageReceiver.start();
+
                 try {
 
                     messageReceiver.join();
@@ -128,10 +149,11 @@ public class ClientJoiner {
             else{
                 //RMI
                 RMIJoiner joiner;
+                int trials = 0;
 
                 try {
 
-                    joiner = (RMIJoiner) (RMIJoiner) Naming.lookup("rmi://localhost/Joiner");
+                    joiner = (RMIJoiner) Naming.lookup("rmi://localhost/Joiner");
 
                 }catch (NotBoundException | RemoteException | MalformedURLException e){
                     System.err.println("Error while connecting to the host registry");
@@ -140,8 +162,6 @@ public class ClientJoiner {
 
                 Scanner scanner = new Scanner(System.in);
                 String input;
-
-
 
                 Thread timer = new Thread(() -> {
                     try {
@@ -157,6 +177,10 @@ public class ClientJoiner {
 
                     timer.start();
                     System.out.println("Press 'enter' key to enter in a game: ");
+
+                    if(checkTrials(trials)){
+                        return 0;
+                    }
 
                     if(scanner.nextLine().equals("")){
 
@@ -195,11 +219,12 @@ public class ClientJoiner {
                                     timer.interrupt();
                                     timer.start();
 
-                                    input.toUpperCase();
+                                    input = input.toUpperCase();
 
                                     if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
 
                                         System.out.println("The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ");
+                                        trials++;
 
                                     } else {
 
@@ -207,6 +232,10 @@ public class ClientJoiner {
                                         System.out.println("Game type was set up correctly");
 
                                         break;
+                                    }
+
+                                    if(checkTrials(trials)){
+                                        return 0;
                                     }
 
                                 }
@@ -230,11 +259,16 @@ public class ClientJoiner {
                                     if (numberOfPlayers < 2 || numberOfPlayers > 4) {
 
                                         System.out.println("The number of players you entered is invalid, please enter a valid value (2-4): ");
+                                        trials++;
 
                                     } else {
 
                                         System.out.println("Number of players was set up correctly");
                                         break;
+                                    }
+
+                                    if(checkTrials(trials)){
+                                        return 0;
                                     }
 
                                 }
@@ -271,6 +305,11 @@ public class ClientJoiner {
                                         break;
                                     }
 
+                                    trials++;
+                                    if(checkTrials(trials)){
+                                        return 0;
+                                    }
+
                                 }
 
                             }
@@ -284,6 +323,7 @@ public class ClientJoiner {
                         else{
 
                             System.out.println("Somebody is already joining the game, please wait.");
+                            timer.interrupt();
 
                         }
 
@@ -296,6 +336,7 @@ public class ClientJoiner {
 
                             return 0;
                         }
+                        trials++;
 
                         System.out.println("The string you entered is invalid!");
 
@@ -313,4 +354,16 @@ public class ClientJoiner {
 
         return 0; //if no returns have been activated, the player is automatically kicked.
     }
+
+    private boolean checkTrials(int trials){
+
+        if(trials > 5){
+            System.out.println("You entered too much wrong information and therefore are slowing" +
+                    "the server, you have been kicked out");
+            return true;
+        }
+        return false;
+    }
 }
+
+

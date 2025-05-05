@@ -8,6 +8,13 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
+/**
+ * Thread that listen for incoming clients with RMI
+ * protocol
+ *
+ * @author carlo
+ */
+
 public class RMIListener implements Runnable{
 
     private Server centralServer;

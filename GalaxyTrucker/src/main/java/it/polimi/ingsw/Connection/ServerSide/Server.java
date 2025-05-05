@@ -85,7 +85,7 @@ public class Server {
         return lock;
     }
 
-    //Method overloading, the second one is used to connect the first player.
+    //Method overloading, the second one is used to add the first player to a
 
     public void addPlayerToCurrentStartingGame(Player player, ViewType viewType, ConnectionType connectionType) {
 
@@ -112,7 +112,7 @@ public class Server {
         currentStartingGame = new Game(gameCode);
     }
 
-    public static void main(){
+    public static void main(String[] args){
 
         Server server = new Server();
         server.start();

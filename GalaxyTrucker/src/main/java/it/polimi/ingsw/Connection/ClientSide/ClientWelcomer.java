@@ -24,7 +24,7 @@ public class ClientWelcomer {
 
         System.out.println("Welcome to galaxy trucker\n");
 
-        //there can be duplicated names!
+        //there can be duplicated names! (but not in the same game)
 
         System.out.print("Enter you're nickname: ");
 
@@ -36,7 +36,7 @@ public class ClientWelcomer {
         System.out.print("Enter the viewType (GUI/TUI): ");
 
         input = scanner.nextLine();
-        input.toUpperCase();
+        input = input.toUpperCase();
 
         while (!input.equals("GUI") && !input.equals("TUI")) {
 
@@ -52,7 +52,7 @@ public class ClientWelcomer {
         System.out.print("Enter the connection type (RMI/SOCKET): ");
 
         input = scanner.nextLine();
-        input.toUpperCase();
+        input = input.toUpperCase();
 
         while (!input.equals("RMI") && !input.equals("SOCKET")) {
 
@@ -69,17 +69,17 @@ public class ClientWelcomer {
         clientInfo.setServerIp(input);
         System.out.println("The ip adress of the server is " + input);
 
-        System.out.println("Do you want to resume an interrupted game ? (y/n)");
+        System.out.print("Do you want to resume an interrupted game ? (y/n)");
 
         input = scanner.nextLine();
+        input = input.toLowerCase();
 
         while(true){
 
-            input.toLowerCase();
 
-            if(input.equals('y')){
+            if(input.equals("y")){
 
-                System.out.println("Enter the game code of the interrupted game: ");
+                System.out.print("Enter the game code of the interrupted game: ");
 
                 try {
 
@@ -96,7 +96,7 @@ public class ClientWelcomer {
 
 
             }
-            else if(input.equals('n')){
+            else if(input.equals("n")){
 
                 break;
 
@@ -104,6 +104,7 @@ public class ClientWelcomer {
 
             System.out.println("The string you entered is invalid, please reenter it (y/n): ");
             input = scanner.nextLine();
+            input = input.toLowerCase();
         }
     }
 }
