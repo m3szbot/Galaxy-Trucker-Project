@@ -18,7 +18,7 @@ public class AssemblyProtocol {
     // cards
     private Deck blockedDeck;
     private Deck[] decksList;
-    // components
+    // components - synchronized lists! - concurrent access by multiple players
     private List<Component> coveredList;
     private List<Component> uncoveredList;
     // components currently in hand (viewMap)
@@ -41,10 +41,12 @@ public class AssemblyProtocol {
             // used cards must be removed from cardsList
             decksList[i] = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
         }
-        coveredList = new ArrayList<>();
+        // concurrently accessed lists
+        coveredList = Collections.synchronizedList(new ArrayList<>());
         coveredList.addAll(gameInformation.getComponentList());
         Collections.shuffle(coveredList);
-        uncoveredList = new ArrayList<>();
+        uncoveredList = Collections.synchronizedList(new ArrayList<>());
+        // player mapped structures
         inHandMap = new HashMap<>();
         bookedMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
