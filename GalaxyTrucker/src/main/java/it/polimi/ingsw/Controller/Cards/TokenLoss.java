@@ -3,7 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
 
 /**
  * Interface that define a default method which handles a player being

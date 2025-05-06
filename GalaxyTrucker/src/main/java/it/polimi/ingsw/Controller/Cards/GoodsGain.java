@@ -4,7 +4,7 @@ import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
 
 /**
  * Interface that define a method which handles a player receiving

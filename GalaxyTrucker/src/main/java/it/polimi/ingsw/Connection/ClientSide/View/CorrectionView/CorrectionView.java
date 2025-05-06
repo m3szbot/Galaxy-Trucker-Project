@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.CorrectionView;
+package it.polimi.ingsw.Connection.ClientSide.View.CorrectionView;
 
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;

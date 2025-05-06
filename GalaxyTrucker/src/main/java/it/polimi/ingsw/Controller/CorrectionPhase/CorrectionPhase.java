@@ -3,7 +3,7 @@ package it.polimi.ingsw.Controller.CorrectionPhase;
 import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.CorrectionView.CorrectionView;
+import it.polimi.ingsw.Connection.ClientSide.View.CorrectionView.CorrectionView;
 
 import java.util.ArrayList;
 import java.util.HashMap;

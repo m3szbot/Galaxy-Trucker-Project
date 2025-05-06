@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.SetUpView;
+package it.polimi.ingsw.Connection.ClientSide.View.SetUpView;
 
 /**
  * set up view class

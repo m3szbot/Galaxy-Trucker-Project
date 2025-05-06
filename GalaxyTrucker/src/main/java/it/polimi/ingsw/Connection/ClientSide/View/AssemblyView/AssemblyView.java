@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.AssemblyView;
+package it.polimi.ingsw.Connection.ClientSide.View.AssemblyView;
 
 import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyPhase;
 import it.polimi.ingsw.Model.Components.Component;

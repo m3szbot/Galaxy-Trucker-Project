@@ -4,7 +4,7 @@ import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
 
 import java.util.HashMap;
 import java.util.Map;

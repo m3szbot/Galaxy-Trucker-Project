@@ -22,6 +22,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *  lifecyle, i.e, making the client join a game. It returns 1, if the client
  *  join the game correctly, 0 if he is kicked, -1 if he encountered a connection
  *  issue.
+ *
+ * @author carlo
  */
 
 
@@ -124,7 +126,7 @@ public class ClientJoiner {
                 });
 
                 messageReceiver.start();
-                messageReceiver.start();
+                messageSender.start();
 
                 try {
 

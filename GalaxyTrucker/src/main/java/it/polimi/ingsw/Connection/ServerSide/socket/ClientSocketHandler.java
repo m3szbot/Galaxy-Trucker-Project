@@ -216,7 +216,7 @@ public class ClientSocketHandler extends Thread {
                 try {
                     dataSender.writeUTF(message);
                 } catch (IOException ex) {
-                    System.err.println("Error while sending data to the cliend");
+                    System.err.println("Error while sending data to the client");
                 }
 
 

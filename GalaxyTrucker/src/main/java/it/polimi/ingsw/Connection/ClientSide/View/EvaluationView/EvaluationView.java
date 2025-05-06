@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.EvaluationView;
+package it.polimi.ingsw.Connection.ClientSide.View.EvaluationView;
 
 
 public class EvaluationView {

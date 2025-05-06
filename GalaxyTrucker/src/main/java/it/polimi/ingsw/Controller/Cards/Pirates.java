@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
 
 /**
  * Class representing the card pirates.
