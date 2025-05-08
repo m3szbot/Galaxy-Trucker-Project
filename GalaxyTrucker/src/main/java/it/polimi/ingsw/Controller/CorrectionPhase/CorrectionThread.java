@@ -30,7 +30,8 @@ public class CorrectionThread implements Runnable {
             row = values[1];
             playerView.printComponentRemovalMessage(col, row);
             // no check for col, row value - if out of bounds, nothing happens
-            player.getShipBoard().removeComponent(col, row, true);
+            // trigger automatically removes disconnected components - set to false
+            player.getShipBoard().removeComponent(col, row, false);
             errors = player.getShipBoard().isErroneous();
         }
         // errors corrected
