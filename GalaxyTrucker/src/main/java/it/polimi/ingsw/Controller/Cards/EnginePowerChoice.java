@@ -25,7 +25,7 @@ public interface EnginePowerChoice {
 
         String message;
         int defaultEnginePower = player.getShipBoard().getShipBoardAttributes().getDrivingPower();
-        int doubleEnginesToActivate = 0;
+        int doubleEnginesToActivate;
 
         //Checking if the brown alien is present
         if (defaultEnginePower > 0 && (player.getShipBoard().getShipBoardAttributes().getAlienType() == 1 || player.getShipBoard().getShipBoardAttributes().getAlienType() == 3)) {
@@ -39,6 +39,9 @@ public interface EnginePowerChoice {
             message = "You're engine power is " + defaultEnginePower +
                     ", but you still have " + player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() + " double engine." +
                     " Would you like to use double engines to increase you're engine power ?";
+            /*
+            With the new clientMessenger tool, the client answers yes or no.
+             */
 
             if (flightView.askPlayerGenericQuestion(player, message)) {
                 //player decide to activate some double engines

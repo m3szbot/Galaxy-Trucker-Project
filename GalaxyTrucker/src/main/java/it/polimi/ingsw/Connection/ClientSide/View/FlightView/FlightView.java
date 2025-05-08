@@ -34,6 +34,10 @@ public class FlightView {
 
     }
 
+    public void sendMessageToPlayer(Player player, String message){
+        //TODO
+    }
+
     //Todo
 
     public boolean askPlayerGenericQuestion(Player player, String question) {

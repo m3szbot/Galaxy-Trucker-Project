@@ -195,7 +195,8 @@ public class ShipBoardAttributes {
     /**
      * Returns the type of alien crew member present on the ship.
      *
-     * @return 1 if a purple alien is present, 2 if a brown alien is present, 0 if none.
+     * @return 1 if a purple and brown alien is present, 2 if a purple alien is present, 3 if a brown alien
+     * is present, 0 if none.
      * @author Giacomo
      */
     public int getAlienType() {

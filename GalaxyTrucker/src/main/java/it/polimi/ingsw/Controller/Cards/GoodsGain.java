@@ -8,7 +8,7 @@ import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
 
 /**
  * Interface that define a method which handles a player receiving
- * a certain ammount of goods
+ * a certain amount of goods
  *
  * @author carlo
  */
@@ -24,7 +24,6 @@ public interface GoodsGain {
 
     default void giveGoods(Player player, int[] goods, FlightBoard flightBoard, FlightView flightView) {
 
-        int i, j;
         int[] coordinates;
         String message;
         Component component;
@@ -109,7 +108,7 @@ public interface GoodsGain {
                             errorFlag = false;
 
                         }
-                        //value entered are incorrect
+                        //value entered are incorrect, add notification to player
 
                     }
                 } else {
@@ -236,6 +235,9 @@ public interface GoodsGain {
 
                         }
 
+                        /*
+                        Value entered by the player are incorrect
+                         */
 
                     }
 
@@ -284,7 +286,7 @@ public interface GoodsGain {
 
                         while (errorFlag) {
 
-                            message = "Enter red goods to add to the selected storage component: ";
+                            message = "Enter the number of red goods to add to the selected storage component: ";
                             redGoodsToAdd = flightView.askPlayerValue(player, message);
 
                             if (redGoodsToAdd <= goods[0] && redGoodsToAdd <= ((Storage) component).getAvailableRedSlots()) {
@@ -300,9 +302,10 @@ public interface GoodsGain {
                                     player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -redGoodsToAdd);
 
                                 } catch (IllegalArgumentException e) {
-                                    //Error management will be developed later, for now this is enough
 
-                                    System.out.println(e.getMessage());
+                                    goods[0] += redGoodsToAdd;
+                                    flightView.sendMessageToPlayer(player, e.getMessage());
+                                    break;
 
                                 }
 
@@ -338,7 +341,7 @@ public interface GoodsGain {
 
         }
 
-        if (goods[1] + goods[2] + goods[3] > 0 && player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() > 0) {
+        if (goods[1] + goods[2] + goods[3] > 0 && player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() > 0) {
             //other goods can be added
             message = "Do you want to add to your ship goods that are not red ?";
             placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
@@ -392,6 +395,7 @@ public interface GoodsGain {
                                 goods[2] -= goodsToAdd[2];
                                 goods[3] -= goodsToAdd[3];
                                 try {
+
                                     flightBoard.removeGoods(goodsToAdd);
                                     player.getShipBoard().getShipBoardAttributes().updateGoods(goodsToAdd);
                                     ((Storage) component).addGoods(goodsToAdd);
@@ -406,7 +410,13 @@ public interface GoodsGain {
 
                                     }
                                 } catch (IllegalArgumentException e) {
-                                    System.out.println(e.getMessage());
+
+                                    goods[1] += goodsToAdd[1];
+                                    goods[2] += goodsToAdd[2];
+                                    goods[3] += goodsToAdd[3];
+
+                                    flightView.sendMessageToPlayer(player, message);
+                                    break;
                                 }
                             }
 

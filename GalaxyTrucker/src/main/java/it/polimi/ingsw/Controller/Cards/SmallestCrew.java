@@ -16,7 +16,7 @@ public interface SmallestCrew {
 
     /**
      *
-     * @param flightBoard flightboard of the current game
+     * @param flightBoard flight board of the current game
      * @return the player with the smallest number of inhabitants on the ship
      *
      * @author Carlo
