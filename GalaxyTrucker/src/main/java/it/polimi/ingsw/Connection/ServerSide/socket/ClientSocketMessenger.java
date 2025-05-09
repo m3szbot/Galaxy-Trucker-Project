@@ -7,11 +7,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientSocketMessenger {
 
-    private static HashMap<Player, DataOutputStream> playerDataOutputStreamMap = new HashMap<>();
-    private static HashMap<Player, DataInputStream> playerDataInputStreamMap = new HashMap<>();
+    private static Map<Player, DataOutputStream> playerDataOutputStreamMap = new ConcurrentHashMap<>();
+    private static Map<Player, DataInputStream> playerDataInputStreamMap = new ConcurrentHashMap<>();
 
     public void addPlayerToSocket(Player player, Socket socket){
 
@@ -19,7 +21,7 @@ public class ClientSocketMessenger {
             playerDataOutputStreamMap.put(player, new DataOutputStream(socket.getOutputStream()));
             playerDataInputStreamMap.put(player, new DataInputStream(socket.getInputStream()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //prob qui va modificato con un altro tipo di errore che permetta di gestire la mancata ricezione
         }
 
 

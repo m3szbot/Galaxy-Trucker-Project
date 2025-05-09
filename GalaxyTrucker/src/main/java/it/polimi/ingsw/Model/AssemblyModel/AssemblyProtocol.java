@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * AssemblyProtocol handles the logic behind deck selection, component
@@ -25,6 +26,9 @@ public class AssemblyProtocol {
     private Map<Player, Component> inHandMap;
     // booked components
     private Map<Player, List<Component>> bookedMap;
+    public Object lockUncoveredList = new Object();
+    public Object lockCoveredList = new Object();
+    public Object lockDecksList = new Object();
 
 
     /**
@@ -47,8 +51,8 @@ public class AssemblyProtocol {
         Collections.shuffle(coveredList);
         uncoveredList = Collections.synchronizedList(new ArrayList<>());
         // player mapped structures
-        inHandMap = new HashMap<>();
-        bookedMap = new HashMap<>();
+        inHandMap = new ConcurrentHashMap<>();
+        bookedMap = new ConcurrentHashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
             bookedMap.put(player, new ArrayList<>());
         }

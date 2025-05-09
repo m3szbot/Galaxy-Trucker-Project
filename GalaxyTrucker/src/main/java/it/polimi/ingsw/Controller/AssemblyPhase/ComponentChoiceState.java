@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -14,19 +15,16 @@ import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
 public class ComponentChoiceState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
-    private AssemblyView view;
     private String message;
 
     /**
      * Constructs a ComponentChoice state.
      *
-     * @param view     the game view for showing messages
      * @param protocol the game logic handler
      * @param player   the current player
      */
-    public ComponentChoiceState(AssemblyView view, AssemblyProtocol protocol, Player player) {
+    public ComponentChoiceState(AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
-        this.view = view;
         this.player = player;
     }
 
@@ -39,16 +37,14 @@ public class ComponentChoiceState implements GameState {
      * Displays the message prompting the player to choose a component.
      *
      * @param assemblyPhase the current game instance
-     * @param view          the view used to show the message
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase, AssemblyView view) {
-        /*
-        message = "Enter the number of the component you would like:";
-        view.sendMessageToPlayer(message, player);
-        view.printUncoveredComponentsMessage(assemblyPhase);
+    public void enter(AssemblyThread assemblyPhase) {
 
-         */
+        message = "Enter the number of the component you would like:";
+        ClientSocketMessenger.sendMessageToPlayer(player, message);
+
+
     }
 
     /**
@@ -75,23 +71,25 @@ public class ComponentChoiceState implements GameState {
         }
         switch (caseManagement) {
             case 1:
-                /*
-                assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
+                synchronized (assemblyProtocol.lockUncoveredList) {
+                    assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
+                }
                 component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
                 message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
-                view.sendComponentMessageToPlayer(message, player, component);
-                assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
+                ClientSocketMessenger.sendMessageToPlayer(player, message);
+                synchronized (assemblyProtocol.lockUncoveredList) {
+                    assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
+                }
                 component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
                 message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
-                view.sendComponentMessageToPlayer(message, player, component);
+                ClientSocketMessenger.sendMessageToPlayer(player, message);
                 break;
             case 2:
-                view.printErrorComponentChoiceMessage();
+                message = "Error in component choice";
+                ClientSocketMessenger.sendMessageToPlayer(player, message);
                 break;
-
-                 */
         }
-        assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
+        assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
     }
 
 }

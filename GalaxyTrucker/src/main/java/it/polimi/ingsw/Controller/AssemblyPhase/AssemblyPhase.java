@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 
+import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
@@ -20,7 +21,6 @@ public class AssemblyPhase {
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private GameInformation gameInformation;
     private AssemblyProtocol assemblyProtocol;
-    private AssemblyView assemblyView;
     private String message;
 
 
@@ -29,11 +29,6 @@ public class AssemblyPhase {
      */
     public AssemblyPhase() {
         assemblyProtocol = new AssemblyProtocol(gameInformation);
-        assemblyView = new AssemblyView();
-    }
-
-    public AssemblyView getAssemblyView() {
-        return assemblyView;
     }
 
     /**
@@ -77,12 +72,12 @@ public class AssemblyPhase {
         for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;
             new Thread(() -> {
-                AssemblyThread assemblyThread = new AssemblyThread(gameInformation, gameInformation.getPlayerList().get(threadInt), assemblyProtocol, assemblyView);
+                AssemblyThread assemblyThread = new AssemblyThread(gameInformation, gameInformation.getPlayerList().get(threadInt), assemblyProtocol);
             });
         }
-/*
+
         message = "Assembly phase has ended";
-        assemblyView.sendMessageToAll(message);*/
+        ClientSocketMessenger.sendMessageToAll(message);
     }
 /*
       //main fatto a caso da gecky per fare test

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
@@ -13,18 +14,15 @@ import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
 public class ShowDeckState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
-    private AssemblyView view;
 
     /**
      * Constructs a ShowDeckState with the necessary protocol, view, and player.
      *
-     * @param view     the game view for user interaction
      * @param protocol the game logic handler
      * @param player   the current player
      */
-    public ShowDeckState(AssemblyView view, AssemblyProtocol protocol, Player player) {
+    public ShowDeckState (AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
-        this.view = view;
         this.player = player;
     }
 
@@ -32,11 +30,11 @@ public class ShowDeckState implements GameState {
      * Displays the message asking the player to choose a deck.
      *
      * @param assemblyPhase the current game instance
-     * @param assemblyView  the view used to print the prompt
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase, AssemblyView assemblyView) {
-        assemblyView.printChooseDeckMessage();
+    public void enter(AssemblyThread assemblyPhase) {
+        String message = "Choose a deck from 1 to 3 writing the number:";
+        ClientSocketMessenger.sendMessageToPlayer(player, message);
     }
 
     /**
@@ -50,10 +48,13 @@ public class ShowDeckState implements GameState {
     public void handleInput(String input, AssemblyThread assemblyPhase) {
         int index = Integer.parseInt(input);
         if (index >= 0 && index < 4) {
-            assemblyPhase.getAssemblyProtocol().showDeck(index);
+            synchronized (assemblyProtocol.lockDecksList) {
+                assemblyPhase.getAssemblyProtocol().showDeck(index);
+            }
         } else {
-            view.printNotValidDeckNumberMessage();
+            String message = "Invalid deck number";
+            ClientSocketMessenger.sendMessageToPlayer(player, message);
         }
-        assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
+        assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
     }
 }
