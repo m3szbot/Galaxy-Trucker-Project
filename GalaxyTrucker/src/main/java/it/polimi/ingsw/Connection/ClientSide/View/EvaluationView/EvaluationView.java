@@ -1,12 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide.View.EvaluationView;
 
+import it.polimi.ingsw.Connection.ClientSide.View.GeneralView;
 
-public class EvaluationView {
-
-    /*
-    show credits of all players
-     */
-    public void printLeaderboardMessage(String message) {
-        System.out.println(message);
-    }
+public class EvaluationView extends GeneralView {
 }
