@@ -15,7 +15,7 @@ import java.util.List;
 public class Planets extends Card implements GoodsGain, Movable {
 
     public int daysLost;
-    private boolean[] playerOccupation, planetOccupation;
+    private boolean[] planetOccupation;
 
     private int[] planet1;
     private int[] planet2;
@@ -38,13 +38,95 @@ public class Planets extends Card implements GoodsGain, Movable {
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
         String message;
-        int planetChosen, numberOfPlayers = flightBoard.getPlayerOrderList().size(), i, numberOfPlanets;
-        int freePlanet;
+        int planetChosen, numberOfPlanets, freePlanet;
 
         List<Player> players = flightBoard.getPlayerOrderList();
 
-
         //At the beginning all the planets are still to be occupied
+
+
+        numberOfPlanets = countPlanetsToLandOn();
+        freePlanet = numberOfPlanets;
+
+        planetOccupation = new boolean[numberOfPlanets];
+
+        for (Player player: players) {
+
+            message = "Would you like to land on a planet ?";
+
+            if (flightView.askPlayerGenericQuestion(player, message)) {
+
+                message = "Enter the planet you want to land on(1-" + numberOfPlanets + "): ";
+
+                while (true) {
+
+                    planetChosen = flightView.askPlayerValue(player, message);
+
+                    if (planetChosen > 0 && planetChosen <= numberOfPlanets) {
+
+                        if (!planetOccupation[planetChosen - 1]) {
+
+                            message = "Player " + player.getNickName() +
+                                    "has landed on planet " + planetChosen + " !";
+                            flightView.sendMessageToAll(message);
+                            freePlanet--;
+
+                            planetOccupation[planetChosen - 1] = true;
+
+                            if (planetChosen == 1) {
+
+                                giveGoods(player, planet1, flightBoard, flightView);
+
+                            } else if (planetChosen == 2) {
+
+                                giveGoods(player, planet2, flightBoard, flightView);
+
+                            } else if (planetChosen == 3) {
+
+                                giveGoods(player, planet3, flightBoard, flightView);
+
+                            } else {
+
+                                giveGoods(player, planet4, flightBoard, flightView);
+
+                            }
+
+                            break;
+
+                        }
+                        else{
+                            message = "The planet you selected has already been occupied";
+                            flightView.sendMessageToPlayer(player, message);
+                        }
+                    }
+                    else{
+
+                        message = "The planet you chose is invalid";
+                        flightView.sendMessageToPlayer(player, message);
+
+                    }
+
+                }
+
+                if (freePlanet == 0) {
+                    message = "All planets were occupied!";
+                    flightView.sendMessageToAll(message);
+                    break;
+                }
+
+            } else {
+
+                message = "Player " + player.getNickName() +
+                        " decided to not land on any planet!";
+                flightView.sendMessageToAll(message);
+            }
+        }
+
+    }
+
+    private int countPlanetsToLandOn(){
+
+        int i, numberOfPlanets;
 
         for (i = 0, numberOfPlanets = 0; i < 5; i++) {
 
@@ -90,73 +172,6 @@ public class Planets extends Card implements GoodsGain, Movable {
             }
         }
 
-        freePlanet = numberOfPlanets;
-
-        planetOccupation = new boolean[numberOfPlanets];
-
-        for (i = 0; i < numberOfPlayers; i++) {
-
-            message = "Would you like to land on a planet ?";
-
-            if (flightView.askPlayerGenericQuestion(players.get(i), message)) {
-
-                message = "Enter the planet you want to land on: ";
-
-                while (true) {
-
-                    planetChosen = flightView.askPlayerValue(players.get(i), message);
-
-                    if (planetChosen > 0 && planetChosen <= numberOfPlanets) {
-
-                        if (!planetOccupation[planetChosen - 1]) {
-
-                            message = "Player " + players.get(i).getNickName() +
-                                    "has landed on planet " + planetChosen + " !";
-                            flightView.sendMessageToAll(message);
-                            freePlanet--;
-
-                            planetOccupation[planetChosen - 1] = true;
-
-                            if (planetChosen == 1) {
-
-                                giveGoods(players.get(i), planet1, flightBoard, flightView);
-
-                            } else if (planetChosen == 2) {
-
-                                giveGoods(players.get(i), planet2, flightBoard, flightView);
-
-                            } else if (planetChosen == 3) {
-
-                                giveGoods(players.get(i), planet3, flightBoard, flightView);
-
-                            } else {
-
-                                giveGoods(players.get(i), planet4, flightBoard, flightView);
-
-                            }
-
-                            break;
-
-                        }
-                    }
-
-                    message = "The planet you entered is invalid, please enter a valid one: ";
-
-                }
-
-                if (freePlanet == 0) {
-                    message = "All planets were occupied!";
-                    flightView.sendMessageToAll(message);
-                    break;
-                }
-
-            } else {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() +
-                        " decided to not land on any planet!";
-                flightView.sendMessageToAll(message);
-            }
-        }
-
+        return numberOfPlanets;
     }
 }

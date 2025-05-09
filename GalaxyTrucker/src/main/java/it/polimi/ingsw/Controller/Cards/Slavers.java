@@ -9,7 +9,7 @@ import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
  * @author carlo
  */
 
-public class Slavers extends Card implements CreditsGain, Movable, TokenLoss, FirePowerChoice {
+public class Slavers extends AttackStatesSetting implements CreditsGain, Movable, TokenLoss, FirePowerChoice {
 
     private int daysLost;
     private int gainedCredit;
@@ -35,39 +35,11 @@ public class Slavers extends Card implements CreditsGain, Movable, TokenLoss, Fi
 
 
         int numberOfPlayers = flightBoard.getPlayerOrderList().size(), i;
-        float chosenFirePower;
         String message;
-        AttackStates[] results = new AttackStates[numberOfPlayers];
+        AttackStates[] results;
 
-        for (i = 0; i < numberOfPlayers; i++) {
+        results = setAttackStates(flightView, flightBoard, requirementNumber);
 
-            chosenFirePower = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
-
-            if (chosenFirePower > requirementNumber) {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has defeated the" +
-                        "enemies!";
-                flightView.sendMessageToAll(message);
-                results[i] = AttackStates.EnemyDefeated;
-                break;
-
-            } else if (chosenFirePower == requirementNumber) {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " equalized the" +
-                        "enemies!";
-                results[i] = AttackStates.Equalized;
-                flightView.sendMessageToAll(message);
-
-            } else {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has been" +
-                        " defeated by the enemies!";
-                results[i] = AttackStates.PlayerDefeated;
-                flightView.sendMessageToAll(message);
-
-            }
-
-        }
 
         for (i = 0; i < numberOfPlayers; i++) {
 

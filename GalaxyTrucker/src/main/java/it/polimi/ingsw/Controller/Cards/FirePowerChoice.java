@@ -21,7 +21,7 @@ public interface FirePowerChoice {
         int forwardDoubleCannons = player.getShipBoard().getShipBoardAttributes().getNumberForwardDoubleCannons();
         int notForwardDoubleCannons = player.getShipBoard().getShipBoardAttributes().getNumberNotForwardDoubleCannons();
         float defaultFirePower = player.getShipBoard().getShipBoardAttributes().getFirePower();
-        int doubleCannonsToActivate = 0;
+        int doubleCannonsToActivate;
         float addedFirePower = 0;
 
         //checking if purple alien is present

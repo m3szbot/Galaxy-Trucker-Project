@@ -13,14 +13,12 @@ public interface CreditsGain {
 
     /**
      *
-     * @param player indicates the to player to which you wanna give credits
+     * @param player indicates the player to which you want give credits
      * @param creditNumber number of credits to give
      *
      * @author Carlo
      */
 
-    //note that the method doesn't have to be tested as it calls another method.
-    //updateCredits must be tested.
 
     default void giveCredits(Player player, int creditNumber) {
 
