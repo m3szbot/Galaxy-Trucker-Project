@@ -8,22 +8,21 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.util.*;
 
 /**
- * AssemblyProtocol handles the logic behind deck selection, component
- * booking and drawing, and other player interactions.
+ * AssemblyProtocol handles the logic behind deck selection, hourglass,
+ * component booking and drawing, and other player interactions.
  *
- * @author Giacomo
+ * @author Giacomo, Boti
  */
 public class AssemblyProtocol {
-    private HourGlass hourGlass;
-    // cards
-    private Deck blockedDeck;
-    private Deck[] decksList;
-    // components - synchronized lists! - concurrent access by multiple players
+    private final HourGlass hourGlass;
+    // decks of adventure cards
+    private final Deck blockedDeck;
+    private final Deck[] decksList;
+    // component lists
     private List<Component> coveredList;
     private List<Component> uncoveredList;
-    // components currently in hand (viewMap)
+    // player maps
     private Map<Player, Component> inHandMap;
-    // booked components
     private Map<Player, List<Component>> bookedMap;
 
 
@@ -35,18 +34,18 @@ public class AssemblyProtocol {
      */
     public AssemblyProtocol(GameInformation gameInformation) {
         hourGlass = new HourGlass();
-        blockedDeck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+        // decks
+        blockedDeck = new Deck(gameInformation);
         decksList = new Deck[3];
         for (int i = 0; i < 3; i++) {
-            // used cards must be removed from cardsList
-            decksList[i] = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+            decksList[i] = new Deck(gameInformation);
         }
-        // concurrently accessed lists
+        // component lists
         coveredList = Collections.synchronizedList(new ArrayList<>());
         coveredList.addAll(gameInformation.getComponentList());
         Collections.shuffle(coveredList);
         uncoveredList = Collections.synchronizedList(new ArrayList<>());
-        // player mapped structures
+        // player maps
         inHandMap = new HashMap<>();
         bookedMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {

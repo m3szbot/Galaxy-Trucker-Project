@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.AssemblyModel;
 
 
 import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.util.ArrayList;
@@ -13,43 +14,46 @@ import java.util.List;
  * The deck is initialized based on the game type.
  * It selects specific cards of level 2 and 1 from the provided list.
  *
- * @author Giacomo
+ * @author Giacomo, Boti
  */
 public class Deck {
-    private int numCards; // Number of cards currently in the deck
     private boolean inUse; // Indicates if the deck is in use
     private List<Card> cards; // List storing the deck's cards
 
     /**
-     * Constructs a deck by selecting specific cards based on the game type.
-     * It picks two level 2 cards and one level 1 card for a normal game.
-     *
-     * @param allCards The complete list of available cards.
-     * @param gameType The type of game being played.
+     * Construct a deck based on gameType
+     * Normal Game: 4 decks of: 2 level 2 + 1 level 1 card (12 tot)
+     * Test Game: 4 decks of: 2 level 1 cardsList (8 tot)
      */
-    public Deck(List<Card> allCards, GameType gameType) {
-        numCards = 0;
-        inUse = false;
+    public Deck(GameInformation gameInformation) {
         cards = new ArrayList<>();
-        if (gameType.equals(GameType.NormalGame)) {
-            addCardToDeck(allCards, 2);
-            addCardToDeck(allCards, 2);
-            addCardToDeck(allCards, 1);
-            Collections.shuffle(cards);
+        // add cards to the deck
+        if (gameInformation.getGameType().equals(GameType.NormalGame)) {
+            addCardToDeck(gameInformation, 2);
+            addCardToDeck(gameInformation, 2);
+            addCardToDeck(gameInformation, 1);
         }
         // TestGame
         else {
+            addCardToDeck(gameInformation, 1);
+            addCardToDeck(gameInformation, 1);
         }
+        Collections.shuffle(cards);
     }
 
-    private void addCardToDeck(List<Card> allCards, int level) {
+    /**
+     * Add card of selected level to the current deck and remove it from gameInformation cardsList
+     *
+     * @param level level of the card
+     */
+    private void addCardToDeck(GameInformation gameInformation, int level) {
         int i = 0;
-        Collections.shuffle(allCards);
+        Collections.shuffle(gameInformation.getCardsList());
+        // find card of required level
         do {
             i++;
-        } while (allCards.get(i).getCardLevel() != level);
-        this.cards.add(allCards.remove(i));
-        this.numCards++;
+        } while (gameInformation.getCardsList().get(i).getCardLevel() != level);
+        this.cards.add(gameInformation.getCardsList().remove(i));
     }
 
 
@@ -59,7 +63,7 @@ public class Deck {
      * @return Number of cards in the deck.
      */
     public int getNumCards() {
-        return numCards;
+        return cards.size();
     }
 
     /**
