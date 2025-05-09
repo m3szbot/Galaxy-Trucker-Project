@@ -60,33 +60,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         }
 
-        //calculating the index with the lowest firePower.
-
-        int minIndex = 0;
-
-        for (int i = 0; i < numberOfPlayers; i++) {
-
-            if (firePowers[i] < firePowers[minIndex]) {
-                minIndex = i;
-            }
-
-        }
-
-        weakestFirePowerPlayer = flightBoard.getPlayerOrderList().get(minIndex);
-
-        //calculating the index with the lowest enginePower.
-
-        minIndex = 0;
-
-        for (int i = 0; i < numberOfPlayers; i++) {
-
-            if (enginePowers[i] < enginePowers[minIndex]) {
-                minIndex = i;
-            }
-
-        }
-
-        weakestEnginePowerPlayer = flightBoard.getPlayerOrderList().get(minIndex);
+        weakestFirePowerPlayer = findWeakestFirePowerPlayer(firePowers, numberOfPlayers, flightBoard);
+        weakestEnginePowerPlayer = findWeakestEnginePowerPlayer(enginePowers, numberOfPlayers, flightBoard);
 
         //giving the various penalties to players
 
@@ -107,6 +82,38 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             blows[i].rollDice();
         }
         hit(weakestFirePowerPlayer, blows, blowType, flightBoard, flightView);
+
+    }
+
+    private Player findWeakestFirePowerPlayer(float[] firePowers, int numberOfPlayers, FlightBoard flightBoard){
+
+        int minIndex = 0;
+
+        for (int i = 0; i < numberOfPlayers; i++) {
+
+            if (firePowers[i] < firePowers[minIndex]) {
+                minIndex = i;
+            }
+
+        }
+
+        return flightBoard.getPlayerOrderList().get(minIndex);
+
+    }
+
+    private Player findWeakestEnginePowerPlayer(int[] enginePowers, int numberOfPlayers, FlightBoard flightBoard){
+
+        int minIndex = 0;
+
+        for (int i = 0; i < numberOfPlayers; i++) {
+
+            if (enginePowers[i] < enginePowers[minIndex]) {
+                minIndex = i;
+            }
+
+        }
+
+        return flightBoard.getPlayerOrderList().get(minIndex);
 
     }
 

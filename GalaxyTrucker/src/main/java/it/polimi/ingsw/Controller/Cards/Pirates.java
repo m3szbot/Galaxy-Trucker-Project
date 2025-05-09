@@ -9,7 +9,7 @@ import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
  * @author carlo
  */
 
-public class Pirates extends Card implements SufferBlows, CreditsGain, Movable, FirePowerChoice {
+public class Pirates extends AttackStatesSetting implements SufferBlows, CreditsGain, Movable, FirePowerChoice {
 
     private int daysLost;
     private int gainedCredit;
@@ -34,39 +34,10 @@ public class Pirates extends Card implements SufferBlows, CreditsGain, Movable, 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
 
         int numberOfPlayers = flightBoard.getPlayerOrderList().size(), i;
-        float chosenFirePower;
         String message;
-        AttackStates[] results = new AttackStates[numberOfPlayers];
+        AttackStates[] results;
 
-        for (i = 0; i < numberOfPlayers; i++) {
-
-            chosenFirePower = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
-
-            if (chosenFirePower > requirementNumber) {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has defeated the" +
-                        "enemies!";
-                flightView.sendMessageToAll(message);
-                results[i] = AttackStates.EnemyDefeated;
-                break;
-
-            } else if (chosenFirePower == requirementNumber) {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " equalized the" +
-                        "enemies!";
-                results[i] = AttackStates.Equalized;
-                flightView.sendMessageToAll(message);
-
-            } else {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has been" +
-                        " defeated by the enemies!";
-                results[i] = AttackStates.PlayerDefeated;
-                flightView.sendMessageToAll(message);
-
-            }
-
-        }
+        results = setAttackStates(flightView, flightBoard, requirementNumber);
 
         //rolling all dices
         for (i = 0; i < blows.length; i++) {

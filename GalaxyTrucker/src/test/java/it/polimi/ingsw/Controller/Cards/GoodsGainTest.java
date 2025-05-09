@@ -78,8 +78,8 @@ class GoodsGainTest {
         player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 2, 0, 0});
 
-        String inputString = "true\n3 3\ntrue\n4 4\ntrue\n5 5\ntrue\n3\nfalse\nfalse\nfalse\n" +
-                "true\n5 5\nfalse\ntrue\n2\nfalse\nfalse\nfalse\nfalse";
+        String inputString = "true\n3 3\ntrue\n4 4\ntrue\n5 5\n3\n0\n0\n0\n" +
+                "true\n5 5\n0\n2\n0\n0\nfalse\nfalse";
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
@@ -123,8 +123,8 @@ class GoodsGainTest {
          */
 
         String inputString = "false\ntrue\n3 3\n5 5\ntrue\n2 2\n5 5\ntrue\n5 5\n4 4\n" +
-                "true\n1\nfalse\nfalse\nfalse\nfalse\ntrue\n4\ntrue\n5\ntrue\n1\n" +
-                "false\ntrue\n3\ntrue\n1\nfalse\nfalse\n";
+                "1\n0\n0\n0\n0\n4\n5\n1\n" +
+                "0\n3\n1\n0\nfalse\n";
 
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
@@ -202,7 +202,7 @@ class GoodsGainTest {
         player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{5, 0, 0, 0});
 
         String inputString = "false\nfalse\ntrue\n3 3\ntrue\n2 2\ntrue\n4 4\n3\n0\n0\n" +
-                "true\n5 5\n2\n0\nfalse\n";
+                "true\n5 5\n0\n2\n0\nfalse\n";
 
         /*
         I have added 3 yellow goods to a blue storage and 2 green goods to a red storage, therefore

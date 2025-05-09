@@ -9,7 +9,7 @@ import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
  * @author carlo
  */
 
-public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, FirePowerChoice {
+public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain, TokenLoss, FirePowerChoice {
 
     private int daysLost;
     private ElementType lossType;
@@ -33,40 +33,12 @@ public class Smugglers extends Card implements Movable, GoodsGain, TokenLoss, Fi
     @Override
 
     public void resolve(FlightBoard flightBoard, FlightView flightView) {
+
         int numberOfPlayers = flightBoard.getPlayerOrderList().size(), i;
-        float chosenFirePower;
         String message;
-        AttackStates[] results = new AttackStates[numberOfPlayers];
+        AttackStates[] results;
 
-        for (i = 0; i < numberOfPlayers; i++) {
-
-            chosenFirePower = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
-
-            if (chosenFirePower > requirementNumber) {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has defeated the" +
-                        "enemies!";
-                flightView.sendMessageToAll(message);
-                results[i] = AttackStates.EnemyDefeated;
-                break;
-
-            } else if (chosenFirePower == requirementNumber) {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " equalized the" +
-                        "enemies!";
-                results[i] = AttackStates.Equalized;
-                flightView.sendMessageToAll(message);
-
-            } else {
-
-                message = "Player " + flightBoard.getPlayerOrderList().get(i).getNickName() + " has been" +
-                        " defeated by the enemies!";
-                results[i] = AttackStates.PlayerDefeated;
-                flightView.sendMessageToAll(message);
-
-            }
-
-        }
+        results = setAttackStates(flightView, flightBoard, requirementNumber);
 
         for (i = 0; i < numberOfPlayers; i++) {
 

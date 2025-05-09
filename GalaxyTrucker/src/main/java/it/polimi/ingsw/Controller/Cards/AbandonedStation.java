@@ -33,7 +33,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
         for (Player player : flightBoard.getPlayerOrderList()) {
 
-            if (isCrewSatisfying(player, requirementNumber, flightView)) {
+            if (isCrewSatisfying(player, requirementNumber)) {
                 //player has the possibility to solve the card
 
                 message = "Do you want to solve the card ?";
@@ -63,9 +63,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
      * @author Carlo
      */
 
-    private boolean isCrewSatisfying(Player player, int quantity, FlightView flightView) {
-        int addedPower = 0;
-        String message;
+    private boolean isCrewSatisfying(Player player, int quantity) {
 
         if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= quantity) {
             return true;
