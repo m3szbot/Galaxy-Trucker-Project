@@ -6,7 +6,7 @@ import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that define a default method which handles a player
@@ -51,16 +51,14 @@ public interface SufferBlows {
                         //player can defend itself
                         hitFlag = smallCannonBlowHit(player, flightBoard, flightView, componentCoord[0], componentCoord[1], blow.getDirection());
                     }
-                }
-                else {
+                } else {
 
                     if (blow.isBig()) { // player can defend itself only with cannon
 
 
                         hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightView, flightBoard);
 
-                    }
-                    else { //blow is small
+                    } else { //blow is small
 
                         hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightView, flightBoard);
 
@@ -74,7 +72,7 @@ public interface SufferBlows {
         }
     }
 
-    private int[] findHitComponent(Player player, Blow blow, int[] coords){
+    private int[] findHitComponent(Player player, Blow blow, int[] coords) {
 
         int rows = player.getShipBoard().getMatrixRows();
         int cols = player.getShipBoard().getMatrixCols();
@@ -137,26 +135,22 @@ public interface SufferBlows {
 
     }
 
-    private String directionSolver(int direction){
+    private String directionSolver(int direction) {
 
-        if(direction == 0){
+        if (direction == 0) {
             return "front";
-        }
-        else if(direction == 1){
+        } else if (direction == 1) {
             return "right";
-        }
-        else if(direction == 2){
+        } else if (direction == 2) {
             return "back";
-        }
-        else if(direction == 3){
+        } else if (direction == 3) {
             return "left";
-        }
-        else{
+        } else {
             return null;
         }
     }
 
-    private int[] hasCannon(int direction, int xCoord, int yCoord, Player player){
+    private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
 
         int[] cannonCoords = {-1, -1};
         int rows = player.getShipBoard().getMatrixRows();
@@ -260,12 +254,12 @@ public interface SufferBlows {
         return false;
     }
 
-    private boolean bigCannonBlowHit(Player player, FlightBoard flightBoard, int xCoord, int yCoord){
+    private boolean bigCannonBlowHit(Player player, FlightBoard flightBoard, int xCoord, int yCoord) {
 
         return removeComponent(player, xCoord, yCoord, flightBoard);
     }
 
-    private boolean smallCannonBlowHit(Player player, FlightBoard flightBoard, FlightView flightView, int xCoord, int yCoord, int direction){
+    private boolean smallCannonBlowHit(Player player, FlightBoard flightBoard, FlightView flightView, int xCoord, int yCoord, int direction) {
 
         String message;
 
@@ -295,7 +289,7 @@ public interface SufferBlows {
         }
     }
 
-    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightView flightView, FlightBoard flightBoard){
+    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightView flightView, FlightBoard flightBoard) {
 
         String message;
         int[] cannonCoords = hasCannon(direction, xCoord, yCoord, player);
@@ -314,7 +308,7 @@ public interface SufferBlows {
 
                     if (flightView.askPlayerGenericQuestion(player, message)) { //player decide to defend itself
 
-                       return useBattery(player, flightView);
+                        return useBattery(player, flightView);
 
                     } else { //player decide to not defend itself
 
@@ -338,7 +332,7 @@ public interface SufferBlows {
 
     }
 
-    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightView flightView, FlightBoard flightBoard){
+    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightView flightView, FlightBoard flightBoard) {
 
         String message;
         //condition is true if the side of the component hit is not smooth
@@ -361,7 +355,7 @@ public interface SufferBlows {
 
                 if (flightView.askPlayerGenericQuestion(player, message)) { //player decide to defend itself
 
-                   return useBattery(player, flightView);
+                    return useBattery(player, flightView);
 
                 } else {
 
@@ -395,7 +389,7 @@ public interface SufferBlows {
         return true;
     }
 
-    private void notifyAll(Player player, FlightView flightView, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType){
+    private void notifyAll(Player player, FlightView flightView, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType) {
 
         String message;
 
@@ -421,7 +415,7 @@ public interface SufferBlows {
         }
     }
 
-    private boolean useBattery(Player player, FlightView flightView){
+    private boolean useBattery(Player player, FlightView flightView) {
 
         String message;
         int[] coordinates;

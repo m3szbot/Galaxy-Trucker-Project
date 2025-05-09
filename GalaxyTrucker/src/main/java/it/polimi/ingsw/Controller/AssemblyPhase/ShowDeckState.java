@@ -2,7 +2,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
+import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 /**
  * ShowDeckState prompts the player to select a deck to reveal.

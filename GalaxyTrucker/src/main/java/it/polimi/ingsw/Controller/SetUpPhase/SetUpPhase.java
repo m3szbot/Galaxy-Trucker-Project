@@ -6,13 +6,14 @@ package it.polimi.ingsw.Controller.SetUpPhase;
  * @author Ludo
  */
 
+import it.polimi.ingsw.View.SetUpView.SetUpView;
+import it.polimi.ingsw.View.SetUpView.SetUpViewTUI;
 import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.SetUpView.SetUpView;
 
 import java.io.IOException;
 
@@ -28,7 +29,7 @@ public class SetUpPhase implements Startable {
     public void start(GameInformation gameInformation) throws IOException {
         //Per lasciare questo thread per ciascun giocatore, ad ogni connessione di un giocatore
         //dobbiamo chiamare SetUpPhase.start(...);
-        SetUpView setUpView = new SetUpView();
+        SetUpView setUpView = new SetUpViewTUI();
         Thread thread = new Thread(() -> {
             String message;
             message = "\"Insert your nickname:\"";

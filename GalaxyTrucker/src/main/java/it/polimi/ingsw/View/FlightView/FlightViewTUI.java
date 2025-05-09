@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide.View.FlightView;
+package it.polimi.ingsw.View.FlightView;
 
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
