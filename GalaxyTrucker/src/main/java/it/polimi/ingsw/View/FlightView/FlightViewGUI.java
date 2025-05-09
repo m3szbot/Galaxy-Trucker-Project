@@ -1,4 +1,5 @@
 package it.polimi.ingsw.View.FlightView;
 
-public class FlightViewGUI extends FlightView {
+// TODO: implement
+public abstract class FlightViewGUI extends FlightView {
 }

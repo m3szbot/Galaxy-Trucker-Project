@@ -34,11 +34,7 @@ public class SetUpPhase implements Startable {
             String message;
             message = "\"Insert your nickname:\"";
             String nickName = null;
-            try {
-                nickName = setUpView.askNickName(message);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            nickName = setUpView.askNickName(message);
             message = "\"What type of view do you want to play with? (CLI, GUI)\"";
             ViewType viewType = setUpView.askViewType(message);
             if (gameInformation.getPlayerList().isEmpty()) {

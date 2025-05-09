@@ -7,6 +7,7 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -95,7 +96,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         operator.inflictLoss(player, ElementType.CrewMember, 3, flightBoard, flightView);
 
@@ -139,7 +140,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         operator.inflictLoss(player, ElementType.Goods, 6, flightBoard, flightView);
 
@@ -159,7 +160,7 @@ class TokenLossTest {
         in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         operator.inflictLoss(player, ElementType.Goods, 4, flightBoard, flightView);
         /*
@@ -208,7 +209,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         operator.inflictLoss(player, ElementType.Goods, 13, flightBoard, flightView);
 
@@ -235,7 +236,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         operator.inflictLoss(player, ElementType.Goods, 10, flightBoard, flightView);
 

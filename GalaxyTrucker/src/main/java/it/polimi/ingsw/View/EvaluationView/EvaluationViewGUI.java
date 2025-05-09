@@ -1,4 +1,5 @@
 package it.polimi.ingsw.View.EvaluationView;
 
-public class EvaluationViewGUI extends EvaluationView {
+// TODO: implement
+public abstract class EvaluationViewGUI extends EvaluationView {
 }

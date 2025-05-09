@@ -1,4 +1,5 @@
 package it.polimi.ingsw.View.AssemblyView;
 
-public class AssemblyViewGUI extends AssemblyView {
+// TODO: implement
+public abstract class AssemblyViewGUI extends AssemblyView {
 }

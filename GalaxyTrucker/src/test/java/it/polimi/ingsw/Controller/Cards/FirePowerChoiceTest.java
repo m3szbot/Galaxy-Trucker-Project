@@ -8,6 +8,7 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ class FirePowerChoiceTest {
         player.getShipBoard().getShipBoardAttributes().updateFirePower(5);
         player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         assertTrue(operator.chooseFirePower(player, flightView) == 5);
 
@@ -66,7 +67,7 @@ class FirePowerChoiceTest {
         player.getShipBoard().getShipBoardAttributes().updateFirePower(2);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(3);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         assertTrue(operator.chooseFirePower(player, flightView) == 2);
 
@@ -83,7 +84,7 @@ class FirePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         assertTrue(operator.chooseFirePower(player, flightView) == 1);
     }
@@ -102,7 +103,7 @@ class FirePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         assertTrue(operator.chooseFirePower(player, flightView) == 6);
 
@@ -123,7 +124,7 @@ class FirePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI(gameInformation);
 
         assertTrue(operator.chooseFirePower(player, flightView) == 6);
 

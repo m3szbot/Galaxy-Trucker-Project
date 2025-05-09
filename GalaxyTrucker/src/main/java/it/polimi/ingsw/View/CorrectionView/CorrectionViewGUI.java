@@ -1,4 +1,5 @@
 package it.polimi.ingsw.View.CorrectionView;
 
-public class CorrectionViewGUI extends CorrectionView {
+// TODO: implement
+public abstract class CorrectionViewGUI extends CorrectionView {
 }

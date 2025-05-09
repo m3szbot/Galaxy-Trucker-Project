@@ -79,13 +79,13 @@ public class SetUpViewTUI extends SetUpView {
         return ViewType.valueOf(type);
     }
 
-    public String askNickName(String message) throws IOException {
+    public String askNickName(String message) {
         System.out.println(message);
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 
-    public Color askColor() throws IOException {
+    public Color askColor() {
         Scanner scanner = new Scanner(System.in);
         String mycolor;
 
