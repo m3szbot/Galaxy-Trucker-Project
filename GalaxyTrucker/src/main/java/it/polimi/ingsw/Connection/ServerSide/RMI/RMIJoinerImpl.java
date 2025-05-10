@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide.RMI;
 
 import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -56,6 +57,7 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
         Player player = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
         clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
         centralServer.addPlayerToCurrentStartingGame(player, clientInfo.getViewType(), clientInfo.getConnectionType());
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(player, null);
 
         if(centralServer.getCurrentStartingGame().isFull()){
             centralServer.startCurrentGame();
@@ -68,6 +70,7 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
         Player player = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
         clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
         centralServer.addPlayerToCurrentStartingGame(player, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(player, null);
 
         centralServer.getCurrentStartingGame().changeGameState(GameState.Starting);
     }
