@@ -3,7 +3,6 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 /**
  * ComponentPlacingState handles the logic for placing a component

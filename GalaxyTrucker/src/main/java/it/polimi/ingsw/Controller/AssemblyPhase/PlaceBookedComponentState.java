@@ -4,7 +4,6 @@ import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 /**
  * placeBookedComponentState allows the player to select one of their

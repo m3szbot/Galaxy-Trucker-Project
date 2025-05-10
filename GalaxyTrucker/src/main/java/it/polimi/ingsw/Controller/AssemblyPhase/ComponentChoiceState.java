@@ -5,6 +5,9 @@ import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * ComponentChoice handles the user input when a player chooses
  * a component from the uncovered list.
@@ -15,6 +18,7 @@ public class ComponentChoiceState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private String message;
+    private List<Component> components;
 
     /**
      * Constructs a ComponentChoice state.
@@ -39,6 +43,11 @@ public class ComponentChoiceState implements GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyPhase) {
+        components = new ArrayList<>(assemblyPhase.getAssemblyProtocol().getUncoveredList());
+        for(Component component : components) {
+            message = component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack()  + " Left: " + component.getLeft();
+            ClientSocketMessenger.sendMessageToPlayer(player, message);
+        }
         message = "Enter the number of the component you would like:";
         ClientSocketMessenger.sendMessageToPlayer(player, message);
     }
@@ -56,7 +65,7 @@ public class ComponentChoiceState implements GameState {
         String imput = input.toLowerCase();
         int caseManagement = -1;
         try {
-            caseManagement = Integer.parseInt(input);
+            caseManagement = Integer.parseInt(imput);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -67,18 +76,16 @@ public class ComponentChoiceState implements GameState {
         }
         switch (caseManagement) {
             case 1:
-
                 synchronized (assemblyProtocol.lockUncoveredList) {
-                    assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
+                    if(components.get(Integer.parseInt(input.toLowerCase())) == assemblyPhase.getAssemblyProtocol().getUncoveredList().get(Integer.parseInt(input.toLowerCase()))) {
+                        assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(imput));
+                        component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
+                        message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
+                    }
+                    else {
+                        message = "Component has been already taken";
+                    }
                 }
-                component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
-                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
-                ClientSocketMessenger.sendMessageToPlayer(player, message);
-                synchronized (assemblyProtocol.lockUncoveredList) {
-                    assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(input));
-                }
-                component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
-                message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
                 ClientSocketMessenger.sendMessageToPlayer(player, message);
                 break;
             case 2:

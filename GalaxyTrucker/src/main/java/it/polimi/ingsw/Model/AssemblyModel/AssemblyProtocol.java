@@ -31,6 +31,7 @@ public class AssemblyProtocol {
     public Object lockUncoveredList = new Object();
     public Object lockCoveredList = new Object();
     public Object lockDecksList = new Object();
+    public Object lockFlightBoard = new Object();
     private GameType gameType;
     private FlightBoard flightBoard;
 
@@ -43,11 +44,11 @@ public class AssemblyProtocol {
      */
     public AssemblyProtocol(GameInformation gameInformation) {
         hourGlass = new HourGlass();
-        blockedDeck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+        blockedDeck = new Deck(gameInformation);
         decksList = new Deck[3];
         for (int i = 0; i < 3; i++) {
             // used cards must be removed from cardsList
-            decksList[i] = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+            decksList[i] = new Deck(gameInformation);
         }
         // concurrently accessed lists
         coveredList = Collections.synchronizedList(new ArrayList<>());
