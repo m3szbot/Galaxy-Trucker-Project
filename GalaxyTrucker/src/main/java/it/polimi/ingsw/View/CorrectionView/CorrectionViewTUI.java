@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide.View.CorrectionView;
+package it.polimi.ingsw.View.CorrectionView;
 
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
@@ -6,7 +6,7 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class CorrectionView {
+public class CorrectionViewTUI extends CorrectionView {
 
     /**
      * Print error message and error indexes

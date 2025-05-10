@@ -1,18 +1,12 @@
-package it.polimi.ingsw.Connection.ClientSide.View.FlightView;
+package it.polimi.ingsw.View.FlightView;
 
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.Scanner;
 
-public class FlightView {
+public class FlightViewTUI extends FlightView {
 
-    private GameInformation gameInformation;
     private Scanner in = new Scanner(System.in);
-
-    public FlightView(GameInformation gameInformation) {
-        this.gameInformation = gameInformation;
-    }
 
     //methods are filled up only for testing purposes
 
@@ -34,7 +28,7 @@ public class FlightView {
 
     }
 
-    public void sendMessageToPlayer(Player player, String message){
+    public void sendMessageToPlayer(Player player, String message) {
         //TODO
     }
 

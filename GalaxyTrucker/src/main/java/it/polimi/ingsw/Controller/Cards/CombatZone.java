@@ -2,7 +2,7 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Class that represent the card combat
@@ -85,7 +85,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     }
 
-    private Player findWeakestFirePowerPlayer(float[] firePowers, int numberOfPlayers, FlightBoard flightBoard){
+    private Player findWeakestFirePowerPlayer(float[] firePowers, int numberOfPlayers, FlightBoard flightBoard) {
 
         int minIndex = 0;
 
@@ -101,7 +101,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     }
 
-    private Player findWeakestEnginePowerPlayer(int[] enginePowers, int numberOfPlayers, FlightBoard flightBoard){
+    private Player findWeakestEnginePowerPlayer(int[] enginePowers, int numberOfPlayers, FlightBoard flightBoard) {
 
         int minIndex = 0;
 

@@ -3,7 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that define a default method which handles a player being
@@ -36,8 +36,7 @@ public interface TokenLoss {
 
             removeCrewMembers(player, flightView, quantity);
 
-        }
-        else {
+        } else {
             //removing goods
             int goodsOnShip[] = player.getShipBoard().getShipBoardAttributes().getGoods();
 
@@ -51,13 +50,13 @@ public interface TokenLoss {
             if (quantity > 0) {
                 //need to remove batteries
 
-               removeBatteries(player, flightView, quantity);
+                removeBatteries(player, flightView, quantity);
             }
         }
 
     }
 
-    private void removeCrewMembers(Player player, FlightView flightView, int quantity){
+    private void removeCrewMembers(Player player, FlightView flightView, int quantity) {
 
         String message;
         Component component;
@@ -103,7 +102,7 @@ public interface TokenLoss {
                 } else if (((Cabin) component).getCrewMembers() == 2) {
                     //let the player choose if he wants to remove 2 or 1 crew member (or 0)
 
-                    while(true) {
+                    while (true) {
 
                         message = "Enter number of inhabitants to remove: ";
                         int numberOfRemovedCrew = flightView.askPlayerValue(player, message);
@@ -124,15 +123,13 @@ public interface TokenLoss {
 
                     }
 
-                }
-                else{
+                } else {
 
                     message = "The cabin you selected is empty";
                     flightView.sendMessageToPlayer(player, message);
 
                 }
-            }
-            else {
+            } else {
 
                 message = "The component you entered is not a cabin";
                 flightView.sendMessageToPlayer(player, message);
@@ -143,7 +140,7 @@ public interface TokenLoss {
 
     }
 
-    private int removeGoods(Player player, FlightView flightView, FlightBoard flightBoard, int quantity, int[] goodsOnShip){
+    private int removeGoods(Player player, FlightView flightView, FlightBoard flightBoard, int quantity, int[] goodsOnShip) {
 
         String message;
         String goodColor;
@@ -188,7 +185,7 @@ public interface TokenLoss {
 
                         if (availableGoods[i] > 0) {
 
-                            while(true) {
+                            while (true) {
 
                                 message = "Enter number of " + goodColor + " goods that you want to remove: ";
                                 numberOfRemovedGoods = flightView.askPlayerValue(player, message);
@@ -215,14 +212,12 @@ public interface TokenLoss {
 
                             }
 
-                        }
-                        else{
+                        } else {
                             message = "The storage component you selected does not contain " + goodColor + " goods";
                             flightView.sendMessageToPlayer(player, message);
                         }
 
-                    }
-                    else{
+                    } else {
                         message = "The component you selected is not a storage";
                         flightView.sendMessageToPlayer(player, message);
                     }
@@ -236,7 +231,7 @@ public interface TokenLoss {
         return quantity;
     }
 
-    private void removeBatteries(Player player, FlightView flightView, int quantity){
+    private void removeBatteries(Player player, FlightView flightView, int quantity) {
 
         int batteriesAvailable = player.getShipBoard().getShipBoardAttributes().getBatteryPower();
         String message;
@@ -265,7 +260,7 @@ public interface TokenLoss {
                 if (component.getComponentName().equals("Battery")) {
                     if (((Battery) component).getBatteryPower() > 0) {
 
-                        while(true) {
+                        while (true) {
                             message = "Enter number of batteries you want to remove: ";
                             numberOfRemovedBatteries = flightView.askPlayerValue(player, message);
 
@@ -284,13 +279,11 @@ public interface TokenLoss {
 
                         }
 
-                    }
-                    else{
+                    } else {
                         message = "The battery station you entered is empty";
                         flightView.sendMessageToPlayer(player, message);
                     }
-                }
-                else{
+                } else {
                     message = "The component you entered is not a battery";
                     flightView.sendMessageToPlayer(player, message);
                 }
@@ -299,7 +292,7 @@ public interface TokenLoss {
         }
     }
 
-    private String colorSolver(int good){
+    private String colorSolver(int good) {
 
         if (good == 0) {
 

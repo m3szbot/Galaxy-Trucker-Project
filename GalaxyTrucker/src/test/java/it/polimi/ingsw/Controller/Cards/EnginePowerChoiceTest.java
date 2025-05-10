@@ -7,7 +7,8 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,7 +81,7 @@ class EnginePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(playerResponse.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseEnginePower(player, flightView) == 3);
 
@@ -97,7 +98,7 @@ class EnginePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(playerResponses.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseEnginePower(player, flightView) == 5);
     }
@@ -114,7 +115,7 @@ class EnginePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(playerResponses.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseEnginePower(player, flightView) == 11);
 

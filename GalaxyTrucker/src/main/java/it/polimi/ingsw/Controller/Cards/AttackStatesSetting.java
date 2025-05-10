@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 
 /**
@@ -10,10 +10,11 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
  * @author carlo
  */
 
-public abstract class AttackStatesSetting extends Card implements FirePowerChoice{
+public abstract class AttackStatesSetting extends Card implements FirePowerChoice {
 
     /**
      * Sets the attack state of the various players
+     *
      * @param flightView
      * @param flightBoard
      * @param requirementNumber
@@ -21,7 +22,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
      * in front of them in the flightBoard has defeated the enemies.
      */
 
-    public AttackStates[] setAttackStates(FlightView flightView, FlightBoard flightBoard, int requirementNumber){
+    public AttackStates[] setAttackStates(FlightView flightView, FlightBoard flightBoard, int requirementNumber) {
 
         String message;
         int i;

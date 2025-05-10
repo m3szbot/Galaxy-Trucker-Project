@@ -1,7 +1,7 @@
-package it.polimi.ingsw.Connection.ClientSide.View.EvaluationView;
+package it.polimi.ingsw.View.EvaluationView;
 
 
-public class EvaluationView {
+public class EvaluationViewTUI extends EvaluationView {
 
     /*
     show credits of all players

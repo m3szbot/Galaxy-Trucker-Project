@@ -4,7 +4,7 @@ import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that define a method which handles a player receiving
@@ -31,7 +31,7 @@ public interface GoodsGain {
 
     }
 
-    private void discardingPhase(Player player, FlightView flightView, FlightBoard flightBoard){
+    private void discardingPhase(Player player, FlightView flightView, FlightBoard flightBoard) {
 
         String message;
         boolean discardingPhaseFlag, errorFlag = true;
@@ -61,7 +61,7 @@ public interface GoodsGain {
 
                         goodsToRemove = askForGoods(player, flightView, "remove", 0, 3);
 
-                        if (checkGoodsAvailability(goodsToRemove, availableGoods, 0,  3)) {
+                        if (checkGoodsAvailability(goodsToRemove, availableGoods, 0, 3)) {
                             //value entered are correct
 
                             ((Storage) component).removeGoods(goodsToRemove);
@@ -80,8 +80,7 @@ public interface GoodsGain {
 
                             errorFlag = false;
 
-                        }
-                        else{
+                        } else {
 
                             message = "The goods you entered are incorrect";
                             flightView.sendMessageToPlayer(player, message);
@@ -116,7 +115,7 @@ public interface GoodsGain {
 
     }
 
-    private void rearrangementPhase(Player player, FlightView flightView){
+    private void rearrangementPhase(Player player, FlightView flightView) {
 
         String message;
         boolean rearrangementPhaseFlag, errorFlag = true;
@@ -181,13 +180,11 @@ public interface GoodsGain {
 
                                 errorFlag = false;
 
-                            }
-                            else{
+                            } else {
                                 message = "The destination component doesn't have enough space for the goods to move";
                                 flightView.sendMessageToPlayer(player, message);
                             }
-                        }
-                        else{
+                        } else {
                             message = "The moving goods you entered are too many";
                             flightView.sendMessageToPlayer(player, message);
                         }
@@ -216,7 +213,7 @@ public interface GoodsGain {
         }
     }
 
-    private void redGoodsPlacementPhase(Player player, int[] goods, FlightView flightView, FlightBoard flightBoard){
+    private void redGoodsPlacementPhase(Player player, int[] goods, FlightView flightView, FlightBoard flightBoard) {
 
         String message;
         boolean placementPhaseFlag, errorFlag;
@@ -268,8 +265,7 @@ public interface GoodsGain {
 
                                 }
 
-                            }
-                            else{
+                            } else {
                                 message = "The value you entered is incorrect";
                                 flightView.sendMessageToPlayer(player, message);
                             }
@@ -305,7 +301,7 @@ public interface GoodsGain {
         }
     }
 
-    private void nonRedGoodsPlacementPhasePhase(Player player, int[] goods, FlightView flightView, FlightBoard flightBoard){
+    private void nonRedGoodsPlacementPhasePhase(Player player, int[] goods, FlightView flightView, FlightBoard flightBoard) {
 
         String message;
         boolean placementPhaseFlag, errorFlag;
@@ -338,7 +334,7 @@ public interface GoodsGain {
 
                             goodsToAdd = askForGoods(player, flightView, "add", 1, 3);
 
-                            if (checkGoodsAvailability(goodsToAdd, goods,1,  3) && (goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]) <= ((Storage) component).getAvailableRedSlots() + ((Storage) component).getAvailableBlueSlots()) {
+                            if (checkGoodsAvailability(goodsToAdd, goods, 1, 3) && (goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]) <= ((Storage) component).getAvailableRedSlots() + ((Storage) component).getAvailableBlueSlots()) {
 
                                 errorFlag = false;
                                 goods[1] -= goodsToAdd[1];
@@ -370,8 +366,7 @@ public interface GoodsGain {
                                     flightView.sendMessageToPlayer(player, message);
                                     break;
                                 }
-                            }
-                            else{
+                            } else {
                                 message = "The goods you entered are incorrect";
                                 flightView.sendMessageToPlayer(player, message);
                             }
@@ -409,13 +404,13 @@ public interface GoodsGain {
 
     }
 
-    private int[] askForGoods(Player player, FlightView flightView, String messageType, int start, int end){
+    private int[] askForGoods(Player player, FlightView flightView, String messageType, int start, int end) {
 
         int[] goods = {0, 0, 0, 0};
         String message;
         String[] colors = {"red", "yellow", "green", "blue"};
 
-        for(int i = start; i <= end; i++){
+        for (int i = start; i <= end; i++) {
 
             message = "Enter number of " + colors[i] + " goods to " + messageType;
             goods[i] = flightView.askPlayerValue(player, message);
@@ -425,11 +420,11 @@ public interface GoodsGain {
         return goods;
     }
 
-    private boolean checkGoodsAvailability(int[] firstGoods, int[] secondGoods, int start, int end){
+    private boolean checkGoodsAvailability(int[] firstGoods, int[] secondGoods, int start, int end) {
 
-        for(int i = start; i <= end; i++){
+        for (int i = start; i <= end; i++) {
 
-            if(firstGoods[i] > secondGoods[i]){
+            if (firstGoods[i] > secondGoods[i]) {
                 return false;
             }
 

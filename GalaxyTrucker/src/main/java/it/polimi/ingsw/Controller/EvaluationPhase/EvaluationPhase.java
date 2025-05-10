@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
+import it.polimi.ingsw.View.EvaluationView.EvaluationView;
+import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.EvaluationView.EvaluationView;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class EvaluationPhase implements Startable {
     EvaluationView commonView;
 
     public EvaluationPhase() {
-        commonView = new EvaluationView();
+        commonView = new EvaluationViewTUI();
     }
 
     public void start(GameInformation gameInformation) {

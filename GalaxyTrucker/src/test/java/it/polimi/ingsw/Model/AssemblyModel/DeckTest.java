@@ -25,7 +25,7 @@ class DeckTest {
         } catch (IOException e) {
         }
         // set up deck
-        deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+        deck = new Deck(gameInformation);
     }
 
     @Test

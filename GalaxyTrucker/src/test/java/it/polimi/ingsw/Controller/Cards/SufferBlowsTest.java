@@ -6,7 +6,8 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +78,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[0], 8);
         rollField.setInt(blows[1], 9);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -104,7 +105,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[0], 8);
         rollField.setInt(blows[1], 9);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -137,7 +138,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[1], 4); //targets battery
         rollField.setInt(blows[2], 5); //targets storage
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -180,7 +181,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -211,7 +212,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, new Blow[]{blow}, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -246,7 +247,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[1], 6);
         rollField.setInt(blows[2], 6);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -302,7 +303,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -343,7 +344,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -376,7 +377,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[2], 5);
         rollField.setInt(blows[3], 5);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -410,7 +411,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -444,7 +445,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[1], 6);
         rollField.setInt(blows[2], 6);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 

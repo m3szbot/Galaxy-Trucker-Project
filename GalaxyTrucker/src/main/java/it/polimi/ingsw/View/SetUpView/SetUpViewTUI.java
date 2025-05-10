@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide.View.SetUpView;
+package it.polimi.ingsw.View.SetUpView;
 
 /**
  * set up view class
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 
-public class SetUpView {
+public class SetUpViewTUI extends SetUpView {
 
     public int askMaxNumberOfPlayers(Player player, String message) throws IOException {
         int temp = 0;
@@ -79,13 +79,13 @@ public class SetUpView {
         return ViewType.valueOf(type);
     }
 
-    public String askNickName(String message) throws IOException {
+    public String askNickName(String message) {
         System.out.println(message);
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 
-    public Color askColor() throws IOException {
+    public Color askColor() {
         Scanner scanner = new Scanner(System.in);
         String mycolor;
 

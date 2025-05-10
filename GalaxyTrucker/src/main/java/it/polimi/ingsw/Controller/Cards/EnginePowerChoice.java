@@ -2,7 +2,7 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that defines a default method which let the player choose

@@ -2,7 +2,7 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
         planetOccupation = new boolean[numberOfPlanets];
 
-        for (Player player: players) {
+        for (Player player : players) {
 
             message = "Would you like to land on a planet ?";
 
@@ -93,13 +93,11 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                             break;
 
-                        }
-                        else{
+                        } else {
                             message = "The planet you selected has already been occupied";
                             flightView.sendMessageToPlayer(player, message);
                         }
-                    }
-                    else{
+                    } else {
 
                         message = "The planet you chose is invalid";
                         flightView.sendMessageToPlayer(player, message);
@@ -124,7 +122,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
     }
 
-    private int countPlanetsToLandOn(){
+    private int countPlanetsToLandOn() {
 
         int i, numberOfPlanets;
 

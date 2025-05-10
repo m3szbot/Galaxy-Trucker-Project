@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
+import it.polimi.ingsw.View.CorrectionView.CorrectionViewTUI;
 import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.CorrectionView.CorrectionView;
+import it.polimi.ingsw.View.CorrectionView.CorrectionView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class CorrectionPhase implements Startable {
         // create player-specific correction views
         playerViewMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
-            playerViewMap.put(player, new CorrectionView());
+            playerViewMap.put(player, new CorrectionViewTUI());
         }
     }
 

@@ -134,12 +134,9 @@ public class ShipBoardTest {
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 4), 8, 7);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 4);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(), 0);
-        shipBoard.removeComponent(8, 7, false);
-        shipBoard.removeComponent(8, 8, false);
-        errors = shipBoard.checkErrors();
-        assertEquals(errors, 2);
+        shipBoard.removeComponent(8, 7, true);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 0);
-        assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 2);
+        assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 3);
     }
 
 }

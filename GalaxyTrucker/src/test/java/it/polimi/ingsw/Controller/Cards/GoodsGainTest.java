@@ -8,7 +8,8 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightView;
+import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,7 +84,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
 
@@ -129,7 +130,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
 
@@ -167,7 +168,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{5, 0, 0, 0}, flightBoard, flightView);
 
@@ -212,7 +213,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightView(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{0, 3, 2, 1}, flightBoard, flightView);
 
