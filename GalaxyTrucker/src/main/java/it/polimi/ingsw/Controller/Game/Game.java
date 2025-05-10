@@ -30,6 +30,7 @@ public class Game implements Runnable {
         this.gameCode = gameCode;
         this.gameState = GameState.Empty;
         gameInformation = new GameInformation();
+        gameInformation.setGameCode(gameCode);
 
     }
 

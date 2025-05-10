@@ -7,12 +7,25 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 import java.io.Serializable;
 
+/**
+ * Bean class that contains all the possible object that the server
+ * could send to the client. Before sending information to the client
+ * you must set his dataContainer accordingly.
+ */
+
 public class DataContainer implements Serializable {
 
     private String message;
     private ShipBoard shipBoard;
     private Card card;
     private FlightBoard flightBoard;
+
+    public void clearContainer(){
+        message = null;
+        shipBoard = null;
+        card = null;
+        flightBoard = null;
+    }
 
     public void setCard(Card card) {
         this.card = card;

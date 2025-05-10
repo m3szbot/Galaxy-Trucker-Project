@@ -2,16 +2,28 @@ package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class used to communicate with players during the game.
+ * @author carlo
+ */
+
 public class GameMessenger {
 
     private Map<Player, Socket> playerSocketMap = new HashMap<>();
     private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
+
+    /**
+     * To call when a player is added to the game
+     * @param player
+     * @param socket null if the player chose RMI
+     */
 
     public void addPlayer(Player player, Socket socket){
 
@@ -20,11 +32,22 @@ public class GameMessenger {
 
     }
 
+    /**
+     *
+     * @param player
+     * @return the player dataContainer
+     */
+
     public DataContainer getPlayerContainer(Player player){
 
         return playerDataContainerMap.get(player);
 
     }
+
+    /**
+     * Sends to the player his dataContainer, then clears the container.
+     * @param player
+     */
 
     public void sendPlayerData(Player player){
 
@@ -44,9 +67,38 @@ public class GameMessenger {
             }catch (IOException e){
                 System.err.println();
             }
+            finally {
+            playerDataContainerMap.get(player).clearContainer();
+            }
+
+        }
+    }
+
+    /**
+     *
+     * @param player
+     * @return the string that the player sent to the server
+     */
+
+    public String getPlayerInput(Player player){
+
+        if(playerSocketMap.get(player) == null){
+            //RMI
+            //TODO
+        }
+        else{
+            try {
+                return (new DataInputStream((playerSocketMap.get(player)).getInputStream())).readUTF();
+            } catch (IOException e) {
+
+                System.err.println("Error while reading from client");
+                e.printStackTrace();
+
+            }
 
         }
 
+        return null;
 
     }
 }
