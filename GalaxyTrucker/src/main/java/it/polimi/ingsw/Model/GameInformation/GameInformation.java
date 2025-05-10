@@ -40,6 +40,8 @@ public class GameInformation {
     /**
      * Sets gameType, maxNumberOfPlayers and initializes gameInformation models:
      * cards, components, flightBoard
+     *
+     * @author Boti
      */
     public void setUpGameInformation(GameType gameType, int maxNumberOfPlayers) {
         setGameType(gameType);
