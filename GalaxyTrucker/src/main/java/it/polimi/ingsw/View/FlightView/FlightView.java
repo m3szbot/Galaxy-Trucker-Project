@@ -4,6 +4,11 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.GeneralView;
 
 public abstract class FlightView extends GeneralView {
+    public void printFlightBoard() {
+
+    }
+
+    // TODO: remove
     public abstract void sendMessageToAll(String situationString);
 
     public abstract void sendMessageToPlayer(Player player, String message);
