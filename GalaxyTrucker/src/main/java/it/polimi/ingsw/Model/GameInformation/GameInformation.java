@@ -20,7 +20,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GameInformation {
@@ -30,15 +29,12 @@ public class GameInformation {
     private List<Player> playerList;
     private int maxNumberOfPlayers;
     private FlightBoard flightBoard;
-    private HashMap<Player, ViewType> playerViewMap;
-    private HashMap<Player, ConnectionType> playerConnectionMap;
     private int gameCode;
 
     public GameInformation() {
         cardsList = new ArrayList<>();
         componentList = new ArrayList<>();
         playerList = new ArrayList<>();
-        playerViewMap = new HashMap<>();
     }
 
     /**
@@ -304,13 +300,6 @@ public class GameInformation {
         this.gameType = gameType;
     }
 
-    public ViewType getPlayerViewType(Player player) {
-        return playerViewMap.get(player);
-    }
-
-    public ConnectionType getPlayerConnectionType(Player player) {
-        return playerConnectionMap.get(player);
-    }
 
     /**
      * adds a player to the playerList
@@ -336,28 +325,5 @@ public class GameInformation {
         playerList.remove(player);
     }
 
-    /**
-     * asks each player which view type they want to play with
-     */
-    public void setPlayerViewType(Player player, ViewType viewType) {
-        playerViewMap.put(player, viewType);
-    }
-
-    /**
-     * set up the connection type for the specified player
-     *
-     * @param player
-     * @param connectionType
-     * @author carlo
-     */
-
-    public void setPlayerConnectionType(Player player, ConnectionType connectionType) {
-        playerConnectionMap.put(player, connectionType);
-    }
-
-    /**
-     * @param player
-     * @return player socket, null if player has chosen RMI to comunicate.
-     */
 
 }
