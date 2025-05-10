@@ -1,8 +1,5 @@
 package it.polimi.ingsw.Model.FlightBoard;
 
-import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Controller.Cards.CardBuilder;
-import it.polimi.ingsw.Controller.Cards.Sabotage;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
@@ -11,23 +8,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Tests:
+ * in game: getPlayerOrder, getPlayerTile
+ * eliminated: eliminatedList
+ * gave up: gaveUpList
+ * <p>
+ * Normal game starting tiles: 1, 2, 4, 7
+ * <p>
+ * (test game: redo setup)
+ */
 
 class FlightBoardTest {
     // common fields
     FlightBoard flightBoard;
     GameInformation gameInformation;
-    List<Player> playerOrderList;
     Player playerA, playerB, playerC, playerD;
 
-    /* reassigns field before each test
-     base case: NormalGame
-     reassign setUp for TestGame
-    */
     @BeforeEach
     void setUp() {
         gameInformation = new GameInformation();
@@ -48,8 +49,6 @@ class FlightBoardTest {
         }
 
         flightBoard = new FlightBoard(GameType.NormalGame, gameInformation.getCardsList());
-
-        playerOrderList = new ArrayList<>();
     }
 
     @Test
@@ -59,86 +58,75 @@ class FlightBoardTest {
 
     @Test
     void addOnePlayer() {
-        playerOrderList.add(playerA);
-        flightBoard.addPlayer(playerA, 1);
+        int tile = flightBoard.getStartingTiles().getLast();
+        flightBoard.addPlayer(playerA, tile);
+        assertEquals(tile, flightBoard.getPlayerTile(playerA));
         assertEquals(1, flightBoard.getPlayerOrder(playerA));
-        assertEquals(1, flightBoard.getPlayerTile(playerA));
-        assertEquals(playerOrderList, flightBoard.getPlayerOrderList());
+        assertEquals(1, flightBoard.getPlayerOrderList().size());
+    }
+
+    @Test
+    void nextIncrementTileOccupied() {
+        // next tile occupied
+        // 1 2 4 7
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
+        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
+        flightBoard.incrementPlayerTile(playerB, 3);
+        assertEquals(7, flightBoard.getPlayerTile(playerA));
+        assertEquals(2, flightBoard.getPlayerOrder(playerA));
+        assertEquals(8, flightBoard.getPlayerTile(playerB));
+        assertEquals(1, flightBoard.getPlayerOrder(playerB));
     }
 
     @Test
     void nextIncrementTilesOccupied() {
-        // next tile and tile after that both occupied
-        flightBoard.addPlayer(playerA, 1);
-        flightBoard.addPlayer(playerB, 3);
-        flightBoard.addPlayer(playerC, 4);
-        flightBoard.incrementPlayerTile(playerA, 2);
-        playerOrderList.add(playerA);
-        playerOrderList.add(playerC);
-        playerOrderList.add(playerB);
-        assertEquals(5, flightBoard.getPlayerTile(playerA));
-        assertEquals(playerOrderList, flightBoard.getPlayerOrderList());
+        // next 2 tiles occupied
+        // 1 2 4 7
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
+        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
+        flightBoard.addPlayer(playerC, flightBoard.getStartingTiles().getLast());
+        flightBoard.incrementPlayerTile(playerB, 2);
+        flightBoard.incrementPlayerTile(playerC, 4);
+        assertEquals(7, flightBoard.getPlayerTile(playerA));
+        assertEquals(2, flightBoard.getPlayerOrder(playerA));
+        assertEquals(6, flightBoard.getPlayerTile(playerB));
+        assertEquals(3, flightBoard.getPlayerOrder(playerB));
+        assertEquals(8, flightBoard.getPlayerTile(playerC));
+        assertEquals(1, flightBoard.getPlayerOrder(playerC));
     }
 
     @Test
-    void nextDecrementTilesOccupied() {
-        // next tile and tile before that both occupied
-        flightBoard.addPlayer(playerA, 6);
-        flightBoard.addPlayer(playerB, 3);
-        flightBoard.addPlayer(playerC, 4);
-        flightBoard.incrementPlayerTile(playerA, -2);
-        playerOrderList.add(playerC);
-        playerOrderList.add(playerB);
-        playerOrderList.add(playerA);
-        assertEquals(2, flightBoard.getPlayerTile(playerA));
-        assertEquals(playerOrderList, flightBoard.getPlayerOrderList());
+    void nextDecrementTileOccupied() {
+        // next tile occupied
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
+        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
+        flightBoard.incrementPlayerTile(playerA, -3);
+        assertEquals(3, flightBoard.getPlayerTile(playerA));
+        assertEquals(2, flightBoard.getPlayerOrder(playerA));
+        assertEquals(4, flightBoard.getPlayerTile(playerB));
+        assertEquals(1, flightBoard.getPlayerOrder(playerB));
     }
 
     @Test
-    void eliminateFirstPLayer() {
-        flightBoard.addPlayer(playerA, 10);
-        flightBoard.addPlayer(playerB, 5);
-        playerOrderList.add(playerA);
-        playerOrderList.add(playerB);
-        assertEquals(playerOrderList, flightBoard.getPlayerOrderList());
+    void eliminatePLayer() {
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.eliminatePlayer(playerA);
-        playerOrderList.remove(playerA);
-        assertEquals(playerOrderList, flightBoard.getPlayerOrderList());
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.getPlayerTile(playerA);
         });
+        assertEquals(0, flightBoard.getPlayerOrderList().size());
+        assertEquals(playerA, flightBoard.getEliminatedList().getFirst());
     }
 
     @Test
     void removeLappedPlayer() {
         // normal game: 24 tiles
-        // playerA steps on playerB lapping him
-        flightBoard.addPlayer(playerA, 1);
-        flightBoard.addPlayer(playerB, 2);
-        flightBoard.incrementPlayerTile(playerA, 25);
-        assertEquals(27, flightBoard.getPlayerTile(playerA));
-        assertThrows(NoSuchElementException.class, () -> {
-            flightBoard.getPlayerTile(playerB);
-        });
-        assertThrows(NoSuchElementException.class, () -> {
-            flightBoard.getPlayerOrder(playerB);
-        });
-    }
-
-    @Test
-    void removeLappedPlayerTestGame() {
-        // test game: 18 tiles
-        // playerA steps on playerB lapping him
-        List<Card> cardList = new ArrayList<>();
-        Card card = new Sabotage(new CardBuilder());
-        for (int i = 0; i < 15; i++) {
-            cardList.add(card);
-        }
-        flightBoard = new FlightBoard(GameType.TestGame, cardList);
-        flightBoard.addPlayer(playerA, 1);
-        flightBoard.addPlayer(playerB, 2);
-        flightBoard.incrementPlayerTile(playerA, 19);
-        assertEquals(21, flightBoard.getPlayerTile(playerA));
+        // 1 2 4 7
+        // playerA steps on (28) playerB (4) lapping him
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
+        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
+        flightBoard.incrementPlayerTile(playerA, 21);
+        assertEquals(29, flightBoard.getPlayerTile(playerA));
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.getPlayerTile(playerB);
         });
@@ -149,9 +137,9 @@ class FlightBoardTest {
 
     @Test
     void addDuplicatePlayers() {
-        flightBoard.addPlayer(playerA, 1);
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         assertThrows(IllegalArgumentException.class, () -> {
-            flightBoard.addPlayer(playerA, 10);
+            flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         });
     }
 
@@ -181,6 +169,24 @@ class FlightBoardTest {
     void removeNonPresentPlayer() {
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.eliminatePlayer(playerA);
+        });
+    }
+
+    @Test
+    public void incrementEliminatedPlayer() {
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
+        flightBoard.eliminatePlayer(playerA);
+        assertThrows(NoSuchElementException.class, () -> {
+            flightBoard.incrementPlayerTile(playerA, 1);
+        });
+    }
+
+    @Test
+    public void incrementGaveUpPlayer() {
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
+        flightBoard.giveUpPlayer(playerA);
+        assertThrows(NoSuchElementException.class, () -> {
+            flightBoard.incrementPlayerTile(playerA, 1);
         });
     }
 
