@@ -84,7 +84,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
 
@@ -130,7 +130,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
 
@@ -168,7 +168,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{5, 0, 0, 0}, flightBoard, flightView);
 
@@ -213,7 +213,7 @@ class GoodsGainTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.giveGoods(player, new int[]{0, 3, 2, 1}, flightBoard, flightView);
 

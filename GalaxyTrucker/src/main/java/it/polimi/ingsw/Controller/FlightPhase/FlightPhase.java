@@ -17,13 +17,13 @@ public class FlightPhase implements Startable {
         playerViewMap = new HashMap<>();
         // create player-specific flight views
         for (Player player : gameInformation.getPlayerList()) {
-            playerViewMap.put(player, new FlightViewTUI(gameInformation));
+            playerViewMap.put(player, new FlightViewTUI());
         }
     }
 
     public void start(GameInformation gameInformation) {
         // TODO use playerViewMap
-        FlightView flightView = new FlightViewTUI(gameInformation);
+        FlightView flightView = new FlightViewTUI();
         FlightBoard flightBoard = gameInformation.getFlightBoard();
 
         while (flightBoard.getCardsNumber() > 0) {

@@ -55,7 +55,7 @@ class FirePowerChoiceTest {
         player.getShipBoard().getShipBoardAttributes().updateFirePower(5);
         player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseFirePower(player, flightView) == 5);
 
@@ -67,7 +67,7 @@ class FirePowerChoiceTest {
         player.getShipBoard().getShipBoardAttributes().updateFirePower(2);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(3);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseFirePower(player, flightView) == 2);
 
@@ -84,7 +84,7 @@ class FirePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseFirePower(player, flightView) == 1);
     }
@@ -103,7 +103,7 @@ class FirePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseFirePower(player, flightView) == 6);
 
@@ -124,7 +124,7 @@ class FirePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseFirePower(player, flightView) == 6);
 

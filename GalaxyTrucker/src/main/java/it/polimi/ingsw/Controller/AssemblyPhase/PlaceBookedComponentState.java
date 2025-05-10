@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
@@ -13,19 +15,16 @@ import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 public class PlaceBookedComponentState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
-    private AssemblyView view;
 
     /**
      * Constructs a new state for allowing the player to place one of their
      * previously booked components.
      *
-     * @param view     the game view used to display prompts and messages
      * @param protocol the logic handler that manages components and booking
      * @param player   the player currently placing a booked component
      */
-    public PlaceBookedComponentState(AssemblyView view, AssemblyProtocol protocol, Player player) {
+    public PlaceBookedComponentState(AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
-        this.view = view;
         this.player = player;
     }
 
@@ -33,11 +32,14 @@ public class PlaceBookedComponentState implements GameState {
      * Displays the prompt asking the player to choose a booked component.
      *
      * @param assemblyPhase the current game instance
-     * @param assemblyView  the view used for messages
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase, AssemblyView assemblyView) {
-        view.printChooseBookedComponentMessage(assemblyProtocol.getBookedMap().get(player));
+    public void enter(AssemblyThread assemblyPhase) {
+        for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
+            Component component = assemblyProtocol.getBookedMap().get(player).get(i);
+            String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
+            ClientSocketMessenger.sendMessageToPlayer(player, message);
+        }
     }
 
     /**
@@ -53,12 +55,16 @@ public class PlaceBookedComponentState implements GameState {
         int index = Integer.parseInt(input);
         index = index - 1;
         if (index == 0 || index == 1) {
-            assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+            synchronized (assemblyProtocol.lockUncoveredList) {
+                assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+            }
             if (index == 0 || index == 1) {
                 assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
-                assemblyPhase.setState(new ComponentPlacingState(view, assemblyProtocol, player));
+                assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player));
             } else {
-                view.printErrorChoosingBookedComponentMessage();
+                String message = "The Booked Component chose doesn't exist";
+                ClientSocketMessenger.sendMessageToPlayer(player, message);
+                assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
         }
 

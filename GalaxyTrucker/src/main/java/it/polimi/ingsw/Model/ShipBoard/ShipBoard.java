@@ -280,12 +280,18 @@ public class ShipBoard {
                             errors++;
                         } else {
                             boolean check = false;
+                            if(structureMatrix[i+1][j] != null){
+                                check = true;
+                                errors++;
+                            }
+                            /*
                             for (int k = i + 1; k < 12; k++) {
                                 if (structureMatrix[k][j] != null) {
                                     check = true;
                                     errors++;
                                 }
                             }
+                            */
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
                                 matrErrors[i][j] = true;

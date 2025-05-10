@@ -81,7 +81,7 @@ class EnginePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(playerResponse.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseEnginePower(player, flightView) == 3);
 
@@ -98,7 +98,7 @@ class EnginePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(playerResponses.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseEnginePower(player, flightView) == 5);
     }
@@ -115,7 +115,7 @@ class EnginePowerChoiceTest {
         ByteArrayInputStream in = new ByteArrayInputStream(playerResponses.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         assertTrue(operator.chooseEnginePower(player, flightView) == 11);
 

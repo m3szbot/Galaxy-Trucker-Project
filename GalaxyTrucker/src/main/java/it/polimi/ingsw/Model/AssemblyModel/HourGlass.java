@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model.AssemblyModel;
 
+import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +44,9 @@ public class HourGlass {
                         System.out.println("Elapsed Time: " + elapsedTime + "s");
                         elapsedTime++;
                     } else {
+                        String message = "Time's up!";
                         System.out.println("Time's up!");
+                        ClientSocketMessenger.sendMessageToAll(message);
                         scheduler.shutdown(); // Stops the scheduler
                         updateState(); // Updates the state of the hourglass
                         finished = true; // Resets to finished state
@@ -70,5 +74,9 @@ public class HourGlass {
      */
     public int getState() {
         return state;
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 }

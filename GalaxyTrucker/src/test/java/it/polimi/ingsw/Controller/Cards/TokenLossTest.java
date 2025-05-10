@@ -96,7 +96,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.inflictLoss(player, ElementType.CrewMember, 3, flightBoard, flightView);
 
@@ -140,7 +140,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.inflictLoss(player, ElementType.Goods, 6, flightBoard, flightView);
 
@@ -160,7 +160,7 @@ class TokenLossTest {
         in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.inflictLoss(player, ElementType.Goods, 4, flightBoard, flightView);
         /*
@@ -209,7 +209,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.inflictLoss(player, ElementType.Goods, 13, flightBoard, flightView);
 
@@ -236,7 +236,7 @@ class TokenLossTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.inflictLoss(player, ElementType.Goods, 10, flightBoard, flightView);
 

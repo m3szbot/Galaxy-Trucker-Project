@@ -1,13 +1,15 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 
-import it.polimi.ingsw.View.AssemblyView.AssemblyView;
-import it.polimi.ingsw.View.AssemblyView.AssemblyViewTUI;
+import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * AssemblyGame is the main game controller that manages the game loop,
@@ -17,11 +19,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class AssemblyPhase {
     private GameState currentState;
-    private boolean running = true;
+    private AtomicBoolean running = new AtomicBoolean(true);
+    private AtomicInteger end = new AtomicInteger(0);
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private GameInformation gameInformation;
     private AssemblyProtocol assemblyProtocol;
-    private AssemblyView assemblyView;
     private String message;
 
 
@@ -30,11 +32,6 @@ public class AssemblyPhase {
      */
     public AssemblyPhase() {
         assemblyProtocol = new AssemblyProtocol(gameInformation);
-        assemblyView = new AssemblyViewTUI();
-    }
-
-    public AssemblyView getAssemblyView() {
-        return assemblyView;
     }
 
     /**
@@ -66,7 +63,7 @@ public class AssemblyPhase {
      * Updates the running flag that controls the game loop.
      */
     public void setRunning(boolean value) {
-        running = value;
+        running.set(value);
     }
 
     /**
@@ -78,12 +75,30 @@ public class AssemblyPhase {
         for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;
             new Thread(() -> {
-                AssemblyThread assemblyThread = new AssemblyThread(gameInformation, gameInformation.getPlayerList().get(threadInt), assemblyProtocol, assemblyView);
-            });
+                while (running.get() || end.get() < gameInformation.getMaxNumberOfPlayers()) {
+                    AssemblyThread assemblyThread = new AssemblyThread(gameInformation, gameInformation.getPlayerList().get(threadInt), assemblyProtocol, running, end);
+                }
+            }).start();
         }
-/*
+
+        new Thread(() -> {while (running.get()) {
+            if (assemblyProtocol.getGameType().equals(GameType.NormalGame)) {
+                if (assemblyProtocol.getHourGlass().getState() == 3) {
+                    setRunning(false);
+                    break;
+                }
+            }
+            else{
+                if (assemblyProtocol.getHourGlass().getState() == 2) {
+                    setRunning(false);
+                    break;
+                }
+            }
+            try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+        }}).start();
+
         message = "Assembly phase has ended";
-        assemblyView.sendMessageToAll(message);*/
+        ClientSocketMessenger.sendMessageToAll(message);
     }
 /*
       //main fatto a caso da gecky per fare test

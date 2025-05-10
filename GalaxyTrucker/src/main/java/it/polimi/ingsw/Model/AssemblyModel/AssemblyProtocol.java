@@ -2,28 +2,37 @@ package it.polimi.ingsw.Model.AssemblyModel;
 
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * AssemblyProtocol handles the logic behind deck selection, hourglass,
- * component booking and drawing, and other player interactions.
+ * AssemblyProtocol handles the logic behind deck selection, component
+ * booking and drawing, and other player interactions.
  *
- * @author Giacomo, Boti
+ * @author Giacomo
  */
 public class AssemblyProtocol {
-    private final HourGlass hourGlass;
-    // decks of adventure cards
-    private final Deck blockedDeck;
-    private final Deck[] decksList;
-    // component lists
+    private HourGlass hourGlass;
+    // cards
+    private Deck blockedDeck;
+    private Deck[] decksList;
+    // components - synchronized lists! - concurrent access by multiple players
     private List<Component> coveredList;
     private List<Component> uncoveredList;
-    // player maps
+    // components currently in hand (viewMap)
     private Map<Player, Component> inHandMap;
+    // booked components
     private Map<Player, List<Component>> bookedMap;
+    public Object lockUncoveredList = new Object();
+    public Object lockCoveredList = new Object();
+    public Object lockDecksList = new Object();
+    private GameType gameType;
+    private FlightBoard flightBoard;
 
 
     /**
@@ -34,23 +43,25 @@ public class AssemblyProtocol {
      */
     public AssemblyProtocol(GameInformation gameInformation) {
         hourGlass = new HourGlass();
-        // decks
-        blockedDeck = new Deck(gameInformation);
+        blockedDeck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
         decksList = new Deck[3];
         for (int i = 0; i < 3; i++) {
-            decksList[i] = new Deck(gameInformation);
+            // used cards must be removed from cardsList
+            decksList[i] = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
         }
-        // component lists
+        // concurrently accessed lists
         coveredList = Collections.synchronizedList(new ArrayList<>());
         coveredList.addAll(gameInformation.getComponentList());
         Collections.shuffle(coveredList);
         uncoveredList = Collections.synchronizedList(new ArrayList<>());
-        // player maps
-        inHandMap = new HashMap<>();
-        bookedMap = new HashMap<>();
+        // player mapped structures
+        inHandMap = new ConcurrentHashMap<>();
+        bookedMap = new ConcurrentHashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
             bookedMap.put(player, new ArrayList<>());
         }
+        gameType = gameInformation.getGameType();
+        flightBoard = gameInformation.getFlightBoard();
     }
 
     /**
@@ -204,5 +215,13 @@ public class AssemblyProtocol {
         } else {
             throw new IndexOutOfBoundsException("Not enough booked components");
         }
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public FlightBoard getFlightBoard() {
+        return flightBoard;
     }
 }

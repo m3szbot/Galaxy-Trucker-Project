@@ -1,18 +1,12 @@
 package it.polimi.ingsw.View.FlightView;
 
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.Scanner;
 
 public class FlightViewTUI extends FlightView {
 
-    private GameInformation gameInformation;
     private Scanner in = new Scanner(System.in);
-
-    public FlightViewTUI(GameInformation gameInformation) {
-        this.gameInformation = gameInformation;
-    }
 
     //methods are filled up only for testing purposes
 

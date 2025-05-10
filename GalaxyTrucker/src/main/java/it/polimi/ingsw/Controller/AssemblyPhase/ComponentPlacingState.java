@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.AssemblyView.AssemblyView;
@@ -14,18 +15,15 @@ import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 public class ComponentPlacingState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
-    private AssemblyView view;
 
     /**
      * Constructs a ComponentPlacingState for the current player.
      *
-     * @param view     the game view used for displaying messages
      * @param protocol the game logic handler
      * @param player   the current player placing the component
      */
-    public ComponentPlacingState(AssemblyView view, AssemblyProtocol protocol, Player player) {
+    public ComponentPlacingState(AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
-        this.view = view;
         this.player = player;
     }
 
@@ -34,11 +32,11 @@ public class ComponentPlacingState implements GameState {
      * asking where to place the component.
      *
      * @param assemblyPhase the current game instance
-     * @param view          the view used for messaging
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase, AssemblyView view) {
-        view.printComponentPlacingMessage();
+    public void enter(AssemblyThread assemblyPhase) {
+        String message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
+        ClientSocketMessenger.sendMessageToPlayer(player, message);
     }
 
     /**
@@ -57,12 +55,19 @@ public class ComponentPlacingState implements GameState {
 
 
         if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-            assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
-            assemblyPhase.getAssemblyProtocol().newComponent(player);
-            assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
-        } else {
-            assemblyPhase.getAssemblyView().printEmptyHandErrorMessage();
-            assemblyPhase.setState(new AssemblyState(view, assemblyProtocol, player));
+            if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 1, num2) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 + 1, num2) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1, num2 - 1) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1, num2 + 1) != null) {
+                assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
+                synchronized (assemblyProtocol.lockCoveredList) {
+                    assemblyPhase.getAssemblyProtocol().newComponent(player);
+                }
+                assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+            } else{
+                // di al giocatore che il componente non è adiacente e a nulla.
+            }
+        }else{
+            String message = "Your hand is empty";
+            assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+            ClientSocketMessenger.sendMessageToPlayer(player, message);
         }
     }
 }

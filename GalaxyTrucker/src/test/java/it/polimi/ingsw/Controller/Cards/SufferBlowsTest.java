@@ -78,7 +78,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[0], 8);
         rollField.setInt(blows[1], 9);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -105,7 +105,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[0], 8);
         rollField.setInt(blows[1], 9);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -138,7 +138,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[1], 4); //targets battery
         rollField.setInt(blows[2], 5); //targets storage
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -181,7 +181,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -212,7 +212,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, new Blow[]{blow}, ElementType.CannonBlow, flightBoard, flightView);
 
@@ -247,7 +247,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[1], 6);
         rollField.setInt(blows[2], 6);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -303,7 +303,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -344,7 +344,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -377,7 +377,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[2], 5);
         rollField.setInt(blows[3], 5);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -411,7 +411,7 @@ class SufferBlowsTest {
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
@@ -445,7 +445,7 @@ class SufferBlowsTest {
         rollField.setInt(blows[1], 6);
         rollField.setInt(blows[2], 6);
 
-        flightView = new FlightViewTUI(gameInformation);
+        flightView = new FlightViewTUI();
 
         operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
 
