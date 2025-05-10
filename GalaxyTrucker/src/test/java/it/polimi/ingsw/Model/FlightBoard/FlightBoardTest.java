@@ -95,13 +95,13 @@ class FlightBoardTest {
     }
 
     @Test
-    void removeFirstPLayer() {
+    void eliminateFirstPLayer() {
         flightBoard.addPlayer(playerA, 10);
         flightBoard.addPlayer(playerB, 5);
         playerOrderList.add(playerA);
         playerOrderList.add(playerB);
         assertEquals(playerOrderList, flightBoard.getPlayerOrderList());
-        flightBoard.removePlayer(playerA);
+        flightBoard.eliminatePlayer(playerA);
         playerOrderList.remove(playerA);
         assertEquals(playerOrderList, flightBoard.getPlayerOrderList());
         assertThrows(NoSuchElementException.class, () -> {
@@ -180,7 +180,7 @@ class FlightBoardTest {
     @Test
     void removeNonPresentPlayer() {
         assertThrows(NoSuchElementException.class, () -> {
-            flightBoard.removePlayer(playerA);
+            flightBoard.eliminatePlayer(playerA);
         });
     }
 

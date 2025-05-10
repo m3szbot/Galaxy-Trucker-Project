@@ -8,7 +8,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * FlightBoard class used to model the flight board
+ * FlightBoard class used to model the flight board.
+ * Synchronize methods use by assembly.
+ * Flight is sequential, no need to synchronize,
  *
  * @author Boti
  */
@@ -65,6 +67,22 @@ public class FlightBoard {
     }
 
     /**
+     * @return number of unresolved cards
+     */
+    public int getCardsNumber() {
+        return this.cardsStack.size();
+    }
+
+    /**
+     * Get new card from the cardStack
+     *
+     * @return new card
+     */
+    public Card getNewCard() {
+        return cardsStack.pop();
+    }
+
+    /**
      * @return free starting tiles to choose from
      */
     public List<Integer> getStartingTiles() {
@@ -80,12 +98,11 @@ public class FlightBoard {
     }
 
     /**
-     * @return number of unresolved cards
+     * @return playerOrderList
      */
-    public int getCardsNumber() {
-        return this.cardsStack.size();
+    public List<Player> getPlayerOrderList() {
+        return playerOrderList;
     }
-
 
     /**
      * Get player order in playerOrderList (1-4), if player is in game
@@ -104,7 +121,7 @@ public class FlightBoard {
 
     /**
      * Check if player is still in game or throws exception for player not present/eliminated/given up.
-     * Checks synchronization between playerTilesMap and playerOrderList.
+     * Checks coherence between playerTilesMap and playerOrderList.
      *
      * @param player Player to examine
      * @return true if player is in game, false if not in game
@@ -120,13 +137,6 @@ public class FlightBoard {
     }
 
     /**
-     * @return true if player is eliminated, false otherwise
-     */
-    public boolean isEliminated(Player player) {
-        return eliminatedList.contains(player);
-    }
-
-    /**
      * @return true if player voluntarily gave up, false otherwise
      */
     public boolean isGaveUp(Player player) {
@@ -134,25 +144,16 @@ public class FlightBoard {
     }
 
     /**
-     * @return playerOrderList
+     * @return true if player is eliminated, false otherwise
      */
-    public List<Player> getPlayerOrderList() {
-        return playerOrderList;
-    }
-
-    /**
-     * Get new card from the cardStack
-     *
-     * @return new card
-     */
-    public Card getNewCard() {
-        return cardsStack.pop();
+    public boolean isEliminated(Player player) {
+        return eliminatedList.contains(player);
     }
 
     /**
      * Add player to flight board to the selected tile,
      * if player not already in game and selected tile is free and valid.
-     * Synchronized, only 1 player can be added at a time (because of starting tiles).
+     * Synchronized, called in Assembly.
      *
      * @param player Player to add
      * @param tile   Player's starting tile
@@ -179,8 +180,8 @@ public class FlightBoard {
      * To call after every modification to the players.
      */
     private void checkFlightBoard() {
-        // update playerOrderList - necessary for removal
-        updatePlayerOrderList();
+        // sort playerOrderList - necessary for removal
+        sortPlayerOrderList();
 
         // remove lapped players
         // toRemove list to avoid concurrent modification issues
@@ -206,36 +207,52 @@ public class FlightBoard {
     }
 
     /**
-     * Eliminate player from game (if in game), put him into eliminatedList,
-     * and update playerOrderList (necessary).
-     *
-     * @param player Player to remove
+     * Sort playerOrderList based on playerTilesMap positions (highest is first).
      */
-    public void eliminatePlayer(Player player) {
-        if (isInGame(player)) {
-            playerTilesMap.remove(player);
-            eliminatedList.add(player);
-            playerOrderList.remove(player);
-            updatePlayerOrderList();
-        } else {
-            throw new NoSuchElementException("Player not in game");
-        }
-    }
-
-    /**
-     * Update playerOrderList based on playerTilesMap positions (highest is first).
-     */
-    private void updatePlayerOrderList() {
+    private void sortPlayerOrderList() {
         List<Map.Entry<Player, Integer>> sortedMap = new ArrayList<>(playerTilesMap.entrySet());
         sortedMap.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
         playerOrderList = sortedMap.stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     /**
-     * Increment player tiles by given value, if player is present
+     * Eliminate player from game (if in game), put him into eliminatedList,
+     * and sort playerOrderList.
      *
-     * @param player Player to act on
-     * @param tiles  Value of increment of tiles
+     * @param player Player to remove
+     */
+    public void eliminatePlayer(Player player) {
+        if (isInGame(player)) {
+            playerTilesMap.remove(player);
+            playerOrderList.remove(player);
+            sortPlayerOrderList();
+            eliminatedList.add(player);
+        } else {
+            throw new NoSuchElementException("Player not in game");
+        }
+    }
+
+    /**
+     * Remove player from game (if in game), put him into giveUpList,
+     * sort playerOrderList.
+     *
+     * @param player player who gives up
+     */
+    public void giveUpPlayer(Player player) {
+        if (isInGame(player)) {
+            playerTilesMap.remove(player);
+            playerOrderList.remove(player);
+            sortPlayerOrderList();
+            gaveUpList.add(player);
+        } else {
+            throw new NoSuchElementException("Player not in game");
+        }
+    }
+
+    /**
+     * Increment player tile by given value, if player is in game.
+     *
+     * @param tiles Value of increment of tiles
      */
     public void incrementPlayerTile(Player player, int tiles) {
         if (isInGame(player)) {
@@ -261,29 +278,28 @@ public class FlightBoard {
             checkFlightBoard();
         } else {
             // throw exception
-            throw new NoSuchElementException("player not present");
-        }
-    }
-
-    /**
-     * Return player tile position, if player is in game
-     *
-     * @param player Player to examine
-     * @return player's tile on FLightBoard
-     */
-    public int getPlayerTile(Player player) {
-        if (isInGame(player))
-            return this.playerTilesMap.get(player);
-        else {
-            // throw exception
             throw new NoSuchElementException("Player not in game");
         }
     }
 
     /**
-     * Remove goods from inventory
+     * Return player tile, if player is in game.
      *
-     * @param goods Array of the 4 good types containing the quantities to remove
+     * @param player Player to examine
+     * @return player's tile on FlightBoard
+     */
+    public int getPlayerTile(Player player) {
+        if (isInGame(player))
+            return this.playerTilesMap.get(player);
+        else {
+            throw new NoSuchElementException("Player not in game");
+        }
+    }
+
+    /**
+     * Consume goods from flightBoard inventory, if there are enough goods available.
+     *
+     * @param goods Array of quantities to remove of each color of goods (red, yellow, green, blue)
      */
     public void removeGoods(int[] goods) {
         // first check for depletion
@@ -300,7 +316,7 @@ public class FlightBoard {
     /**
      * Add goods to inventory
      *
-     * @param goods Array of number of goods to add to bank inventory
+     * @param goods Array of quantities to add of each color of goods (red, yellow, green, blue)
      */
     public void addGoods(int[] goods) {
         for (int i = 0; i < 4; i++) {
