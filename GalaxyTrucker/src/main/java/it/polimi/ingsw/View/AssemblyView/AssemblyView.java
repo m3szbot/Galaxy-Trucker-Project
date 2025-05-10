@@ -7,6 +7,15 @@ import it.polimi.ingsw.View.GeneralView;
 import java.util.List;
 
 public abstract class AssemblyView extends GeneralView {
+
+    public void printHourglass() {
+    }
+
+    public void printDeck() {
+        // calls printCard(card)
+    }
+
+    // TODO: remove unnecessary methods:
     public abstract String printAssemblyMessage();
 
     public abstract String printComponentChoice();

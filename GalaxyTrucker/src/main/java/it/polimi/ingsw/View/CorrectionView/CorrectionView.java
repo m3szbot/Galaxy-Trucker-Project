@@ -5,6 +5,9 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.GeneralView;
 
 public abstract class CorrectionView extends GeneralView {
+
+
+    // TODO: remove
     public abstract void printErrorsMessage(ShipBoard shipBoard);
 
     public abstract void printFinishedMessage();
