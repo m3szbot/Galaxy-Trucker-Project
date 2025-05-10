@@ -2,6 +2,8 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
 
@@ -41,25 +43,25 @@ public class AssemblyState implements GameState {
     public void handleInput(String input, AssemblyThread assemblyPhase) {
 
         if (actionTaken) return; // Ignore input after an action is taken
-        String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component)";
+        String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)";
         //view.sendMessageToPlayer(message, player);
         ClientSocketMessenger.sendMessageToPlayer(player, "assemblyView.sendMessageToPlayer");
         ClientSocketMessenger.sendMessageToPlayer(player, message);
         switch (input.toLowerCase()) {
             case "place":
                 actionTaken = true;
-                assemblyPhase.setState(new ComponentPlacingState( protocol, player));
+                assemblyPhase.setState(new ComponentPlacingState(protocol, player));
                 break;
             case "draw":
                 actionTaken = true;
-                synchronized (assemblyPhase.getAssemblyProtocol().lockCoveredList){
+                synchronized (assemblyPhase.getAssemblyProtocol().lockCoveredList) {
                     assemblyPhase.getAssemblyProtocol().newComponent(player);
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));
                 break;
             case "choose":
                 actionTaken = true;
-                assemblyPhase.setState(new ComponentChoiceState( protocol, player));
+                assemblyPhase.setState(new ComponentChoiceState(protocol, player));
                 break;
             case "rotate":
                 if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
@@ -97,6 +99,9 @@ public class AssemblyState implements GameState {
                 actionTaken = true;
                 assemblyPhase.setState(new PlaceBookedComponentState(protocol, player));
                 break;
+            case "end":
+                actionTaken = true;
+                assemblyPhase.setState(new ChooseStartingPositionState(protocol, player));
             default:
                 message = "Invalid command";
                 ClientSocketMessenger.sendMessageToPlayer(player, message);

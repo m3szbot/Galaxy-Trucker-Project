@@ -8,20 +8,27 @@ import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AssemblyThread implements Runnable {
     GameInformation gameInformation;
     Player associatedPlayer;
     AssemblyProtocol assemblyProtocol;
     private GameState currentState;
-    private boolean running = true;
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    AtomicBoolean running;
+    AtomicInteger end;
+    Boolean isfinished = false;
+    Boolean amIChoosing = false;
 
-    public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol) {
+
+    public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, AtomicInteger end) {
         this.gameInformation = gameInformation;
         this.associatedPlayer = player;
         this.assemblyProtocol = assemblyProtocol;
-
+        this.running = running;
+        this.end = end;
     }
 
     /**
@@ -38,7 +45,7 @@ public class AssemblyThread implements Runnable {
      * Updates the running flag that controls the game loop.
      */
     public void setRunning(boolean value) {
-        running = value;
+        running.set(value);
     }
 
     public AssemblyProtocol getAssemblyProtocol() {
@@ -53,20 +60,28 @@ public class AssemblyThread implements Runnable {
     public void run() {
         // For now, the initial state is set using only the first player.
         // Later, threads should be launched for all players.
-        setState(new AssemblyState(assemblyProtocol, gameInformation.getPlayerList().getFirst()));
+        setState(new AssemblyState(assemblyProtocol, associatedPlayer));
 
         // Separate thread for reading user input from the console
         new Thread(() -> {
             //Scanner scanner = new Scanner(System.in);
-            while (running) {
+            while (running.get() || end.get() != gameInformation.getPlayerList().size()) {
                 //String input = scanner.nextLine();
                 String input = ClientSocketMessenger.receiveString(associatedPlayer);
                 inputQueue.offer(input);
             }
         }).start();
 
+        new Thread(() -> {
+            while(running.get()==false && isfinished==false) {
+                if(!amIChoosing) {
+                    setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
+                }
+            }
+        }).start();
+
         // Main non-blocking game loop
-        while (running) {
+        while (running.get() || end.get() < gameInformation.getPlayerList().size()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ignored) {

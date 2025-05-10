@@ -2,7 +2,9 @@ package it.polimi.ingsw.Model.AssemblyModel;
 
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.*;
@@ -29,6 +31,8 @@ public class AssemblyProtocol {
     public Object lockUncoveredList = new Object();
     public Object lockCoveredList = new Object();
     public Object lockDecksList = new Object();
+    private GameType gameType;
+    private FlightBoard flightBoard;
 
 
     /**
@@ -56,6 +60,8 @@ public class AssemblyProtocol {
         for (Player player : gameInformation.getPlayerList()) {
             bookedMap.put(player, new ArrayList<>());
         }
+        gameType = gameInformation.getGameType();
+        flightBoard = gameInformation.getFlightBoard();
     }
 
     /**
@@ -209,5 +215,13 @@ public class AssemblyProtocol {
         } else {
             throw new IndexOutOfBoundsException("Not enough booked components");
         }
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public FlightBoard getFlightBoard() {
+        return flightBoard;
     }
 }
