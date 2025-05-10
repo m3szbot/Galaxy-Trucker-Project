@@ -39,6 +39,7 @@ public class Server {
     public Server(){
         this.gameCode = 0;
         this.currentStartingGame = new Game(gameCode);
+        ClientMessenger.addGame(gameCode);
         this.socketListener = new SocketListener(this);
         this.rmiListener = new RMIListener(this);
         this.currentColor = Color.RED;
@@ -47,6 +48,10 @@ public class Server {
 
     public int getPort(){
         return portNumber;
+    }
+
+    public int getCurrentGameCode() {
+        return gameCode;
     }
 
     public Color getCurrentColor() {
@@ -110,6 +115,7 @@ public class Server {
         addGame(currentStartingGame);
         //new game
         currentStartingGame = new Game(gameCode);
+        ClientMessenger.addGame(gameCode);
     }
 
     public static void main(String[] args){

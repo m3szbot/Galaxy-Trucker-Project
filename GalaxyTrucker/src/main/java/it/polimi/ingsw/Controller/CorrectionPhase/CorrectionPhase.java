@@ -34,6 +34,7 @@ public class CorrectionPhase implements Startable {
      *
      * @param gameInformation
      */
+
     public void start(GameInformation gameInformation) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads

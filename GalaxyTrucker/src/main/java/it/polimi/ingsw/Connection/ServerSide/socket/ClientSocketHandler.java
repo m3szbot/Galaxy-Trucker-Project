@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide.socket;
 
 import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -140,6 +141,7 @@ public class ClientSocketHandler extends Thread {
                             clientInfoSender.writeObject(clientInfo);
                             centralServer.addPlayerToCurrentStartingGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
                             centralServer.getCurrentStartingGame().getGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, clientSocket);
 
                             message = "You have been added to the game (game code " + centralServer.getCurrentStartingGame().getGameCode() + " )";
                             dataSender.writeUTF(message);
@@ -179,10 +181,12 @@ public class ClientSocketHandler extends Thread {
                             clientInfoSender.writeObject(clientInfo);
                             centralServer.addPlayerToCurrentStartingGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType());
                             centralServer.getCurrentStartingGame().getGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, clientSocket);
 
                             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
                             dataSender.writeUTF(message);
                             dataSender.writeUTF("added");
+
 
                             if (centralServer.getCurrentStartingGame().isFull()) {
                                 centralServer.startCurrentGame();
