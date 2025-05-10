@@ -28,7 +28,7 @@ public class ChooseStartingPositionState implements GameState{
                 assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                 break;
             case "2":
-                if(assemblyProtocol.getFlightBoard().getStartingTiles().length >= 2 ){
+                if(assemblyProtocol.getFlightBoard().getStartingTiles().size() >= 2 ){
                     assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(2));
                     assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                     break;
@@ -39,7 +39,7 @@ public class ChooseStartingPositionState implements GameState{
                     break;
                 }
             case "3":
-                if (assemblyProtocol.getFlightBoard().getStartingTiles().length >= 3){
+                if (assemblyProtocol.getFlightBoard().getStartingTiles().size() >= 3){
                     assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(3));
                     assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                     break;
@@ -50,7 +50,7 @@ public class ChooseStartingPositionState implements GameState{
                     break;
                 }
             case "4":
-                if (assemblyProtocol.getFlightBoard().getStartingTiles().length == 4){
+                if (assemblyProtocol.getFlightBoard().getStartingTiles().size() == 4){
                     assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(4));
                     assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                     break;

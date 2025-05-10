@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class used to comunicate with the player
@@ -16,9 +18,9 @@ import java.util.HashMap;
 
 public class ClientSocketMessenger {
 
-    private static HashMap<Player, DataOutputStream> playerDataOutputStreamMap = new HashMap<>();
-    private static HashMap<Player, ObjectOutputStream> playerObjectOutputStreamMap = new HashMap<>();
-    private static HashMap<Player, DataInputStream> playerDataInputStreamMap = new HashMap<>();
+    private static Map<Player, DataOutputStream> playerDataOutputStreamMap = new ConcurrentHashMap<>();
+    private static Map<Player, DataInputStream> playerDataInputStreamMap = new ConcurrentHashMap<>();
+    private static Map<Player, ObjectOutputStream> playerObjectOutputStreamMap = new ConcurrentHashMap<>();
 
     public void addPlayerToSocket(Player player, Socket socket){
 

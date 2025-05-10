@@ -4,7 +4,6 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.util.concurrent.BlockingQueue;

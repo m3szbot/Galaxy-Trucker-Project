@@ -5,7 +5,6 @@ import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Connection.ClientSide.View.AssemblyView.AssemblyView;
 
 /**
  * AssemblyState handles the player's turn during the assembly phase,
@@ -118,7 +117,7 @@ public class AssemblyState implements GameState {
         if (!actionTaken) {
             long now = System.currentTimeMillis();
             if (now - startTime >= 50000) {
-                String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component)"; // 50 seconds timeout
+                String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)"; // 50 seconds timeout
                 ClientSocketMessenger.sendMessageToPlayer(player, message);
                 actionTaken = true;
                 assemblyPhase.setState(new AssemblyState(protocol, player));
