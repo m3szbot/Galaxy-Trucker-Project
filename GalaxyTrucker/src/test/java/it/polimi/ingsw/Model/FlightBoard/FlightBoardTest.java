@@ -179,6 +179,8 @@ class FlightBoardTest {
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.incrementPlayerTile(playerA, 1);
         });
+        assertEquals(1, flightBoard.getEliminatedList().size());
+        assertTrue(flightBoard.isEliminated(playerA));
     }
 
     @Test
@@ -188,6 +190,8 @@ class FlightBoardTest {
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.incrementPlayerTile(playerA, 1);
         });
+        assertEquals(1, flightBoard.getGaveUpList().size());
+        assertTrue(flightBoard.isGaveUp(playerA));
     }
 
     @Test
