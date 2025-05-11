@@ -1,38 +1,42 @@
 package it.polimi.ingsw.Model.ScoreCounter;
 
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.*;
 
 /**
- * ScoreCounter class to evaluate player score at end of flight
+ * ScoreCounter class to evaluate player score at end of flight.
+ * <p>
+ * Finishing players: normal pointing
+ * Did not finish (gave up/eliminated): special pointing:
+ * No finishOrder points, no leastExposedLinks points
+ * 1/2 goods points
+ * Normal lostComponents points
  *
  * @author Boti
  */
 
 public class ScoreCounter {
+    // scoring constants
+    private final int[] finishOrderPoints;
+    private final int[] goodsPoints;
+    private final int leastExposedLinksPoints;
+    private final int lostComponentsPoints;
     // map of player scores
     private Map<Player, Integer> playerScoresMap;
-
     // more players can have the minimum and both receive points
     private List<Player> leastExposedLinksList;
-    // constants
-    private final int[] finishOrderPoints;
-    private final int leastExposedLinksPoints;
-    private final int[] goodsPoints;
-    private final int lostComponentsPoints;
 
     /**
-     * Constructor, populates playerScoresMap
-     * playerList needed to calculate score for all players
-     * playerOrderList needed to calculate finishOrderPoints
+     * Constructor, calculates player scores and puts them in playerScoresMap.
+     * Use  getPlayerScore to get calculated scores.
      *
-     * @param gameType        Game type that determines scoring
-     * @param playerList      List of all players
-     * @param playerOrderList Finish order of players (only players still in game)
+     * @param gameType    Game type that determines scoring
+     * @param flightBoard contains playerOrderList (players who finished), eliminatedList, gaveUpList
      */
-    public ScoreCounter(GameType gameType, List<Player> playerList, List<Player> playerOrderList) {
+    public ScoreCounter(FlightBoard flightBoard, GameType gameType) {
         // set scoring based on game type
         // normal game values
         int[] finishOrderPoints = {8, 6, 4, 2};
@@ -47,31 +51,27 @@ public class ScoreCounter {
         // set scoring attributes
         this.leastExposedLinksPoints = leastExposedLinksPoints;
         this.lostComponentsPoints = lostComponentsPoints;
-        this.finishOrderPoints = new int[finishOrderPoints.length];
-        System.arraycopy(finishOrderPoints, 0, this.finishOrderPoints, 0, finishOrderPoints.length);
-        this.goodsPoints = new int[goodsPoints.length];
-        System.arraycopy(goodsPoints, 0, this.goodsPoints, 0, goodsPoints.length);
-        // create and fill leastExposedLinksList with players
+        this.finishOrderPoints = finishOrderPoints.clone();
+        this.goodsPoints = goodsPoints.clone();
+        // create and fill leastExposedLinksList
         this.leastExposedLinksList = new ArrayList<>();
-        calculateLeastExposedLinks(playerList);
+        // only finishing players count for leastExposedLinks points
+        calculateLeastExposedLinks(flightBoard.getPlayerOrderList());
         // populate playerScoresMap
         this.playerScoresMap = new HashMap<>();
-        for (Player player : playerList) {
-            playerScoresMap.put(player, calculatePlayerScore(player, playerOrderList));
+        // finishing players
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            playerScoresMap.put(player, calculateFinishingPlayerScore(player, flightBoard.getPlayerOrderList()));
         }
-    }
+        // eliminated players
+        for (Player player : flightBoard.getEliminatedList()) {
+            playerScoresMap.put(player, calculateDNFPlayerScore(player));
+        }
+        // gave up players
+        for (Player player : flightBoard.getGaveUpList()) {
+            playerScoresMap.put(player, calculateDNFPlayerScore(player));
+        }
 
-    /**
-     * Return score of given player
-     *
-     * @param player Player to examine
-     * @return Score of given player
-     */
-    public int getPlayerScore(Player player) {
-        if (playerScoresMap.containsKey(player)) {
-            return playerScoresMap.get(player);
-        } else
-            throw new IllegalArgumentException("Player not present");
     }
 
     /**
@@ -97,13 +97,12 @@ public class ScoreCounter {
     }
 
     /**
-     * Calculate score of a player (credits assigned by controller)
+     * Calculate score of a finishing player.
+     * Credits assigned by controller.
      *
-     * @param player          Player whose score is to be calculated
-     * @param playerOrderList Finish order of players (only players still in game)
-     * @return Score of the given player
+     * @return Score of the given player.
      */
-    private int calculatePlayerScore(Player player, List<Player> playerOrderList) {
+    private int calculateFinishingPlayerScore(Player player, List<Player> playerOrderList) {
         int playerPoints = 0;
         playerPoints += calculateFinishOrderPoints(player, playerOrderList);
         playerPoints += calculateLeastExposedLinksPoints(player);
@@ -113,23 +112,31 @@ public class ScoreCounter {
     }
 
     /**
-     * Calculate player score based on finish position
-     * no points if DNF
+     * Calculate score of a not finishing/DNF player.
+     * Credits assigned by controller.
+     *
+     * @return Score of the given player.
+     */
+    private int calculateDNFPlayerScore(Player player) {
+        int playerPoints = 0;
+        playerPoints += calculateGoodsPoints(player) / 2;
+        playerPoints += calculateLostComponentsPoints(player);
+        return playerPoints;
+    }
+
+    /**
+     * Calculate player score based on finish position. Called only for finishing players.
      *
      * @param player          Player to examine
      * @param playerOrderList Finish order of players
      * @return Score of player given for finish position
      */
     private int calculateFinishOrderPoints(Player player, List<Player> playerOrderList) {
-        if (playerOrderList.contains(player)) {
-            return finishOrderPoints[playerOrderList.indexOf(player)];
-        } else {
-            return 0;
-        }
+        return finishOrderPoints[playerOrderList.indexOf(player)];
     }
 
     /**
-     * Calculates points given for least exposed components ship
+     * Calculates points given for least exposed components ship for player.
      *
      * @param player Player to evaluate
      * @return Earned points
@@ -143,7 +150,7 @@ public class ScoreCounter {
     }
 
     /**
-     * Calculate points given for selling goods
+     * Calculate points given for selling goods of the player.
      *
      * @param player Player to evaluate
      * @return Earned points
@@ -157,7 +164,7 @@ public class ScoreCounter {
     }
 
     /**
-     * Calculate (negative) points given for lost components
+     * Calculate (negative) points given for lost components of player.
      *
      * @param player Player to evaluate
      * @return Earned (negative) points
@@ -166,6 +173,19 @@ public class ScoreCounter {
         int lostPoints = 0;
         lostPoints += lostComponentsPoints * player.getShipBoard().getShipBoardAttributes().getDestroyedComponents();
         return lostPoints;
+    }
+
+    /**
+     * Return score of given player.
+     *
+     * @param player Player to examine
+     * @return Score of given player
+     */
+    public int getPlayerScore(Player player) {
+        if (playerScoresMap.containsKey(player)) {
+            return playerScoresMap.get(player);
+        } else
+            throw new IllegalArgumentException("Player not present");
     }
 }
 
