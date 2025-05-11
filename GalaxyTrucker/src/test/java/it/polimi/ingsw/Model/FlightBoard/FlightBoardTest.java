@@ -7,7 +7,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,12 +40,7 @@ class FlightBoardTest {
 
         // set up gameInformation
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        try {
-            gameInformation.setUpCards(GameType.NormalGame);
-            gameInformation.setUpComponents();
-        } catch (IOException e) {
-        }
+        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
 
         flightBoard = new FlightBoard(GameType.NormalGame, gameInformation.getCardsList());
     }
@@ -198,6 +192,25 @@ class FlightBoardTest {
     void getNewCard() {
         assertNotNull(flightBoard.getNewCard());
         assertEquals(11, flightBoard.getCardsNumber());
+    }
+
+    @Test
+    void concurrentAddPlayer() {
+        // add all players from different threads
+        // the starting tiles should cause conflicts of occupation
+        for (Player player : gameInformation.getPlayerList()) {
+            Thread thread = new Thread(() -> {
+                while (true) {
+                    try {
+                        flightBoard.addPlayer(player, flightBoard.getStartingTiles().getFirst());
+                        break;
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Tile chosen occupied, retrying");
+                    }
+                }
+
+            });
+        }
     }
 
 }

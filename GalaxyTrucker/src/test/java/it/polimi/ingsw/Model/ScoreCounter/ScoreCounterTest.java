@@ -32,7 +32,7 @@ class ScoreCounterTest {
     void setUp() {
         // gameInformation necessary for player
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
+        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);
         playerC = new Player("C", Color.YELLOW, gameInformation);
