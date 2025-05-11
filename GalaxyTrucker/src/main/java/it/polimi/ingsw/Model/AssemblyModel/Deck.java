@@ -2,7 +2,6 @@ package it.polimi.ingsw.Model.AssemblyModel;
 
 
 import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.util.ArrayList;
@@ -25,18 +24,18 @@ public class Deck {
      * Normal Game: 4 decks of: 2 level 2 + 1 level 1 card (12 tot)
      * Test Game: 4 decks of: 2 level 1 cardsList (8 tot)
      */
-    public Deck(GameInformation gameInformation) {
+    public Deck(List<Card> cardsList, GameType gameType) {
         cards = new ArrayList<>();
         // add cards to the deck
-        if (gameInformation.getGameType().equals(GameType.NormalGame)) {
-            addCardToDeck(gameInformation, 2);
-            addCardToDeck(gameInformation, 2);
-            addCardToDeck(gameInformation, 1);
+        if (gameType.equals(GameType.NormalGame)) {
+            addCardToDeck(cardsList, 2);
+            addCardToDeck(cardsList, 2);
+            addCardToDeck(cardsList, 1);
         }
         // TestGame
         else {
-            addCardToDeck(gameInformation, 1);
-            addCardToDeck(gameInformation, 1);
+            addCardToDeck(cardsList, 1);
+            addCardToDeck(cardsList, 1);
         }
         Collections.shuffle(cards);
     }
@@ -46,14 +45,14 @@ public class Deck {
      *
      * @param level level of the card
      */
-    private void addCardToDeck(GameInformation gameInformation, int level) {
+    private void addCardToDeck(List<Card> cardsList, int level) {
         int i = 0;
-        Collections.shuffle(gameInformation.getCardsList());
+        Collections.shuffle(cardsList);
         // find card of required level
         do {
             i++;
-        } while (gameInformation.getCardsList().get(i).getCardLevel() != level);
-        this.cards.add(gameInformation.getCardsList().remove(i));
+        } while (cardsList.get(i).getCardLevel() != level);
+        this.cards.add(cardsList.remove(i));
     }
 
 
