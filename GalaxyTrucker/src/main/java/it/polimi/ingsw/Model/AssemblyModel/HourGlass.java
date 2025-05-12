@@ -1,7 +1,11 @@
 package it.polimi.ingsw.Model.AssemblyModel;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +21,7 @@ public class HourGlass {
     private int state; // Represents the current state of the hourglass
     private boolean finished; // Indicates whether the timer has completed
     private int life = 60; // Duration of the timer in seconds
+    List<Player> listOfPlayers = new ArrayList<>();
 
     /**
      * Constructor initializes the HourGlass with a default state and finished status.
@@ -30,7 +35,7 @@ public class HourGlass {
      * Starts the hourglass timer if it is not already running.
      * The timer runs for a predefined duration and updates the state when completed.
      */
-    public void twist() {
+    public void twist(AssemblyProtocol assemblyProtocol, List<Player> players) {
         if (finished == true) { // Ensures the hourglass is not already running
             finished = false;
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -46,7 +51,11 @@ public class HourGlass {
                     } else {
                         String message = "Time's up!";
                         System.out.println("Time's up!");
-                        ClientSocketMessenger.sendMessageToAll(message);
+                        for(Player player: players) {
+                            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
+                        }
                         scheduler.shutdown(); // Stops the scheduler
                         updateState(); // Updates the state of the hourglass
                         finished = true; // Resets to finished state

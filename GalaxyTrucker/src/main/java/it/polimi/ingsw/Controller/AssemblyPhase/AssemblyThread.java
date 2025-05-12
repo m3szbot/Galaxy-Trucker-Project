@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -66,7 +67,7 @@ public class AssemblyThread implements Runnable {
             //Scanner scanner = new Scanner(System.in);
             while (running.get() || end.get() != gameInformation.getPlayerList().size()) {
                 //String input = scanner.nextLine();
-                String input = ClientSocketMessenger.receiveString(associatedPlayer);
+                String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(associatedPlayer);
                 inputQueue.offer(input);
             }
         }).start();
@@ -96,7 +97,9 @@ public class AssemblyThread implements Runnable {
         }
 
         String message = "Game Over";
-        ClientSocketMessenger.sendMessageToPlayer(associatedPlayer, message);
+        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(associatedPlayer);
+        dataContainer.setMessage(message);
+        ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(associatedPlayer);
 
     }
 }

@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * class that represent the card sabotage
@@ -22,21 +23,40 @@ public class Sabotage extends Card implements SmallestCrew {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, int gameCode) {
 
         Player smallestCrewPlayer = calculateSmallestCrew(flightBoard);
         String message;
+        DataContainer dataContainer;
 
         if (destroyRandomComponent(smallestCrewPlayer, flightBoard)) {
 
             message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
-            flightView.sendMessageToAll(message);
+            for (Player player : flightBoard.getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            }
 
         } else {
 
             message = "Player " + smallestCrewPlayer.getNickName() +
                     "was lucky enough to not get hit!";
-            flightView.sendMessageToAll(message);
+            for (Player player : flightBoard.getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            }
+        }
+
+        flightBoard.updateFlightBoard();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setFlightBoard(flightBoard);
+            dataContainer.setCommand("printFlightBoard");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
         }
 
     }
