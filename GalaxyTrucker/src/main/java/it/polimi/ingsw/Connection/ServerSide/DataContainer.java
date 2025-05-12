@@ -19,12 +19,21 @@ public class DataContainer implements Serializable {
     private ShipBoard shipBoard;
     private Card card;
     private FlightBoard flightBoard;
+    private String command;
 
     public void clearContainer(){
         message = null;
         shipBoard = null;
         card = null;
         flightBoard = null;
+    }
+
+    public void setCommand(String command){
+        this.command = command;
+    }
+
+    public String getCommand() {
+        return command;
     }
 
     public void setCard(Card card) {

@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.View.GeneralView;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -12,10 +13,11 @@ import java.util.Map;
 public class GameMessageReceiver implements Runnable{
 
     private Map<String, GeneralView> viewMap = new HashMap<>();
-    private DataInputStream in;
+    private ObjectInputStream in;
     private String currentPhase;
 
-    public GameMessageReceiver(GeneralView[] views, DataInputStream in){
+
+    public GameMessageReceiver(GeneralView[] views, ObjectInputStream in){
 
         String[] phases = {"setup", "assembly", "correction", "flight"};
 
@@ -37,19 +39,43 @@ public class GameMessageReceiver implements Runnable{
         while(true){
 
             try {
-                String command = in.readUTF();
-                result = executeCommand(command);
+                DataContainer data = (DataContainer) in.readObject();
+                result = executeCommand(data.getCommand());
 
             } catch (IOException e) {
                 System.err.println("Critical error while receiving messages");
                 break;
+            } catch (ClassNotFoundException e) {
+
+                System.err.println("DataContainer class not recognized");
+                break;
+
             }
 
         }
 
     }
 
+    private void advancePhase(){
+
+        switch (currentPhase){
+            case "setup": currentPhase = "assembly";
+            break;
+            case "assembly": currentPhase = "correction";
+            break;
+        }
+
+    }
+
     private int executeCommand(String command){
+
+        if(command.equals("change phase")){
+
+        }
+
+    }
+
+    private int callView(DataContainer container){
 
         GeneralView currentView = viewMap.get(currentPhase);
 
@@ -69,12 +95,9 @@ public class GameMessageReceiver implements Runnable{
             return 0;
 
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-           System.err.println("Critical error while accessing view method ");
-           e.printStackTrace();
-           return -1;
+            System.err.println("Critical error while accessing view method ");
+            e.printStackTrace();
+            return -1;
         }
-
-
-
     }
 }

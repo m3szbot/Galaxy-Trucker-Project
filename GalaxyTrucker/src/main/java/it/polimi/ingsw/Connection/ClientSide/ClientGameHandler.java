@@ -9,9 +9,7 @@ import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import it.polimi.ingsw.View.GeneralView;
 import it.polimi.ingsw.View.SetUpView.SetUpViewTUI;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Class that handles the client playing the game.
@@ -62,11 +60,11 @@ public class ClientGameHandler {
 
     private int startSCK(GeneralView[] views) {
 
-        DataInputStream in;
+        ObjectInputStream in;
         DataOutputStream out;
 
         try {
-            in = new DataInputStream(clientInfo.getServerSocket().getInputStream());
+            in = new ObjectInputStream(clientInfo.getServerSocket().getInputStream());
             out = new DataOutputStream(clientInfo.getServerSocket().getOutputStream());
         } catch (IOException e) {
             System.err.println("A critical error occured while opening streams");
