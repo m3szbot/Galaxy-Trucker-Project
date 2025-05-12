@@ -8,7 +8,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,12 +20,7 @@ class AssemblyProtocolTest {
     void setUp() {
         // set up gameInformation
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        try {
-            gameInformation.setUpCards(GameType.NormalGame);
-            gameInformation.setUpComponents();
-        } catch (IOException e) {
-        }
+        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
         // set up players
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);

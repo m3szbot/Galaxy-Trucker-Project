@@ -6,31 +6,34 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DeckTest {
+    GameInformation gameInformation;
     Deck deck;
 
     @BeforeEach
     void setUp() {
         // set up gameInformation
-        GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        try {
-            gameInformation.setUpCards(GameType.NormalGame);
-        } catch (IOException e) {
-        }
+        gameInformation = new GameInformation();
+        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
         // set up deck
-        deck = new Deck(gameInformation);
+        deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
     }
 
     @Test
     void checkNumCard() {
         assertEquals(3, deck.getNumCards());
+    }
+
+    @Test
+    void deckCardsRemovedFromGameInformation() {
+        int count = gameInformation.getCardsList().size();
+        deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+        assertEquals(count, gameInformation.getCardsList().size());
     }
 
     @Test

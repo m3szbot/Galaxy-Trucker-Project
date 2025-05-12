@@ -20,73 +20,45 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GameInformation {
+    private GameType gameType;
     private List<Card> cardsList;
     private List<Component> componentList;
     private List<Player> playerList;
     private int maxNumberOfPlayers;
     private FlightBoard flightBoard;
-    private GameType gameType;
-    private HashMap<Player, ViewType> playerViewMap;
-    private HashMap<Player, ConnectionType> playerConnectionMap;
     private int gameCode;
 
     public GameInformation() {
         cardsList = new ArrayList<>();
         componentList = new ArrayList<>();
         playerList = new ArrayList<>();
-        playerViewMap = new HashMap<>();
     }
 
-    public void setGameCode(int gameCode){
-        this.gameCode = gameCode;
-    }
-
-    public int getGameCode(){
-        return this.gameCode;
-    }
-
-    public List<Card> getCardsList() {
-        return cardsList;
-    }
-
-    public List<Component> getComponentList() {
-        return componentList;
-    }
-
-    public List<Player> getPlayerList() {
-        return playerList;
-    }
-
-    public int getMaxNumberOfPlayers() {
-        return maxNumberOfPlayers;
-    }
-
-    public FlightBoard getFlightBoard() {
-        return flightBoard;
-    }
-
-    public GameType getGameType() {
-        return gameType;
-    }
-
-    public ViewType getPlayerViewType(Player player) {
-        return playerViewMap.get(player);
-    }
-
-    public ConnectionType getPlayerConnectionType(Player player) {
-        return playerConnectionMap.get(player);
+    /**
+     * Sets gameType, maxNumberOfPlayers and initializes gameInformation models:
+     * cards, components, flightBoard
+     *
+     * @author Boti
+     */
+    public void setUpGameInformation(GameType gameType, int maxNumberOfPlayers) {
+        setGameType(gameType);
+        setMaxNumberOfPlayers(maxNumberOfPlayers);
+        try {
+            setUpCards();
+            setUpComponents();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        setUpFlightBoard();
     }
 
     /**
      * creates the complete list of cards based on the type of game
-     *
-     * @param gameType
      */
-    public void setUpCards(GameType gameType) throws IOException {
+    public void setUpCards() throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(new File("src/main/resources/Cards.json"));
@@ -220,6 +192,40 @@ public class GameInformation {
     }
 
     /**
+     * creates component objects
+     */
+    public void setUpComponents() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Serve ad ignorare le proprietà(campi) sconosciuti degli oggetti json con campi aggiuntivi
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Registrazione esplicita dei subtypes
+        mapper.registerSubtypes(
+                AlienSupport.class,
+                Battery.class,
+                Cabin.class,
+                Cannon.class,
+                Component.class,
+                Engine.class,
+                Shield.class,
+                Storage.class
+        );
+
+        componentList = mapper.readValue(new File("src/main/resources/Components.json"),
+                mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
+        );
+
+    }
+
+    /**
+     * creates the flight board based on the game type
+     */
+    public void setUpFlightBoard() {
+        this.flightBoard = new FlightBoard(gameType, cardsList);
+    }
+
+    /**
      * Returns the field value as int if the field exists, default value otherwise
      *
      * @param node  Json node
@@ -253,37 +259,49 @@ public class GameInformation {
         }
     }
 
-    /**
-     * creates component objects
-     */
-    public void setUpComponents() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-
-        // Serve ad ignorare le proprietà(campi) sconosciuti degli oggetti json con campi aggiuntivi
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        // Registrazione esplicita dei subtypes
-        mapper.registerSubtypes(
-                AlienSupport.class,
-                Battery.class,
-                Cabin.class,
-                Cannon.class,
-                Component.class,
-                Engine.class,
-                Shield.class,
-                Storage.class
-        );
-
-        componentList = mapper.readValue(new File("src/main/resources/Components.json"),
-                mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
-        );
-
+    public int getGameCode() {
+        return this.gameCode;
     }
 
+    public void setGameCode(int gameCode) {
+        this.gameCode = gameCode;
+    }
+
+    public List<Card> getCardsList() {
+        return cardsList;
+    }
+
+    public List<Component> getComponentList() {
+        return componentList;
+    }
+
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public int getMaxNumberOfPlayers() {
+        return maxNumberOfPlayers;
+    }
 
     public void setMaxNumberOfPlayers(int maxNumberOfPlayers) {
         this.maxNumberOfPlayers = maxNumberOfPlayers;
     }
+
+    public FlightBoard getFlightBoard() {
+        return flightBoard;
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    /**
+     * asks the creator of the game which mode to play
+     */
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
+    }
+
 
     /**
      * adds a player to the playerList
@@ -309,42 +327,5 @@ public class GameInformation {
         playerList.remove(player);
     }
 
-    /**
-     * creates the flight board based on the game type
-     */
-    public void setUpFlightBoard() {
-        this.flightBoard = new FlightBoard(gameType, cardsList);
-    }
-
-    /**
-     * asks the creator of the game which mode to play
-     */
-    public void setGameType(GameType gameType) {
-        this.gameType = gameType;
-    }
-
-    /**
-     * asks each player which view type they want to play with
-     */
-    public void setPlayerViewType(Player player, ViewType viewType) {
-        playerViewMap.put(player, viewType);
-    }
-
-    /**
-     * set up the connection type for the specified player
-     *
-     * @param player
-     * @param connectionType
-     * @author carlo
-     */
-
-    public void setPlayerConnectionType(Player player, ConnectionType connectionType) {
-        playerConnectionMap.put(player, connectionType);
-    }
-
-    /**
-     * @param player
-     * @return player socket, null if player has chosen RMI to comunicate.
-     */
 
 }

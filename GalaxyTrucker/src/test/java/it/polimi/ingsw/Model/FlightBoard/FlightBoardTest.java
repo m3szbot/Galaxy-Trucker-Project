@@ -7,7 +7,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,12 +40,7 @@ class FlightBoardTest {
 
         // set up gameInformation
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        try {
-            gameInformation.setUpCards(GameType.NormalGame);
-            gameInformation.setUpComponents();
-        } catch (IOException e) {
-        }
+        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
 
         flightBoard = new FlightBoard(GameType.NormalGame, gameInformation.getCardsList());
     }
@@ -72,6 +66,7 @@ class FlightBoardTest {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
         flightBoard.incrementPlayerTile(playerB, 3);
+        flightBoard.updateFlightBoard();
         assertEquals(7, flightBoard.getPlayerTile(playerA));
         assertEquals(2, flightBoard.getPlayerOrder(playerA));
         assertEquals(8, flightBoard.getPlayerTile(playerB));
@@ -87,6 +82,7 @@ class FlightBoardTest {
         flightBoard.addPlayer(playerC, flightBoard.getStartingTiles().getLast());
         flightBoard.incrementPlayerTile(playerB, 2);
         flightBoard.incrementPlayerTile(playerC, 4);
+        flightBoard.updateFlightBoard();
         assertEquals(7, flightBoard.getPlayerTile(playerA));
         assertEquals(2, flightBoard.getPlayerOrder(playerA));
         assertEquals(6, flightBoard.getPlayerTile(playerB));
@@ -101,6 +97,7 @@ class FlightBoardTest {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
         flightBoard.incrementPlayerTile(playerA, -3);
+        flightBoard.updateFlightBoard();
         assertEquals(3, flightBoard.getPlayerTile(playerA));
         assertEquals(2, flightBoard.getPlayerOrder(playerA));
         assertEquals(4, flightBoard.getPlayerTile(playerB));
@@ -126,6 +123,9 @@ class FlightBoardTest {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
         flightBoard.incrementPlayerTile(playerA, 21);
+        assertEquals(7, flightBoard.getPlayerTile(playerA));
+        assertEquals(4, flightBoard.getPlayerTile(playerA));
+        flightBoard.updateFlightBoard();
         assertEquals(29, flightBoard.getPlayerTile(playerA));
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.getPlayerTile(playerB);
@@ -144,7 +144,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void AddExhaustGoods() {
+    void AddAndExhaustGoods() {
         // {12, 17, 13, 14}
         flightBoard.addGoods(new int[]{1, 1, 1, 1});
         // nothing is removed if limit exceeded
@@ -198,6 +198,25 @@ class FlightBoardTest {
     void getNewCard() {
         assertNotNull(flightBoard.getNewCard());
         assertEquals(11, flightBoard.getCardsNumber());
+    }
+
+    @Test
+    void concurrentAddPlayer() {
+        // add all players from different threads
+        // the starting tiles should cause conflicts of occupation
+        for (Player player : gameInformation.getPlayerList()) {
+            Thread thread = new Thread(() -> {
+                while (true) {
+                    try {
+                        flightBoard.addPlayer(player, flightBoard.getStartingTiles().getFirst());
+                        break;
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Tile chosen occupied, retrying");
+                    }
+                }
+
+            });
+        }
     }
 
 }

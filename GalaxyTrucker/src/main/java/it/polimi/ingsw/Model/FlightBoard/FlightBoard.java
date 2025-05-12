@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 /**
  * FlightBoard class used to model the flight board.
  * Synchronize methods use by assembly.
- * Flight is sequential, no need to synchronize,
+ * Flight is sequential, no need to synchronize.
+ * <p>
+ * FlightBoard is automatically updated before flight (addPlayer).
+ * During Flight phase, flightBoard must be updated only at the end of every adventure card
+ * (no update after incrementPlayer).
  *
  * @author Boti
  */
@@ -153,6 +157,7 @@ public class FlightBoard {
     /**
      * Add player to flight board to the selected tile,
      * if player not already in game and selected tile is free and valid.
+     * Updates flightBoard.
      * Synchronized, called in Assembly.
      *
      * @param player Player to add
@@ -164,7 +169,7 @@ public class FlightBoard {
                 // add player
                 this.playerTilesMap.put(player, tile);
                 this.playerOrderList.add(player);
-                checkFlightBoard();
+                sortPlayerOrderList();
                 // remove starting tile
                 startingTiles.remove((Integer) tile);
             } else {
@@ -176,14 +181,29 @@ public class FlightBoard {
     }
 
     /**
-     * Update playerOrderList and remove lapped players.
-     * To call after every modification to the players.
+     * Sort playerOrderList based on playerTilesMap positions (highest is first).
      */
-    private void checkFlightBoard() {
+    private void sortPlayerOrderList() {
+        List<Map.Entry<Player, Integer>> sortedMap = new ArrayList<>(playerTilesMap.entrySet());
+        sortedMap.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        playerOrderList = sortedMap.stream().map(Map.Entry::getKey).collect(Collectors.toList());
+    }
+
+    /**
+     * Remove lapped players and update playerOrderList.
+     * Called at the end of every adventure card.
+     */
+    public void updateFlightBoard() {
         // sort playerOrderList - necessary for removal
         sortPlayerOrderList();
+        // check for lapped players
+        removeLappedPlayers();
+    }
 
-        // remove lapped players
+    /**
+     * Removes lapped players from flightBoard. PlayerOrderList must be sorted before calling.
+     */
+    private void removeLappedPlayers() {
         // toRemove list to avoid concurrent modification issues
         List<Player> toRemove = new ArrayList<>();
         Player low, high;
@@ -204,15 +224,6 @@ public class FlightBoard {
         for (Player player : toRemove) {
             eliminatePlayer(player);
         }
-    }
-
-    /**
-     * Sort playerOrderList based on playerTilesMap positions (highest is first).
-     */
-    private void sortPlayerOrderList() {
-        List<Map.Entry<Player, Integer>> sortedMap = new ArrayList<>(playerTilesMap.entrySet());
-        sortedMap.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        playerOrderList = sortedMap.stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     /**
@@ -251,6 +262,7 @@ public class FlightBoard {
 
     /**
      * Increment player tile by given value, if player is in game.
+     * Does not update flightBoard - updateFlightBoard must be called at the end of the card!
      *
      * @param tiles Value of increment of tiles
      */
@@ -275,7 +287,6 @@ public class FlightBoard {
             }
             // update player tile
             this.playerTilesMap.put(player, nextTile);
-            checkFlightBoard();
         } else {
             // throw exception
             throw new NoSuchElementException("Player not in game");

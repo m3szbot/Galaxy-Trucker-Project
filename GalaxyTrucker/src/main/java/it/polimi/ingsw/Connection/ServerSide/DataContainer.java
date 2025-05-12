@@ -2,6 +2,7 @@ package it.polimi.ingsw.Connection.ServerSide;
 
 
 import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
@@ -17,54 +18,57 @@ public class DataContainer implements Serializable {
 
     private String message;
     private ShipBoard shipBoard;
-    private Card card;
+    private Component component;
     private FlightBoard flightBoard;
-    private String command;
+    private Card card;
 
-    public void clearContainer(){
+    public void clearContainer() {
         message = null;
         shipBoard = null;
-        card = null;
+        component = null;
         flightBoard = null;
+        card = null;
     }
 
-    public void setCommand(String command){
-        this.command = command;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
-
-    public void setFlightBoard(FlightBoard flightBoard) {
-        this.flightBoard = flightBoard;
+    public String getMessage() {
+        return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
     }
 
+    public ShipBoard getShipBoard() {
+        return shipBoard;
+    }
+
     public void setShipBoard(ShipBoard shipBoard) {
         this.shipBoard = shipBoard;
     }
 
-    public Card getCard() {
-        return card;
+    public Component getComponent() {
+        return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
     }
 
     public FlightBoard getFlightBoard() {
         return flightBoard;
     }
 
-    public ShipBoard getShipBoard() {
-        return shipBoard;
+    public void setFlightBoard(FlightBoard flightBoard) {
+        this.flightBoard = flightBoard;
     }
 
-    public String getMessage() {
-        return message;
+    public Card getCard() {
+        return card;
     }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
+
 }
