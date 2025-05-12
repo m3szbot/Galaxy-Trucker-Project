@@ -122,7 +122,6 @@ public class GameMessageReceiver implements Runnable{
 
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             System.err.println("Critical error while accessing view method ");
-            e.printStackTrace();
             return -1;
         }
     }
