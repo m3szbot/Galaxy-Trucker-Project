@@ -3,7 +3,6 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -28,6 +27,20 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         this.lossType = cardBuilder.getLossType();
         this.lossNumber = cardBuilder.getLossNumber();
         this.gainedCredit = cardBuilder.getGainedCredit();
+
+
+
+    }
+
+    public void showCard(){
+
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Loss type: " + lossType.toString());
+        System.out.println("Loss number: " + lossNumber);
+        System.out.println("Gained credit: " + gainedCredit);
 
     }
 

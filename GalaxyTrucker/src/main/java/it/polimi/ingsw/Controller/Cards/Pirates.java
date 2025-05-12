@@ -3,10 +3,8 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Class representing the card pirates.
@@ -31,6 +29,20 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         this.requirementNumber = cardBuilder.getRequirementNumber();
         this.blowType = cardBuilder.getBlowType();
         this.blows = cardBuilder.getBlows();
+
+    }
+
+    public void showCard(){
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Gained credit: " + gainedCredit);
+        System.out.println("Blow type: " + blowType.toString());
+        System.out.println("Requirement number: " + requirementNumber + " (fire power)");
+
+        printBlows(blows);
+
 
     }
 

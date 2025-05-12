@@ -23,6 +23,12 @@ public class Epidemic extends Card {
 
     }
 
+    public void showCard(){
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+
+    }
     @Override
 
     public void resolve(GameInformation gameInformation) {
