@@ -37,6 +37,7 @@ public class FlightPhase implements Startable {
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
         }
+
         while (flightBoard.getCardsNumber() > 0) {
             // TODO pass playerViewMap so each user sees his own speicific view
             flightBoard.getNewCard().resolve(flightBoard, gameCode);
