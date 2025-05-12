@@ -101,4 +101,8 @@ public class GameMessenger {
         return null;
 
     }
+
+    public Map<Player, Socket> getPlayerSocketMap() {
+        return playerSocketMap;
+    }
 }

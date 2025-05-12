@@ -1,10 +1,12 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 
-import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -98,7 +100,12 @@ public class AssemblyPhase {
         }}).start();
 
         message = "Assembly phase has ended";
-        ClientSocketMessenger.sendMessageToAll(message);
+        for (Player player: gameInformation.getPlayerList() ) {
+            DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+        }
+
     }
 /*
       //main fatto a caso da gecky per fare test

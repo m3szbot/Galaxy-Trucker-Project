@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;

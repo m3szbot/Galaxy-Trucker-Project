@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -37,7 +38,9 @@ public class PlaceBookedComponentState implements GameState {
         for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
             Component component = assemblyProtocol.getBookedMap().get(player).get(i);
             String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
-            ClientSocketMessenger.sendMessageToPlayer(player, message);
+            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
     }
 
@@ -62,7 +65,9 @@ public class PlaceBookedComponentState implements GameState {
                 assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player));
             } else {
                 String message = "The Booked Component chose doesn't exist";
-                ClientSocketMessenger.sendMessageToPlayer(player, message);
+                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
         }

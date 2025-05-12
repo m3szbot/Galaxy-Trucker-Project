@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -35,7 +36,9 @@ public class ComponentPlacingState implements GameState {
     @Override
     public void enter(AssemblyThread assemblyPhase) {
         String message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
-        ClientSocketMessenger.sendMessageToPlayer(player, message);
+        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+        dataContainer.setMessage(message);
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
     }
 
     /**
@@ -66,7 +69,9 @@ public class ComponentPlacingState implements GameState {
         }else{
             String message = "Your hand is empty";
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
-            ClientSocketMessenger.sendMessageToPlayer(player, message);
+            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
     }
 }
