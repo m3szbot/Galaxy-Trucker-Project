@@ -2,7 +2,6 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class StarDust extends Card implements Movable {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, int gameCode) {
 
         List<Player> players = flightBoard.getPlayerOrderList();
 
@@ -35,6 +34,8 @@ public class StarDust extends Card implements Movable {
             changePlayerPosition(players.get(i), -players.get(i).getShipBoard().countExternalJunctions(), flightBoard);
 
         }
+
+        flightBoard.updateFlightBoard();
 
     }
 

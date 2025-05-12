@@ -25,7 +25,7 @@ public abstract class Card {
      * MVC.
      */
 
-    public abstract void resolve(FlightBoard flightBoard, FlightView flightView);
+    public abstract void resolve(FlightBoard flightBoard, int gameCode);
 
 
     public int getCardLevel() {

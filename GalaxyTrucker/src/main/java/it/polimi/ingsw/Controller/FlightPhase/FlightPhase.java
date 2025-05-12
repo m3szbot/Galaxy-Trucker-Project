@@ -25,10 +25,11 @@ public class FlightPhase implements Startable {
         // TODO use playerViewMap
         FlightView flightView = new FlightViewTUI();
         FlightBoard flightBoard = gameInformation.getFlightBoard();
+        int gameCode = gameInformation.getGameCode();
 
         while (flightBoard.getCardsNumber() > 0) {
             // TODO pass playerViewMap so each user sees his own speicific view
-            flightBoard.getNewCard().resolve(flightBoard, flightView);
+            flightBoard.getNewCard().resolve(flightBoard, gameCode);
         }
 
     }

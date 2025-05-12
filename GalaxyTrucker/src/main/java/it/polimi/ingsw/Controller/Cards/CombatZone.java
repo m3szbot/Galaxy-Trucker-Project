@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
@@ -32,13 +34,14 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, int gameCode) {
 
         int numberOfPlayers = flightBoard.getPlayerOrderList().size();
         int[] enginePowers = new int[numberOfPlayers];
         float[] firePowers = new float[numberOfPlayers];
         Player lowestInhabitantNumberPlayer, weakestEnginePowerPlayer, weakestFirePowerPlayer;
         String message;
+        DataContainer dataContainer;
 
         //calculating player with the lowest inhabitant number
 
@@ -48,7 +51,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         for (int i = 0; i < numberOfPlayers; i++) {
 
-            firePowers[i] = chooseFirePower(flightBoard.getPlayerOrderList().get(i), flightView);
+            firePowers[i] = chooseFirePower(flightBoard.getPlayerOrderList().get(i), gameCode);
 
         }
 
@@ -56,7 +59,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         for (int i = 0; i < numberOfPlayers; i++) {
 
-            enginePowers[i] = chooseEnginePower(flightBoard.getPlayerOrderList().get(i), flightView);
+            enginePowers[i] = chooseEnginePower(flightBoard.getPlayerOrderList().get(i), gameCode);
 
         }
 
@@ -69,19 +72,31 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         message = "Player " + lowestInhabitantNumberPlayer.getNickName() + " lost " + daysLost +
                 " flight days as he is the one with the lowest number of inhabitants!";
-        flightView.sendMessageToAll(message);
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
 
-        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, flightBoard, flightView);
+        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, flightBoard, gameCode);
 
         message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
                 " crew members as he is the one with the weakest engine power!";
-        flightView.sendMessageToAll(message);
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
 
         //rolling the dice for each shot and then hitting
         for (int i = 0; i < blows.length; i++) {
             blows[i].rollDice();
         }
-        hit(weakestFirePowerPlayer, blows, blowType, flightBoard, flightView);
+        hit(weakestFirePowerPlayer, blows, blowType, flightBoard, gameCode);
+
+        flightBoard.updateFlightBoard();
 
     }
 
