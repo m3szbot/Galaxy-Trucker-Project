@@ -25,6 +25,7 @@ public class ChooseStartingPositionState implements GameState{
         String message = "In which position do you want to start? (1-4)";
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
         dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
         ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
     }
 
@@ -37,6 +38,7 @@ public class ChooseStartingPositionState implements GameState{
                     String message = "Error in position choosing, please enter it again";
                     DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                     assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
                 }
@@ -49,6 +51,7 @@ public class ChooseStartingPositionState implements GameState{
                         String message = "Error in position choosing, please enter it again";
                         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                         dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
                         ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                         assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
                     }
@@ -58,6 +61,7 @@ public class ChooseStartingPositionState implements GameState{
                     String message = "Sorry, there is only one position left";
                     DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                     assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(1));
                     break;
@@ -69,6 +73,7 @@ public class ChooseStartingPositionState implements GameState{
                         String message = "Error in position choosing, please enter it again";
                         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                         dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
                         ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                         assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
                     }
@@ -78,6 +83,7 @@ public class ChooseStartingPositionState implements GameState{
                     String message = "Please choose a position between 1 and 2";
                     DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                     assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
                     break;
@@ -89,6 +95,7 @@ public class ChooseStartingPositionState implements GameState{
                         String message = "Error in position choosing, please enter it again";
                         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                         dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
                         ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                         assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
                     }
@@ -98,6 +105,7 @@ public class ChooseStartingPositionState implements GameState{
                     String message = "Please choose a position between 1 and 3";
                     DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                     assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
                     break;
@@ -106,6 +114,7 @@ public class ChooseStartingPositionState implements GameState{
                 String message = "Invalid input";
                 DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
                 assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                 break;

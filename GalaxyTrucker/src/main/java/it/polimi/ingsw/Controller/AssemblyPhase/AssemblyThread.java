@@ -113,6 +113,7 @@ public class AssemblyThread implements Runnable {
         String message = "Game Over";
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(associatedPlayer);
         dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
         ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(associatedPlayer);
 
     }

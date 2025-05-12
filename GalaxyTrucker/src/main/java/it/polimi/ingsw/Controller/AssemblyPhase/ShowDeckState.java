@@ -56,6 +56,7 @@ public class ShowDeckState implements GameState {
             String message = "Invalid deck number";
             DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);        }
         assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
     }

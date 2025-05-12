@@ -40,6 +40,7 @@ public class PlaceBookedComponentState implements GameState {
             String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
             DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
     }
@@ -67,6 +68,7 @@ public class PlaceBookedComponentState implements GameState {
                 String message = "The Booked Component chose doesn't exist";
                 DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
