@@ -2,6 +2,9 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -67,8 +70,19 @@ public class AssemblyThread implements Runnable {
             //Scanner scanner = new Scanner(System.in);
             while (running.get() || end.get() != gameInformation.getPlayerList().size()) {
                 //String input = scanner.nextLine();
-                String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(associatedPlayer);
-                inputQueue.offer(input);
+                try {String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(associatedPlayer);
+                    inputQueue.offer(input);
+                }
+                catch (PlayerDisconnectedException e) {
+                    gameInformation.disconnectPlayer(associatedPlayer);
+                    String message = e.getMessage();
+                    for (Player player : gameInformation.getPlayerList()) {
+                        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
+                    }
+                }
+
             }
         }).start();
 
