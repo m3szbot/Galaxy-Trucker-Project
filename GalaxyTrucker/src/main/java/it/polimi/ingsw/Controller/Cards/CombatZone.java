@@ -97,6 +97,12 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         hit(weakestFirePowerPlayer, blows, blowType, flightBoard, gameCode);
 
         flightBoard.updateFlightBoard();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setFlightBoard(flightBoard);
+            dataContainer.setCommand("printFlightBoard");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
 
     }
 

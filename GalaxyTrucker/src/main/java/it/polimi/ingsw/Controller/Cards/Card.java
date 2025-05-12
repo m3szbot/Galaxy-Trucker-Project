@@ -27,7 +27,6 @@ public abstract class Card {
 
     public abstract void resolve(FlightBoard flightBoard, int gameCode);
 
-
     public int getCardLevel() {
         return cardLevel;
     }

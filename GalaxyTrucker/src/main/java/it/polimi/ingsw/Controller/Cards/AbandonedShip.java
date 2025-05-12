@@ -2,11 +2,8 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
-import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-
-import java.util.Objects;
 
 /**
  * class that represent the card abbandonedShip
@@ -82,6 +79,12 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
         }
         flightBoard.updateFlightBoard();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setFlightBoard(flightBoard);
+            dataContainer.setCommand("printFlightBoard");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
     }
 
 }

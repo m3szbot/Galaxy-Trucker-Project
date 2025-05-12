@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -27,6 +29,8 @@ public class StarDust extends Card implements Movable {
 
     public void resolve(FlightBoard flightBoard, int gameCode) {
 
+        DataContainer dataContainer;
+
         List<Player> players = flightBoard.getPlayerOrderList();
 
         for (int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--) {
@@ -36,6 +40,12 @@ public class StarDust extends Card implements Movable {
         }
 
         flightBoard.updateFlightBoard();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setFlightBoard(flightBoard);
+            dataContainer.setCommand("printFlightBoard");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
 
     }
 

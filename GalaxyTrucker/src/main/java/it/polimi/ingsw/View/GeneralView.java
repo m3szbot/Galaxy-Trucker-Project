@@ -63,6 +63,7 @@ public abstract class GeneralView {
 
     /**
      * Used to print the shipboard
+     *
      * @param dataContainer
      */
 
@@ -70,42 +71,40 @@ public abstract class GeneralView {
 
         ShipBoard shipBoard = dataContainer.getShipBoard();
 
-        if(shipBoard == null){
+        if (shipBoard == null) {
             throw new IllegalArgumentException("The given container does not contain a shipboard");
         }
 
         Component[][] shipStructure = shipBoard.getStructureMatrix();
         boolean[][] validPositions = shipBoard.getMatr();
 
-        for(int i = 0; i < shipBoard.getMatrixRows(); i++){
+        for (int i = 0; i < shipBoard.getMatrixRows(); i++) {
 
-            for(int j = 0; j < shipBoard.getMatrixCols(); j++){
+            for (int j = 0; j < shipBoard.getMatrixCols(); j++) {
 
-                if(!validPositions[i][j]){
+                if (!validPositions[i][j]) {
                     //position is invalid
                     System.out.printf("""
-                                    +---.---+
-                                    |       |
-                                    X  XXX    X
-                                    |       |
-                                    +---.---+
-                                    """);
+                            +---.---+
+                            |       |
+                            X  XXX    X
+                            |       |
+                            +---.---+
+                            """);
 
-                }
-                else{
+                } else {
 
-                    if(shipStructure[i][j] == null){
+                    if (shipStructure[i][j] == null) {
                         //position is valid but no component is found
                         System.out.printf("""
-                                        +---.---+
-                                        |       |
-                                        .  ...    .
-                                        |       |
-                                        +---.---+
-                                        """);
+                                +---.---+
+                                |       |
+                                .  ...    .
+                                |       |
+                                +---.---+
+                                """);
 
-                    }
-                    else{
+                    } else {
                         //position is valid and component is found
                         printComponent(shipStructure[i][j]);
                     }
@@ -116,10 +115,17 @@ public abstract class GeneralView {
         }
 
 
-
     }
 
-    public void printCard() {
+    public void printCard(DataContainer dataContainer) {
+
+        Card card = dataContainer.getCard();
+        String cardName = card.getCardName();
+        String cardAttributes;
+
+        System.out.printf("%s\n", cardName);
+
+
     }
 
     private void printCard(Card card) {
