@@ -33,7 +33,7 @@ public class CorrectionPhase implements Startable {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads
         for (Player player : gameInformation.getPlayerList()) {
-            CorrectionThread playerThread = new CorrectionThread(gameInformation.getGameCode(), player);
+            CorrectionThread playerThread = new CorrectionThread(gameInformation, player);
             scheduler.submit(playerThread);
         }
         // no new tasks should be added
@@ -46,10 +46,31 @@ public class CorrectionPhase implements Startable {
         }
         scheduler.shutdownNow();
 
+        removeErroneousShipboardPlayers(gameInformation);
+
+        // end of correction phase, advance to next phase
+        for (Player player : gameInformation.getPlayerList()) {
+            advancePhase(player);
+        }
+    }
+
+    /**
+     * Remove players with invalid shipboards.
+     */
+    private void removeErroneousShipboardPlayers(GameInformation gameInformation) {
         // remove players who timed out with invalid shipboard
         ArrayList<Player> toRemove = new ArrayList<>();
-        // find players to remove
+        // find connected players to remove
         for (Player player : gameInformation.getPlayerList()) {
+            if (player.getShipBoard().isErroneous()) {
+                toRemove.add(player);
+                for (Player target : gameInformation.getPlayerList()) {
+                    sendRemovalMessage(target, player);
+                }
+            }
+        }
+        // find disconnected players to remove
+        for (Player player : gameInformation.getDisconnectedPlayerList()) {
             if (player.getShipBoard().isErroneous()) {
                 toRemove.add(player);
                 for (Player target : gameInformation.getPlayerList()) {
@@ -61,10 +82,18 @@ public class CorrectionPhase implements Startable {
         for (Player player : toRemove) {
             gameInformation.removePlayers(player);
         }
-        // end of correction phase, advance to next phase
-        for (Player player : gameInformation.getPlayerList()) {
-            advancePhase(player);
-        }
+    }
+
+    /**
+     * Send advancePhase command to client.
+     *
+     * @param player
+     */
+    private void advancePhase(Player player) {
+        DataContainer dataContainer = gameMessenger.getPlayerContainer(player);
+        dataContainer.clearContainer();
+        dataContainer.setCommand("advancePhase");
+        gameMessenger.sendPlayerData(player);
     }
 
     /**
@@ -80,18 +109,6 @@ public class CorrectionPhase implements Startable {
         dataContainer.setMessage(String.format
                 ("Player %s didn't correct his shipboard in time and got removed\n", removedPlayer.getNickName()));
         gameMessenger.sendPlayerData(target);
-    }
-
-    /**
-     * Send advancePhase command to client.
-     *
-     * @param player
-     */
-    private void advancePhase(Player player) {
-        DataContainer dataContainer = gameMessenger.getPlayerContainer(player);
-        dataContainer.clearContainer();
-        dataContainer.setCommand("advancePhase");
-        gameMessenger.sendPlayerData(player);
     }
 
 }

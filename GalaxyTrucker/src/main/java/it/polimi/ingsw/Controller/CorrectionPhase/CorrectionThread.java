@@ -4,19 +4,20 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 public class CorrectionThread implements Runnable {
-    final int gameCode;
+    final GameInformation gameInformation;
     final Player player;
     final GameMessenger gameMessenger;
     final DataContainer dataContainer;
 
-    public CorrectionThread(int gameCode, Player player) {
-        this.gameCode = gameCode;
+    public CorrectionThread(GameInformation gameInformation, Player player) {
+        this.gameInformation = gameInformation;
         this.player = player;
-        this.gameMessenger = ClientMessenger.getGameMessenger(gameCode);
+        this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
         this.dataContainer = gameMessenger.getPlayerContainer(player);
     }
 
@@ -51,7 +52,9 @@ public class CorrectionThread implements Runnable {
             try {
                 coordinates = gameMessenger.getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
-                throw new RuntimeException(e);
+                // handle disconnected player
+                gameInformation.disconnectPlayer(player);
+                return;
             }
 
             // no check for col, row value - if out of bounds, nothing happens
