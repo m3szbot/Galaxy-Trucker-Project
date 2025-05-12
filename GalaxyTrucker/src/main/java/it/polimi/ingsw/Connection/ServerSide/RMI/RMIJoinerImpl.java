@@ -56,7 +56,7 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
 
         Player player = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
         clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
-        centralServer.addPlayerToCurrentStartingGame(player, clientInfo.getViewType(), clientInfo.getConnectionType());
+        centralServer.addPlayerToCurrentStartingGame(player);
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(player, null);
 
         if(centralServer.getCurrentStartingGame().isFull()){
@@ -69,7 +69,7 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
 
         Player player = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
         clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
-        centralServer.addPlayerToCurrentStartingGame(player, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
+        centralServer.addPlayerToCurrentStartingGame(player, gameType, numberOfPlayers);
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(player, null);
 
         centralServer.getCurrentStartingGame().changeGameState(GameState.Starting);

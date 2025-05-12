@@ -61,6 +61,11 @@ public abstract class GeneralView {
             return 4;
     }
 
+    /**
+     * Used to print the shipboard
+     * @param dataContainer
+     */
+
     public void printShipboard(DataContainer dataContainer) {
 
         ShipBoard shipBoard = dataContainer.getShipBoard();
@@ -81,7 +86,7 @@ public abstract class GeneralView {
                     System.out.printf("""
                                     +---.---+
                                     |       |
-                                    x  xxx    x
+                                    X  XXX    X
                                     |       |
                                     +---.---+
                                     """);
@@ -101,7 +106,7 @@ public abstract class GeneralView {
 
                     }
                     else{
-                        //position is valid and component if found
+                        //position is valid and component is found
                         printComponent(shipStructure[i][j]);
                     }
                 }
@@ -118,6 +123,8 @@ public abstract class GeneralView {
     }
 
     private void printCard(Card card) {
+
+
     }
 
 
