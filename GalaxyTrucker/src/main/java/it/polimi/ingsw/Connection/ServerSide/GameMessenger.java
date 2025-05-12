@@ -41,44 +41,19 @@ public class GameMessenger {
         playerRMIList.add(player);
     }
 
-    /**
-     * @param player
-     * @return the player dataContainer
-     */
-
-    public DataContainer getPlayerContainer(Player player) {
-
-        return playerDataContainerMap.get(player);
+    private void sendErrorMessage(String message, Player player) {
+        DataContainer dataContainer = getPlayerContainer(player);
+        dataContainer.setCommand("printMessage");
+        dataContainer.setMessage(message);
+        sendPlayerData(player);
 
     }
 
-    /**
-     * Sends to the player his dataContainer, then clears the container.
-     *
-     * @param player
-     */
+    public String getPlayerString(Player player) throws PlayerDisconnectedException {
 
-    public void sendPlayerData(Player player) {
+        String input = getPlayerInput(player);
+        return input;
 
-        Socket playerSocket = playerSocketMap.get(player);
-
-        if (playerRMIList.contains(player)) {
-            //RMI
-            //TODO
-        } else {
-            //socket
-
-            try {
-
-                (new ObjectOutputStream(playerSocket.getOutputStream())).writeObject(playerDataContainerMap.get(player));
-
-            } catch (IOException e) {
-                System.err.println();
-            } finally {
-                playerDataContainerMap.get(player).clearContainer();
-            }
-
-        }
     }
 
     /**
@@ -120,22 +95,6 @@ public class GameMessenger {
 
     }
 
-    private void sendErrorMessage(String message, Player player){
-
-       DataContainer dataContainer = getPlayerContainer(player);
-       dataContainer.setCommand("printMessate");
-       dataContainer.setMessage(message);
-       sendPlayerData(player);
-
-    }
-
-    public String getPlayerString(Player player) throws PlayerDisconnectedException {
-
-        String input = getPlayerInput(player);
-        return input;
-
-    }
-
     public int getPlayerInt(Player player) throws PlayerDisconnectedException {
 
         String input = getPlayerInput(player);
@@ -161,7 +120,7 @@ public class GameMessenger {
         String input = getPlayerInput(player);
         int[] coordinates = new int[2];
 
-        try{
+        try {
 
             String[] parts = input.split(" ");
 
@@ -183,13 +142,11 @@ public class GameMessenger {
 
         String input = getPlayerInput(player);
 
-        if(input.equalsIgnoreCase("yes")){
+        if (input.equalsIgnoreCase("yes")) {
             return true;
-        }
-        else if(input.equalsIgnoreCase("no")){
+        } else if (input.equalsIgnoreCase("no")) {
             return false;
-        }
-        else{
+        } else {
 
             sendErrorMessage("You didn't enter the correct response, please reenter it (yes/no): ", player);
             return getPlayerBoolean(player);
@@ -199,4 +156,59 @@ public class GameMessenger {
     public Map<Player, Socket> getPlayerSocketMap() {
         return playerSocketMap;
     }
+
+    /**
+     * Send a message to print to the given player's client.
+     * Command is set to "printMessage".
+     *
+     * @author Boti
+     */
+    public void sendPlayerMessage(Player player, String message) {
+        DataContainer dataContainer = getPlayerContainer(player);
+        dataContainer.clearContainer();
+        dataContainer.setCommand("printMessage");
+        dataContainer.setMessage(message);
+        sendPlayerData(player);
+    }
+
+    /**
+     * @param player
+     * @return the player dataContainer
+     */
+
+    public DataContainer getPlayerContainer(Player player) {
+
+        return playerDataContainerMap.get(player);
+
+    }
+
+    /**
+     * Sends to the player his dataContainer, then clears the container.
+     *
+     * @param player
+     */
+
+    public void sendPlayerData(Player player) {
+
+        Socket playerSocket = playerSocketMap.get(player);
+
+        if (playerRMIList.contains(player)) {
+            //RMI
+            //TODO
+        } else {
+            //socket
+
+            try {
+
+                (new ObjectOutputStream(playerSocket.getOutputStream())).writeObject(playerDataContainerMap.get(player));
+
+            } catch (IOException e) {
+                System.err.println();
+            } finally {
+                playerDataContainerMap.get(player).clearContainer();
+            }
+
+        }
+    }
+
 }

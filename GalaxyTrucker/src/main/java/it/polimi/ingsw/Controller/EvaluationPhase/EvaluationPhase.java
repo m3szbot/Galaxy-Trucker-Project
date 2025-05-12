@@ -1,11 +1,11 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.EvaluationView.EvaluationView;
-import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -16,29 +16,37 @@ import java.util.Map;
  * calculates final scores of players after flight phase ends
  */
 public class EvaluationPhase implements Startable {
-    // 1 view in common for all players
-    EvaluationView commonView;
+    final GameMessenger gameMessenger;
 
-    public EvaluationPhase() {
-        commonView = new EvaluationViewTUI();
+    public EvaluationPhase(GameInformation gameInformation) {
+        this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
     }
 
+    /**
+     * Start evaluationPhase. Calculates player scores and prints scoreboard for all players.
+     *
+     * @param gameInformation
+     */
     public void start(GameInformation gameInformation) {
         String message;
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
-        // show leaderboard
         message = getLeaderboardMessage(gameInformation);
-        commonView.printLeaderboardMessage(message);
+        for (Player player : gameInformation.getPlayerList()) {
+            gameMessenger.sendPlayerMessage(player, message);
+        }
+
         // suspend main thread so that players have time to read the leaderboard
         try {
-            Thread.sleep(15000);
+            // 1000ms = 1s
+            Thread.sleep(60000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         // end of evaluationPhase
         // end of game
+
     }
 
 
@@ -75,5 +83,4 @@ public class EvaluationPhase implements Startable {
         }
         return result.toString();
     }
-
 }
