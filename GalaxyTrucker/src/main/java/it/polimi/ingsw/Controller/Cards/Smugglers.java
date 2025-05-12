@@ -33,7 +33,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
@@ -71,7 +71,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
                 try {
-                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
                                 "has collected the reward!";

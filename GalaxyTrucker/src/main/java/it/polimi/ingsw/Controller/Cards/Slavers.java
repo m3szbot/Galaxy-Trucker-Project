@@ -32,7 +32,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
@@ -70,7 +70,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
                 try {
-                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
                                 "has collected the reward!";

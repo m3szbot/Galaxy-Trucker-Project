@@ -32,7 +32,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
@@ -74,7 +74,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
                 try {
-                    if ("Yes".equalsIgnoreCase(ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player))) {
+                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
                         //player decides to collect the reward
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +

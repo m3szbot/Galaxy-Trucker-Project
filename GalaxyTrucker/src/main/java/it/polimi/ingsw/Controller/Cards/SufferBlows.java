@@ -276,7 +276,7 @@ public interface SufferBlows {
             dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+            if (ClientMessenger.getGameMessenger(gameCode).getPlayerBoolean(player)) {
                 //player decide to defend itself with shields
 
                 return useBattery(player, gameCode);
@@ -316,7 +316,7 @@ public interface SufferBlows {
                     dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) { //player decides to defend themselves
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerBoolean(player)) { //player decides to defend themselves
 
                         return useBattery(player, gameCode);
 
@@ -368,7 +368,7 @@ public interface SufferBlows {
                 dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) { //player decides to defend themselves
+                if (ClientMessenger.getGameMessenger(gameCode).getPlayerBoolean(player)) { //player decides to defend themselves
 
                     return useBattery(player, gameCode);
 
@@ -464,8 +464,7 @@ public interface SufferBlows {
 
         while (true) {
 
-            coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
-            coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+            coordinates = ClientMessenger.getGameMessenger(gameCode).getPlayerCoordinates(player);
 
             if (player.getShipBoard().getComponent(coordinates[0], coordinates[1]) != null) {
 

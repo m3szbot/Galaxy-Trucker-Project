@@ -29,10 +29,9 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         this.gainedCredit = cardBuilder.getGainedCredit();
 
 
-
     }
 
-    public void showCard(){
+    public void showCard() {
 
 
         System.out.println("Card name: " + getCardName());
@@ -63,7 +62,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
                 try {
-                    if ("Yes".equalsIgnoreCase(ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player))) {
+                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
                         //player decide to solve the card
 
                         inflictLoss(player, lossType, lossNumber, gameInformation.getFlightBoard(), gameInformation.getGameCode());
