@@ -11,6 +11,7 @@ import it.polimi.ingsw.View.GeneralView;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class that handles the client playing the game.
@@ -23,6 +24,12 @@ public class ClientGameHandler {
     GeneralView[] views = new GeneralView[4];
     ClientInfo clientInfo;
 
+    /**
+     * Starts the handler that handles the player communication with
+     * the server during the game
+     * @param clientInfo
+     */
+
     public void start(ClientInfo clientInfo) {
 
         this.clientInfo = clientInfo;
@@ -30,12 +37,20 @@ public class ClientGameHandler {
         setViews(clientInfo.getViewType(), views);
 
         if (clientInfo.getConnectionType() == ConnectionType.Socket) {
-            int result = startSCK(views);
+            startSCK(views);
+
+
         } else {
             startRMI(views);
         }
 
     }
+
+    /**
+     * Sets the player views in function of the view type he chose
+     * @param viewType
+     * @param views
+     */
 
     private void setViews(ViewType viewType, GeneralView[] views) {
 
@@ -57,22 +72,28 @@ public class ClientGameHandler {
 
     }
 
-    private int startSCK(GeneralView[] views) {
+    /**
+     * Starts the player threads that communicate with the server with
+     * socket protocol
+     * @param views
+     */
+
+    private void startSCK(GeneralView[] views) {
 
         ObjectInputStream in;
         DataOutputStream out;
+        AtomicBoolean running = new AtomicBoolean(true);
 
         try {
             in = new ObjectInputStream(clientInfo.getServerSocket().getInputStream());
             out = new DataOutputStream(clientInfo.getServerSocket().getOutputStream());
         } catch (IOException e) {
-            System.err.println("A critical error occured while opening streams");
-            e.printStackTrace();
-            return -1;
+            System.err.println("A critical error occurred while opening streams");
+            return;
         }
 
-        Thread messageReceiver = new Thread(new GameMessageReceiver(views, in));
-        Thread messageSender = new Thread(new GameMessageSender(out));
+        Thread messageReceiver = new Thread(new GameMessageReceiver(views, in, running));
+        Thread messageSender = new Thread(new GameMessageSender(out, running));
 
         messageReceiver.start();
         messageSender.start();
@@ -80,16 +101,41 @@ public class ClientGameHandler {
         try {
 
             messageReceiver.join();
-            messageSender.interrupt();
+
+            try {
+                in.close();
+                out.close();
+            } catch (IOException e) {
+               System.err.println("Error while closing sockets");
+            }
 
         } catch (InterruptedException e) {
             System.err.println("Receiver thread was interrupted abnormally");
+
+            try{
+
+                in.close();
+                out.close();
+
+            }catch (IOException ex){
+
+                System.err.println("Error while closing sockets");
+
+            }
         }
-        return 0;
 
     }
 
+
+    /**
+     * Starts the player threads that communicate with the server with
+     * RMI protocol
+     * @param views
+     */
+
     private void startRMI(GeneralView[] views) {
+
+        //TODO
 
     }
 }

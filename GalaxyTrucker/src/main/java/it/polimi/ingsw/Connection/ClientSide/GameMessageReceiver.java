@@ -9,15 +9,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+/**
+ * Thread that receive the messages that the server sends to the player
+ *
+ * @author carlo
+ */
 
 public class GameMessageReceiver implements Runnable{
 
     private Map<String, GeneralView> viewMap = new HashMap<>();
     private ObjectInputStream in;
     private String currentPhase;
+    private AtomicBoolean running;
 
 
-    public GameMessageReceiver(GeneralView[] views, ObjectInputStream in){
+    public GameMessageReceiver(GeneralView[] views, ObjectInputStream in, AtomicBoolean running){
 
         String[] phases = {"assembly", "correction", "flight", "evaluation"};
 
@@ -29,34 +37,37 @@ public class GameMessageReceiver implements Runnable{
 
         this.in = in;
         this.currentPhase = "assembly";
+        this.running = running;
 
     }
 
     public void run(){
 
-        int result;
-
-        while(true){
+        while(running.get()){
 
             try {
                 DataContainer container = (DataContainer) in.readObject();
 
                 if(executeCommand(container.getCommand()) == -1){
-                    break;
+
+                    System.out.println("The game has ended, press any key to quit");
+                    running.set(false);
                 }
 
                 if(callView(container) == -1) {
-                   throw new IOException();
+                    running.set(false);
                 }
 
 
             } catch (IOException e) {
-                System.err.println("Critical error while receiving messages");
-                break;
+                System.err.println("Critical error while receiving messages, you have been disconnected");
+
+                running.set(false);
             } catch (ClassNotFoundException e) {
 
-                System.err.println("DataContainer class not recognized");
-                break;
+                System.err.println("DataContainer class not recognized, you have been disconnected");
+
+                running.set(false);
 
             }
 
