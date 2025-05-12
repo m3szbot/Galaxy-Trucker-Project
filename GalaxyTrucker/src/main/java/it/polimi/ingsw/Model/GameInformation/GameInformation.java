@@ -35,12 +35,11 @@ public class GameInformation {
     /**
      * Creates and sets up gameInformation.
      */
-    public GameInformation(GameType gameType, int maxNumberOfPlayers) {
+    public GameInformation() {
         cardsList = new ArrayList<>();
         componentList = new ArrayList<>();
         connectedPlayerList = new ArrayList<>();
         disconnectedPlayerList = new ArrayList<>();
-        setUpGameInformation(gameType, maxNumberOfPlayers);
     }
 
     /**
@@ -49,7 +48,7 @@ public class GameInformation {
      *
      * @author Boti
      */
-    private void setUpGameInformation(GameType gameType, int maxNumberOfPlayers) {
+    public void setUpGameInformation(GameType gameType, int maxNumberOfPlayers) {
         setGameType(gameType);
         setMaxNumberOfPlayers(maxNumberOfPlayers);
         try {
