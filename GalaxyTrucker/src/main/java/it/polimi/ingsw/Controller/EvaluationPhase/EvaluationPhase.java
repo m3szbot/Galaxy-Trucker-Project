@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -29,13 +30,12 @@ public class EvaluationPhase implements Startable {
      */
     public void start(GameInformation gameInformation) {
         String message;
+        gameMessenger.setGamePhaseToAll(GamePhase.Evaluation);
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
         message = getLeaderboardMessage(gameInformation);
-        for (Player player : gameInformation.getPlayerList()) {
-            gameMessenger.sendPlayerMessage(player, message);
-        }
+        gameMessenger.sendMessageToALl(message);
 
         // suspend main thread so that players have time to read the leaderboard
         try {
@@ -46,6 +46,7 @@ public class EvaluationPhase implements Startable {
         }
         // end of evaluationPhase
         // end of game
+        gameMessenger.endGame();
 
     }
 

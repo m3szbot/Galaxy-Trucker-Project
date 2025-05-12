@@ -44,10 +44,7 @@ public class CorrectionThread implements Runnable {
                 }
             }
             message.append("Enter column and row (col row):");
-            dataContainer.clearContainer();
-            dataContainer.setCommand("printMessage");
-            dataContainer.setMessage(message.toString());
-            gameMessenger.sendPlayerData(player);
+            gameMessenger.sendPlayerMessage(player, message.toString());
 
             try {
                 coordinates = gameMessenger.getPlayerCoordinates(player);
@@ -63,10 +60,7 @@ public class CorrectionThread implements Runnable {
             errors = shipBoard.isErroneous();
         }
         // errors corrected
-        dataContainer.clearContainer();
-        dataContainer.setCommand("printMessage");
-        dataContainer.setMessage("Your ship is valid, please wait for other players.");
-        gameMessenger.sendPlayerData(player);
+        gameMessenger.sendPlayerMessage(player, "Your ship is valid, please wait for other players.");
         // end of thread
     }
 }

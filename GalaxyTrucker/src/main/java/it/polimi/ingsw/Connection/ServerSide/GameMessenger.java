@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.DataInputStream;
@@ -158,17 +159,39 @@ public class GameMessenger {
     }
 
     /**
+     * Send message to all players.
+     * Command is set to "printMessage".ú
+     * TODO: rmi
+     *
+     * @author Boti
+     */
+    public void sendMessageToALl(String message) {
+        // socket
+        for (Player player : playerSocketMap.keySet()) {
+            sendPlayerMessage(player, message);
+        }
+
+        // rmi
+    }
+
+    /**
      * Send a message to print to the given player's client.
      * Command is set to "printMessage".
+     * <p>
+     * TODO: rmi
      *
      * @author Boti
      */
     public void sendPlayerMessage(Player player, String message) {
-        DataContainer dataContainer = getPlayerContainer(player);
-        dataContainer.clearContainer();
-        dataContainer.setCommand("printMessage");
-        dataContainer.setMessage(message);
-        sendPlayerData(player);
+        // socket
+        if (playerSocketMap.containsKey(player)) {
+            DataContainer dataContainer = getPlayerContainer(player);
+            dataContainer.clearContainer();
+            dataContainer.setCommand("printMessage");
+            dataContainer.setMessage(message);
+            sendPlayerData(player);
+        }
+        // RMI
     }
 
     /**
@@ -209,6 +232,56 @@ public class GameMessenger {
             }
 
         }
+    }
+
+    /**
+     * Set gamePhase for all players' client.
+     * TODO: rmi
+     */
+    public void setGamePhaseToAll(GamePhase gamePhase) {
+        // socket
+        for (Player player : playerSocketMap.keySet()) {
+            setPlayerGamePhase(player, gamePhase);
+        }
+        // RMI
+    }
+
+    /**
+     * Sets gamePhase of player's client.
+     * <p>
+     * TODO: rmi
+     *
+     * @author Boti
+     */
+    public void setPlayerGamePhase(Player player, GamePhase gamePhase) {
+        // socket
+        if (playerSocketMap.containsKey(player)) {
+            DataContainer dataContainer = getPlayerContainer(player);
+            dataContainer.clearContainer();
+            dataContainer.setCommand("setGamePhase");
+            dataContainer.setGamePhase(gamePhase);
+            sendPlayerData(player);
+        }
+        // RMI
+    }
+
+    /**
+     * End game for all players.
+     * TODO rmi
+     *
+     * @author Boti
+     */
+    public void endGame() {
+        // socket
+        for (Player player : playerSocketMap.keySet()) {
+            DataContainer dataContainer = getPlayerContainer(player);
+            dataContainer.clearContainer();
+            dataContainer.setCommand("endGame");
+            sendPlayerData(player);
+        }
+
+        // RMI
+
     }
 
 }
