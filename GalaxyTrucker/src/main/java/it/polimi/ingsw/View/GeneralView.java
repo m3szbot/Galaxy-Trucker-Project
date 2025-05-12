@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 /**
  * General view class defining the most basic methods reused by others classes.
@@ -60,13 +61,78 @@ public abstract class GeneralView {
             return 4;
     }
 
-    public void printShipboard() {
+    /**
+     * Used to print the shipboard
+     *
+     * @param dataContainer
+     */
+
+    public void printShipboard(DataContainer dataContainer) {
+
+        ShipBoard shipBoard = dataContainer.getShipBoard();
+
+        if (shipBoard == null) {
+            throw new IllegalArgumentException("The given container does not contain a shipboard");
+        }
+
+        Component[][] shipStructure = shipBoard.getStructureMatrix();
+        boolean[][] validPositions = shipBoard.getMatr();
+
+        for (int i = 0; i < shipBoard.getMatrixRows(); i++) {
+
+            for (int j = 0; j < shipBoard.getMatrixCols(); j++) {
+
+                if (!validPositions[i][j]) {
+                    //position is invalid
+                    System.out.printf("""
+                            +---.---+
+                            |       |
+                            X  XXX    X
+                            |       |
+                            +---.---+
+                            """);
+
+                } else {
+
+                    if (shipStructure[i][j] == null) {
+                        //position is valid but no component is found
+                        System.out.printf("""
+                                +---.---+
+                                |       |
+                                .  ...    .
+                                |       |
+                                +---.---+
+                                """);
+
+                    } else {
+                        //position is valid and component is found
+                        printComponent(shipStructure[i][j]);
+                    }
+                }
+
+
+            }
+        }
+
+
     }
 
-    public void printCard() {
+    public void printCard(DataContainer dataContainer) {
+
+        Card card = dataContainer.getCard();
+        String cardName = card.getCardName();
+        String cardAttributes;
+
+        System.out.printf("Current card:    %s\n", cardName);
+        //Come scorro e stampo gli attributi se non so a priori di che carta si tratta?
+        //Con uno switch case o una serie di if? Perchè verrebbe lunghissima
+
+
     }
 
     private void printCard(Card card) {
+
+
     }
 
 

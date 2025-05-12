@@ -1,13 +1,13 @@
 package it.polimi.ingsw.Controller.Cards;
 
-
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that define a default method which handles a player
@@ -22,14 +22,13 @@ import it.polimi.ingsw.View.FlightView.FlightView;
 public interface SufferBlows {
 
     /**
-     * @param player     player that is being hit
-     * @param blows      array of blows that is hitting the player
-     * @param blowType   type of blow
-     * @param flightView class to comunicate with the player
+     * @param player   player that is being hit
+     * @param blows    array of blows that is hitting the player
+     * @param blowType type of blow
      * @author Carlo
      */
 
-    default void hit(Player player, Blow[] blows, ElementType blowType, FlightBoard flightBoard, FlightView flightView) {
+    default void hit(Player player, Blow[] blows, ElementType blowType, FlightBoard flightBoard, int gameCode) {
 
         int[] componentCoord = {-1, -1};
         boolean hitFlag = false;
@@ -50,18 +49,18 @@ public interface SufferBlows {
 
                     } else {
                         //player can defend itself
-                        hitFlag = smallCannonBlowHit(player, flightBoard, flightView, componentCoord[0], componentCoord[1], blow.getDirection());
+                        hitFlag = smallCannonBlowHit(player, flightBoard, componentCoord[0], componentCoord[1], blow.getDirection(), gameCode);
                     }
                 } else {
 
                     if (blow.isBig()) { // player can defend itself only with cannon
 
 
-                        hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightView, flightBoard);
+                        hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightBoard, gameCode);
 
                     } else { //blow is small
 
-                        hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightView, flightBoard);
+                        hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightBoard, gameCode);
 
                     }
                 }
@@ -69,7 +68,7 @@ public interface SufferBlows {
 
             //notifying everybody of the blow effect on the player.
 
-            notifyAll(player, flightView, blow.getDirection(), hitFlag, componentCoord[0], componentCoord[1], blowType);
+            notifyAll(player, flightBoard, blow.getDirection(), hitFlag, componentCoord[0], componentCoord[1], blowType, gameCode);
         }
     }
 
@@ -260,9 +259,10 @@ public interface SufferBlows {
         return removeComponent(player, xCoord, yCoord, flightBoard);
     }
 
-    private boolean smallCannonBlowHit(Player player, FlightBoard flightBoard, FlightView flightView, int xCoord, int yCoord, int direction) {
+    private boolean smallCannonBlowHit(Player player, FlightBoard flightBoard, int xCoord, int yCoord, int direction, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
 
         if (player.getShipBoard().getShipBoardAttributes().checkSide(direction) &&
                 player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
@@ -271,13 +271,15 @@ public interface SufferBlows {
             message = "A small cannon blow is directed on position ["
                     + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                     directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-            ClientSocketMessenger.sendMessageToPlayer(player, message);
-
-            if (ClientSocketMessenger.receiveString(player).equalsIgnoreCase("Yes")) {
+            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
                 //player decide to defend itself with shields
 
-                return useBattery(player, flightView);
+                return useBattery(player, gameCode);
 
             } else { //player decide to not defend itself
 
@@ -292,9 +294,10 @@ public interface SufferBlows {
         }
     }
 
-    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightView flightView, FlightBoard flightBoard) {
+    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightBoard flightBoard, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         int[] cannonCoords = hasCannon(direction, xCoord, yCoord, player);
 
 
@@ -308,12 +311,14 @@ public interface SufferBlows {
                             + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                             direction + "!\nDo you want to defend yourself with the " +
                             "double cannon pointing towards its direction ?";
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                    ClientSocketMessenger.sendMessageToPlayer(player, message);
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) { //player decides to defend themselves
 
-                    if (ClientSocketMessenger.receiveString(player).equalsIgnoreCase("Yes")) { //player decides to defend themselves
-
-                        return useBattery(player, flightView);
+                        return useBattery(player, gameCode);
 
                     } else { //player decide to not defend itself
 
@@ -337,9 +342,10 @@ public interface SufferBlows {
 
     }
 
-    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightView flightView, FlightBoard flightBoard) {
+    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightBoard flightBoard, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         //condition is true if the side of the component hit is not smooth
         if (!((direction == 0
                 && player.getShipBoard().getComponent(xCoord, yCoord).getFront() == SideType.Smooth)
@@ -357,12 +363,14 @@ public interface SufferBlows {
                 message = "A small asteroid is directed on position ["
                         + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                         direction + "!\nDo you want to defend yourself with shields ?";
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                ClientSocketMessenger.sendMessageToPlayer(player, message);
+                if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) { //player decides to defend themselves
 
-                if (ClientSocketMessenger.receiveString(player).equalsIgnoreCase("Yes")) { //player decides to defend themselves
-
-                    return useBattery(player, flightView);
+                    return useBattery(player, gameCode);
 
                 } else {
 
@@ -396,9 +404,10 @@ public interface SufferBlows {
         return true;
     }
 
-    private void notifyAll(Player player, FlightView flightView, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType) {
+    private void notifyAll(Player player, FlightBoard flightBoard, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
 
         if (hitFlag) {
 
@@ -406,7 +415,12 @@ public interface SufferBlows {
                     blowType.toString().toLowerCase() + " at position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
 
-            ClientSocketMessenger.sendMessageToAll(message);
+            for (Player player1 : flightBoard.getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+            }
 
         } else if (xCoord != -1) {
 
@@ -414,32 +428,44 @@ public interface SufferBlows {
                     blowType.toString().toLowerCase() + " that hit position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
 
-            ClientSocketMessenger.sendMessageToAll(message);
+            for (Player player1 : flightBoard.getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+            }
 
         } else {
 
             message = "Player " + player.getNickName() + " dodged the " +
                     blowType.toString().toLowerCase() + " coming at him from the " + direction + "!";
 
-            ClientSocketMessenger.sendMessageToAll(message);
+            for (Player player1 : flightBoard.getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+            }
 
         }
     }
 
-    private boolean useBattery(Player player, FlightView flightView) {
+    private boolean useBattery(Player player, int gameCode) {
 
         String message;
-        int[] coordinates = null;
+        DataContainer dataContainer;
+        int[] coordinates = new int[2];
 
-        message = "Enter coordinate of the battery want to use: ";
-
-        ClientSocketMessenger.sendMessageToPlayer(player, message);
+        message = "Enter the coordinates of the battery want to use: ";
+        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+        dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
+        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
         while (true) {
 
-            assert false;
-            coordinates[0] = ClientSocketMessenger.receiveInteger(player);
-            coordinates[1] = ClientSocketMessenger.receiveInteger(player);
+            coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+            coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
             if (player.getShipBoard().getComponent(coordinates[0], coordinates[1]) != null) {
 
@@ -450,9 +476,11 @@ public interface SufferBlows {
                 }
             }
 
-            message = "Invalid coordinate, reenter coordinate: ";
-
-            ClientSocketMessenger.sendMessageToPlayer(player, message);
+            message = "Invalid coordinates, reenter coordinates: ";
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
         }
 

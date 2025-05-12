@@ -15,12 +15,13 @@ import java.io.Serializable;
  */
 
 public class DataContainer implements Serializable {
-
+    private String command;
     private String message;
     private ShipBoard shipBoard;
     private Component component;
     private FlightBoard flightBoard;
     private Card card;
+
 
     public void clearContainer() {
         message = null;
@@ -30,12 +31,36 @@ public class DataContainer implements Serializable {
         card = null;
     }
 
+    /**
+     * Method to set DataContainer with a single command.
+     * Pass null for parameters not to set a value for.
+     *
+     * @author Boti
+     */
+    public void setDataContainer(String command, String message, ShipBoard shipBoard, Component component,
+                                 FlightBoard flightBoard, Card card) {
+        this.command = command;
+        this.message = message;
+        this.shipBoard = shipBoard;
+        this.component = component;
+        this.flightBoard = flightBoard;
+        this.card = card;
+    }
+
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
     }
 
     public ShipBoard getShipBoard() {

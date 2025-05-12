@@ -80,7 +80,7 @@ public class GameMessenger {
      * @return the string that the player sent to the server
      */
 
-    public String getPlayerInput(Player player){
+    public String getPlayerInput(Player player) throws PlayerDisconnectedException{
 
         if(playerSocketMap.get(player) == null){
             //RMI
@@ -93,6 +93,19 @@ public class GameMessenger {
 
                 System.err.println("Error while reading from client");
                 e.printStackTrace();
+
+                //closing player socket
+
+                try {
+                    playerSocketMap.get(player).close();
+                } catch (IOException ex) {
+                    System.err.println("Error while closing disconnected player socket");
+                }
+
+                playerSocketMap.remove(player);
+                playerDataContainerMap.remove(player);
+
+                throw new PlayerDisconnectedException(player);
 
             }
 

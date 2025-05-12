@@ -4,9 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.RMI.RMIListener;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketListener;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Controller.Game.GameState;
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -92,17 +90,17 @@ public class Server {
 
     //Method overloading, the second one is used to add the first player to a
 
-    public void addPlayerToCurrentStartingGame(Player player, ViewType viewType, ConnectionType connectionType) {
+    public void addPlayerToCurrentStartingGame(Player player) {
 
-        currentStartingGame.addPlayer(player, viewType, connectionType, false);
+        currentStartingGame.addPlayer(player, false);
 
     }
 
-    public void addPlayerToCurrentStartingGame(Player player, ViewType viewType, ConnectionType connectionType, GameType gameType, int numberOfPlayers) {
+    public void addPlayerToCurrentStartingGame(Player player, GameType gameType, int numberOfPlayers) {
 
         currentStartingGame.setNumberOfPlayers(numberOfPlayers);
         currentStartingGame.setGameType(gameType);
-        currentStartingGame.addPlayer(player, viewType, connectionType, true);
+        currentStartingGame.addPlayer(player, true);
         currentStartingGame.changeGameState(GameState.Starting);
 
     }

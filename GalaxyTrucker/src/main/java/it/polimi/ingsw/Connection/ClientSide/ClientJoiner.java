@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *  Client joiner is responsible for the second phase of the client
- *  lifecyle, i.e, making the client join a game. It returns 1, if the client
+ *  lifecycle, i.e, making the client join a game. It returns 1, if the client
  *  join the game correctly, 0 if he is kicked, -1 if he encountered a connection
  *  issue.
  *
@@ -33,7 +33,7 @@ public class ClientJoiner {
 
         if (clientInfo.getViewType() == ViewType.CLI) {
 
-            startCLI(clientInfo);
+            return startCLI(clientInfo);
 
 
         } else {

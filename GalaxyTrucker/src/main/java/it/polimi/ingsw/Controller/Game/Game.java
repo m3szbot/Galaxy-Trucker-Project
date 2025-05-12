@@ -5,11 +5,15 @@ import it.polimi.ingsw.Controller.CorrectionPhase.CorrectionPhase;
 import it.polimi.ingsw.Controller.EvaluationPhase.EvaluationPhase;
 import it.polimi.ingsw.Controller.FlightPhase.FlightPhase;
 import it.polimi.ingsw.Controller.InitializationPhase.InitializationPhase;
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static it.polimi.ingsw.Controller.Game.ConnectionStatus.Connected;
+import static it.polimi.ingsw.Controller.Game.ConnectionStatus.Disconnected;
 
 public class Game implements Runnable {
 
@@ -23,6 +27,7 @@ public class Game implements Runnable {
     private EvaluationPhase evaluationPhase;
     private int numberOfJoinedPlayers = 0;
     private String creator;
+    private Map<Player, ConnectionStatus > playerConnectionStatusMap;
 
 
     public Game(int gameCode) {
@@ -31,6 +36,7 @@ public class Game implements Runnable {
         this.gameState = GameState.Empty;
         gameInformation = new GameInformation();
         gameInformation.setGameCode(gameCode);
+        playerConnectionStatusMap = new HashMap<>();
 
     }
 
@@ -51,12 +57,15 @@ public class Game implements Runnable {
         return gameCode;
     }
 
-    public void addPlayer(Player player, ViewType viewType, ConnectionType connectionType, boolean first) {
+    public void disconnectPlayer(Player player){
+        playerConnectionStatusMap.put(player, Disconnected);
+    }
+
+    public void addPlayer(Player player, boolean first) {
 
         gameInformation.addPlayers(player);
-        gameInformation.setPlayerViewType(player, viewType);
-        gameInformation.setPlayerConnectionType(player, connectionType);
         numberOfJoinedPlayers++;
+        playerConnectionStatusMap.put(player, Connected);
 
         if (first) {
             creator = player.getNickName();

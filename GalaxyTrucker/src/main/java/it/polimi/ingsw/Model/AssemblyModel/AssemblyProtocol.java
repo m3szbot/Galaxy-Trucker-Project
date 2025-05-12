@@ -17,6 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Giacomo
  */
 public class AssemblyProtocol {
+    public Object lockUncoveredList = new Object();
+    public Object lockCoveredList = new Object();
+    public Object lockDecksList = new Object();
+    public Object lockFlightBoard = new Object();
     private HourGlass hourGlass;
     // cards
     private Deck blockedDeck;
@@ -28,10 +32,6 @@ public class AssemblyProtocol {
     private Map<Player, Component> inHandMap;
     // booked components
     private Map<Player, List<Component>> bookedMap;
-    public Object lockUncoveredList = new Object();
-    public Object lockCoveredList = new Object();
-    public Object lockDecksList = new Object();
-    public Object lockFlightBoard = new Object();
     private GameType gameType;
     private FlightBoard flightBoard;
     private int gameCode;
@@ -45,11 +45,11 @@ public class AssemblyProtocol {
      */
     public AssemblyProtocol(GameInformation gameInformation) {
         hourGlass = new HourGlass();
-        blockedDeck = new Deck(gameInformation);
+        blockedDeck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
         decksList = new Deck[3];
         for (int i = 0; i < 3; i++) {
             // used cards must be removed from cardsList
-            decksList[i] = new Deck(gameInformation);
+            decksList[i] = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
         }
         // concurrently accessed lists
         coveredList = Collections.synchronizedList(new ArrayList<>());
@@ -139,19 +139,6 @@ public class AssemblyProtocol {
     }
 
     /**
-     * Add current component in hand to the uncovered list
-     * So that it can be replaced
-     *
-     * @param player player with the component in hand
-     */
-    private void addComponentInHandToUncoveredList(Player player) {
-        // remove card from player's hand
-        if (inHandMap.get(player) != null) {
-            uncoveredList.add(inHandMap.get(player));
-        }
-    }
-
-    /**
      * Draws a new component for the player and updates the current view.
      * Moves the previous component in hand (if any) to the uncovered list.
      *
@@ -164,6 +151,19 @@ public class AssemblyProtocol {
             inHandMap.put(player, coveredList.removeFirst());
         } else {
             throw new IndexOutOfBoundsException("Covered list empty");
+        }
+    }
+
+    /**
+     * Add current component in hand to the uncovered list
+     * So that it can be replaced
+     *
+     * @param player player with the component in hand
+     */
+    private void addComponentInHandToUncoveredList(Player player) {
+        // remove card from player's hand
+        if (inHandMap.get(player) != null) {
+            uncoveredList.add(inHandMap.get(player));
         }
     }
 

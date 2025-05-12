@@ -139,8 +139,7 @@ public class ClientSocketHandler extends Thread {
                             playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
                             clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
                             clientInfoSender.writeObject(clientInfo);
-                            centralServer.addPlayerToCurrentStartingGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType(), gameType, numberOfPlayers);
-                            centralServer.getCurrentStartingGame().getGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+                            centralServer.addPlayerToCurrentStartingGame(playerToAdd, gameType, numberOfPlayers);
                             ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, clientSocket);
 
                             message = "You have been added to the game (game code " + centralServer.getCurrentStartingGame().getGameCode() + " )";
@@ -179,8 +178,7 @@ public class ClientSocketHandler extends Thread {
                             playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
                             clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
                             clientInfoSender.writeObject(clientInfo);
-                            centralServer.addPlayerToCurrentStartingGame(playerToAdd, clientInfo.getViewType(), clientInfo.getConnectionType());
-                            centralServer.getCurrentStartingGame().getGameInformation().setPlayerSocketMap(playerToAdd, clientSocket);
+                            centralServer.addPlayerToCurrentStartingGame(playerToAdd);
                             ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, clientSocket);
 
                             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
