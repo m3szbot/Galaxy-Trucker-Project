@@ -2,7 +2,6 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -23,6 +22,13 @@ public class StarDust extends Card implements Movable {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
+
+    }
+
+    public void showCard(){
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
 
     }
 

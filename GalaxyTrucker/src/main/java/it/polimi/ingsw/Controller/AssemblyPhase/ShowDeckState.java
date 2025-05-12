@@ -2,7 +2,9 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -50,7 +52,13 @@ public class ShowDeckState implements GameState {
         int index = Integer.parseInt(input);
         if (index >= 0 && index < 4) {
             synchronized (assemblyProtocol.lockDecksList) {
-                assemblyPhase.getAssemblyProtocol().showDeck(index); //qui penso che dovrebbe returnare una stringa, può essere sia una di blocco che una con la stampa
+                Deck deck = assemblyPhase.getAssemblyProtocol().showDeck(index);
+                for( Card card : deck.getCards()) {
+                    DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+                    dataContainer.setCard(card);
+                    dataContainer.setCommand("printCard");
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                }
             }
         } else {
             String message = "Invalid deck number";

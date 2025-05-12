@@ -3,10 +3,8 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * class that represent the card abbandonedStation
@@ -28,6 +26,17 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         this.daysLost = cardBuilder.getDaysLost();
         this.goods = cardBuilder.getGoods();
         this.requirementNumber = cardBuilder.getRequirementNumber();
+
+        printGoods(goods);
+
+    }
+
+    public void showCard(){
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+
 
     }
 

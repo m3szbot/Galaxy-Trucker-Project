@@ -86,7 +86,7 @@ public class GameMessenger {
      * @return the string that the player sent to the server
      */
 
-    public String getPlayerInput(Player player) throws PlayerDisconnectedException {
+    private String getPlayerInput(Player player) throws PlayerDisconnectedException {
 
         if (playerRMIList.contains(player)) {
             //RMI
@@ -120,20 +120,80 @@ public class GameMessenger {
 
     }
 
+    private void sendErrorMessage(String message, Player player){
+
+       DataContainer dataContainer = getPlayerContainer(player);
+       dataContainer.setCommand("printMessate");
+       dataContainer.setMessage(message);
+       sendPlayerData(player);
+
+    }
+
     public String getPlayerString(Player player) throws PlayerDisconnectedException {
-        throw new PlayerDisconnectedException(player);
+
+        String input = getPlayerInput(player);
+        return input;
+
     }
 
     public int getPlayerInt(Player player) throws PlayerDisconnectedException {
-        throw new PlayerDisconnectedException(player);
+
+        String input = getPlayerInput(player);
+        int value;
+
+        try {
+
+            value = Integer.parseInt(input);
+
+        } catch (NumberFormatException e) {
+
+            sendErrorMessage("You didn't enter an integer! Please reenter it: ", player);
+            return getPlayerInt(player);
+
+        }
+
+        return value;
+
     }
 
     public int[] getPlayerCoordinates(Player player) throws PlayerDisconnectedException {
-        throw new PlayerDisconnectedException(player);
+
+        String input = getPlayerInput(player);
+        int[] coordinates = new int[2];
+
+        try{
+
+            String[] parts = input.split(" ");
+
+            coordinates[0] = Integer.parseInt(parts[0]);
+            coordinates[1] = Integer.parseInt(parts[1]);
+
+        } catch (NumberFormatException e) {
+
+            sendErrorMessage("You didn't enter the coordinates in the correct syntax, please reenter them: ", player);
+            return getPlayerCoordinates(player);
+
+        }
+
+        return coordinates;
+
     }
 
     public boolean getPlayerBoolean(Player player) throws PlayerDisconnectedException {
-        throw new PlayerDisconnectedException(player);
+
+        String input = getPlayerInput(player);
+
+        if(input.equalsIgnoreCase("yes")){
+            return true;
+        }
+        else if(input.equalsIgnoreCase("no")){
+            return false;
+        }
+        else{
+
+            sendErrorMessage("You didn't enter the correct response, please reenter it (yes/no): ", player);
+            return getPlayerBoolean(player);
+        }
     }
 
     public Map<Player, Socket> getPlayerSocketMap() {
