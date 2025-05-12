@@ -62,7 +62,7 @@ public class GameInformation {
     /**
      * creates the complete list of cards based on the type of game
      */
-    public void setUpCards() throws IOException {
+    private void setUpCards() throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(new File("src/main/resources/Cards.json"));
@@ -198,7 +198,7 @@ public class GameInformation {
     /**
      * creates component objects
      */
-    public void setUpComponents() throws IOException {
+    private void setUpComponents() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
         // Serve ad ignorare le proprietà(campi) sconosciuti degli oggetti json con campi aggiuntivi
@@ -225,7 +225,7 @@ public class GameInformation {
     /**
      * creates the flight board based on the game type
      */
-    public void setUpFlightBoard() {
+    private void setUpFlightBoard() {
         this.flightBoard = new FlightBoard(gameType, cardsList);
     }
 
