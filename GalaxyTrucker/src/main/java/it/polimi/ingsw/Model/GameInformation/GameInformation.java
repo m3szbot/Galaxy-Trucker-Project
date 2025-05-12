@@ -26,7 +26,8 @@ public class GameInformation {
     private GameType gameType;
     private List<Card> cardsList;
     private List<Component> componentList;
-    private List<Player> playerList;
+    private List<Player> connectedPlayerList;
+    private List<Player> disconnectedPlayerList;
     private int maxNumberOfPlayers;
     private FlightBoard flightBoard;
     private int gameCode;
@@ -37,7 +38,8 @@ public class GameInformation {
     public GameInformation(GameType gameType, int maxNumberOfPlayers) {
         cardsList = new ArrayList<>();
         componentList = new ArrayList<>();
-        playerList = new ArrayList<>();
+        connectedPlayerList = new ArrayList<>();
+        disconnectedPlayerList = new ArrayList<>();
         setUpGameInformation(gameType, maxNumberOfPlayers);
     }
 
@@ -279,8 +281,15 @@ public class GameInformation {
         return componentList;
     }
 
+    /**
+     * @return connectedPlayerList
+     */
     public List<Player> getPlayerList() {
-        return playerList;
+        return connectedPlayerList;
+    }
+
+    public List<Player> getDisconnectedPlayerList() {
+        return this.disconnectedPlayerList;
     }
 
     public int getMaxNumberOfPlayers() {
@@ -308,14 +317,14 @@ public class GameInformation {
 
 
     /**
-     * adds a player to the playerList
+     * adds a player to the connectedPlayerList
      *
      * @param player
      */
     public void addPlayers(Player player) {
 
-        if (playerList.size() < maxNumberOfPlayers) {
-            playerList.add(player);
+        if (connectedPlayerList.size() < maxNumberOfPlayers) {
+            connectedPlayerList.add(player);
 
         } else {
             System.out.println("Cannot join match, max number of players reached");
@@ -323,12 +332,32 @@ public class GameInformation {
     }
 
     /**
-     * removes a player from the playerList
+     * removes a player from the connectedPlayerList
      *
      * @param player
      */
     public void removePlayers(Player player) {
-        playerList.remove(player);
+        connectedPlayerList.remove(player);
+    }
+
+    /**
+     * Moves player from connectedPlayerList to disconnectedPlayerList.
+     *
+     * @author Boti
+     */
+    public void disconnectPlayer(Player player) {
+        connectedPlayerList.remove(player);
+        disconnectedPlayerList.add(player);
+    }
+
+    /**
+     * Moves player from disconnectedPlayerList to connectedPlayerList.
+     *
+     * @author Boti
+     */
+    public void reconnectPlayer(Player player) {
+        disconnectedPlayerList.remove(player);
+        connectedPlayerList.add(player);
     }
 
 
