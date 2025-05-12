@@ -23,7 +23,7 @@ public class Game implements Runnable {
     private String creator;
 
 
-    public Game(int gameCode, GameType gameType, int maxNumberPlayer) {
+    public Game(int gameCode) {
 
         this.gameCode = gameCode;
         this.gameState = GameState.Empty;
