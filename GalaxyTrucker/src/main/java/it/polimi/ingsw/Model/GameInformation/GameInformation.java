@@ -31,6 +31,7 @@ public class GameInformation {
     private int maxNumberOfPlayers;
     private FlightBoard flightBoard;
     private int gameCode;
+    private GamePhase gamePhase;
 
     /**
      * Creates and sets up gameInformation.
@@ -40,6 +41,14 @@ public class GameInformation {
         componentList = new ArrayList<>();
         connectedPlayerList = new ArrayList<>();
         disconnectedPlayerList = new ArrayList<>();
+    }
+
+    public GamePhase getGamePhase() {
+        return gamePhase;
+    }
+
+    public void setGamePhase(GamePhase gamePhase) {
+        this.gamePhase = gamePhase;
     }
 
     /**
@@ -355,6 +364,8 @@ public class GameInformation {
      * @author Boti
      */
     public void reconnectPlayer(Player player) {
+        // TODO send current phase to reconnected player
+        // TODO notify suspended player threads or launch new thread
         disconnectedPlayerList.remove(player);
         connectedPlayerList.add(player);
     }
