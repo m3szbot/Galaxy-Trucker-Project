@@ -6,7 +6,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +19,7 @@ import java.util.Map;
 public class GameMessenger {
 
     private Map<Player, Socket> playerSocketMap = new HashMap<>();
+    private List<Player> playerRMIList = new ArrayList<>();
     private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
 
     /**
@@ -25,11 +28,15 @@ public class GameMessenger {
      * @param socket null if the player chose RMI
      */
 
-    public void addPlayer(Player player, Socket socket){
+    public void addPlayerSocket(Player player, Socket socket){
 
         this.playerSocketMap.put(player, socket);
         this.playerDataContainerMap.put(player, new DataContainer());
 
+    }
+
+    public void addPlayerRMI(Player player){
+        playerRMIList.add(player);
     }
 
     /**
@@ -53,7 +60,7 @@ public class GameMessenger {
 
         Socket playerSocket = playerSocketMap.get(player);
 
-        if(playerSocket == null){
+        if(playerRMIList.contains(player)){
             //RMI
             //TODO
         }
@@ -82,7 +89,7 @@ public class GameMessenger {
 
     public String getPlayerInput(Player player) throws PlayerDisconnectedException{
 
-        if(playerSocketMap.get(player) == null){
+        if(playerRMIList.contains(player)){
             //RMI
             //TODO
         }

@@ -140,7 +140,7 @@ public class ClientSocketHandler extends Thread {
                             clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
                             clientInfoSender.writeObject(clientInfo);
                             centralServer.addPlayerToCurrentStartingGame(playerToAdd, gameType, numberOfPlayers);
-                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, clientSocket);
+                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
 
                             message = "You have been added to the game (game code " + centralServer.getCurrentStartingGame().getGameCode() + " )";
                             dataSender.writeUTF(message);
@@ -179,7 +179,7 @@ public class ClientSocketHandler extends Thread {
                             clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
                             clientInfoSender.writeObject(clientInfo);
                             centralServer.addPlayerToCurrentStartingGame(playerToAdd);
-                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, clientSocket);
+                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
 
                             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
                             dataSender.writeUTF(message);
