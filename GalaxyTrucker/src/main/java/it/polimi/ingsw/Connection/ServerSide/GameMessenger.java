@@ -132,6 +132,9 @@ public class GameMessenger {
         throw new PlayerDisconnectedException(player);
     }
 
+    public boolean getPlayerBoolean(Player player) throws PlayerDisconnectedException {
+        throw new PlayerDisconnectedException(player);
+    }
 
     public Map<Player, Socket> getPlayerSocketMap() {
         return playerSocketMap;
