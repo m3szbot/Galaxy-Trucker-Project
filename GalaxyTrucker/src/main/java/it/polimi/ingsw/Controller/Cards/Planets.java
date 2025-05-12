@@ -35,32 +35,32 @@ public class Planets extends Card implements GoodsGain, Movable {
 
     }
 
-    public void showCard(){
+    public void showCard() {
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Days lost: " + daysLost);
 
-        if(planet1 != null) {
+        if (planet1 != null) {
 
             System.out.println("Planet 1 offers: ");
             printGoods(planet1);
 
         }
 
-        if(planet2 != null){
+        if (planet2 != null) {
 
             System.out.println("Planet 2 offers: ");
             printGoods(planet2);
 
         }
 
-        if(planet3 != null){
+        if (planet3 != null) {
 
             System.out.println("Planet 3 offers: ");
             printGoods(planet3);
         }
 
-        if(planet4 != null){
+        if (planet4 != null) {
 
             System.out.println("Planet 4 offers: ");
             printGoods(planet4);
@@ -96,7 +96,7 @@ public class Planets extends Card implements GoodsGain, Movable {
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
             try {
-                if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
 
                     message = "Enter the planet you want to land on(1-" + numberOfPlanets + "): ";
                     dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
@@ -106,7 +106,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                     while (true) {
 
-                        planetChosen = Integer.parseInt(ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player));
+                        planetChosen = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInt(player);
 
                         if (planetChosen > 0 && planetChosen <= numberOfPlanets) {
 

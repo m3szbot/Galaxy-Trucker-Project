@@ -80,8 +80,8 @@ public interface TokenLoss {
             dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-            coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
-            coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+            coordinates = ClientMessenger.getGameMessenger(gameCode).getPlayerCoordinates(player);
+
             component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
             if (component.getComponentName().equals("Cabin")) {
@@ -115,7 +115,7 @@ public interface TokenLoss {
                         dataContainer.setCommand("printMessage");
                         ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                        int numberOfRemovedCrew = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                        int numberOfRemovedCrew = ClientMessenger.getGameMessenger(gameCode).getPlayerInt(player);
 
                         if (numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove && numberOfRemovedCrew > 0) {
 
@@ -200,8 +200,7 @@ public interface TokenLoss {
                     dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                    coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
-                    coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                    coordinates = ClientMessenger.getGameMessenger(gameCode).getPlayerCoordinates(player);
                     component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
                     if (component.getComponentName().equals("Storage")) {
@@ -218,7 +217,7 @@ public interface TokenLoss {
                                 dataContainer.setCommand("printMessage");
                                 ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                                numberOfRemovedGoods = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                                numberOfRemovedGoods = ClientMessenger.getGameMessenger(gameCode).getPlayerInt(player);
                                 goodsRemoved[i] = numberOfRemovedGoods;
 
                                 if (numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove && numberOfRemovedGoods > 0) {
@@ -299,8 +298,7 @@ public interface TokenLoss {
                 dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
-                coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                coordinates = ClientMessenger.getGameMessenger(gameCode).getPlayerCoordinates(player);
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
                 if (component.getComponentName().equals("Battery")) {
@@ -313,7 +311,7 @@ public interface TokenLoss {
                             dataContainer.setCommand("printMessage");
                             ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                            numberOfRemovedBatteries = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                            numberOfRemovedBatteries = ClientMessenger.getGameMessenger(gameCode).getPlayerInt(player);
 
                             if (numberOfRemovedBatteries <= ((Battery) component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove && numberOfRemovedBatteries > 0) {
 
