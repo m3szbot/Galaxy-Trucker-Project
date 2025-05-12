@@ -2,7 +2,9 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -31,7 +33,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, int gameCode) {
+    public void resolve(GameInformation gameInformation) {
 
         DataContainer dataContainer;
 
@@ -47,24 +49,28 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                 dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
-                    //player decide to solve the card
+                try {
+                    if ("Yes".equalsIgnoreCase(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player))) {
+                        //player decide to solve the card
 
-                    inflictLoss(player, lossType, lossNumber, flightBoard, gameCode);
-                    giveCredits(player, gainedCredit);
-                    changePlayerPosition(player, daysLost, flightBoard);
+                        inflictLoss(player, lossType, lossNumber, flightBoard, gameCode);
+                        giveCredits(player, gainedCredit);
+                        changePlayerPosition(player, daysLost, flightBoard);
 
-                    message = player.getNickName() + "has solved the card!";
-                    for (Player player1 : flightBoard.getPlayerOrderList()) {
+                        message = player.getNickName() + "has solved the card!";
+                        for (Player player1 : flightBoard.getPlayerOrderList()) {
 
-                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+                            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+                            dataContainer.setMessage(message);
+                            dataContainer.setCommand("printMessage");
+                            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
 
+                        }
+
+                        break;
                     }
+                } catch (PlayerDisconnectedException e) {
 
-                    break;
                 }
             }
         }

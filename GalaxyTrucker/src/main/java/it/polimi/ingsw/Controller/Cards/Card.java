@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
@@ -25,7 +26,7 @@ public abstract class Card {
      * MVC.
      */
 
-    public abstract void resolve(FlightBoard flightBoard, int gameCode);
+    public abstract void resolve(GameInformation gameInformation);
 
     public int getCardLevel() {
         return cardLevel;

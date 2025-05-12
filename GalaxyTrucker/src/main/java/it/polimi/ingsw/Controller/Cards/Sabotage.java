@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -23,40 +24,40 @@ public class Sabotage extends Card implements SmallestCrew {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, int gameCode) {
+    public void resolve(GameInformation gameInformation) {
 
-        Player smallestCrewPlayer = calculateSmallestCrew(flightBoard);
+        Player smallestCrewPlayer = calculateSmallestCrew(gameInformation.getFlightBoard());
         String message;
         DataContainer dataContainer;
 
-        if (destroyRandomComponent(smallestCrewPlayer, flightBoard)) {
+        if (destroyRandomComponent(smallestCrewPlayer, gameInformation.getFlightBoard())) {
 
             message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
-            for (Player player : flightBoard.getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
                 dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
             }
 
         } else {
 
             message = "Player " + smallestCrewPlayer.getNickName() +
                     "was lucky enough to not get hit!";
-            for (Player player : flightBoard.getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
                 dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
             }
         }
 
-        flightBoard.updateFlightBoard();
-        for (Player player : flightBoard.getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-            dataContainer.setFlightBoard(flightBoard);
+        gameInformation.getFlightBoard().updateFlightBoard();
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
         }
 
     }

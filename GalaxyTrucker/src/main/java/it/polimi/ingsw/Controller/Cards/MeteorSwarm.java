@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
 
@@ -28,7 +29,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, int gameCode) {
+    public void resolve(GameInformation gameInformation) {
 
         DataContainer dataContainer;
 
@@ -37,17 +38,17 @@ public class MeteorSwarm extends Card implements SufferBlows {
             blows[i].rollDice();
         }
 
-        for (Player player : flightBoard.getPlayerOrderList()) {
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
 
-            hit(player, blows, blowType, flightBoard, gameCode);
+            hit(player, blows, blowType, gameInformation.getFlightBoard(), gameInformation.getGameCode());
         }
 
-        flightBoard.updateFlightBoard();
-        for (Player player : flightBoard.getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-            dataContainer.setFlightBoard(flightBoard);
+        gameInformation.getFlightBoard().updateFlightBoard();
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
         }
     }
 }

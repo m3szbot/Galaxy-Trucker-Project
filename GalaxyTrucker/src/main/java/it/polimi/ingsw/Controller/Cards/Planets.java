@@ -2,7 +2,9 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
 
@@ -37,13 +39,13 @@ public class Planets extends Card implements GoodsGain, Movable {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, int gameCode) {
+    public void resolve(GameInformation gameInformation) {
 
         String message;
         DataContainer dataContainer;
         int planetChosen, numberOfPlanets, freePlanet;
 
-        List<Player> players = flightBoard.getPlayerOrderList();
+        List<Player> players = gameInformation.getFlightBoard().getPlayerOrderList();
 
         //At the beginning all the planets are still to be occupied
 
@@ -56,110 +58,120 @@ public class Planets extends Card implements GoodsGain, Movable {
         for (Player player : players) {
 
             message = "Would you like to land on a planet ?";
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
             dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
-            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+            try {
+                if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player).equalsIgnoreCase("Yes")) {
 
-                message = "Enter the planet you want to land on(1-" + numberOfPlanets + "): ";
-                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+                    message = "Enter the planet you want to land on(1-" + numberOfPlanets + "): ";
+                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
-                while (true) {
+                    while (true) {
 
-                    planetChosen = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                        planetChosen = Integer.parseInt(ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInput(player));
 
-                    if (planetChosen > 0 && planetChosen <= numberOfPlanets) {
+                        if (planetChosen > 0 && planetChosen <= numberOfPlanets) {
 
-                        if (!planetOccupation[planetChosen - 1]) {
+                            if (!planetOccupation[planetChosen - 1]) {
 
-                            message = "Player " + player.getNickName() +
-                                    "has landed on planet " + planetChosen + " !";
-                            for (Player player1 : flightBoard.getPlayerOrderList()) {
-                                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
-                                dataContainer.setMessage(message);
-                                dataContainer.setCommand("printMessage");
-                                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
-                            }
-                            freePlanet--;
+                                message = "Player " + player.getNickName() +
+                                        "has landed on planet " + planetChosen + " !";
+                                for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
+                                    dataContainer.setMessage(message);
+                                    dataContainer.setCommand("printMessage");
+                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
+                                }
+                                freePlanet--;
 
-                            planetOccupation[planetChosen - 1] = true;
+                                planetOccupation[planetChosen - 1] = true;
 
-                            if (planetChosen == 1) {
+                                if (planetChosen == 1) {
 
-                                giveGoods(player, planet1, flightBoard, gameCode);
+                                    giveGoods(player, planet1, gameInformation.getFlightBoard(), gameInformation.getGameCode());
 
-                            } else if (planetChosen == 2) {
+                                } else if (planetChosen == 2) {
 
-                                giveGoods(player, planet2, flightBoard, gameCode);
+                                    giveGoods(player, planet2, gameInformation.getFlightBoard(), gameInformation.getGameCode());
 
-                            } else if (planetChosen == 3) {
+                                } else if (planetChosen == 3) {
 
-                                giveGoods(player, planet3, flightBoard, gameCode);
+                                    giveGoods(player, planet3, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+
+                                } else {
+
+                                    giveGoods(player, planet4, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+
+                                }
+
+                                break;
 
                             } else {
 
-                                giveGoods(player, planet4, flightBoard, gameCode);
+                                message = "The planet you selected has already been occupied";
+                                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+                                dataContainer.setMessage(message);
+                                dataContainer.setCommand("printMessage");
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
                             }
-
-                            break;
-
                         } else {
 
-                            message = "The planet you selected has already been occupied";
-                            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                            message = "The planet you chose is invalid";
+                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
                             dataContainer.setMessage(message);
                             dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
                         }
-                    } else {
-
-                        message = "The planet you chose is invalid";
-                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                     }
 
-                }
+                    if (freePlanet == 0) {
+                        message = "All planets were occupied!";
+                        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
+                            dataContainer.setMessage(message);
+                            dataContainer.setCommand("printMessage");
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
+                        }
+                        break;
+                    }
 
-                if (freePlanet == 0) {
-                    message = "All planets were occupied!";
-                    for (Player player1 : flightBoard.getPlayerOrderList()) {
-                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+                } else {
+
+                    message = "Player " + player.getNickName() +
+                            " decided to not land on any planet!";
+                    for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
                         dataContainer.setMessage(message);
                         dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
                     }
-                    break;
                 }
-
-            } else {
-
-                message = "Player " + player.getNickName() +
-                        " decided to not land on any planet!";
-                for (Player player1 : flightBoard.getPlayerOrderList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+            } catch (PlayerDisconnectedException e) {
+                gameInformation.disconnectPlayer(player);
+                message = e.getMessage();
+                for (Player player1 : gameInformation.getPlayerList()) {
+                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
                     dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
                 }
             }
         }
 
-        flightBoard.updateFlightBoard();
-        for (Player player : flightBoard.getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-            dataContainer.setFlightBoard(flightBoard);
+        gameInformation.getFlightBoard().updateFlightBoard();
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
         }
 
     }

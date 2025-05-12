@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.List;
@@ -27,24 +28,24 @@ public class StarDust extends Card implements Movable {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, int gameCode) {
+    public void resolve(GameInformation gameInformation) {
 
         DataContainer dataContainer;
 
-        List<Player> players = flightBoard.getPlayerOrderList();
+        List<Player> players = gameInformation.getFlightBoard().getPlayerOrderList();
 
-        for (int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--) {
+        for (int i = gameInformation.getFlightBoard().getPlayerOrderList().size() - 1; i >= 0; i--) {
 
-            changePlayerPosition(players.get(i), -players.get(i).getShipBoard().countExternalJunctions(), flightBoard);
+            changePlayerPosition(players.get(i), -players.get(i).getShipBoard().countExternalJunctions(), gameInformation.getFlightBoard());
 
         }
 
-        flightBoard.updateFlightBoard();
-        for (Player player : flightBoard.getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-            dataContainer.setFlightBoard(flightBoard);
+        gameInformation.getFlightBoard().updateFlightBoard();
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
         }
 
     }
