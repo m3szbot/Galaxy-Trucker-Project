@@ -120,18 +120,23 @@ public abstract class GeneralView {
     public void printCard(DataContainer dataContainer) {
 
         Card card = dataContainer.getCard();
+
+        if (card == null) {
+            throw new IllegalArgumentException("The given container does not contain a card");
+        }
+
+        printCard(card);
+
+    }
+
+    private void printCard(Card card) {
+
         String cardName = card.getCardName();
         String cardAttributes;
 
         System.out.printf("Current card:    %s\n", cardName);
         //Come scorro e stampo gli attributi se non so a priori di che carta si tratta?
         //Con uno switch case o una serie di if? Perchè verrebbe lunghissima
-
-
-    }
-
-    private void printCard(Card card) {
-
 
     }
 
