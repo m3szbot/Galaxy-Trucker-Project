@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that define a method which handles a player receiving
@@ -16,37 +17,56 @@ import it.polimi.ingsw.View.FlightView.FlightView;
 public interface GoodsGain {
 
     /**
-     * @param player     indicates the target player
-     * @param goods      goods to give to the target player
-     * @param flightView class to comunicate with the player
+     * @param player indicates the target player
+     * @param goods  goods to give to the target player
      * @author Carlo
      */
 
-    default void giveGoods(Player player, int[] goods, FlightBoard flightBoard, FlightView flightView) {
+    default void giveGoods(Player player, int[] goods, FlightBoard flightBoard, int gameCode) {
 
-        discardingPhase(player, flightView, flightBoard);
-        rearrangementPhase(player, flightView);
-        redGoodsPlacementPhase(player, goods, flightView, flightBoard);
-        nonRedGoodsPlacementPhasePhase(player, goods, flightView, flightBoard);
+        discardingPhase(player, flightBoard, gameCode);
+        rearrangementPhase(player, gameCode);
+        redGoodsPlacementPhase(player, goods, flightBoard, gameCode);
+        nonRedGoodsPlacementPhasePhase(player, goods, flightBoard, gameCode);
 
     }
 
-    private void discardingPhase(Player player, FlightView flightView, FlightBoard flightBoard) {
+    private void discardingPhase(Player player, FlightBoard flightBoard, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         boolean discardingPhaseFlag, errorFlag = true;
-        int[] coordinates;
+        int[] coordinates = new int[2];
         Component component;
 
         message = "Are there some goods that you want to discard ?";
+        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+        dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
+        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-        discardingPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+        if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+
+            discardingPhaseFlag = true;
+
+        } else {
+
+            discardingPhaseFlag = false;
+
+        }
+
 
         while (discardingPhaseFlag) {
             //player decide to discard some goods
 
-            message = "Enter coordinate of the storage component: ";
-            coordinates = flightView.askPlayerCoordinates(player, message);
+            message = "Enter coordinates of the storage component: ";
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+            coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+            coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
             component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
             if (component.getComponentName().equals("Storage")) {
@@ -59,9 +79,9 @@ public interface GoodsGain {
 
                         int goodsToRemove[];
 
-                        goodsToRemove = askForGoods(player, flightView, "remove", 0, 3);
+                        goodsToRemove = askForGoods(player, "remove", 0, 3, gameCode);
 
-                        if (checkGoodsAvailability(goodsToRemove, availableGoods, 0, 3)) {
+                        if (checkGoodsAvailability(goodsToRemove, availableGoods, 0, 3, gameCode)) {
                             //value entered are correct
 
                             ((Storage) component).removeGoods(goodsToRemove);
@@ -83,7 +103,10 @@ public interface GoodsGain {
                         } else {
 
                             message = "The goods you entered are incorrect";
-                            flightView.sendMessageToPlayer(player, message);
+                            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            dataContainer.setCommand("printMessage");
+                            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                         }
 
@@ -93,7 +116,16 @@ public interface GoodsGain {
                 } else {
 
                     message = "The storage component you entered is empty, do you still want to discard some goods ?";
-                    discardingPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                        discardingPhaseFlag = true;
+                    } else {
+                        discardingPhaseFlag = false;
+                    }
 
                     continue;
 
@@ -102,40 +134,78 @@ public interface GoodsGain {
 
                 message = "The component you entered is not a storage component! Do you still" +
                         " want to discard some goods ?";
-                discardingPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                    discardingPhaseFlag = true;
+                } else {
+                    discardingPhaseFlag = false;
+                }
 
                 continue;
             }
 
             message = "Are there some other goods that you want to discard ?";
             errorFlag = true;
-            discardingPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
+            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                discardingPhaseFlag = true;
+            } else {
+                discardingPhaseFlag = false;
+            }
         }
 
     }
 
-    private void rearrangementPhase(Player player, FlightView flightView) {
+    private void rearrangementPhase(Player player, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         boolean rearrangementPhaseFlag, errorFlag = true;
 
         message = "Are there some goods that you want to rearrange ?";
+        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+        dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
+        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-        rearrangementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+        if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+            rearrangementPhaseFlag = true;
+        } else {
+            rearrangementPhaseFlag = false;
+        }
 
         while (rearrangementPhaseFlag) {
             //player decide that he wants to rearrange some goods
 
-            int[] sourceCoordinates, destCoordinates;
+            int[] sourceCoordinates = new int[2], destCoordinates = new int[2];
             Component sourceComponent, destComponent;
             int[] sourceGoods;
 
             message = "Enter coordinate of the source storage component: ";
-            sourceCoordinates = flightView.askPlayerCoordinates(player, message);
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+            sourceCoordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+            sourceCoordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
             message = "Enter coordinate of the destination storage component: ";
-            destCoordinates = flightView.askPlayerCoordinates(player, message);
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+            destCoordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+            destCoordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
             sourceComponent = player.getShipBoard().getComponent(sourceCoordinates[0], sourceCoordinates[1]);
             destComponent = player.getShipBoard().getComponent(destCoordinates[0], destCoordinates[1]);
@@ -150,9 +220,9 @@ public interface GoodsGain {
 
                         int[] movingGoods;
 
-                        movingGoods = askForGoods(player, flightView, "move", 0, 3);
+                        movingGoods = askForGoods(player, "move", 0, 3, gameCode);
 
-                        if (checkGoodsAvailability(movingGoods, sourceGoods, 0, 3)) {
+                        if (checkGoodsAvailability(movingGoods, sourceGoods, 0, 3, gameCode)) {
 
                            /*
                            two possible scenarios:
@@ -181,12 +251,22 @@ public interface GoodsGain {
                                 errorFlag = false;
 
                             } else {
+
                                 message = "The destination component doesn't have enough space for the goods to move";
-                                flightView.sendMessageToPlayer(player, message);
+                                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                                dataContainer.setMessage(message);
+                                dataContainer.setCommand("printMessage");
+                                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
                             }
                         } else {
+
                             message = "The moving goods you entered are too many";
-                            flightView.sendMessageToPlayer(player, message);
+                            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            dataContainer.setCommand("printMessage");
+                            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
                         }
                     }
 
@@ -194,44 +274,88 @@ public interface GoodsGain {
 
                     message = "The source storage you entered is empty or the destination storage you entered is full, " +
                             "do you still want to rearrange some goods ?";
-                    rearrangementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                        rearrangementPhaseFlag = true;
+                    } else {
+                        rearrangementPhaseFlag = false;
+                    }
 
                     continue;
                 }
             } else {
 
                 message = "The components you entered are not both storages! Do you still want to rearrange some goods ?";
-                rearrangementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                    rearrangementPhaseFlag = true;
+                } else {
+                    rearrangementPhaseFlag = false;
+                }
 
                 continue;
             }
 
             message = "Are there some other goods you want to rearrange ?";
             errorFlag = true;
-            rearrangementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                rearrangementPhaseFlag = true;
+            } else {
+                rearrangementPhaseFlag = false;
+            }
 
         }
     }
 
-    private void redGoodsPlacementPhase(Player player, int[] goods, FlightView flightView, FlightBoard flightBoard) {
+    private void redGoodsPlacementPhase(Player player, int[] goods, FlightBoard flightBoard, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         boolean placementPhaseFlag, errorFlag;
-        int[] coordinates;
+        int[] coordinates = new int[2];
         Component component;
 
         if (goods[0] > 0 && player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() > 0) {
             //red goods can be added
 
             message = "Do you want to add to your ship red goods ? ";
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
             //check if you can do this
-            placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+
+            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                placementPhaseFlag = true;
+            } else {
+                placementPhaseFlag = false;
+            }
 
             while (placementPhaseFlag) {
 
                 message = "Enter coordinates of storage component: ";
-                coordinates = flightView.askPlayerCoordinates(player, message);
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
                 int redGoodsToAdd[];
                 errorFlag = true;
@@ -241,10 +365,10 @@ public interface GoodsGain {
 
                         while (errorFlag) {
 
-                            redGoodsToAdd = askForGoods(player, flightView, "add", 0, 0);
+                            redGoodsToAdd = askForGoods(player, "add", 0, 0, gameCode);
 
 
-                            if (checkGoodsAvailability(redGoodsToAdd, goods, 0, 0) && redGoodsToAdd[0] <= ((Storage) component).getAvailableRedSlots()) {
+                            if (checkGoodsAvailability(redGoodsToAdd, goods, 0, 0, gameCode) && redGoodsToAdd[0] <= ((Storage) component).getAvailableRedSlots()) {
 
                                 errorFlag = false;
                                 goods[0] -= redGoodsToAdd[0];
@@ -260,21 +384,37 @@ public interface GoodsGain {
 
                                     goods[0] += redGoodsToAdd[0];
                                     message = "The are not enough red goods in the flight board, check it to see the available ones";
-                                    flightView.sendMessageToPlayer(player, message);
+                                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                                    dataContainer.setMessage(message);
+                                    dataContainer.setCommand("printMessage");
+                                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
                                     break;
 
                                 }
 
                             } else {
                                 message = "The value you entered is incorrect";
-                                flightView.sendMessageToPlayer(player, message);
+                                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                                dataContainer.setMessage(message);
+                                dataContainer.setCommand("printMessage");
+                                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
                             }
 
                         }
                     } else {
 
                         message = "The storage you entered is either full or is not red, do you still want to add red goods to your ship ? ";
-                        placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                        if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                            placementPhaseFlag = true;
+                        } else {
+                            placementPhaseFlag = false;
+                        }
 
                         continue;
                     }
@@ -282,7 +422,16 @@ public interface GoodsGain {
                 } else {
 
                     message = "The selected component is not a storage! Do you still want to add red goods to your ship? ";
-                    placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                        placementPhaseFlag = true;
+                    } else {
+                        placementPhaseFlag = false;
+                    }
 
                     continue;
                 }
@@ -292,7 +441,16 @@ public interface GoodsGain {
                 } else {
 
                     message = "Do you want to add other red goods to your ship ?";
-                    placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                        placementPhaseFlag = true;
+                    } else {
+                        placementPhaseFlag = false;
+                    }
 
                 }
 
@@ -301,22 +459,39 @@ public interface GoodsGain {
         }
     }
 
-    private void nonRedGoodsPlacementPhasePhase(Player player, int[] goods, FlightView flightView, FlightBoard flightBoard) {
+    private void nonRedGoodsPlacementPhasePhase(Player player, int[] goods, FlightBoard flightBoard, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         boolean placementPhaseFlag, errorFlag;
         Component component;
-        int[] coordinates;
+        int[] coordinates = new int[2];
 
         if (goods[1] + goods[2] + goods[3] > 0 && player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() + player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() > 0) {
             //other goods can be added
             message = "Do you want to add to your ship goods that are not red ?";
-            placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                placementPhaseFlag = true;
+            } else {
+                placementPhaseFlag = false;
+            }
 
             while (placementPhaseFlag) {
 
                 message = "Enter coordinates of storage component: ";
-                coordinates = flightView.askPlayerCoordinates(player, message);
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
                 errorFlag = true;
                 boolean redFlag = false;
@@ -332,9 +507,9 @@ public interface GoodsGain {
 
                             int[] goodsToAdd;
 
-                            goodsToAdd = askForGoods(player, flightView, "add", 1, 3);
+                            goodsToAdd = askForGoods(player, "add", 1, 3, gameCode);
 
-                            if (checkGoodsAvailability(goodsToAdd, goods, 1, 3) && (goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]) <= ((Storage) component).getAvailableRedSlots() + ((Storage) component).getAvailableBlueSlots()) {
+                            if (checkGoodsAvailability(goodsToAdd, goods, 1, 3, gameCode) && (goodsToAdd[1] + goodsToAdd[2] + goodsToAdd[3]) <= ((Storage) component).getAvailableRedSlots() + ((Storage) component).getAvailableBlueSlots()) {
 
                                 errorFlag = false;
                                 goods[1] -= goodsToAdd[1];
@@ -362,20 +537,35 @@ public interface GoodsGain {
                                     goods[3] += goodsToAdd[3];
 
                                     message = "There are not enough goods in the flight board, check it to see the available ones";
+                                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                                    dataContainer.setMessage(message);
+                                    dataContainer.setCommand("printMessage");
+                                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                                    flightView.sendMessageToPlayer(player, message);
                                     break;
                                 }
                             } else {
                                 message = "The goods you entered are incorrect";
-                                flightView.sendMessageToPlayer(player, message);
+                                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                                dataContainer.setMessage(message);
+                                dataContainer.setCommand("printMessage");
+                                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
                             }
 
                         }
                     } else {
 
                         message = "The storage component you entered is already full! Do you still want to add non red goods to your ship? ";
-                        placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                        if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                            placementPhaseFlag = true;
+                        } else {
+                            placementPhaseFlag = false;
+                        }
 
                         continue;
                     }
@@ -383,7 +573,16 @@ public interface GoodsGain {
                 } else {
 
                     message = "The selected component is not a storage! Do you still want to add non red goods to your ship? ";
-                    placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                        placementPhaseFlag = true;
+                    } else {
+                        placementPhaseFlag = false;
+                    }
 
                     continue;
                 }
@@ -394,7 +593,16 @@ public interface GoodsGain {
                 } else {
 
                     message = "Do you want to add other non red goods to your ship ?";
-                    placementPhaseFlag = flightView.askPlayerGenericQuestion(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
+                        placementPhaseFlag = true;
+                    } else {
+                        placementPhaseFlag = false;
+                    }
 
                 }
 
@@ -404,23 +612,29 @@ public interface GoodsGain {
 
     }
 
-    private int[] askForGoods(Player player, FlightView flightView, String messageType, int start, int end) {
+    private int[] askForGoods(Player player, String messageType, int start, int end, int gameCode) {
 
         int[] goods = {0, 0, 0, 0};
         String message;
+        DataContainer dataContainer;
         String[] colors = {"red", "yellow", "green", "blue"};
 
         for (int i = start; i <= end; i++) {
 
             message = "Enter number of " + colors[i] + " goods to " + messageType;
-            goods[i] = flightView.askPlayerValue(player, message);
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+            goods[i] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
         }
 
         return goods;
     }
 
-    private boolean checkGoodsAvailability(int[] firstGoods, int[] secondGoods, int start, int end) {
+    private boolean checkGoodsAvailability(int[] firstGoods, int[] secondGoods, int start, int end, int gameCode) {
 
         for (int i = start; i <= end; i++) {
 

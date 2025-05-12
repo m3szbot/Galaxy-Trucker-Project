@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
@@ -8,16 +10,16 @@ public interface FirePowerChoice {
 
 
     /**
-     * @param player     target player
-     * @param flightView class to comunicate with the players
+     * @param player target player
      * @return firePower of the player
      * @author Carlo
      */
 
 
-    default float chooseFirePower(Player player, FlightView flightView) {
+    default float chooseFirePower(Player player, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         int forwardDoubleCannons = player.getShipBoard().getShipBoardAttributes().getNumberForwardDoubleCannons();
         int notForwardDoubleCannons = player.getShipBoard().getShipBoardAttributes().getNumberNotForwardDoubleCannons();
         float defaultFirePower = player.getShipBoard().getShipBoardAttributes().getFirePower();
@@ -38,16 +40,24 @@ public interface FirePowerChoice {
                     ", but you still have " + forwardDoubleCannons + " double cannons pointing forward (+2 each) and " +
                     notForwardDoubleCannons + " double cannons not pointing forward (+1 each). " +
                     " Would you like to use double cannons to increase you're engine power ?";
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-            if (flightView.askPlayerGenericQuestion(player, message)) {
+            if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
 
                 message = "Double cannons will be automatically chosen from the ones that gives more fire power" +
                         "to the ones that gives less. Please enter the number of double cannons you want to" +
                         "activate: ";
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                 while (true) {
 
-                    doubleCannonsToActivate = flightView.askPlayerValue(player, message);
+                    doubleCannonsToActivate = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
                     if (doubleCannonsToActivate > 0 && doubleCannonsToActivate <= player.getShipBoard().getShipBoardAttributes().getBatteryPower()
                             && doubleCannonsToActivate <= forwardDoubleCannons + notForwardDoubleCannons) {
@@ -55,18 +65,27 @@ public interface FirePowerChoice {
                     }
 
                     message = "The value you entered is incorrect, please enter a valid one: ";
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
                 }
 
 
-                int[] coordinates;
+                int[] coordinates = new int[2];
 
                 while (doubleCannonsToActivate > 0) {
 
                     message = "Enter coordinates of the battery you want to use: ";
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                     while (true) {
 
-                        coordinates = flightView.askPlayerCoordinates(player, message);
+                        coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                        coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
                         if ((player.getShipBoard().getComponent(coordinates[0], coordinates[1]).getComponentName().equals("Battery"))) {
                             if (((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
@@ -75,6 +94,10 @@ public interface FirePowerChoice {
                         }
 
                         message = "Invalid coordinate, reenter coordinate: ";
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                     }
 

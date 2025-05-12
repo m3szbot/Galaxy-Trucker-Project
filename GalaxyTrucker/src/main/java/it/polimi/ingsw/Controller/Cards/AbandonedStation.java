@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
@@ -29,7 +31,9 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, int gameCode) {
+
+        DataContainer dataContainer;
 
         for (Player player : flightBoard.getPlayerOrderList()) {
 
@@ -37,22 +41,43 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                 //player has the possibility to solve the card
 
                 message = "Do you want to solve the card ?";
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                if (flightView.askPlayerGenericQuestion(player, message)) {
+                if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
                     //player decides to solve the card
 
-                    giveGoods(player, goods, flightBoard, flightView);
+                    giveGoods(player, goods, flightBoard, gameCode);
                     changePlayerPosition(player, daysLost, flightBoard);
 
                     message = player.getNickName() + "has solved the card!";
-                    flightView.sendMessageToAll(message);
+                    for (Player player1 : flightBoard.getPlayerOrderList()) {
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+                    }
                     break;
                 }
             }
         }
 
         message = "Nobody solved the card!";
-        flightView.sendMessageToAll(message);
+        for (Player player1 : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+        }
+        flightBoard.updateFlightBoard();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setFlightBoard(flightBoard);
+            dataContainer.setCommand("printFlightBoard");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
     }
 
     /**

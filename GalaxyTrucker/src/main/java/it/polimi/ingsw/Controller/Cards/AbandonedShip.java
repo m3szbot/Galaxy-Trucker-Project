@@ -1,8 +1,9 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * class that represent the card abbandonedShip
@@ -30,7 +31,9 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, int gameCode) {
+
+        DataContainer dataContainer;
 
         for (Player player : flightBoard.getPlayerOrderList()) {
 
@@ -39,16 +42,27 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
             if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= lossNumber) {
 
                 message = "Do you want to solve the card ? ";
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                if (flightView.askPlayerGenericQuestion(player, message)) {
+                if (ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player).equalsIgnoreCase("Yes")) {
                     //player decide to solve the card
 
-                    inflictLoss(player, lossType, lossNumber, flightBoard, flightView);
+                    inflictLoss(player, lossType, lossNumber, flightBoard, gameCode);
                     giveCredits(player, gainedCredit);
                     changePlayerPosition(player, daysLost, flightBoard);
 
                     message = player.getNickName() + "has solved the card!";
-                    flightView.sendMessageToAll(message);
+                    for (Player player1 : flightBoard.getPlayerOrderList()) {
+
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+
+                    }
 
                     break;
                 }
@@ -56,8 +70,21 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         }
 
         message = "Nobody solved the card!";
-        flightView.sendMessageToAll(message);
+        for (Player player : flightBoard.getPlayerOrderList()) {
 
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+        }
+        flightBoard.updateFlightBoard();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setFlightBoard(flightBoard);
+            dataContainer.setCommand("printFlightBoard");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
     }
 
 }

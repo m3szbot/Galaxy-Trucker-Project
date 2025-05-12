@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.ClientSocketMessenger;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -33,8 +34,9 @@ public class ShowDeckState implements GameState {
     @Override
     public void enter(AssemblyThread assemblyPhase) {
         String message = "Choose a deck from 1 to 3 writing the number:";
-        ClientSocketMessenger.sendMessageToPlayer(player, message);
-    }
+        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+        dataContainer.setMessage(message);
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);    }
 
     /**
      * Handles the user's input to select a deck, validates the index,
@@ -48,12 +50,13 @@ public class ShowDeckState implements GameState {
         int index = Integer.parseInt(input);
         if (index >= 0 && index < 4) {
             synchronized (assemblyProtocol.lockDecksList) {
-                assemblyPhase.getAssemblyProtocol().showDeck(index);
+                assemblyPhase.getAssemblyProtocol().showDeck(index); //qui penso che dovrebbe returnare una stringa, può essere sia una di blocco che una con la stampa
             }
         } else {
             String message = "Invalid deck number";
-            ClientSocketMessenger.sendMessageToPlayer(player, message);
-        }
+            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);        }
         assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
     }
 }

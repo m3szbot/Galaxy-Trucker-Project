@@ -34,6 +34,7 @@ public class AssemblyProtocol {
     private Map<Player, List<Component>> bookedMap;
     private GameType gameType;
     private FlightBoard flightBoard;
+    private int gameCode;
 
 
     /**
@@ -63,6 +64,7 @@ public class AssemblyProtocol {
         }
         gameType = gameInformation.getGameType();
         flightBoard = gameInformation.getFlightBoard();
+        gameCode = gameInformation.getGameCode();
     }
 
     /**
@@ -224,5 +226,9 @@ public class AssemblyProtocol {
 
     public FlightBoard getFlightBoard() {
         return flightBoard;
+    }
+
+    public int getGameCode() {
+        return gameCode;
     }
 }

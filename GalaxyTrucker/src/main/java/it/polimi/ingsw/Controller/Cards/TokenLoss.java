@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -22,19 +24,15 @@ public interface TokenLoss {
      * @param lossType    can be either inhabitants or goods
      * @param quantity    quantity of the loss
      * @param flightBoard flightboard of the actual game
-     * @param flightView  class to comunicate with the player
      * @author Carlo
      */
 
-    default void inflictLoss(Player player, ElementType lossType, int quantity, FlightBoard flightBoard, FlightView flightView) {
+    default void inflictLoss(Player player, ElementType lossType, int quantity, FlightBoard flightBoard, int gameCode) {
 
-        int coordinates[];
-        String message;
-        Component component;
 
         if (lossType == ElementType.CrewMember) {
 
-            removeCrewMembers(player, flightView, quantity);
+            removeCrewMembers(player, quantity, gameCode);
 
         } else {
             //removing goods
@@ -43,24 +41,25 @@ public interface TokenLoss {
             if (goodsOnShip[0] + goodsOnShip[1] + goodsOnShip[2] + goodsOnShip[3] > 0) {
                 //there are some goods that can be removed
 
-                quantity = removeGoods(player, flightView, flightBoard, quantity, goodsOnShip);
+                quantity = removeGoods(player, flightBoard, quantity, goodsOnShip, gameCode);
 
             }
 
             if (quantity > 0) {
                 //need to remove batteries
 
-                removeBatteries(player, flightView, quantity);
+                removeBatteries(player, quantity, gameCode);
             }
         }
 
     }
 
-    private void removeCrewMembers(Player player, FlightView flightView, int quantity) {
+    private void removeCrewMembers(Player player, int quantity, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         Component component;
-        int[] coordinates;
+        int[] coordinates = new int[2];
         //removing crew members or aliens
         int availableCrew = player.getShipBoard().getShipBoardAttributes().getCrewMembers();
         int numberOfCrewToRemove;
@@ -76,7 +75,13 @@ public interface TokenLoss {
 
             message = "You must remove " + numberOfCrewToRemove + " inhabitants." +
                     " Enter coordinates of cabin: ";
-            coordinates = flightView.askPlayerCoordinates(player, message);
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+            coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+            coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
             component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
             if (component.getComponentName().equals("Cabin")) {
@@ -105,7 +110,12 @@ public interface TokenLoss {
                     while (true) {
 
                         message = "Enter number of inhabitants to remove: ";
-                        int numberOfRemovedCrew = flightView.askPlayerValue(player, message);
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                        int numberOfRemovedCrew = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
                         if (numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove && numberOfRemovedCrew > 0) {
 
@@ -119,20 +129,29 @@ public interface TokenLoss {
                         }
 
                         message = "The number of inhabitants you entered is incorrect";
-                        flightView.sendMessageToPlayer(player, message);
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                     }
 
                 } else {
 
                     message = "The cabin you selected is empty";
-                    flightView.sendMessageToPlayer(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                 }
             } else {
 
                 message = "The component you entered is not a cabin";
-                flightView.sendMessageToPlayer(player, message);
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
             }
         }
@@ -140,13 +159,14 @@ public interface TokenLoss {
 
     }
 
-    private int removeGoods(Player player, FlightView flightView, FlightBoard flightBoard, int quantity, int[] goodsOnShip) {
+    private int removeGoods(Player player, FlightBoard flightBoard, int quantity, int[] goodsOnShip, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         String goodColor;
         int numberOfGoodsToRemove;
         Component component;
-        int[] coordinates;
+        int[] coordinates = new int[2];
 
         for (int i = 0; i < 4 && quantity > 0; i++) {
 
@@ -175,8 +195,13 @@ public interface TokenLoss {
 
                     message = "You must remove " + numberOfGoodsToRemove + " " + goodColor + " goods, " +
                             "enter coordinate of storage component: ";
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
-                    coordinates = flightView.askPlayerCoordinates(player, message);
+                    coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                    coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
                     component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
                     if (component.getComponentName().equals("Storage")) {
@@ -188,7 +213,12 @@ public interface TokenLoss {
                             while (true) {
 
                                 message = "Enter number of " + goodColor + " goods that you want to remove: ";
-                                numberOfRemovedGoods = flightView.askPlayerValue(player, message);
+                                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                                dataContainer.setMessage(message);
+                                dataContainer.setCommand("printMessage");
+                                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                                numberOfRemovedGoods = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
                                 goodsRemoved[i] = numberOfRemovedGoods;
 
                                 if (numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove && numberOfRemovedGoods > 0) {
@@ -208,18 +238,27 @@ public interface TokenLoss {
                                 }
 
                                 message = "The number of goods you entered is invalid";
-                                flightView.sendMessageToPlayer(player, message);
+                                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                                dataContainer.setMessage(message);
+                                dataContainer.setCommand("printMessage");
+                                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                             }
 
                         } else {
                             message = "The storage component you selected does not contain " + goodColor + " goods";
-                            flightView.sendMessageToPlayer(player, message);
+                            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            dataContainer.setCommand("printMessage");
+                            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
                         }
 
                     } else {
                         message = "The component you selected is not a storage";
-                        flightView.sendMessageToPlayer(player, message);
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
                     }
 
                 }
@@ -231,13 +270,14 @@ public interface TokenLoss {
         return quantity;
     }
 
-    private void removeBatteries(Player player, FlightView flightView, int quantity) {
+    private void removeBatteries(Player player, int quantity, int gameCode) {
 
         int batteriesAvailable = player.getShipBoard().getShipBoardAttributes().getBatteryPower();
         String message;
+        DataContainer dataContainer;
         int numberOfBatteriesToRemove;
         Component component;
-        int[] coordinates;
+        int[] coordinates = new int[2];
 
         if (batteriesAvailable > 0) {
             //there are batteries that can be removed
@@ -254,7 +294,13 @@ public interface TokenLoss {
 
                 int numberOfRemovedBatteries;
                 message = "Enter coordinate of the battery station: ";
-                coordinates = flightView.askPlayerCoordinates(player, message);
+                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
+                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                coordinates[0] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
+                coordinates[1] = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
                 if (component.getComponentName().equals("Battery")) {
@@ -262,7 +308,12 @@ public interface TokenLoss {
 
                         while (true) {
                             message = "Enter number of batteries you want to remove: ";
-                            numberOfRemovedBatteries = flightView.askPlayerValue(player, message);
+                            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            dataContainer.setCommand("printMessage");
+                            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+
+                            numberOfRemovedBatteries = Integer.parseInt(ClientMessenger.getGameMessenger(gameCode).getPlayerInput(player));
 
                             if (numberOfRemovedBatteries <= ((Battery) component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove && numberOfRemovedBatteries > 0) {
 
@@ -275,17 +326,26 @@ public interface TokenLoss {
                             }
 
                             message = "The number of batteries you entered is invalid";
-                            flightView.sendMessageToPlayer(player, message);
+                            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            dataContainer.setCommand("printMessage");
+                            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
 
                         }
 
                     } else {
                         message = "The battery station you entered is empty";
-                        flightView.sendMessageToPlayer(player, message);
+                        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                        dataContainer.setMessage(message);
+                        dataContainer.setCommand("printMessage");
+                        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
                     }
                 } else {
                     message = "The component you entered is not a battery";
-                    flightView.sendMessageToPlayer(player, message);
+                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
+                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
                 }
             }
 

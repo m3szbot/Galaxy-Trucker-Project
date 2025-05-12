@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * class that represent the card epidemic
@@ -23,13 +24,22 @@ public class Epidemic extends Card {
 
     @Override
 
-    public void resolve(FlightBoard flightBoard, FlightView flightView) {
+    public void resolve(FlightBoard flightBoard, int gameCode) {
+
+        DataContainer dataContainer;
 
         for (int i = 0; i < flightBoard.getPlayerOrderList().size(); i++) {
 
-            removeAdjacentAstronauts(flightBoard.getPlayerOrderList().get(i), flightView);
+            removeAdjacentAstronauts(flightBoard.getPlayerOrderList().get(i), flightBoard, gameCode);
         }
 
+        flightBoard.updateFlightBoard();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setFlightBoard(flightBoard);
+            dataContainer.setCommand("printFlightBoard");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
 
     }
 
@@ -37,14 +47,15 @@ public class Epidemic extends Card {
      * method that handles infected cabins when the epidemic
      * adventure card is being solved
      *
-     * @param player     target player
-     * @param flightView class to comunicate with the player
+     * @param player
+     * @param flightBoard target player
      * @author Carlo
      */
 
-    private void removeAdjacentAstronauts(Player player, FlightView flightView) {
+    private void removeAdjacentAstronauts(Player player, FlightBoard flightBoard, int gameCode) {
 
         String message;
+        DataContainer dataContainer;
         int rows = player.getShipBoard().getMatrixRows();
         int cols = player.getShipBoard().getMatrixCols();
         int i, j, numberOfRemovedInhabitants = 0;
@@ -139,6 +150,10 @@ public class Epidemic extends Card {
         player.getShipBoard().getShipBoardAttributes().updateCrewMembers(-numberOfRemovedInhabitants);
         message = "Player " + player.getNickName() + "lost " + numberOfRemovedInhabitants +
                 " inhabitants from the epidemic!";
-        flightView.sendMessageToAll(message);
+        for (Player player1 : flightBoard.getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+            dataContainer.setMessage(message);
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+        }
     }
 }
