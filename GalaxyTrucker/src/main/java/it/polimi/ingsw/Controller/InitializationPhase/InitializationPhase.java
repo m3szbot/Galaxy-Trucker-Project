@@ -21,13 +21,7 @@ public class InitializationPhase implements Startable {
      */
     @Override
     public void start(GameInformation gameInformation) {
-        try {
-            gameInformation.setUpCards(gameInformation.getGameType());
-            gameInformation.setUpComponents();
-        } catch (Exception e) {
-            System.out.println("Setup error");
-        }
-        gameInformation.setUpFlightBoard();
+        gameInformation.setUpGameInformation(gameInformation.getGameType(), gameInformation.getMaxNumberOfPlayers());
     }
 
 }
