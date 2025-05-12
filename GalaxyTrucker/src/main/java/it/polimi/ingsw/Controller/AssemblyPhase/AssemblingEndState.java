@@ -19,6 +19,7 @@ public class AssemblingEndState implements GameState {
         String message = "Do you want to turn the hourglass? (yes or wait)";
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
     }
 
@@ -33,6 +34,7 @@ public class AssemblingEndState implements GameState {
                    String message = "HourGlass is already running";
                    DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                    dataContainer.setMessage(message);
+                   dataContainer.setCommand("printMessage");
                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                    assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                }
@@ -41,6 +43,7 @@ public class AssemblingEndState implements GameState {
                String message = "Invalid input";
                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                dataContainer.setMessage(message);
+               dataContainer.setCommand("printMessage");
                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                break;

@@ -31,6 +31,13 @@ public class FlightPhase implements Startable {
         FlightBoard flightBoard = gameInformation.getFlightBoard();
         int gameCode = gameInformation.getGameCode();
 
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setMessage("FlightPhase is starting ...\n");
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        }
+
         for (Player player : flightBoard.getPlayerOrderList()) {
             dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
             dataContainer.setFlightBoard(flightBoard);
@@ -40,7 +47,12 @@ public class FlightPhase implements Startable {
 
         while (flightBoard.getCardsNumber() > 0) {
             // TODO pass playerViewMap so each user sees his own speicific view
-            flightBoard.getNewCard().resolve(flightBoard, gameCode);
+            flightBoard.getNewCard().resolve(gameInformation);
+        }
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer.setCommand("advancePhase");
+            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
         }
 
     }

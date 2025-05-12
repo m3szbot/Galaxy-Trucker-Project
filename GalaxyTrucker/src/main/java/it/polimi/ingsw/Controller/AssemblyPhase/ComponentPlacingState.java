@@ -38,6 +38,7 @@ public class ComponentPlacingState implements GameState {
         String message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
     }
 
@@ -71,6 +72,7 @@ public class ComponentPlacingState implements GameState {
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
     }

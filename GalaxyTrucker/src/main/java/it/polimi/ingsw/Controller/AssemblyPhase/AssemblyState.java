@@ -45,6 +45,7 @@ public class AssemblyState implements GameState {
         //view.sendMessageToPlayer(message, player);
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setMessage(message);
+        dataContainer.setCommand("printMessage");
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         switch (input.toLowerCase()) {
             case "place":
@@ -68,11 +69,13 @@ public class AssemblyState implements GameState {
                     message = "Component rotated:" + assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).getComponentName() + "Front:" + assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).getFront() + "Right:" + assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).getRight() + "Back:" + assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).getBack() + "Left:" + assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).getLeft();
                     dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                 } else {
                     message = "Your hand is empty";
                     dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));
@@ -82,6 +85,7 @@ public class AssemblyState implements GameState {
                 message = "Turn the hourglass";
                 dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                 assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(),ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerSocketMap().keySet().stream().toList() );
                 assemblyPhase.setState(new AssemblyState(protocol, player));
@@ -98,6 +102,7 @@ public class AssemblyState implements GameState {
                     message = "Your hand is empty";
                     dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
+                    dataContainer.setCommand("printMessage");
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));
@@ -113,6 +118,7 @@ public class AssemblyState implements GameState {
                 message = "Invalid command";
                 dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
                 assemblyPhase.setState(new AssemblyState(protocol, player));
         }
@@ -130,6 +136,7 @@ public class AssemblyState implements GameState {
                 String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)"; // 50 seconds timeout
                 DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
+                dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
 
                 actionTaken = true;

@@ -103,6 +103,13 @@ public class AssemblyPhase {
         for (Player player: gameInformation.getPlayerList() ) {
             DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+        }
+
+        for (Player player: gameInformation.getPlayerList() ) {
+            DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+            dataContainer.setCommand("advancePhase");
             ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
 
