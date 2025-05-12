@@ -7,9 +7,10 @@ import it.polimi.ingsw.View.CorrectionView.CorrectionViewTUI;
 import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import it.polimi.ingsw.View.GeneralView;
-import it.polimi.ingsw.View.SetUpView.SetUpViewTUI;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 /**
  * Class that handles the client playing the game.
@@ -19,7 +20,7 @@ import java.io.*;
 
 public class ClientGameHandler {
 
-    GeneralView[] views = new GeneralView[5];
+    GeneralView[] views = new GeneralView[4];
     ClientInfo clientInfo;
 
     public void start(ClientInfo clientInfo) {
@@ -40,19 +41,17 @@ public class ClientGameHandler {
 
         if (viewType == ViewType.CLI) {
 
-            views[0] = new SetUpViewTUI();
-            views[1] = new AssemblyViewTUI();
-            views[2] = new CorrectionViewTUI();
-            views[3] = new FlightViewTUI();
-            views[4] = new EvaluationViewTUI();
+            views[0] = new AssemblyViewTUI();
+            views[1] = new CorrectionViewTUI();
+            views[2] = new FlightViewTUI();
+            views[3] = new EvaluationViewTUI();
 
         } else {/*
 
-            views[0] = new SetUpViewGUI();
-            views[1] = new AssemblyViewGUI();
-            views[2] = new CorrectionViewGUI();
-            views[3] = new FlightViewGUI();
-            views[4] = new EvaluationViewGUI();
+            views[0] = new AssemblyViewGUI();
+            views[1] = new CorrectionViewGUI();
+            views[2] = new FlightViewGUI();
+            views[3] = new EvaluationViewGUI();
             */
         }
 

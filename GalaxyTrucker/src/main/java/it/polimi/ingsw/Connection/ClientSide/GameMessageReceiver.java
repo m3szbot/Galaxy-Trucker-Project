@@ -19,7 +19,7 @@ public class GameMessageReceiver implements Runnable{
 
     public GameMessageReceiver(GeneralView[] views, ObjectInputStream in){
 
-        String[] phases = {"setup", "assembly", "correction", "flight"};
+        String[] phases = {"assembly", "correction", "flight", "evaluation"};
 
         for(int i = 0; i < views.length; i++){
 
@@ -28,7 +28,7 @@ public class GameMessageReceiver implements Runnable{
         }
 
         this.in = in;
-        this.currentPhase = "setup";
+        this.currentPhase = "assembly";
 
     }
 
@@ -39,8 +39,16 @@ public class GameMessageReceiver implements Runnable{
         while(true){
 
             try {
-                DataContainer data = (DataContainer) in.readObject();
-                result = executeCommand(data.getCommand());
+                DataContainer container = (DataContainer) in.readObject();
+
+                if(executeCommand(container.getCommand()) == -1){
+                    break;
+                }
+
+                if(callView(container) == -1) {
+                   throw new IOException();
+                }
+
 
             } catch (IOException e) {
                 System.err.println("Critical error while receiving messages");
@@ -59,9 +67,11 @@ public class GameMessageReceiver implements Runnable{
     private void advancePhase(){
 
         switch (currentPhase){
-            case "setup": currentPhase = "assembly";
-            break;
             case "assembly": currentPhase = "correction";
+            break;
+            case "correction": currentPhase = "flight";
+            break;
+            case "flight": currentPhase = "evaluation";
             break;
         }
 
@@ -69,28 +79,33 @@ public class GameMessageReceiver implements Runnable{
 
     private int executeCommand(String command){
 
-        if(command.equals("change phase")){
-
+        if(command.equals("advance phase")){
+            advancePhase();
         }
+        else if(command.equals("game ended")){
+            return -1;
+        }
+
+        return 0;
 
     }
 
     private int callView(DataContainer container){
 
         GeneralView currentView = viewMap.get(currentPhase);
+        String methodName = container.getCommand();
 
         if(currentView == null){
             System.err.println("Critical error: view not found");
             return -1;
         }
 
-        String methodName = command.substring(0, command.indexOf('('));
 
         try {
 
-            Method method = currentView.getClass().getMethod(methodName);
+            Method method = currentView.getClass().getMethod(methodName, DataContainer.class);
 
-            method.invoke(currentView);
+            method.invoke(currentView, container);
 
             return 0;
 

@@ -21,6 +21,7 @@ public class DataContainer implements Serializable {
     private Component component;
     private FlightBoard flightBoard;
     private Card card;
+    private String command;
 
     public void clearContainer() {
         message = null;
@@ -36,6 +37,14 @@ public class DataContainer implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
     }
 
     public ShipBoard getShipBoard() {
