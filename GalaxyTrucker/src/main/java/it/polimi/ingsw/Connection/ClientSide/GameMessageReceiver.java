@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author carlo
  */
 
-public class GameMessageReceiver implements Runnable{
+public class GameMessageReceiver implements Runnable {
 
     private Map<String, GeneralView> viewMap = new HashMap<>();
     private ObjectInputStream in;
@@ -25,11 +25,11 @@ public class GameMessageReceiver implements Runnable{
     private AtomicBoolean running;
 
 
-    public GameMessageReceiver(GeneralView[] views, ObjectInputStream in, AtomicBoolean running){
+    public GameMessageReceiver(GeneralView[] views, ObjectInputStream in, AtomicBoolean running) {
 
         String[] phases = {"assembly", "correction", "flight", "evaluation"};
 
-        for(int i = 0; i < views.length; i++){
+        for (int i = 0; i < views.length; i++) {
 
             this.viewMap.put(phases[i], views[i]);
 
@@ -41,20 +41,20 @@ public class GameMessageReceiver implements Runnable{
 
     }
 
-    public void run(){
+    public void run() {
 
-        while(running.get()){
+        while (running.get()) {
 
             try {
                 DataContainer container = (DataContainer) in.readObject();
 
-                if(executeCommand(container.getCommand()) == -1){
+                if (executeCommand(container.getCommand()) == -1) {
 
                     System.out.println("The game has ended, press any key to quit");
                     running.set(false);
                 }
 
-                if(callView(container) == -1) {
+                if (callView(container) == -1) {
                     running.set(false);
                 }
 
@@ -75,25 +75,11 @@ public class GameMessageReceiver implements Runnable{
 
     }
 
-    private void advancePhase(){
+    private int executeCommand(String command) {
 
-        switch (currentPhase){
-            case "assembly": currentPhase = "correction";
-            break;
-            case "correction": currentPhase = "flight";
-            break;
-            case "flight": currentPhase = "evaluation";
-            break;
-        }
-
-    }
-
-    private int executeCommand(String command){
-
-        if(command.equals("advance phase")){
+        if (command.equals("advancePhase")) {
             advancePhase();
-        }
-        else if(command.equals("game ended")){
+        } else if (command.equals("endGame")) {
             return -1;
         }
 
@@ -101,12 +87,12 @@ public class GameMessageReceiver implements Runnable{
 
     }
 
-    private int callView(DataContainer container){
+    private int callView(DataContainer container) {
 
         GeneralView currentView = viewMap.get(currentPhase);
         String methodName = container.getCommand();
 
-        if(currentView == null){
+        if (currentView == null) {
             System.err.println("Critical error: view not found");
             return -1;
         }
@@ -125,5 +111,21 @@ public class GameMessageReceiver implements Runnable{
             e.printStackTrace();
             return -1;
         }
+    }
+
+    private void advancePhase() {
+
+        switch (currentPhase) {
+            case "assembly":
+                currentPhase = "correction";
+                break;
+            case "correction":
+                currentPhase = "flight";
+                break;
+            case "flight":
+                currentPhase = "evaluation";
+                break;
+        }
+
     }
 }

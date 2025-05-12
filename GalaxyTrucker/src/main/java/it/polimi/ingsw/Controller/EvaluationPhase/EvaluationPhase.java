@@ -1,11 +1,11 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
-import it.polimi.ingsw.View.EvaluationView.EvaluationView;
-import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.Controller.Game.Startable;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.EvaluationView.EvaluationView;
+import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class EvaluationPhase implements Startable {
      * @param gameInformation
      */
     private void assignPlayerCredits(GameInformation gameInformation) {
-        ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getGameType(), gameInformation.getPlayerList(), gameInformation.getFlightBoard().getPlayerOrderList());
+        ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getFlightBoard(), gameInformation.getGameType());
         for (Player player : gameInformation.getPlayerList()) {
             player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
         }
