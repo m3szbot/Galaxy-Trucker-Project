@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * Class used to communicate with players during the game.
+ *
  * @author carlo
  */
 
@@ -24,28 +25,28 @@ public class GameMessenger {
 
     /**
      * To call when a player is added to the game
+     *
      * @param player
      * @param socket null if the player chose RMI
      */
 
-    public void addPlayerSocket(Player player, Socket socket){
+    public void addPlayerSocket(Player player, Socket socket) {
 
         this.playerSocketMap.put(player, socket);
         this.playerDataContainerMap.put(player, new DataContainer());
 
     }
 
-    public void addPlayerRMI(Player player){
+    public void addPlayerRMI(Player player) {
         playerRMIList.add(player);
     }
 
     /**
-     *
      * @param player
      * @return the player dataContainer
      */
 
-    public DataContainer getPlayerContainer(Player player){
+    public DataContainer getPlayerContainer(Player player) {
 
         return playerDataContainerMap.get(player);
 
@@ -53,47 +54,44 @@ public class GameMessenger {
 
     /**
      * Sends to the player his dataContainer, then clears the container.
+     *
      * @param player
      */
 
-    public void sendPlayerData(Player player){
+    public void sendPlayerData(Player player) {
 
         Socket playerSocket = playerSocketMap.get(player);
 
-        if(playerRMIList.contains(player)){
+        if (playerRMIList.contains(player)) {
             //RMI
             //TODO
-        }
-        else{
+        } else {
             //socket
 
             try {
 
                 (new ObjectOutputStream(playerSocket.getOutputStream())).writeObject(playerDataContainerMap.get(player));
 
-            }catch (IOException e){
+            } catch (IOException e) {
                 System.err.println();
-            }
-            finally {
-            playerDataContainerMap.get(player).clearContainer();
+            } finally {
+                playerDataContainerMap.get(player).clearContainer();
             }
 
         }
     }
 
     /**
-     *
      * @param player
      * @return the string that the player sent to the server
      */
 
-    public String getPlayerInput(Player player) throws PlayerDisconnectedException{
+    public String getPlayerInput(Player player) throws PlayerDisconnectedException {
 
-        if(playerRMIList.contains(player)){
+        if (playerRMIList.contains(player)) {
             //RMI
             //TODO
-        }
-        else{
+        } else {
             try {
                 return (new DataInputStream((playerSocketMap.get(player)).getInputStream())).readUTF();
             } catch (IOException e) {
@@ -120,6 +118,22 @@ public class GameMessenger {
 
         return null;
 
+    }
+
+    public String getPlayerString(Player player) throws PlayerDisconnectedException {
+        throw new PlayerDisconnectedException(player);
+    }
+
+    public int getPlayerInt(Player player) throws PlayerDisconnectedException {
+        throw new PlayerDisconnectedException(player);
+    }
+
+    public int[] getPlayerCoordinates(Player player) throws PlayerDisconnectedException {
+        throw new PlayerDisconnectedException(player);
+    }
+
+    public boolean getPlayerBoolean(Player player) throws PlayerDisconnectedException {
+        throw new PlayerDisconnectedException(player);
     }
 
     public Map<Player, Socket> getPlayerSocketMap() {
