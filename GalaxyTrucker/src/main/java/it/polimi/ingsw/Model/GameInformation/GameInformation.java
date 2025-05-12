@@ -31,10 +31,14 @@ public class GameInformation {
     private FlightBoard flightBoard;
     private int gameCode;
 
-    public GameInformation() {
+    /**
+     * Creates and sets up gameInformation.
+     */
+    public GameInformation(GameType gameType, int maxNumberOfPlayers) {
         cardsList = new ArrayList<>();
         componentList = new ArrayList<>();
         playerList = new ArrayList<>();
+        setUpGameInformation(gameType, maxNumberOfPlayers);
     }
 
     /**
@@ -43,7 +47,7 @@ public class GameInformation {
      *
      * @author Boti
      */
-    public void setUpGameInformation(GameType gameType, int maxNumberOfPlayers) {
+    private void setUpGameInformation(GameType gameType, int maxNumberOfPlayers) {
         setGameType(gameType);
         setMaxNumberOfPlayers(maxNumberOfPlayers);
         try {
