@@ -1,15 +1,23 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.CorrectionView.CorrectionView;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 public class CorrectionThread implements Runnable {
-    Player player;
-    CorrectionView playerView;
+    final int gameCode;
+    final Player player;
+    final GameMessenger gameMessenger;
+    final DataContainer dataContainer;
 
-    public CorrectionThread(Player player, CorrectionView playerView) {
+    public CorrectionThread(int gameCode, Player player) {
+        this.gameCode = gameCode;
         this.player = player;
-        this.playerView = playerView;
+        this.gameMessenger = ClientMessenger.getGameMessenger(gameCode);
+        this.dataContainer = gameMessenger.getPlayerContainer(player);
     }
 
     /**
@@ -18,25 +26,44 @@ public class CorrectionThread implements Runnable {
     @Override
     public void run() {
         boolean errors;
-        int values[];
-        int col, row;
+        StringBuilder message = new StringBuilder();
+        int[] coordinates;
+        ShipBoard shipBoard = player.getShipBoard();
         // check if there are errors
-        errors = player.getShipBoard().isErroneous();
+        errors = shipBoard.isErroneous();
         // correct errors
         while (errors) {
-            playerView.printErrorsMessage(player.getShipBoard());
-            values = playerView.promptForColumnRow();
-            col = values[0];
-            row = values[1];
-            playerView.printComponentRemovalMessage(col, row);
+            // construct errors message
+            message.append("There are errors in your ship, please correct them:\n");
+            for (int i = 0; i < shipBoard.getMatrixCols(); i++) {
+                for (int j = 0; j < shipBoard.getMatrixRows(); j++) {
+                    if (shipBoard.getMatrErrors()[i][j]) {
+                        message.append("Error in: %d %d\n", i + 1, j + 1);
+                    }
+                }
+            }
+            message.append("Enter column and row (col row):");
+            dataContainer.clearContainer();
+            dataContainer.setCommand("printMessage");
+            dataContainer.setMessage(message.toString());
+            gameMessenger.sendPlayerData(player);
+
+            try {
+                coordinates = gameMessenger.getPlayerCoordinates(player);
+            } catch (PlayerDisconnectedException e) {
+                throw new RuntimeException(e);
+            }
+
             // no check for col, row value - if out of bounds, nothing happens
             // trigger automatically removes disconnected components - set to false
-            player.getShipBoard().removeComponent(col, row, false);
-            errors = player.getShipBoard().isErroneous();
+            shipBoard.removeComponent(coordinates[0], coordinates[1], false);
+            errors = shipBoard.isErroneous();
         }
         // errors corrected
-        playerView.printFinishedMessage();
+        dataContainer.clearContainer();
+        dataContainer.setCommand("printMessage");
+        dataContainer.setMessage("Your ship is valid, please wait for other players.");
+        gameMessenger.sendPlayerData(player);
         // end of thread
     }
-
 }
