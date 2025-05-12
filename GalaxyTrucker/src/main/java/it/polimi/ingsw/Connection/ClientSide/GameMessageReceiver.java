@@ -90,10 +90,10 @@ public class GameMessageReceiver implements Runnable{
 
     private int executeCommand(String command){
 
-        if(command.equals("advance phase")){
+        if(command.equals("advancePhase")){
             advancePhase();
         }
-        else if(command.equals("game ended")){
+        else if(command.equals("gameEnded")){
             return -1;
         }
 
