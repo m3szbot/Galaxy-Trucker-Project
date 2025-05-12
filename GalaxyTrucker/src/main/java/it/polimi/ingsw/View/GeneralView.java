@@ -135,8 +135,8 @@ public abstract class GeneralView {
         String cardAttributes;
 
         System.out.printf("Current card:    %s\n", cardName);
-        //Come scorro e stampo gli attributi se non so a priori di che carta si tratta?
-        //Con uno switch case o una serie di if? Perchè verrebbe lunghissima
+
+        card.showCard();
 
     }
 
