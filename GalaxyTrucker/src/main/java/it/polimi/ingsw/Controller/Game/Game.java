@@ -19,7 +19,7 @@ public class Game implements Runnable {
     private CorrectionPhase correctionPhase;
     private FlightPhase flightPhase;
     private EvaluationPhase evaluationPhase;
-    private int numberOfJoinedPlayers = 0;
+    private int numberOfJoinedPlayers;
     private String creator;
 
 
@@ -29,6 +29,7 @@ public class Game implements Runnable {
         this.gameState = GameState.Empty;
         gameInformation = new GameInformation();
         gameInformation.setGameCode(gameCode);
+        numberOfJoinedPlayers = 0;
 
     }
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.View.GeneralView;
 
 import java.io.IOException;
@@ -19,15 +20,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameMessageReceiver implements Runnable {
 
-    private Map<String, GeneralView> viewMap = new HashMap<>();
+    private Map<GamePhase, GeneralView> viewMap = new HashMap<>();
     private ObjectInputStream in;
-    private String currentPhase;
+    private GamePhase currentPhase;
     private AtomicBoolean running;
 
 
     public GameMessageReceiver(GeneralView[] views, ObjectInputStream in, AtomicBoolean running) {
 
-        String[] phases = {"assembly", "correction", "flight", "evaluation"};
+        GamePhase[] phases = {GamePhase.Assembly, GamePhase.Correction, GamePhase.Flight, GamePhase.Evaluation};
 
         for (int i = 0; i < views.length; i++) {
 
@@ -36,7 +37,6 @@ public class GameMessageReceiver implements Runnable {
         }
 
         this.in = in;
-        this.currentPhase = "assembly";
         this.running = running;
 
     }
@@ -48,7 +48,7 @@ public class GameMessageReceiver implements Runnable {
             try {
                 DataContainer container = (DataContainer) in.readObject();
 
-                if (executeCommand(container.getCommand()) == -1) {
+                if (executeCommand(container.getCommand(), container) == -1) {
 
                     System.out.println("The game has ended, press any key to quit");
                     running.set(false);
@@ -75,10 +75,10 @@ public class GameMessageReceiver implements Runnable {
 
     }
 
-    private int executeCommand(String command) {
+    private int executeCommand(String command, DataContainer dataContainer) {
 
-        if (command.equals("advancePhase")) {
-            advancePhase();
+        if (command.equals("setGamePhase")) {
+            setGamePhase(dataContainer.getGamePhase());
         } else if (command.equals("endGame")) {
             return -1;
         }
@@ -112,19 +112,8 @@ public class GameMessageReceiver implements Runnable {
         }
     }
 
-    private void advancePhase() {
-
-        switch (currentPhase) {
-            case "assembly":
-                currentPhase = "correction";
-                break;
-            case "correction":
-                currentPhase = "flight";
-                break;
-            case "flight":
-                currentPhase = "evaluation";
-                break;
-        }
-
+    private void setGamePhase(GamePhase gamePhase){
+        this.currentPhase = gamePhase;
     }
+
 }

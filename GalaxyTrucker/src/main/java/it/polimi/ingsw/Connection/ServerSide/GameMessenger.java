@@ -52,8 +52,7 @@ public class GameMessenger {
 
     public String getPlayerString(Player player) throws PlayerDisconnectedException {
 
-        String input = getPlayerInput(player);
-        return input;
+        return getPlayerInput(player);
 
     }
 
