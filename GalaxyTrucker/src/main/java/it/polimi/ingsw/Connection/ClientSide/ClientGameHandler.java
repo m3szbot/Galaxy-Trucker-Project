@@ -11,6 +11,7 @@ import it.polimi.ingsw.View.GeneralView;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -27,6 +28,7 @@ public class ClientGameHandler {
     /**
      * Starts the handler that handles the player communication with
      * the server during the game
+     *
      * @param clientInfo
      */
 
@@ -48,6 +50,7 @@ public class ClientGameHandler {
 
     /**
      * Sets the player views in function of the view type he chose
+     *
      * @param viewType
      * @param views
      */
@@ -75,6 +78,7 @@ public class ClientGameHandler {
     /**
      * Starts the player threads that communicate with the server with
      * socket protocol
+     *
      * @param views
      */
 
@@ -106,18 +110,18 @@ public class ClientGameHandler {
                 in.close();
                 out.close();
             } catch (IOException e) {
-               System.err.println("Error while closing sockets");
+                System.err.println("Error while closing sockets");
             }
 
         } catch (InterruptedException e) {
             System.err.println("Receiver thread was interrupted abnormally");
 
-            try{
+            try {
 
                 in.close();
                 out.close();
 
-            }catch (IOException ex){
+            } catch (IOException ex) {
 
                 System.err.println("Error while closing sockets");
 
@@ -130,6 +134,7 @@ public class ClientGameHandler {
     /**
      * Starts the player threads that communicate with the server with
      * RMI protocol
+     *
      * @param views
      */
 

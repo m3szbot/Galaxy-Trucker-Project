@@ -2,6 +2,7 @@ package it.polimi.ingsw.Connection.ClientSide;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -11,12 +12,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author carlo
  */
 
-public class GameMessageSender implements Runnable{
+public class GameMessageSender implements Runnable {
 
     private DataOutputStream out;
     private AtomicBoolean running;
 
-    public GameMessageSender(DataOutputStream out, AtomicBoolean running){
+    public GameMessageSender(DataOutputStream out, AtomicBoolean running) {
 
         this.out = out;
         this.running = running;
@@ -28,7 +29,7 @@ public class GameMessageSender implements Runnable{
 
         Scanner reader = new Scanner(System.in);
 
-        while(running.get()){
+        while (running.get()) {
 
             try {
 
