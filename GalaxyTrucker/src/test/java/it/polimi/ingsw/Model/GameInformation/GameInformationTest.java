@@ -37,33 +37,20 @@ class GameInformationTest {
         assertEquals(player, gameInformation.getPlayerList().getFirst());
     }
 
-    @Test
-    void testSetPlayerViewMap() {
-        Player player1 = new Player("Ludo", Color.RED, gameInformation);
-        ViewType viewType1 = ViewType.CLI;
-        Player player2 = new Player("Boti", Color.BLUE, gameInformation);
-        ViewType viewType2 = ViewType.GUI;
-
-        gameInformation.setPlayerViewType(player1, viewType1);
-        gameInformation.setPlayerViewType(player2, viewType2);
-
-        assertEquals(viewType1, gameInformation.getPlayerViewType(player1));
-        assertEquals(viewType2, gameInformation.getPlayerViewType(player2));
-    }
 
     @Test
     void testSetUpCards() throws IOException {
         GameType gameType1 = GameType.TestGame;
         GameType gameType2 = GameType.NormalGame;
 
-        gameInformation.setUpCards(gameType1);
+        gameInformation.setUpGameInformation(gameType1, 4);
         assertNotNull(gameInformation.getCardsList());
         for (int i = 0; i < gameInformation.getCardsList().size(); i++) {
             Card card = gameInformation.getCardsList().get(i);
             System.out.println(card.getCardName());
             System.out.println(card.getCardLevel());
         }
-        gameInformation.setUpCards(gameType2);
+        gameInformation.setUpGameInformation(gameType2, 4);
         assertNotNull(gameInformation.getCardsList());
         for (int i = 0; i < gameInformation.getCardsList().size(); i++) {
             assertNotNull(gameInformation.getCardsList().get(i));
@@ -76,14 +63,14 @@ class GameInformationTest {
     @Test
     void test2SetUpCards() throws IOException {
         // Test with TestGame type
-        gameInformation.setUpCards(GameType.TestGame);
+        gameInformation.setUpGameInformation(GameType.TestGame, 4);
         List<Card> cards = gameInformation.getCardsList();
         assertNotNull(cards, "Cards list should not be null");
         assertFalse(cards.isEmpty(), "Cards list should not be empty");
 
         // Verify NormalGame contains mixed levels
         gameInformation.getCardsList().clear();
-        gameInformation.setUpCards(GameType.NormalGame);
+        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
         cards = gameInformation.getCardsList();
         assertNotNull(cards, "Cards list should not be null");
         assertFalse(cards.isEmpty(), "Cards list should not be empty");
@@ -91,7 +78,7 @@ class GameInformationTest {
 
     @Test
     void testSetUpComponents() throws IOException {
-        gameInformation.setUpComponents();
+        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
         assertNotNull(gameInformation.getComponentList());
         for (int i = 0; i < gameInformation.getComponentList().size(); i++) {
             assertNotNull(gameInformation.getComponentList().get(i));
@@ -145,10 +132,8 @@ class GameInformationTest {
     @Test
     void testSetUpFlightBoard() throws IOException {
         GameType gameType1 = GameType.NormalGame;
-        gameInformation.setUpCards(gameType1);
+        gameInformation.setUpGameInformation(gameType1, 4);
         assertNotNull(gameInformation.getCardsList());
-
-        gameInformation.setUpFlightBoard();
         assertNotNull(gameInformation.getFlightBoard());
     }
 
