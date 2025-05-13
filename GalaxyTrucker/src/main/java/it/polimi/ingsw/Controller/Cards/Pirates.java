@@ -55,7 +55,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         DataContainer dataContainer;
         AttackStates[] results;
 
-        results = setAttackStates(gameInformation.getFlightBoard(), gameInformation.getGameCode(), requirementNumber);
+        results = setAttackStates(requirementNumber, gameInformation);
 
         //rolling all dices
         for (i = 0; i < blows.length; i++) {
@@ -114,7 +114,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 break;
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
-                hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+                hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
 
             }
 

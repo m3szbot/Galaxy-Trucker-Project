@@ -65,7 +65,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                     if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
                         //player decide to solve the card
 
-                        inflictLoss(player, lossType, lossNumber, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+                        inflictLoss(player, lossType, lossNumber, gameInformation);
                         giveCredits(player, gainedCredit);
                         changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
 

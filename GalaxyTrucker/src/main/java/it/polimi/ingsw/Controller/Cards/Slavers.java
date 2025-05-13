@@ -55,7 +55,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         DataContainer dataContainer;
         AttackStates[] results;
 
-        results = setAttackStates(gameInformation.getFlightBoard(), requirementNumber, gameInformation.getGameCode());
+        results = setAttackStates(requirementNumber, gameInformation);
 
         for (i = 0; i < numberOfPlayers; i++) {
 
@@ -109,7 +109,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                 break;
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
-                inflictLoss(gameInformation.getFlightBoard().getPlayerOrderList().get(i), lossType, lossNumber, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+                inflictLoss(gameInformation.getFlightBoard().getPlayerOrderList().get(i), lossType, lossNumber, gameInformation);
 
             }
 

@@ -129,10 +129,9 @@ public interface EnginePowerChoice {
                 }
             }
 
-        } else {
-            return defaultEnginePower;
         }
 
+        return defaultEnginePower;
     }
 
 }

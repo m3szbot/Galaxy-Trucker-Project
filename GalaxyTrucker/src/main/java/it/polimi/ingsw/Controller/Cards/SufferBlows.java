@@ -2,11 +2,13 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -28,7 +30,7 @@ public interface SufferBlows {
      * @author Carlo
      */
 
-    default void hit(Player player, Blow[] blows, ElementType blowType, FlightBoard flightBoard, int gameCode) {
+    default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) {
 
         int[] componentCoord = {-1, -1};
         boolean hitFlag = false;
@@ -45,22 +47,22 @@ public interface SufferBlows {
 
                     if (blow.isBig()) {
 
-                        hitFlag = bigCannonBlowHit(player, flightBoard, componentCoord[0], componentCoord[1]);
+                        hitFlag = bigCannonBlowHit(player, gameInformation.getFlightBoard(), componentCoord[0], componentCoord[1]);
 
                     } else {
                         //player can defend itself
-                        hitFlag = smallCannonBlowHit(player, flightBoard, componentCoord[0], componentCoord[1], blow.getDirection(), gameCode);
+                        hitFlag = smallCannonBlowHit(player, componentCoord[0], componentCoord[1], blow.getDirection(), gameInformation);
                     }
                 } else {
 
                     if (blow.isBig()) { // player can defend itself only with cannon
 
 
-                        hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightBoard, gameCode);
+                        hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], gameInformation);
 
                     } else { //blow is small
 
-                        hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], flightBoard, gameCode);
+                        hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], gameInformation);
 
                     }
                 }
@@ -68,7 +70,7 @@ public interface SufferBlows {
 
             //notifying everybody of the blow effect on the player.
 
-            notifyAll(player, flightBoard, blow.getDirection(), hitFlag, componentCoord[0], componentCoord[1], blowType, gameCode);
+            notifyAll(player, blow.getDirection(), hitFlag, componentCoord[0], componentCoord[1], blowType, gameInformation);
         }
     }
 
@@ -259,47 +261,56 @@ public interface SufferBlows {
         return removeComponent(player, xCoord, yCoord, flightBoard);
     }
 
-    private boolean smallCannonBlowHit(Player player, FlightBoard flightBoard, int xCoord, int yCoord, int direction, int gameCode) {
+    private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) {
 
         String message;
         DataContainer dataContainer;
 
         if (player.getShipBoard().getShipBoardAttributes().checkSide(direction) &&
                 player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
-            //player can defend itself with a shield
+            //player can defend themselves with a shield
 
             message = "A small cannon blow is directed on position ["
                     + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                     directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
             dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
-            if (ClientMessenger.getGameMessenger(gameCode).getPlayerBoolean(player)) {
-                //player decide to defend itself with shields
+            try {
+                if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
+                    //player decide to defend itself with shields
 
-                return useBattery(player, gameCode);
+                    return useBattery(player, gameInformation);
 
-            } else { //player decide to not defend itself
+                } else { //player decide to not defend itself
 
-                return removeComponent(player, xCoord, yCoord, flightBoard);
+                    return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
 
+                }
+            } catch (PlayerDisconnectedException e) {
+                gameInformation.disconnectPlayer(player);
+                message = e.getMessage();
+                for (Player player1 : gameInformation.getPlayerList()) {
+                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
+                    dataContainer.setMessage(message);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
+                }
             }
 
-        } else { //player cannot defend itself
-
-            return removeComponent(player, xCoord, yCoord, flightBoard);
-
         }
+
+        return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
+
     }
 
-    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightBoard flightBoard, int gameCode) {
+    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) {
 
         String message;
         DataContainer dataContainer;
-        int[] cannonCoords = hasCannon(direction, xCoord, yCoord, player);
 
+        int[] cannonCoords = hasCannon(direction, xCoord, yCoord, player);
 
         if (cannonCoords[0] != -1) { //player has a cannon which points toward the blow.
 
@@ -311,23 +322,33 @@ public interface SufferBlows {
                             + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                             direction + "!\nDo you want to defend yourself with the " +
                             "double cannon pointing towards its direction ?";
-                    dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
                     dataContainer.setMessage(message);
                     dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
-                    if (ClientMessenger.getGameMessenger(gameCode).getPlayerBoolean(player)) { //player decides to defend themselves
+                    try {
+                        if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) { //player decides to defend themselves
 
-                        return useBattery(player, gameCode);
+                            return useBattery(player, gameInformation);
 
-                    } else { //player decide to not defend itself
+                        } else { //player decide to not defend itself
 
-                        return removeComponent(player, xCoord, yCoord, flightBoard);
+                            return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
+                        }
+                    } catch (PlayerDisconnectedException e) {
+                        gameInformation.disconnectPlayer(player);
+                        message = e.getMessage();
+                        for (Player player1 : gameInformation.getPlayerList()) {
+                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
+                            dataContainer.setMessage(message);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
+                        }
                     }
 
                 } else { //player don't have batteries
 
-                    return removeComponent(player, xCoord, yCoord, flightBoard);
+                    return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
 
                 }
 
@@ -337,12 +358,12 @@ public interface SufferBlows {
 
         } else { //player doesn't have a cannon
 
-            return removeComponent(player, xCoord, yCoord, flightBoard);
+            return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
         }
 
     }
 
-    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, FlightBoard flightBoard, int gameCode) {
+    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) {
 
         String message;
         DataContainer dataContainer;
@@ -363,23 +384,33 @@ public interface SufferBlows {
                 message = "A small asteroid is directed on position ["
                         + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                         direction + "!\nDo you want to defend yourself with shields ?";
-                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
                 dataContainer.setMessage(message);
                 dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
-                if (ClientMessenger.getGameMessenger(gameCode).getPlayerBoolean(player)) { //player decides to defend themselves
+                try {
+                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) { //player decides to defend themselves
 
-                    return useBattery(player, gameCode);
+                        return useBattery(player, gameInformation);
 
-                } else {
+                    } else {
 
-                    return removeComponent(player, xCoord, yCoord, flightBoard);
+                        return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
 
+                    }
+                } catch (PlayerDisconnectedException e) {
+                    gameInformation.disconnectPlayer(player);
+                    message = e.getMessage();
+                    for (Player player1 : gameInformation.getPlayerList()) {
+                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
+                        dataContainer.setMessage(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
+                    }
                 }
             } else {
 
-                return removeComponent(player, xCoord, yCoord, flightBoard);
+                return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
 
             }
 
@@ -404,7 +435,7 @@ public interface SufferBlows {
         return true;
     }
 
-    private void notifyAll(Player player, FlightBoard flightBoard, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, int gameCode) {
+    private void notifyAll(Player player, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, GameInformation gameInformation) {
 
         String message;
         DataContainer dataContainer;
@@ -415,11 +446,11 @@ public interface SufferBlows {
                     blowType.toString().toLowerCase() + " at position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
 
-            for (Player player1 : flightBoard.getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+            for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
                 dataContainer.setMessage(message);
                 dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
             }
 
         } else if (xCoord != -1) {
@@ -428,11 +459,11 @@ public interface SufferBlows {
                     blowType.toString().toLowerCase() + " that hit position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
 
-            for (Player player1 : flightBoard.getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+            for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
                 dataContainer.setMessage(message);
                 dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
             }
 
         } else {
@@ -440,31 +471,41 @@ public interface SufferBlows {
             message = "Player " + player.getNickName() + " dodged the " +
                     blowType.toString().toLowerCase() + " coming at him from the " + direction + "!";
 
-            for (Player player1 : flightBoard.getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
+            for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
                 dataContainer.setMessage(message);
                 dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
             }
 
         }
     }
 
-    private boolean useBattery(Player player, int gameCode) {
+    private boolean useBattery(Player player, GameInformation gameInformation) {
 
         String message;
         DataContainer dataContainer;
         int[] coordinates = new int[2];
 
         message = "Enter the coordinates of the battery want to use: ";
-        dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
         dataContainer.setMessage(message);
         dataContainer.setCommand("printMessage");
-        ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
         while (true) {
 
-            coordinates = ClientMessenger.getGameMessenger(gameCode).getPlayerCoordinates(player);
+            try {
+                coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
+            } catch (PlayerDisconnectedException e) {
+                gameInformation.disconnectPlayer(player);
+                message = e.getMessage();
+                for (Player player1 : gameInformation.getPlayerList()) {
+                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
+                    dataContainer.setMessage(message);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
+                }
+            }
 
             if (player.getShipBoard().getComponent(coordinates[0], coordinates[1]) != null) {
 
@@ -476,10 +517,10 @@ public interface SufferBlows {
             }
 
             message = "Invalid coordinates, reenter coordinates: ";
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
             dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
 
         }
 

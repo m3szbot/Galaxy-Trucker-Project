@@ -56,7 +56,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
         DataContainer dataContainer;
         AttackStates[] results;
 
-        results = setAttackStates(gameInformation.getFlightBoard(), requirementNumber, gameInformation.getGameCode());
+        results = setAttackStates(requirementNumber, gameInformation);
 
         for (i = 0; i < numberOfPlayers; i++) {
 
@@ -82,7 +82,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
                         }
 
-                        giveGoods(gameInformation.getFlightBoard().getPlayerOrderList().get(i), goods, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+                        giveGoods(gameInformation.getFlightBoard().getPlayerOrderList().get(i), goods, gameInformation.getFlightBoard(), gameInformation);
                         changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), daysLost, gameInformation.getFlightBoard());
 
                     } else {
@@ -110,7 +110,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                 break;
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
-                inflictLoss(gameInformation.getFlightBoard().getPlayerOrderList().get(i), lossType, lossNumber, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+                inflictLoss(gameInformation.getFlightBoard().getPlayerOrderList().get(i), lossType, lossNumber, gameInformation);
 
             }
 

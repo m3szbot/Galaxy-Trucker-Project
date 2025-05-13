@@ -22,7 +22,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
@@ -40,7 +40,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
         for (int i = 0; i < numberOfPlayers; i++) {
 
-            enginePowerChosen = chooseEnginePower(players.get(i), gameInformation.getGameCode());
+            enginePowerChosen = chooseEnginePower(players.get(i), gameInformation);
             changePlayerPosition(players.get(i), enginePowerChosen, gameInformation.getFlightBoard());
 
             message = "Player " + players.get(i).getNickName() + " has moved " +

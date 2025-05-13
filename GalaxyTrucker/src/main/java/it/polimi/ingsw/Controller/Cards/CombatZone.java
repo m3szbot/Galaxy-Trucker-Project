@@ -32,7 +32,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
@@ -63,7 +63,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         for (int i = 0; i < numberOfPlayers; i++) {
 
-            firePowers[i] = chooseFirePower(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation.getGameCode());
+            firePowers[i] = chooseFirePower(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);
 
         }
 
@@ -71,7 +71,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         for (int i = 0; i < numberOfPlayers; i++) {
 
-            enginePowers[i] = chooseEnginePower(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation.getGameCode());
+            enginePowers[i] = chooseEnginePower(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);
 
         }
 
@@ -91,7 +91,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
         }
 
-        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
 
         message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
                 " crew members as he is the one with the weakest engine power!";
@@ -106,7 +106,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         for (int i = 0; i < blows.length; i++) {
             blows[i].rollDice();
         }
-        hit(weakestFirePowerPlayer, blows, blowType, gameInformation.getFlightBoard(), gameInformation.getGameCode());
+        hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
 
         gameInformation.getFlightBoard().updateFlightBoard();
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
