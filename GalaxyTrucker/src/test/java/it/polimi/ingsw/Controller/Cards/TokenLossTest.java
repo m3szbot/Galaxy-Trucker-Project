@@ -98,7 +98,7 @@ class TokenLossTest {
 
         flightView = new FlightViewTUI();
 
-        operator.inflictLoss(player, ElementType.CrewMember, 3, flightBoard, flightView);
+        operator.inflictLoss(player, ElementType.CrewMember, 3, gameInformation);
 
         assertTrue(((Cabin) player.getShipBoard().getComponent(5, 5)).getCrewMembers() == 0);
         assertTrue(((Cabin) player.getShipBoard().getComponent(4, 4)).getCrewMembers() == 0);
@@ -142,7 +142,7 @@ class TokenLossTest {
 
         flightView = new FlightViewTUI();
 
-        operator.inflictLoss(player, ElementType.Goods, 6, flightBoard, flightView);
+        operator.inflictLoss(player, ElementType.Goods, 6, gameInformation);
 
         /*
         Av.RedSlots = 4
@@ -162,7 +162,7 @@ class TokenLossTest {
 
         flightView = new FlightViewTUI();
 
-        operator.inflictLoss(player, ElementType.Goods, 4, flightBoard, flightView);
+        operator.inflictLoss(player, ElementType.Goods, 4, gameInformation);
         /*
         Av.RedSlots = 5
         Av.BlueSlots = 10
@@ -211,7 +211,7 @@ class TokenLossTest {
 
         flightView = new FlightViewTUI();
 
-        operator.inflictLoss(player, ElementType.Goods, 13, flightBoard, flightView);
+        operator.inflictLoss(player, ElementType.Goods, 13, gameInformation);
 
 
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 0);
@@ -238,7 +238,7 @@ class TokenLossTest {
 
         flightView = new FlightViewTUI();
 
-        operator.inflictLoss(player, ElementType.Goods, 10, flightBoard, flightView);
+        operator.inflictLoss(player, ElementType.Goods, 10, gameInformation);
 
         assertTrue(player.getShipBoard().getShipBoardAttributes().getBatteryPower() == 0);
         assertTrue(((Battery) player.getShipBoard().getComponent(8, 8)).getBatteryPower() == 0);
