@@ -42,6 +42,7 @@ public class ClientWelcomer {
 
             System.out.print("The string you entered is not valid, please enter a valid one (GUI/TUI): ");
             input = scanner.nextLine();
+            input = input.toUpperCase();
 
         }
 
@@ -58,6 +59,7 @@ public class ClientWelcomer {
 
             System.out.print("The string you entered is not valid, please enter a valid one (RMI/SOCKET): ");
             input = scanner.nextLine();
+            input = input.toUpperCase();
 
         }
 

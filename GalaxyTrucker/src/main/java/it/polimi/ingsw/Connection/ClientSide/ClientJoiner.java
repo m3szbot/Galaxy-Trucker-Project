@@ -77,11 +77,13 @@ public class ClientJoiner {
         try {
             socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
             clientInfo.setServerSocket(socket);
-            dataReceiver = new ObjectInputStream(socket.getInputStream());
             dataSender = new ObjectOutputStream(socket.getOutputStream());
-            scanner = new Scanner(System.in);
-
+            dataSender.flush();
+            System.out.println("Output stream aperto e flushato");
+            dataReceiver = new ObjectInputStream(socket.getInputStream());
             dataSender.writeObject(clientInfo);
+            dataSender.flush();
+            scanner = new Scanner(System.in);
 
         } catch (IOException e) {
             System.err.println("Error while connecting to the server");
@@ -142,6 +144,7 @@ public class ClientJoiner {
 
                 try {
                     dataSender.writeUTF(scanner.nextLine());
+                    dataSender.flush();
                 } catch (IOException e) {
                     connectionLost.set(true);
                     terminatedFlag.set(true);
