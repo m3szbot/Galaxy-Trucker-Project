@@ -30,7 +30,7 @@ public class Server {
     private Game currentStartingGame;
     private SocketListener socketListener;
     private RMIListener rmiListener;
-    private ReentrantLock lock;
+    private ReentrantLock lock = new ReentrantLock();
     private Color currentColor;
     private int portNumber;
 

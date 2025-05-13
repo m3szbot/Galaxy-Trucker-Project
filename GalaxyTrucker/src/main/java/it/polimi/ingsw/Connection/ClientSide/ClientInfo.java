@@ -20,12 +20,12 @@ import java.net.Socket;
 public class ClientInfo implements Serializable {
 
     private String nickname;
-    private ConnectionType connectionType;
-    private ViewType viewType;
+    private transient ConnectionType connectionType;
+    private transient ViewType viewType;
     private int gameCode = -1;
-    private String serverIp;
+    private transient String serverIp;
     private final static int serverPort = 5200;
-    private Socket serverSocket;
+    private transient Socket serverSocket;
 
     public Socket getServerSocket() {
         return serverSocket;

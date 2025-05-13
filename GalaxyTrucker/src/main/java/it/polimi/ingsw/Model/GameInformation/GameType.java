@@ -7,5 +7,5 @@ package it.polimi.ingsw.Model.GameInformation;
  */
 
 public enum GameType {
-    TestGame, NormalGame;
+    TESTGAME, NORMALGAME;
 }

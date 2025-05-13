@@ -44,7 +44,7 @@ public class ScoreCounter {
         int[] goodsPoints = {4, 3, 2, 1};
         int lostComponentsPoints = -1;
         // test game values
-        if (gameType == GameType.TestGame) {
+        if (gameType == GameType.TESTGAME) {
             finishOrderPoints = new int[]{4, 3, 2, 1};
             leastExposedLinksPoints = 2;
         }

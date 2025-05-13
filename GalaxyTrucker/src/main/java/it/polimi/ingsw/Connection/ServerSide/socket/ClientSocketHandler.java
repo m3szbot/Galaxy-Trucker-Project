@@ -32,10 +32,12 @@ public class ClientSocketHandler extends Thread {
         this.centralServer = centralServer;
 
         try {
+            dataReceiver = new ObjectInputStream(clientSocket.getInputStream());
             dataSender = new ObjectOutputStream(clientSocket.getOutputStream());
             dataSender.flush();
             System.out.println("Output stream aperto e flushato");
-            dataReceiver = new ObjectInputStream(clientSocket.getInputStream());
+            System.out.println(clientSocket.isConnected());
+
 
         } catch (IOException e) {
             System.err.println("Error while opening streams");
@@ -67,168 +69,188 @@ public class ClientSocketHandler extends Thread {
 
                 message = "Press 'enter' key to enter in a game: ";
 
-                dataSender.writeUTF(message);
+                dataSender.writeObject(message);
                 dataSender.flush();
 
-                if (dataReceiver.readUTF().isEmpty()) {
+                try {
+                    if (((String)dataReceiver.readObject()).isEmpty()) {
 
-                    if (centralServer.getLock().tryLock()) {
+                        if (centralServer.getLock().tryLock()) {
 
-                        if (centralServer.getCurrentStartingGame().getGameState() == GameState.Empty) {
-                            //first player
+                            if (centralServer.getCurrentStartingGame().getGameState() == GameState.Empty) {
+                                //first player
 
-                            int numberOfPlayers;
-                            GameType gameType;
+                                int numberOfPlayers;
+                                GameType gameType;
 
-                            message = "You are the first player joining the game!";
-
-
-                            dataSender.writeUTF(message);
-                            dataSender.flush();
-
-                            message = "Enter the game type (TESTGAME/NORMALGAME): ";
-
-                            dataSender.writeUTF(message);
-                            dataSender.flush();
-
-                            while (true) {
-
-                                input = dataReceiver.readUTF();
-                                input = input.toUpperCase();
-
-                                if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
-
-                                    message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
-                                    dataSender.writeUTF(message);
-                                    dataSender.flush();
-                                    dataSender.writeUTF("increment trials");
-                                    dataSender.flush();
-
-                                } else {
-
-                                    gameType = GameType.valueOf(input);
-                                    message = "Game type was set up correctly";
-                                    dataSender.writeUTF(message);
-                                    dataSender.flush();
-
-                                    break;
-                                }
-
-                            }
-
-                            message = "Enter the number of players of the game (2-4): ";
-
-                            dataSender.writeUTF(message);
-                            dataSender.flush();
-
-                            while (true) {
-
-                                numberOfPlayers = dataReceiver.readInt();
-
-                                if (numberOfPlayers < 2 || numberOfPlayers > 4) {
-
-                                    message = "The number of players you entered is invalid, please enter a valid value (2-4): ";
-                                    dataSender.writeUTF(message);
-                                    dataSender.flush();
-                                    dataSender.writeUTF("increment trials");
-                                    dataSender.flush();
-                                } else {
-
-                                    message = "Number of players was set up correctly";
-                                    dataSender.writeUTF(message);
-                                    dataSender.flush();
-                                    break;
-                                }
-
-                            }
-
-                            //There are no repeated names as he is the first player.
-
-                            playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
-                            clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
-                            dataSender.writeObject(clientInfo);
-                            dataSender.flush();
-                            centralServer.addPlayerToCurrentStartingGame(playerToAdd, gameType, numberOfPlayers);
-                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
-
-                            message = "You have been added to the game (game code " + centralServer.getCurrentStartingGame().getGameCode() + " )";
-                            dataSender.writeUTF(message);
-                            dataSender.flush();
-                            dataSender.writeUTF("added");
-                            dataSender.flush();
-                            centralServer.getCurrentStartingGame().changeGameState(GameState.Starting);
+                                message = "You are the first player joining the game!";
 
 
-                        } else {
-                            //not first player
+                                dataSender.writeObject(message);
+                                dataSender.flush();
 
-                            if (centralServer.getCurrentStartingGame().isNickNameRepeated(clientInfo.getNickname())) {
+                                message = "Enter the game type (TESTGAME/NORMALGAME): ";
+
+                                dataSender.writeObject(message);
+                                dataSender.flush();
 
                                 while (true) {
 
-                                    message = "You're nickname has already been chosen, please enter a new one: ";
 
-                                    dataSender.writeUTF(message);
-                                    dataSender.flush();
+                                    try {
+                                        input = (String)dataReceiver.readObject();
+                                    } catch (ClassNotFoundException e) {
+                                        input = null;
+                                        System.err.println("Error: String class not found");
+                                        return;
+                                    }
 
-                                    input = dataReceiver.readUTF();
+                                    input = input.toUpperCase();
 
-                                    if (!centralServer.getCurrentStartingGame().isNickNameRepeated(input)) {
-                                        message = "You're nickname is now " + input;
-                                        dataSender.writeUTF(message);
+                                    if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
+
+                                        message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
+                                        dataSender.writeObject(message);
                                         dataSender.flush();
-                                        clientInfo.setNickname(input);
+                                        dataSender.writeObject("increment trials");
+                                        dataSender.flush();
+
+                                    } else {
+
+                                        gameType = GameType.valueOf(input);
+                                        message = "Game type was set up correctly";
+                                        dataSender.writeObject(message);
+                                        dataSender.flush();
+
                                         break;
                                     }
 
-                                    dataSender.writeUTF("increment trials");
-                                    dataSender.flush();
+                                }
 
+                                message = "Enter the number of players of the game (2-4): ";
+
+                                dataSender.writeObject(message);
+                                dataSender.flush();
+
+                                while (true) {
+
+                                    numberOfPlayers = (Integer)dataReceiver.readObject();
+
+                                    if (numberOfPlayers < 2 || numberOfPlayers > 4) {
+
+                                        message = "The number of players you entered is invalid, please enter a valid value (2-4): ";
+                                        dataSender.writeObject(message);
+                                        dataSender.flush();
+                                        dataSender.writeObject("increment trials");
+                                        dataSender.flush();
+                                    } else {
+
+                                        message = "Number of players was set up correctly";
+                                        dataSender.writeObject(message);
+                                        dataSender.flush();
+                                        break;
+                                    }
+
+                                }
+
+                                //There are no repeated names as he is the first player.
+
+                                playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
+                                clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
+
+                                centralServer.addPlayerToCurrentStartingGame(playerToAdd, gameType, numberOfPlayers);
+                                ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
+
+                                message = "You have been added to the game (game code " + centralServer.getCurrentStartingGame().getGameCode() + " )";
+                                dataSender.writeObject(message);
+                                dataSender.flush();
+                                dataSender.writeObject("added");
+                                dataSender.flush();
+                                dataSender.writeObject(clientInfo);
+                                dataSender.flush();
+                                centralServer.getCurrentStartingGame().changeGameState(GameState.Starting);
+
+
+                            } else {
+                                //not first player
+
+                                if (centralServer.getCurrentStartingGame().isNickNameRepeated(clientInfo.getNickname())) {
+
+                                    while (true) {
+
+                                        message = "You're nickname has already been chosen, please enter a new one: ";
+
+                                        dataSender.writeObject(message);
+                                        dataSender.flush();
+
+                                        try {
+                                            input = (String)dataReceiver.readObject();
+                                        } catch (ClassNotFoundException e) {
+                                            System.err.println("Error: String class not found");
+                                            return;
+                                        }
+
+                                        if (!centralServer.getCurrentStartingGame().isNickNameRepeated(input)) {
+                                            message = "You're nickname is now " + input;
+                                            dataSender.writeObject(message);
+                                            dataSender.flush();
+                                            clientInfo.setNickname(input);
+                                            break;
+                                        }
+
+                                        dataSender.writeObject("increment trials");
+                                        dataSender.flush();
+
+                                    }
+
+                                }
+
+
+                                playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
+                                clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
+
+                                centralServer.addPlayerToCurrentStartingGame(playerToAdd);
+                                ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
+
+                                message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
+                                dataSender.writeObject(message);
+                                dataSender.flush();
+                                dataSender.writeObject("added");
+                                dataSender.flush();
+                                dataSender.writeObject(clientInfo);
+                                dataSender.flush();
+
+
+                                if (centralServer.getCurrentStartingGame().isFull()) {
+                                    centralServer.startCurrentGame();
                                 }
 
                             }
 
+                            centralServer.getLock().unlock();
+                            break;
 
-                            playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
-                            clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
-                            dataSender.writeObject(clientInfo);
+                        } else {
+
+                            message = "Somebody is already joining a new game, please wait.";
+
+                            dataSender.writeObject(message);
                             dataSender.flush();
-                            centralServer.addPlayerToCurrentStartingGame(playerToAdd);
-                            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
-
-                            message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
-                            dataSender.writeUTF(message);
-                            dataSender.flush();
-                            dataSender.writeUTF("added");
-                            dataSender.flush();
-
-
-                            if (centralServer.getCurrentStartingGame().isFull()) {
-                                centralServer.startCurrentGame();
-                            }
 
                         }
 
-                        centralServer.getLock().unlock();
-                        break;
-
                     } else {
 
-                        message = "Somebody is already joining a new game, please wait.";
-
-                        dataSender.writeUTF(message);
+                        message = "The string you entered is invalid!";
+                        dataSender.writeObject(message);
+                        dataSender.flush();
+                        dataSender.writeObject("increment trials");
                         dataSender.flush();
 
                     }
+                } catch (ClassNotFoundException e) {
 
-                } else {
-
-                    message = "The string you entered is invalid!";
-                    dataSender.writeUTF(message);
-                    dataSender.flush();
-                    dataSender.writeUTF("increment trials");
-                    dataSender.flush();
-
+                    System.err.println("Error: String class not found");
                 }
 
 
@@ -236,7 +258,7 @@ public class ClientSocketHandler extends Thread {
 
                 message = "The server kicked you out because of inactivity!";
                 try {
-                    dataSender.writeUTF(message);
+                    dataSender.writeObject(message);
                     dataSender.flush();
                 } catch (IOException ex) {
                     System.err.println("Error while sending data to the client");

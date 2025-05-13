@@ -80,6 +80,7 @@ public class ClientJoiner {
             dataSender = new ObjectOutputStream(socket.getOutputStream());
             dataSender.flush();
             System.out.println("Output stream aperto e flushato");
+            System.out.println(socket.isConnected());
             dataReceiver = new ObjectInputStream(socket.getInputStream());
             dataSender.writeObject(clientInfo);
             dataSender.flush();
@@ -104,7 +105,7 @@ public class ClientJoiner {
                         break;
                     }
 
-                    String message = dataReceiver.readUTF();
+                    String message = (String) dataReceiver.readObject();
 
                     if(message.equals("added")){
                         terminatedFlag.set(true);
@@ -132,6 +133,10 @@ public class ClientJoiner {
                 connectionLost.set(true);
                 terminatedFlag.set(true);
                 System.err.println("An error was encountered while receiving data from the server");
+            } catch (ClassNotFoundException e) {
+                connectionLost.set(true);
+                terminatedFlag.set(true);
+                System.err.println("Error while receiving message from the server");
             }
 
         });
@@ -143,7 +148,7 @@ public class ClientJoiner {
             while(!terminatedFlag.get()) {
 
                 try {
-                    dataSender.writeUTF(scanner.nextLine());
+                    dataSender.writeObject(scanner.nextLine());
                     dataSender.flush();
                 } catch (IOException e) {
                     connectionLost.set(true);
