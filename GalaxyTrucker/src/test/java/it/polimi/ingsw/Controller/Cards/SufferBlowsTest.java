@@ -80,7 +80,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.CannonBlow, gameInformation);
 
         assertNotNull(player.getShipBoard().getComponent(4, 4));
         assertNotNull(player.getShipBoard().getComponent(3, 3));
@@ -107,7 +107,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.CannonBlow, gameInformation);
 
         assertNotNull(player.getShipBoard().getComponent(4, 4));
         assertNotNull(player.getShipBoard().getComponent(3, 3));
@@ -140,7 +140,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.CannonBlow, gameInformation);
 
         assertNull(player.getShipBoard().getComponent(6, 5));
         assertNull(player.getShipBoard().getComponent(6, 4));
@@ -183,7 +183,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.CannonBlow, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.CannonBlow, gameInformation);
 
         assertNull(player.getShipBoard().getComponent(5, 7));
         assertNull(player.getShipBoard().getComponent(6, 7));
@@ -214,7 +214,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, new Blow[]{blow}, ElementType.CannonBlow, flightBoard, flightView);
+        operator.hit(player, new Blow[]{blow}, ElementType.CannonBlow, gameInformation);
 
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
         assertEquals(2, ((Battery) player.getShipBoard().getComponent(3, 3)).getBatteryPower());
@@ -249,7 +249,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, gameInformation);
 
         assertNull(player.getShipBoard().getComponent(3, 6));
         assertNull(player.getShipBoard().getComponent(4, 6));
@@ -305,7 +305,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, gameInformation);
 
         System.out.println("Components destroyed: " + player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
 
@@ -346,7 +346,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, gameInformation);
 
         assertNotNull(player.getShipBoard().getComponent(6, 6));
         assertNotNull(player.getShipBoard().getComponent(6, 7));
@@ -379,7 +379,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, gameInformation);
 
         assertNotNull(player.getShipBoard().getComponent(5, 5));
 
@@ -413,7 +413,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, gameInformation);
 
         assertNotNull(player.getShipBoard().getComponent(5, 5));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
@@ -447,7 +447,7 @@ class SufferBlowsTest {
 
         flightView = new FlightViewTUI();
 
-        operator.hit(player, blows, ElementType.Meteorite, flightBoard, flightView);
+        operator.hit(player, blows, ElementType.Meteorite, gameInformation);
 
         assertNull(player.getShipBoard().getComponent(3, 6));
         assertNull(player.getShipBoard().getComponent(4, 6));

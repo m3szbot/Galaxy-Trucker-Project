@@ -56,7 +56,7 @@ class EnginePowerChoiceTest {
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
         player.getShipBoard().getShipBoardAttributes().updateBatteryPower(4);
 
-        assertTrue(operator.chooseEnginePower(player, flightView) == 5);
+        assertTrue(operator.chooseEnginePower(player, gameInformation) == 5);
 
     }
 
@@ -66,7 +66,7 @@ class EnginePowerChoiceTest {
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
         player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(1);
 
-        assertTrue(operator.chooseEnginePower(player, flightView) == 5);
+        assertTrue(operator.chooseEnginePower(player, gameInformation) == 5);
 
     }
 
@@ -83,7 +83,7 @@ class EnginePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseEnginePower(player, flightView) == 3);
+        assertTrue(operator.chooseEnginePower(player, gameInformation) == 3);
 
     }
 
@@ -100,7 +100,7 @@ class EnginePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseEnginePower(player, flightView) == 5);
+        assertTrue(operator.chooseEnginePower(player, gameInformation) == 5);
     }
 
     @Test
@@ -117,7 +117,7 @@ class EnginePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseEnginePower(player, flightView) == 11);
+        assertTrue(operator.chooseEnginePower(player, gameInformation) == 11);
 
     }
 
