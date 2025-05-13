@@ -50,6 +50,7 @@ public class ClientSocketHandler extends Thread {
         String input;
         ClientInfo clientInfo;
 
+
         try {
             clientInfo = (ClientInfo) dataReceiver.readObject();
 
@@ -243,7 +244,7 @@ public class ClientSocketHandler extends Thread {
                 }
 
 
-            }catch (IOException e){
+            } catch (IOException e) {
 
                 System.err.println("Error while comunicating with " + clientSocket.getInetAddress() + " ,connection closed");
                 try {
@@ -252,14 +253,13 @@ public class ClientSocketHandler extends Thread {
                     System.err.println("Error while closing the client socket");
                 }
 
-            }
-            finally {
+            } finally {
 
                 try {
 
                     centralServer.getLock().unlock();
 
-                }catch (IllegalMonitorStateException e){
+                } catch (IllegalMonitorStateException e) {
                     //the client didn't have the lock
                 }
 
