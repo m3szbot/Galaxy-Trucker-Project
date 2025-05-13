@@ -86,7 +86,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
+        operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, gameInformation);
 
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).isEmpty());
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 0);
@@ -132,7 +132,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, flightView);
+        operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, gameInformation);
 
         assertTrue(sourceStorage.getAvailableRedSlots() == 4);
         assertTrue(destStorage.getAvailableBlueSlots() == 0);
@@ -170,7 +170,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{5, 0, 0, 0}, flightBoard, flightView);
+        operator.giveGoods(player, new int[]{5, 0, 0, 0}, flightBoard, gameInformation);
 
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 0);
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).isFull());
@@ -215,7 +215,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{0, 3, 2, 1}, flightBoard, flightView);
+        operator.giveGoods(player, new int[]{0, 3, 2, 1}, flightBoard, gameInformation);
 
         assertTrue(((Storage) player.getShipBoard().getComponent(4, 4)).getAvailableBlueSlots() == 2);
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 3);

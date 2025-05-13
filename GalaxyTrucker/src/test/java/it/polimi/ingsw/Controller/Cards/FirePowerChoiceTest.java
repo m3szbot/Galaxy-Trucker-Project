@@ -57,7 +57,7 @@ class FirePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseFirePower(player, flightView) == 5);
+        assertTrue(operator.chooseFirePower(player, gameInformation) == 5);
 
     }
 
@@ -69,7 +69,7 @@ class FirePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseFirePower(player, flightView) == 2);
+        assertTrue(operator.chooseFirePower(player, gameInformation) == 2);
 
     }
 
@@ -86,7 +86,7 @@ class FirePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseFirePower(player, flightView) == 1);
+        assertTrue(operator.chooseFirePower(player, gameInformation) == 1);
     }
 
     @Test
@@ -105,7 +105,7 @@ class FirePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseFirePower(player, flightView) == 6);
+        assertTrue(operator.chooseFirePower(player, gameInformation) == 6);
 
     }
 
@@ -126,7 +126,7 @@ class FirePowerChoiceTest {
 
         flightView = new FlightViewTUI();
 
-        assertTrue(operator.chooseFirePower(player, flightView) == 6);
+        assertTrue(operator.chooseFirePower(player, gameInformation) == 6);
 
     }
 
