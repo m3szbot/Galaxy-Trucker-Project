@@ -202,6 +202,7 @@ class FlightBoardTest {
         assertEquals(11, flightBoard.getCardsNumber());
     }
 
+    // TODO
     @Test
     void concurrentAddPlayer() {
         // add all players from different threads
@@ -213,7 +214,6 @@ class FlightBoardTest {
                         flightBoard.addPlayer(player, flightBoard.getStartingTiles().getFirst());
                         break;
                     } catch (IndexOutOfBoundsException e) {
-                        System.out.println("Tile chosen occupied, retrying");
                     }
                 }
 
