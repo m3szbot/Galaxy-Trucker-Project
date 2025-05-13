@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class DeckTest {
     GameInformation gameInformation;
@@ -33,7 +34,7 @@ class DeckTest {
     void deckCardsRemovedFromGameInformation() {
         int count = gameInformation.getCardsList().size();
         deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
-        assertEquals(count, gameInformation.getCardsList().size());
+        assertNotEquals(count, gameInformation.getCardsList().size());
     }
 
     @Test

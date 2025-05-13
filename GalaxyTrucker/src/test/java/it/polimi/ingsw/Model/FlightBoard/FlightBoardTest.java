@@ -116,17 +116,19 @@ class FlightBoardTest {
     }
 
     @Test
-    void removeLappedPlayer() {
+    void removeLappedPlayerOnUpdate() {
         // normal game: 24 tiles
         // 1 2 4 7
-        // playerA steps on (28) playerB (4) lapping him
+        // playerA steps on (28->29) playerB (4) lapping him
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
         flightBoard.incrementPlayerTile(playerA, 21);
-        assertEquals(7, flightBoard.getPlayerTile(playerA));
-        assertEquals(4, flightBoard.getPlayerTile(playerA));
-        flightBoard.updateFlightBoard();
+        assertEquals(4, flightBoard.getPlayerTile(playerB));
         assertEquals(29, flightBoard.getPlayerTile(playerA));
+        assertEquals(2, flightBoard.getPlayerOrderList().size());
+        // playerB gets removed
+        flightBoard.updateFlightBoard();
+        assertEquals(1, flightBoard.getPlayerOrderList().size());
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.getPlayerTile(playerB);
         });
@@ -217,6 +219,7 @@ class FlightBoardTest {
 
             });
         }
+        assertEquals(4, flightBoard.getPlayerOrderList().size());
     }
 
 }
