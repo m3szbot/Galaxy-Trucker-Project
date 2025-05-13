@@ -89,7 +89,7 @@ public class GameInformation {
         for (JsonNode node : rootNode) {
 
             // only level 1 cards for TestGame
-            if (gameType == GameType.NormalGame || (gameType == GameType.TestGame && node.get("level").asInt() == 1)) {
+            if (gameType == GameType.NORMALGAME || (gameType == GameType.TESTGAME && node.get("level").asInt() == 1)) {
 
                 // present for all
                 cardLevel = node.get("level").asInt();

@@ -64,7 +64,7 @@ public class ShipBoard {
             }
         }
 
-        if (gameType.equals(GameType.TestGame)) {
+        if (gameType.equals(GameType.TESTGAME)) {
         } else {
             // Set forbidden zones in the structure
             for (int i = 0; i < 12; i++) {

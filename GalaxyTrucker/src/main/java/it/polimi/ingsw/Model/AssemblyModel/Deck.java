@@ -27,7 +27,7 @@ public class Deck {
     public Deck(List<Card> cardsList, GameType gameType) {
         cards = new ArrayList<>();
         // add cards to the deck
-        if (gameType.equals(GameType.NormalGame)) {
+        if (gameType.equals(GameType.NORMALGAME)) {
             addCardToDeck(cardsList, 2);
             addCardToDeck(cardsList, 2);
             addCardToDeck(cardsList, 1);

@@ -85,12 +85,12 @@ public class ClientGameHandler {
     private void startSCK(GeneralView[] views) {
 
         ObjectInputStream in;
-        DataOutputStream out;
+        ObjectOutputStream out;
         AtomicBoolean running = new AtomicBoolean(true);
 
         try {
             in = new ObjectInputStream(clientInfo.getServerSocket().getInputStream());
-            out = new DataOutputStream(clientInfo.getServerSocket().getOutputStream());
+            out = new ObjectOutputStream(clientInfo.getServerSocket().getOutputStream());
         } catch (IOException e) {
             System.err.println("A critical error occurred while opening streams");
             return;

@@ -84,7 +84,7 @@ public class AssemblyPhase {
         }
 
         new Thread(() -> {while (running.get()) {
-            if (assemblyProtocol.getGameType().equals(GameType.NormalGame)) {
+            if (assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
                 if (assemblyProtocol.getHourGlass().getState() == 3) {
                     setRunning(false);
                     break;

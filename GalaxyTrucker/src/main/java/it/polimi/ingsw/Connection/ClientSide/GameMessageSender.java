@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
@@ -14,10 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameMessageSender implements Runnable {
 
-    private DataOutputStream out;
+    private ObjectOutputStream out;
     private AtomicBoolean running;
 
-    public GameMessageSender(DataOutputStream out, AtomicBoolean running) {
+    public GameMessageSender(ObjectOutputStream out, AtomicBoolean running) {
 
         this.out = out;
         this.running = running;

@@ -52,7 +52,7 @@ public class FlightBoard {
         int numberOfTiles = 24;
         Integer[] startingTiles = new Integer[]{1, 2, 4, 7};
         // test game
-        if (gameType == GameType.TestGame) {
+        if (gameType == GameType.TESTGAME) {
             cardCount = 8;
             numberOfTiles = 18;
             startingTiles = new Integer[]{1, 2, 3, 5};

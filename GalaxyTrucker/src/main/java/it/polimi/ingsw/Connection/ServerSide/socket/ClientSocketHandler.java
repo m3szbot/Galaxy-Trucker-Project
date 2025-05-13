@@ -119,6 +119,7 @@ public class ClientSocketHandler extends Thread {
                                     } else {
 
                                         gameType = GameType.valueOf(input);
+                                        centralServer.getCurrentStartingGame().getGameInformation().setGameType(gameType);
                                         message = "Game type was set up correctly";
                                         dataSender.writeObject(message);
                                         dataSender.flush();
@@ -135,7 +136,18 @@ public class ClientSocketHandler extends Thread {
 
                                 while (true) {
 
-                                    numberOfPlayers = (Integer)dataReceiver.readObject();
+                                    try {
+
+                                        numberOfPlayers = Integer.parseInt((String) dataReceiver.readObject());
+
+                                    }catch (NumberFormatException e){
+
+                                        message = "You didn't enter a number! Please enter one: ";
+                                        dataSender.writeObject(message);
+                                        dataSender.flush();
+                                        continue;
+
+                                    }
 
                                     if (numberOfPlayers < 2 || numberOfPlayers > 4) {
 
