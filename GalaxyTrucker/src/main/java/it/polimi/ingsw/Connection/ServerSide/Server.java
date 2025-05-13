@@ -41,7 +41,7 @@ public class Server {
         this.socketListener = new SocketListener(this);
         this.rmiListener = new RMIListener(this);
         this.currentColor = Color.RED;
-        this.portNumber = 5000;
+        this.portNumber = 5200;
     }
 
     public int getPort(){
@@ -126,8 +126,8 @@ public class Server {
 
     public void start() {
 
-        socketListener.run();
-        rmiListener.run();
+        new Thread(socketListener).start();
+        new Thread(rmiListener).start();
 
     }
 
