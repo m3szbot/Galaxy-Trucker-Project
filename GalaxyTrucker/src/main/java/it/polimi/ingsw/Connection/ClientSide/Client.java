@@ -13,7 +13,7 @@ package it.polimi.ingsw.Connection.ClientSide;
 
 public class Client {
 
-    public static void main(){
+    public static void main(String[] args){
 
         ClientWelcomer welcomer = new ClientWelcomer();
         ClientJoiner joiner = new ClientJoiner();

@@ -24,7 +24,7 @@ public class ClientInfo implements Serializable {
     private ViewType viewType;
     private int gameCode = -1;
     private String serverIp;
-    private final static int serverPort = 5000;
+    private final static int serverPort = 5200;
     private Socket serverSocket;
 
     public Socket getServerSocket() {

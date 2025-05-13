@@ -37,11 +37,11 @@ public class RMIListener implements Runnable{
            System.out.println("Rmi listener is activated and is listening...");
 
        } catch (RemoteException e) {
-           e.printStackTrace();
+           System.err.println("Errow while initializing RMI");
        } catch (MalformedURLException e) {
-           throw new RuntimeException(e);
+           System.err.println("Error with RMI URL");
        } catch (AlreadyBoundException e) {
-           throw new RuntimeException(e);
+           System.err.println("Name joiner is already bounded");
        }
 
 

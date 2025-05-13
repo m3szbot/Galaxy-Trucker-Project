@@ -8,5 +8,5 @@ package it.polimi.ingsw.Model.GameInformation;
  */
 
 public enum ConnectionType {
-    RMI, Socket;
+    RMI, SOCKET;
 }
