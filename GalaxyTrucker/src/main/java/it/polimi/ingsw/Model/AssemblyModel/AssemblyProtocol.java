@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * AssemblyProtocol handles the logic behind deck selection, component
  * booking and drawing, and other player interactions.
  *
- * @author Giacomo
+ * @author Giacomo, Boti
  */
 public class AssemblyProtocol {
     public Object lockUncoveredList = new Object();
@@ -28,9 +28,13 @@ public class AssemblyProtocol {
     // components - synchronized lists! - concurrent access by multiple players
     private List<Component> coveredList;
     private List<Component> uncoveredList;
-    // components currently in hand (viewMap)
+
+    // ConcurrentMap does NOT allow null values!
+    // Components currently in hand (viewMap).
+    // Does not contain player entry if no component in hand (no nulls).
     private Map<Player, Component> inHandMap;
-    // booked components
+    // Booked components.
+    // List has no elements if no components booked, but entry is not removed.
     private Map<Player, List<Component>> bookedMap;
     private GameType gameType;
     private FlightBoard flightBoard;
@@ -155,15 +159,15 @@ public class AssemblyProtocol {
     }
 
     /**
-     * Add current component in hand to the uncovered list
-     * So that it can be replaced
+     * If a component is present in the player's hand, return component to the uncovered list,
+     * remove player entry from inHandMap.
      *
-     * @param player player with the component in hand
+     * @author Boti
      */
     private void addComponentInHandToUncoveredList(Player player) {
-        // remove card from player's hand
-        if (inHandMap.get(player) != null) {
+        if (inHandMap.containsKey(player)) {
             uncoveredList.add(inHandMap.get(player));
+            inHandMap.remove(player);
         }
     }
 
@@ -187,16 +191,18 @@ public class AssemblyProtocol {
     }
 
     /**
-     * Books the player's current component if they haven't reached the max (3).
+     * If component is present in player's hand, books the component
+     * if number of booked components hasn't reached the max (3).
      *
      * @param player the player booking the component
+     * @author Boti
      */
     public void bookComponent(Player player) {
-        if (inHandMap.get(player) != null) {
+        if (inHandMap.containsKey(player)) {
             if (bookedMap.get(player).size() < 3) {
                 bookedMap.get(player).add(inHandMap.get(player));
                 // remove component from hand (newComponent places component in hand in uncovered list)
-                inHandMap.put(player, null);
+                inHandMap.remove(player);
             } else {
                 throw new IllegalStateException("Too many components booked");
             }
@@ -210,6 +216,7 @@ public class AssemblyProtocol {
      *
      * @param player the player retrieving a booked component
      * @param index  the index of the component to take
+     * @author Boti
      */
     public void chooseBookedComponent(Player player, int index) {
         if (bookedMap.get(player).size() > index) {
