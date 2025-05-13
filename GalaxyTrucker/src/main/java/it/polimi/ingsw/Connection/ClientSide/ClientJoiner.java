@@ -31,7 +31,7 @@ public class ClientJoiner {
 
     public int start(ClientInfo clientInfo){
 
-        if (clientInfo.getViewType() == ViewType.CLI) {
+        if (clientInfo.getViewType() == ViewType.TUI) {
 
             return startCLI(clientInfo);
 
@@ -55,7 +55,7 @@ public class ClientJoiner {
 
     private int startCLI(ClientInfo clientInfo){
 
-        if(clientInfo.getConnectionType() == ConnectionType.Socket) {
+        if(clientInfo.getConnectionType() == ConnectionType.SOCKET) {
 
             return startSCK(clientInfo);
 

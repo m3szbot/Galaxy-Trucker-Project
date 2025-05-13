@@ -36,7 +36,7 @@ public class ClientGameHandler {
 
         setViews(clientInfo.getViewType(), views);
 
-        if (clientInfo.getConnectionType() == ConnectionType.Socket) {
+        if (clientInfo.getConnectionType() == ConnectionType.SOCKET) {
             startSCK(views);
 
 
@@ -54,7 +54,7 @@ public class ClientGameHandler {
 
     private void setViews(ViewType viewType, GeneralView[] views) {
 
-        if (viewType == ViewType.CLI) {
+        if (viewType == ViewType.TUI) {
 
             views[0] = new AssemblyViewTUI();
             views[1] = new CorrectionViewTUI();

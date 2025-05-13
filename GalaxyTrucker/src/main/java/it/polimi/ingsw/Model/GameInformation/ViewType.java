@@ -7,5 +7,5 @@ package it.polimi.ingsw.Model.GameInformation;
  */
 
 public enum ViewType {
-    CLI, GUI;
+    TUI, GUI;
 }
