@@ -22,10 +22,8 @@ public class ClientSocketHandler extends Thread {
 
     private Socket clientSocket;
     private Server centralServer;
-    private DataInputStream dataReceiver;
-    private DataOutputStream dataSender;
-    private ObjectInputStream clientInfoReceiver;
-    private ObjectOutputStream clientInfoSender;
+    private ObjectInputStream dataReceiver;
+    private ObjectOutputStream dataSender;
     private Player playerToAdd = null;
 
 
@@ -34,10 +32,8 @@ public class ClientSocketHandler extends Thread {
         this.centralServer = centralServer;
 
         try {
-            dataReceiver = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-            dataSender = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-            clientInfoReceiver = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-            clientInfoSender = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+            dataReceiver = new ObjectInputStream(clientSocket.getInputStream());
+            dataSender = new ObjectOutputStream(clientSocket.getOutputStream());
 
         } catch (IOException e) {
             System.err.println("Error while opening streams");
@@ -53,7 +49,7 @@ public class ClientSocketHandler extends Thread {
         ClientInfo clientInfo;
 
         try {
-            clientInfo = (ClientInfo) clientInfoReceiver.readObject();
+            clientInfo = (ClientInfo) dataReceiver.readObject();
 
         } catch (IOException e) {
             System.err.println("Error while opening clientInfo");
@@ -138,7 +134,7 @@ public class ClientSocketHandler extends Thread {
 
                             playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
                             clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
-                            clientInfoSender.writeObject(clientInfo);
+                            dataSender.writeObject(clientInfo);
                             centralServer.addPlayerToCurrentStartingGame(playerToAdd, gameType, numberOfPlayers);
                             ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
 
@@ -177,7 +173,7 @@ public class ClientSocketHandler extends Thread {
 
                             playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
                             clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
-                            clientInfoSender.writeObject(clientInfo);
+                            dataSender.writeObject(clientInfo);
                             centralServer.addPlayerToCurrentStartingGame(playerToAdd);
                             ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket);
 

@@ -5,10 +5,7 @@ import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.rmi.Naming;
@@ -70,9 +67,8 @@ public class ClientJoiner {
     private int startSCK(ClientInfo clientInfo){
 
         Socket socket;
-        DataInputStream dataReceiver;
-        DataOutputStream dataSender;
-        ObjectOutputStream objectSender;
+        ObjectInputStream dataReceiver;
+        ObjectOutputStream dataSender;
         Scanner scanner;
         AtomicBoolean terminatedFlag = new AtomicBoolean(false);
         AtomicBoolean isKicked = new AtomicBoolean(false);
@@ -81,12 +77,11 @@ public class ClientJoiner {
         try {
             socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
             clientInfo.setServerSocket(socket);
-            dataReceiver = new DataInputStream(socket.getInputStream());
-            dataSender = new DataOutputStream(socket.getOutputStream());
-            objectSender = new ObjectOutputStream(socket.getOutputStream());
+            dataReceiver = new ObjectInputStream(socket.getInputStream());
+            dataSender = new ObjectOutputStream(socket.getOutputStream());
             scanner = new Scanner(System.in);
 
-            objectSender.writeObject(clientInfo);
+            dataSender.writeObject(clientInfo);
 
         } catch (IOException e) {
             System.err.println("Error while connecting to the server");
