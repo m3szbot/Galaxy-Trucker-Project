@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  * Interface defining all the methods that the client
@@ -20,14 +21,14 @@ public interface RMIJoiner extends Remote {
      * @return true if nobody is joining the game
      */
 
-    public boolean joinGame();
+    public boolean joinGame() throws RemoteException;
 
     /**
      *
      * @return true if the player is the first one joining
      */
 
-    public boolean isFirstPlayer();
+    public boolean isFirstPlayer() throws RemoteException;
 
     /**
      *
@@ -35,20 +36,20 @@ public interface RMIJoiner extends Remote {
      * @return true if the nickname is repeated
      */
 
-    public boolean isNameRepeated(String nickname);
+    public boolean isNameRepeated(String nickname) throws RemoteException;
 
     /**
      * releases the reentrant lock of the server
      */
 
-    public void releaseLock();
+    public void releaseLock() throws RemoteException;
 
     /**
      * adds a non-first player to the current game
      * @param clientInfo
      */
 
-    public void addPlayer(ClientInfo clientInfo);
+    public void addPlayer(ClientInfo clientInfo) throws RemoteException;
 
     /**
      * adds the first player to the current game
@@ -56,19 +57,19 @@ public interface RMIJoiner extends Remote {
      * @param gameType
      * @param numberOfPlayers
      */
-    public void addPlayer(ClientInfo clientInfo, GameType gameType, int numberOfPlayers);
+    public void addPlayer(ClientInfo clientInfo, GameType gameType, int numberOfPlayers) throws RemoteException;
 
     /**
      *
      * @return the game code
      */
 
-    public int getGameCode();
+    public int getGameCode() throws RemoteException;
 
     /**
      *
      * @return the game creator
      */
 
-    public String getCurrentGameCreator();
+    public String getCurrentGameCreator() throws RemoteException;
 }

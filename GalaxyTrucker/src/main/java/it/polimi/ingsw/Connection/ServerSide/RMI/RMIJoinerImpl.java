@@ -23,7 +23,7 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
     }
 
     @Override
-    public boolean joinGame() {
+    public boolean joinGame() throws RemoteException{
 
        if(centralServer.getLock().tryLock()){
 
@@ -34,25 +34,25 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
 
     }
 
-    public void releaseLock(){
+    public void releaseLock() throws RemoteException{
         centralServer.getLock().unlock();
     }
 
     @Override
-    public boolean isFirstPlayer() {
+    public boolean isFirstPlayer() throws RemoteException{
 
         return (centralServer.getCurrentStartingGame().getGameState() == GameState.Empty);
 
     }
 
     @Override
-    public boolean isNameRepeated(String nickname) {
+    public boolean isNameRepeated(String nickname) throws RemoteException{
 
         return centralServer.getCurrentStartingGame().isNickNameRepeated(nickname);
     }
 
     @Override
-    public void addPlayer(ClientInfo clientInfo) {
+    public void addPlayer(ClientInfo clientInfo) throws RemoteException{
 
         Player player = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
         clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
@@ -66,7 +66,7 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
 
     }
 
-    public void addPlayer(ClientInfo clientInfo, GameType gameType, int numberOfPlayers){
+    public void addPlayer(ClientInfo clientInfo, GameType gameType, int numberOfPlayers) throws RemoteException{
 
         Player player = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
         clientInfo.setGameCode(centralServer.getCurrentStartingGame().getGameCode());
@@ -76,11 +76,11 @@ public class RMIJoinerImpl extends UnicastRemoteObject implements RMIJoiner{
         centralServer.getCurrentStartingGame().changeGameState(GameState.Starting);
     }
 
-    public int getGameCode(){
+    public int getGameCode() throws RemoteException{
        return centralServer.getCurrentStartingGame().getGameCode();
     }
 
-    public String getCurrentGameCreator(){
+    public String getCurrentGameCreator() throws RemoteException{
         return centralServer.getCurrentStartingGame().getCreator();
     }
 
