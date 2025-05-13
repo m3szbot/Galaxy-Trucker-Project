@@ -35,9 +35,10 @@ public abstract class GeneralView {
         System.out.printf("""
                         +---%d---+
                         |       |
-                        %d  %s    %d
+                        %d  %s  %d
                         |       |
-                        +---%d---+""",
+                        +---%d---+
+                        """,
                 componentSideTranslator(component.getFront()), componentSideTranslator(component.getLeft()),
                 component.getComponentName().substring(0, 3),
                 componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
