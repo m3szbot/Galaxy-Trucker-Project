@@ -209,178 +209,184 @@ public class ClientJoiner {
             }
         });
 
+        try {
 
-        while(true){
 
-            timer.start();
-            System.out.println("Press 'enter' key to enter in a game: ");
+            while (true) {
 
-            if(checkTrials(trials)){
-                return 0;
-            }
+                timer.start();
+                System.out.println("Press 'enter' key to enter in a game: ");
 
-            if(scanner.nextLine().isEmpty()){
-
-                if(isKicked.get()){
-
-                    System.out.println("The server kicked you out because of inactivity!");
-
+                if (checkTrials(trials)) {
                     return 0;
                 }
 
-                timer.interrupt();
-                timer.start();
+                if (scanner.nextLine().isEmpty()) {
 
-                if(joiner.joinGame()){
+                    if (isKicked.get()) {
 
-                    if(joiner.isFirstPlayer()){
+                        System.out.println("The server kicked you out because of inactivity!");
 
-                        int numberOfPlayers;
-                        GameType gameType;
+                        return 0;
+                    }
 
-                        System.out.println("You are the first player joining the game!");
-                        System.out.println("Enter the game type (TESTGAME/NORMALGAME): ");
+                    timer.interrupt();
+                    timer.start();
 
-                        while (true) {
+                    if (joiner.joinGame()) {
 
-                            input = scanner.nextLine();
+                        if (joiner.isFirstPlayer()) {
 
-                            if(isKicked.get()){
+                            int numberOfPlayers;
+                            GameType gameType;
 
-                                System.out.println("The server kicked you out because of inactivity!");
-                                joiner.releaseLock();
+                            System.out.println("You are the first player joining the game!");
+                            System.out.println("Enter the game type (TESTGAME/NORMALGAME): ");
 
-                                return 0;
+                            while (true) {
+
+                                input = scanner.nextLine();
+
+                                if (isKicked.get()) {
+
+                                    System.out.println("The server kicked you out because of inactivity!");
+                                    joiner.releaseLock();
+
+                                    return 0;
+                                }
+
+                                timer.interrupt();
+                                timer.start();
+
+                                input = input.toUpperCase();
+
+                                if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
+
+                                    System.out.println("The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ");
+                                    trials++;
+
+                                } else {
+
+                                    gameType = GameType.valueOf(input);
+                                    System.out.println("Game type was set up correctly");
+
+                                    break;
+                                }
+
+                                if (checkTrials(trials)) {
+                                    return 0;
+                                }
+
                             }
 
-                            timer.interrupt();
-                            timer.start();
+                            System.out.println("Enter the number of players of the game (2-4): ");
 
-                            input = input.toUpperCase();
+                            while (true) {
 
-                            if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
+                                numberOfPlayers = scanner.nextInt();
 
-                                System.out.println("The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ");
+                                if (isKicked.get()) {
+
+                                    System.out.println("The server kicked you out because of inactivity!");
+                                    joiner.releaseLock();
+                                    return 0;
+                                }
+
+                                timer.interrupt();
+                                timer.start();
+
+                                if (numberOfPlayers < 2 || numberOfPlayers > 4) {
+
+                                    System.out.println("The number of players you entered is invalid, please enter a valid value (2-4): ");
+                                    trials++;
+
+                                } else {
+
+                                    System.out.println("Number of players was set up correctly");
+                                    break;
+                                }
+
+                                if (checkTrials(trials)) {
+                                    return 0;
+                                }
+
+                            }
+
+                            joiner.addPlayer(clientInfo, gameType, numberOfPlayers);
+                            System.out.println("You have been added to the game (game code " + joiner.getGameCode() + ")");
+                            joiner.releaseLock();
+                            return 1;
+
+                        }
+                        //the player is not the first one
+                        if (joiner.isNameRepeated(clientInfo.getNickname())) {
+
+                            while (true) {
+
+                                System.out.println("You're nickname has already been chosen, please enter a new one: ");
+
+                                input = scanner.nextLine();
+
+                                if (isKicked.get()) {
+
+                                    System.out.println("The server kicked you out because of inactivity!");
+                                    joiner.releaseLock();
+                                    return 0;
+                                }
+
+                                timer.interrupt();
+                                timer.start();
+
+                                if (!joiner.isNameRepeated(input)) {
+
+                                    System.out.println("You're nickname is now " + input);
+                                    clientInfo.setNickname(input);
+                                    break;
+                                }
+
                                 trials++;
+                                if (checkTrials(trials)) {
+                                    return 0;
+                                }
 
-                            } else {
-
-                                gameType = GameType.valueOf(input);
-                                System.out.println("Game type was set up correctly");
-
-                                break;
-                            }
-
-                            if(checkTrials(trials)){
-                                return 0;
                             }
 
                         }
 
-                        System.out.println("Enter the number of players of the game (2-4): ");
-
-                        while (true) {
-
-                            numberOfPlayers = scanner.nextInt();
-
-                            if(isKicked.get()){
-
-                                System.out.println("The server kicked you out because of inactivity!");
-                                joiner.releaseLock();
-                                return 0;
-                            }
-
-                            timer.interrupt();
-                            timer.start();
-
-                            if (numberOfPlayers < 2 || numberOfPlayers > 4) {
-
-                                System.out.println("The number of players you entered is invalid, please enter a valid value (2-4): ");
-                                trials++;
-
-                            } else {
-
-                                System.out.println("Number of players was set up correctly");
-                                break;
-                            }
-
-                            if(checkTrials(trials)){
-                                return 0;
-                            }
-
-                        }
-
-                        joiner.addPlayer(clientInfo, gameType, numberOfPlayers);
-                        System.out.println("You have been added to the game (game code " + joiner.getGameCode() + ")");
+                        joiner.addPlayer(clientInfo);
+                        System.out.println("You have joined the game of " + joiner.getCurrentGameCreator() + "(game code " + joiner.getGameCode() + ")");
                         joiner.releaseLock();
                         return 1;
 
-                    }
-                    //the player is not the first one
-                    if(joiner.isNameRepeated(clientInfo.getNickname())){
+                    } else {
 
-                        while (true) {
-
-                            System.out.println("You're nickname has already been chosen, please enter a new one: ");
-
-                            input = scanner.nextLine();
-
-                            if(isKicked.get()){
-
-                                System.out.println("The server kicked you out because of inactivity!");
-                                joiner.releaseLock();
-                                return 0;
-                            }
-
-                            timer.interrupt();
-                            timer.start();
-
-                            if (!joiner.isNameRepeated(input)) {
-
-                                System.out.println( "You're nickname is now " + input);
-                                clientInfo.setNickname(input);
-                                break;
-                            }
-
-                            trials++;
-                            if(checkTrials(trials)){
-                                return 0;
-                            }
-
-                        }
+                        System.out.println("Somebody is already joining the game, please wait.");
+                        timer.interrupt();
 
                     }
 
-                    joiner.addPlayer(clientInfo);
-                    System.out.println("You have joined the game of " + joiner.getCurrentGameCreator() + "(game code " + joiner.getGameCode() + ")");
-                    joiner.releaseLock();
-                    return 1;
+                } else {
 
-                }
-                else{
+                    if (isKicked.get()) {
 
-                    System.out.println("Somebody is already joining the game, please wait.");
+                        System.out.println("The server kicked you out because of inactivity!");
+
+                        return 0;
+                    }
+                    trials++;
+
+                    System.out.println("The string you entered is invalid!");
+
                     timer.interrupt();
 
                 }
 
             }
-            else{
 
-                if(isKicked.get()){
+        }catch (RemoteException e){
 
-                    System.out.println("The server kicked you out because of inactivity!");
-
-                    return 0;
-                }
-                trials++;
-
-                System.out.println("The string you entered is invalid!");
-
-                timer.interrupt();
-
-            }
-
+            System.err.println("Connection error while comunicating with the server");
+            return 0;
         }
 
     }
