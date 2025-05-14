@@ -49,8 +49,7 @@ public class Deck {
         int i = 0;
         Collections.shuffle(cardsList);
         // find card of required level
-        System.out.println("Debug, lunghezza array carte: " + cardsList.size());
-        while (cardsList.get(i).getCardLevel() != level){
+        while (cardsList.get(i).getCardLevel() != level) {
             i++;
         }
         this.cards.add(cardsList.remove(i));
