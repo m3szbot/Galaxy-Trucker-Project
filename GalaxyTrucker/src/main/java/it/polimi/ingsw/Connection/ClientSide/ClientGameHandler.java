@@ -8,7 +8,6 @@ import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import it.polimi.ingsw.View.GeneralView;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -101,26 +100,9 @@ public class ClientGameHandler {
             messageReceiver.join();
             messageSender.join();
 
-            try {
-                in.close();
-                out.close();
-            } catch (IOException e) {
-                System.err.println("Error while closing streams");
-            }
-
         } catch (InterruptedException e) {
             System.err.println("Receiver or sender thread was interrupted abnormally");
 
-            try {
-
-                in.close();
-                out.close();
-
-            } catch (IOException ex) {
-
-                System.err.println("Error while closing streams");
-
-            }
         }
 
     }

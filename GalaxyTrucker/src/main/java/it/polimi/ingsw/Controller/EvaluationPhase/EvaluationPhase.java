@@ -29,6 +29,7 @@ public class EvaluationPhase implements Startable {
      * @param gameInformation
      */
     public void start(GameInformation gameInformation) {
+        System.out.println("Evaluation phase started");
         String message;
         gameMessenger.setGamePhaseToAll(GamePhase.Evaluation);
         // assign player credits to shipBoard
@@ -47,18 +48,22 @@ public class EvaluationPhase implements Startable {
         // end of evaluationPhase
         // end of game
         gameMessenger.endGame();
-
+        System.out.println("Evaluation phase ended");
     }
 
 
     /**
-     * Calculate and assign final points for each player
-     *
-     * @param gameInformation
+     * Calculate and assign final points for each player.
      */
     private void assignPlayerCredits(GameInformation gameInformation) {
-        ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getFlightBoard(), gameInformation.getGameType());
+        ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getGameType());
+        // calculate player credits
+        scoreCounter.calculatePlayerScores(gameInformation.getFlightBoard());
+        // assign player credits to their shipboards
         for (Player player : gameInformation.getPlayerList()) {
+            player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
+        }
+        for (Player player : gameInformation.getDisconnectedPlayerList()) {
             player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
         }
     }

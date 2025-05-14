@@ -50,24 +50,27 @@ public class GameMessageReceiver implements Runnable {
 
                 if (executeCommand(container.getCommand(), container) == -1) {
 
-                    System.out.println("The game has ended, press any key to quit");
                     running.set(false);
+                    System.out.println("The game has ended, press any key to quit");
+
                 }
 
                 if (callView(container) == -1) {
                     running.set(false);
+                    System.out.println("You have been disconnected, press any key to quit");
                 }
 
 
             } catch (IOException e) {
-                System.err.println("Critical error while receiving messages, you have been disconnected");
 
                 running.set(false);
+                System.err.println("Critical error while receiving messages, you have been disconnected, press" +
+                        " any key to quit");
+
             } catch (ClassNotFoundException e) {
 
-                System.err.println("DataContainer class not recognized, you have been disconnected");
-
                 running.set(false);
+                System.err.println("DataContainer class not recognized, you have been disconnected, press any key to quit");
 
             }
 

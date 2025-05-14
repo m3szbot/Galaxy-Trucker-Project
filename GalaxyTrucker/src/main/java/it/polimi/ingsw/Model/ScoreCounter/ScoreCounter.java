@@ -30,14 +30,11 @@ public class ScoreCounter {
     private List<Player> leastExposedLinksList;
 
     /**
-     * Constructor, calculates player scores and puts them in playerScoresMap.
-     * Use  getPlayerScore to get calculated scores.
+     * Constructor. Sets scoring based on GameType.
      *
-     * @param gameType    Game type that determines scoring
-     * @param flightBoard contains playerOrderList (players who finished), eliminatedList, gaveUpList
+     * @param gameType Game type that determines scoring
      */
-    public ScoreCounter(FlightBoard flightBoard, GameType gameType) {
-        // set scoring based on game type
+    public ScoreCounter(GameType gameType) {
         // normal game values
         int[] finishOrderPoints = {8, 6, 4, 2};
         int leastExposedLinksPoints = 4;
@@ -53,12 +50,19 @@ public class ScoreCounter {
         this.lostComponentsPoints = lostComponentsPoints;
         this.finishOrderPoints = finishOrderPoints.clone();
         this.goodsPoints = goodsPoints.clone();
-        // create and fill leastExposedLinksList
+        this.playerScoresMap = new HashMap<>();
         this.leastExposedLinksList = new ArrayList<>();
+
+    }
+
+    /**
+     * Calculates the scores for each player based on flightBoard.
+     */
+    public void calculatePlayerScores(FlightBoard flightBoard) {
         // only finishing players count for leastExposedLinks points
         calculateLeastExposedLinks(flightBoard.getPlayerOrderList());
         // populate playerScoresMap
-        this.playerScoresMap = new HashMap<>();
+
         // finishing players
         for (Player player : flightBoard.getPlayerOrderList()) {
             playerScoresMap.put(player, calculateFinishingPlayerScore(player, flightBoard.getPlayerOrderList()));

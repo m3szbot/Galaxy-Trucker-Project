@@ -33,6 +33,7 @@ public class GameMessageSender implements Runnable {
             try {
 
                 out.writeUTF(reader.nextLine());
+                out.flush();
 
             } catch (IOException e) {
 

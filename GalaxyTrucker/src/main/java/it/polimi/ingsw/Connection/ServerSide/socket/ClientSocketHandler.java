@@ -385,19 +385,25 @@ public class ClientSocketHandler extends Thread {
         notifyAllPlayers(message);
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket, dataSender, dataReceiver);
 
-        message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
+        if(isFirstPlayer) {
+            message = "You have succesfully created the game (game code " + centralServer.getCurrentGameCode() + ")";
+
+        }else{
+            message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
+        }
         dataSender.writeUTF(message);
         dataSender.flush();
         dataSender.writeUTF("added");
         dataSender.flush();
+        clientSocket.setSoTimeout(0);
 
         //nickname might be changed
         dataSender.writeUTF(nickName);
         dataSender.flush();
 
         if (centralServer.getCurrentStartingGame().isFull()) {
-            centralServer.startCurrentGame();
             notifyAllPlayers("start");
+            centralServer.startCurrentGame();
         }
 
         dataSender.writeUTF("Waiting for other players to join...");
