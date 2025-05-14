@@ -396,8 +396,8 @@ public class ClientSocketHandler extends Thread {
         dataSender.flush();
 
         if (centralServer.getCurrentStartingGame().isFull()) {
-            centralServer.startCurrentGame();
             notifyAllPlayers("start");
+            centralServer.startCurrentGame();
         }
 
         dataSender.writeUTF("Waiting for other players to join...");
