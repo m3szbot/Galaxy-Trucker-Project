@@ -26,7 +26,7 @@ public class FlightPhase implements Startable {
     }
 
     public void start(GameInformation gameInformation) {
-        System.out.println("Flight phase started");
+        gameInformation.setGamePhaseServerClient(GamePhase.Flight);
         DataContainer dataContainer;
 
         for (Player player : gameInformation.getPlayerList()) {

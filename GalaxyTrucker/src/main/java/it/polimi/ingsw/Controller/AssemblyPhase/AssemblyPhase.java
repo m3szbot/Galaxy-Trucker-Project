@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -37,13 +38,6 @@ public class AssemblyPhase {
     }
 
     /**
-     * Returns the protocol managing component booking and placement.
-     */
-    public AssemblyProtocol getAssemblyProtocol() {
-        return assemblyProtocol;
-    }
-
-    /**
      * Sets the current state of the game and triggers its enter logic.
      *
      * @param newState the new state to switch to
@@ -62,18 +56,12 @@ public class AssemblyPhase {
     }
 
     /**
-     * Updates the running flag that controls the game loop.
-     */
-    public void setRunning(boolean value) {
-        running.set(value);
-    }
-
-    /**
      * Starts the game, initializes the state, sets up user input thread,
      * and runs the main non-blocking game loop.
      */
     public void start(GameInformation gameInformation) throws InterruptedException {
         this.gameInformation = gameInformation;
+        gameInformation.setGamePhaseServerClient(GamePhase.Assembly);
 
         for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;
@@ -91,38 +79,56 @@ public class AssemblyPhase {
             }).start();
         }
 
-        Thread t = new Thread(() -> {while (running.get()) {
-            if (assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
-                if (assemblyProtocol.getHourGlass().getState() == 3) {
-                    setRunning(false);
-                    break;
+        Thread t = new Thread(() -> {
+            while (running.get()) {
+                if (assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
+                    if (assemblyProtocol.getHourGlass().getState() == 3) {
+                        setRunning(false);
+                        break;
+                    }
+                } else {
+                    if (assemblyProtocol.getHourGlass().getState() == 2) {
+                        setRunning(false);
+                        break;
+                    }
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
                 }
             }
-            else{
-                if (assemblyProtocol.getHourGlass().getState() == 2) {
-                    setRunning(false);
-                    break;
-                }
-            }
-            try { Thread.sleep(100); } catch (InterruptedException ignored) {}
-        }});
+        });
         t.start();
         t.join();
 
         message = "Assembly phase has ended";
-        for (Player player: gameInformation.getPlayerList() ) {
+        for (Player player : gameInformation.getPlayerList()) {
             DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
             dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
 
-        for (Player player: gameInformation.getPlayerList() ) {
+        for (Player player : gameInformation.getPlayerList()) {
             DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setCommand("advancePhase");
             ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
 
+    }
+
+    /**
+     * Updates the running flag that controls the game loop.
+     */
+    public void setRunning(boolean value) {
+        running.set(value);
+    }
+
+    /**
+     * Returns the protocol managing component booking and placement.
+     */
+    public AssemblyProtocol getAssemblyProtocol() {
+        return assemblyProtocol;
     }
 /*
       //main fatto a caso da gecky per fare test

@@ -30,7 +30,7 @@ public class CorrectionPhase implements Startable {
      * @param gameInformation
      */
     public void start(GameInformation gameInformation) {
-        gameMessenger.setGamePhaseToAll(GamePhase.Correction);
+        gameInformation.setGamePhaseServerClient(GamePhase.Correction);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads
         for (Player player : gameInformation.getPlayerList()) {

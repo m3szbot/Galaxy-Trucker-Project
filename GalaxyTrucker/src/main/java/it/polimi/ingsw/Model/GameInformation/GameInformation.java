@@ -9,6 +9,8 @@ package it.polimi.ingsw.Model.GameInformation;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Controller.Cards.Blow;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Cards.CardBuilder;
@@ -49,6 +51,26 @@ public class GameInformation {
 
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
+    }
+
+    /**
+     * Sets the given gamePhase and sends messages of it for both server and client.
+     */
+    public void setGamePhaseServerClient(GamePhase gamePhase) {
+        GameMessenger gameMessenger = ClientMessenger.getGameMessenger(getGameCode());
+        setGamePhase(gamePhase);
+        System.out.printf("%s phase is starting...\n", gamePhase);
+        gameMessenger.setGamePhaseToAll(gamePhase);
+        gameMessenger.sendMessageToALl(String.format("%s phase is starting...\n", gamePhase));
+
+    }
+
+    public int getGameCode() {
+        return this.gameCode;
+    }
+
+    public void setGameCode(int gameCode) {
+        this.gameCode = gameCode;
     }
 
     /**
@@ -271,14 +293,6 @@ public class GameInformation {
         } else {
             return ElementType.Default;
         }
-    }
-
-    public int getGameCode() {
-        return this.gameCode;
-    }
-
-    public void setGameCode(int gameCode) {
-        this.gameCode = gameCode;
     }
 
     public List<Card> getCardsList() {

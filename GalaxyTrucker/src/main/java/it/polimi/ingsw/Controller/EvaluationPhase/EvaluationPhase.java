@@ -29,9 +29,8 @@ public class EvaluationPhase implements Startable {
      * @param gameInformation
      */
     public void start(GameInformation gameInformation) {
-        System.out.println("Evaluation phase started");
+        gameInformation.setGamePhaseServerClient(GamePhase.Evaluation);
         String message;
-        gameMessenger.setGamePhaseToAll(GamePhase.Evaluation);
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 
