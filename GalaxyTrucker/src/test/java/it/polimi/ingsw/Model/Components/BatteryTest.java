@@ -9,10 +9,10 @@ class BatteryTest {
 
     // Test constants
     private static final SideType[] TEST_SIDES = {
-            SideType.Smooth,
-            SideType.Double,
-            SideType.Single,
-            SideType.Universal
+            SideType.SMOOTH,
+            SideType.DOUBLE,
+            SideType.SINGLE,
+            SideType.UNIVERSAL
     };
 
     @Test

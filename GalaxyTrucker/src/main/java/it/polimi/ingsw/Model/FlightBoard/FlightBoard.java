@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 /**
  * FlightBoard class used to model the flight board.
  * Synchronize methods use by assembly.
- * Flight is sequential, no need to synchronize.
+ * FLIGHT is sequential, no need to synchronize.
  * <p>
  * FlightBoard is automatically updated before flight (addPlayer).
- * During Flight phase, flightBoard must be updated only at the end of every adventure card
+ * During FLIGHT phase, flightBoard must be updated only at the end of every adventure card
  * (no update after incrementPlayer).
  *
  * @author Boti
@@ -158,7 +158,7 @@ public class FlightBoard {
      * Add player to flight board to the selected tile,
      * if player not already in game and selected tile is free and valid.
      * Updates flightBoard.
-     * Synchronized, called in Assembly.
+     * Synchronized, called in ASSEMBLY.
      *
      * @param player Player to add
      * @param tile   Player's starting tile

@@ -7,6 +7,8 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +33,7 @@ class FlightBoardTest {
     @BeforeEach
     void setUp() {
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
+        gameInformation.setGameType(GameType.NORMALGAME);
 
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);
@@ -40,13 +42,19 @@ class FlightBoardTest {
 
         // set up gameInformation
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
+        gameInformation.addPlayers(playerA);
+        gameInformation.addPlayers(playerB);
+        gameInformation.addPlayers(playerC);
+        gameInformation.addPlayers(playerD);
 
-        flightBoard = new FlightBoard(GameType.NormalGame, gameInformation.getCardsList());
+
+        flightBoard = new FlightBoard(GameType.NORMALGAME, gameInformation.getCardsList());
     }
 
     @Test
     void TestSetUp() {
+        assertEquals(4, gameInformation.getPlayerList().size());
         assertEquals(12, flightBoard.getCardsNumber());
     }
 
@@ -205,19 +213,31 @@ class FlightBoardTest {
     // TODO
     @Test
     void concurrentAddPlayer() {
-        // add all players from different threads
-        // the starting tiles should cause conflicts of occupation
+        /** Add all players from different threads.
+         * The starting tiles should cause conflicts of occupation.
+         * Start each thread and wait for them to finish before assertions!
+         */
+        Map<Player, Thread> playerThreadMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
             Thread thread = new Thread(() -> {
-                while (true) {
+                // try adding player until he is added
+                assertFalse(flightBoard.isInGame(player));
+                while (!flightBoard.isInGame(player)) {
                     try {
                         flightBoard.addPlayer(player, flightBoard.getStartingTiles().getFirst());
-                        break;
                     } catch (IndexOutOfBoundsException e) {
                     }
                 }
-
             });
+            playerThreadMap.put(player, thread);
+            thread.start();
+        }
+        for (Thread thread : playerThreadMap.values()) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         assertEquals(4, flightBoard.getPlayerOrderList().size());
     }

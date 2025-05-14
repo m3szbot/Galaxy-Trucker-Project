@@ -11,22 +11,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 
 public enum SideType {
-    Smooth("Smooth"),
-    Single("Single"),
-    Double("Double"),
-    Universal("Universal"),
-    Special("Special");
+    SMOOTH("SMOOTH"),
+    SINGLE("SINGLE"),
+    DOUBLE("DOUBLE"),
+    UNIVERSAL("UNIVERSAL"),
+    SPECIAL("SPECIAL");
 
     //String linked to the "name" of the enum
     private final String jsonValue;
 
     SideType(String jsonValue) {
         this.jsonValue = jsonValue;
-    }
-
-    @JsonValue
-    public String getJsonValue() {
-        return jsonValue;
     }
 
     @JsonCreator
@@ -37,6 +32,11 @@ public enum SideType {
             }
         }
         throw new IllegalArgumentException("Unknown SideType: " + value);
+    }
+
+    @JsonValue
+    public String getJsonValue() {
+        return jsonValue;
     }
 }
 

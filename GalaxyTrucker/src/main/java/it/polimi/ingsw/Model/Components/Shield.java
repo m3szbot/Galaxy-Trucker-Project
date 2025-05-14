@@ -28,25 +28,25 @@ public class Shield extends Component {
 
     private void setCoveredSides() {
 
-        if (getFront() == SideType.Special) {
+        if (getFront() == SideType.SPECIAL) {
             coveredSide1 = 0;
 
-            if (getRight() == SideType.Special) {
+            if (getRight() == SideType.SPECIAL) {
                 coveredSide2 = 1;
-            } else if (getBack() == SideType.Special) {
+            } else if (getBack() == SideType.SPECIAL) {
                 coveredSide2 = 2;
-            } else if (getLeft() == SideType.Special) {
+            } else if (getLeft() == SideType.SPECIAL) {
                 coveredSide2 = 3;
             }
-        } else if (getRight() == SideType.Special) {
+        } else if (getRight() == SideType.SPECIAL) {
             coveredSide1 = 1;
 
-            if (getBack() == SideType.Special) {
+            if (getBack() == SideType.SPECIAL) {
                 coveredSide2 = 2;
-            } else if (getLeft() == SideType.Special) {
+            } else if (getLeft() == SideType.SPECIAL) {
                 coveredSide2 = 3;
             }
-        } else if (getBack() == SideType.Special) {
+        } else if (getBack() == SideType.SPECIAL) {
             coveredSide1 = 2;
             coveredSide2 = 3;
         }

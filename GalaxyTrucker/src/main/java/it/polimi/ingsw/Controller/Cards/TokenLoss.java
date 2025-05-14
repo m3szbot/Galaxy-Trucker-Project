@@ -4,10 +4,8 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that define a default method which handles a player being
@@ -93,13 +91,13 @@ public interface TokenLoss {
                 if (((Cabin) component).getCrewMembers() == 1) {
                     //cabin with aliens have one 1 inhabitant, i.e, the alien.
 
-                    if (((Cabin) component).getCrewType() == CrewType.Brown) {
+                    if (((Cabin) component).getCrewType() == CrewType.BROWN) {
 
-                        player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.Brown, true);
+                        player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.BROWN, true);
 
-                    } else if (((Cabin) component).getCrewType() == CrewType.Purple) {
+                    } else if (((Cabin) component).getCrewType() == CrewType.PURPLE) {
 
-                        player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.Purple, true);
+                        player.getShipBoard().getShipBoardAttributes().updateAlien(CrewType.PURPLE, true);
 
                     }
 

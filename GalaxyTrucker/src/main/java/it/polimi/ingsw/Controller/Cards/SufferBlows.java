@@ -137,125 +137,6 @@ public interface SufferBlows {
 
     }
 
-    private String directionSolver(int direction) {
-
-        if (direction == 0) {
-            return "front";
-        } else if (direction == 1) {
-            return "right";
-        } else if (direction == 2) {
-            return "back";
-        } else if (direction == 3) {
-            return "left";
-        } else {
-            return null;
-        }
-    }
-
-    private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
-
-        int[] cannonCoords = {-1, -1};
-        int rows = player.getShipBoard().getMatrixRows();
-        int cols = player.getShipBoard().getMatrixCols();
-        int i;
-
-        if (direction == 0) {
-
-            for (i = rows - 1; i >= 0; i--) {
-
-                if (player.getShipBoard().getComponent(xCoord, i) != null) {
-
-                    if (player.getShipBoard().getComponent(xCoord, i).getComponentName().equals("Cannon")
-                            && (player.getShipBoard().getComponent(xCoord, i).getFront() == SideType.Special)) {
-
-                        //there is a cannon that can hit the blow
-
-                        cannonCoords[0] = xCoord;
-                        cannonCoords[1] = i;
-                        return cannonCoords;
-
-                    }
-                }
-            }
-
-        } else if (direction == 1 || direction == 3) {
-
-            int temp;
-
-            for (i = 0; i < cols; i++) {
-
-                temp = yCoord;
-
-                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
-
-                temp = yCoord + 1;
-
-                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
-
-                temp = yCoord - 1;
-
-                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
-            }
-        } else {
-            //blow come from the back
-            int temp;
-
-            for (i = 0; i < rows; i++) {
-
-                temp = xCoord;
-
-                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
-
-                temp = xCoord + 1;
-
-                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
-
-                temp = xCoord - 1;
-
-                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
-            }
-
-        }
-
-        return cannonCoords;
-    }
-
-    private boolean checkCannonPresenceOnBack(Player player, int[] cannonCoords, int i, int temp) {
-        if (player.getShipBoard().getComponent(temp, i) != null) {
-
-            if (player.getShipBoard().getComponent(temp, i).getComponentName().equals("Cannon")
-                    && ((player.getShipBoard().getComponent(temp, i).getBack() == SideType.Special))) {
-
-                cannonCoords[0] = temp;
-                cannonCoords[1] = i;
-
-                return true;
-            }
-
-        }
-        return false;
-    }
-
-    private boolean checkCannonPresenceOnSides(int direction, Player player, int[] cannonCoords, int i, int temp) {
-
-        if (player.getShipBoard().getComponent(i, temp) != null) {
-
-            if (player.getShipBoard().getComponent(i, temp).getComponentName().equals("Cannon")
-                    && ((player.getShipBoard().getComponent(i, temp).getRight() == SideType.Special
-                    && direction == 1)
-                    || (player.getShipBoard().getComponent(i, temp).getLeft() == SideType.Special)
-                    && direction == 3)) {
-
-                cannonCoords[0] = i;
-                cannonCoords[1] = temp;
-
-                return true;
-
-            }
-        }
-        return false;
-    }
-
     private boolean bigCannonBlowHit(Player player, FlightBoard flightBoard, int xCoord, int yCoord) {
 
         return removeComponent(player, xCoord, yCoord, flightBoard);
@@ -355,13 +236,13 @@ public interface SufferBlows {
         DataContainer dataContainer;
         //condition is true if the side of the component hit is not smooth
         if (!((direction == 0
-                && player.getShipBoard().getComponent(xCoord, yCoord).getFront() == SideType.Smooth)
+                && player.getShipBoard().getComponent(xCoord, yCoord).getFront() == SideType.SMOOTH)
                 || (direction == 1
-                && player.getShipBoard().getComponent(xCoord, yCoord).getRight() == SideType.Smooth)
+                && player.getShipBoard().getComponent(xCoord, yCoord).getRight() == SideType.SMOOTH)
                 || (direction == 2
-                && player.getShipBoard().getComponent(xCoord, yCoord).getBack() == SideType.Smooth)
+                && player.getShipBoard().getComponent(xCoord, yCoord).getBack() == SideType.SMOOTH)
                 || (direction == 3
-                && player.getShipBoard().getComponent(xCoord, yCoord).getLeft() == SideType.Smooth))) {
+                && player.getShipBoard().getComponent(xCoord, yCoord).getLeft() == SideType.SMOOTH))) {
 
             if (player.getShipBoard().getShipBoardAttributes().checkSide(direction)
                     && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
@@ -400,20 +281,6 @@ public interface SufferBlows {
         //side is smooth
     }
 
-    private boolean removeComponent(Player player, int xCoord, int yCoord, FlightBoard flightBoard) {
-
-        if (player.getShipBoard().getComponent(xCoord, yCoord).getComponentName().equals("Storage")) {
-
-            int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(xCoord, yCoord)).getGoods();
-
-            flightBoard.addGoods(goodsToRemove);
-
-        }
-
-        player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
-        return true;
-    }
-
     private void notifyAll(Player player, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, GameInformation gameInformation) {
 
         String message;
@@ -439,6 +306,35 @@ public interface SufferBlows {
                     blowType.toString().toLowerCase() + " coming at him from the " + direction + "!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
+        }
+    }
+
+    private boolean removeComponent(Player player, int xCoord, int yCoord, FlightBoard flightBoard) {
+
+        if (player.getShipBoard().getComponent(xCoord, yCoord).getComponentName().equals("Storage")) {
+
+            int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(xCoord, yCoord)).getGoods();
+
+            flightBoard.addGoods(goodsToRemove);
+
+        }
+
+        player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+        return true;
+    }
+
+    private String directionSolver(int direction) {
+
+        if (direction == 0) {
+            return "front";
+        } else if (direction == 1) {
+            return "right";
+        } else if (direction == 2) {
+            return "back";
+        } else if (direction == 3) {
+            return "left";
+        } else {
+            return null;
         }
     }
 
@@ -477,6 +373,110 @@ public interface SufferBlows {
 
         player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-1);
         ((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).removeBattery();
+        return false;
+    }
+
+    private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
+
+        int[] cannonCoords = {-1, -1};
+        int rows = player.getShipBoard().getMatrixRows();
+        int cols = player.getShipBoard().getMatrixCols();
+        int i;
+
+        if (direction == 0) {
+
+            for (i = rows - 1; i >= 0; i--) {
+
+                if (player.getShipBoard().getComponent(xCoord, i) != null) {
+
+                    if (player.getShipBoard().getComponent(xCoord, i).getComponentName().equals("Cannon")
+                            && (player.getShipBoard().getComponent(xCoord, i).getFront() == SideType.SPECIAL)) {
+
+                        //there is a cannon that can hit the blow
+
+                        cannonCoords[0] = xCoord;
+                        cannonCoords[1] = i;
+                        return cannonCoords;
+
+                    }
+                }
+            }
+
+        } else if (direction == 1 || direction == 3) {
+
+            int temp;
+
+            for (i = 0; i < cols; i++) {
+
+                temp = yCoord;
+
+                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = yCoord + 1;
+
+                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = yCoord - 1;
+
+                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
+            }
+        } else {
+            //blow come from the back
+            int temp;
+
+            for (i = 0; i < rows; i++) {
+
+                temp = xCoord;
+
+                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = xCoord + 1;
+
+                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = xCoord - 1;
+
+                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
+            }
+
+        }
+
+        return cannonCoords;
+    }
+
+    private boolean checkCannonPresenceOnSides(int direction, Player player, int[] cannonCoords, int i, int temp) {
+
+        if (player.getShipBoard().getComponent(i, temp) != null) {
+
+            if (player.getShipBoard().getComponent(i, temp).getComponentName().equals("Cannon")
+                    && ((player.getShipBoard().getComponent(i, temp).getRight() == SideType.SPECIAL
+                    && direction == 1)
+                    || (player.getShipBoard().getComponent(i, temp).getLeft() == SideType.SPECIAL)
+                    && direction == 3)) {
+
+                cannonCoords[0] = i;
+                cannonCoords[1] = temp;
+
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    private boolean checkCannonPresenceOnBack(Player player, int[] cannonCoords, int i, int temp) {
+        if (player.getShipBoard().getComponent(temp, i) != null) {
+
+            if (player.getShipBoard().getComponent(temp, i).getComponentName().equals("Cannon")
+                    && ((player.getShipBoard().getComponent(temp, i).getBack() == SideType.SPECIAL))) {
+
+                cannonCoords[0] = temp;
+                cannonCoords[1] = i;
+
+                return true;
+            }
+
+        }
         return false;
     }
 }

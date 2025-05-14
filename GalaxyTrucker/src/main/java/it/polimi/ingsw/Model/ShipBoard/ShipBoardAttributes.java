@@ -1,4 +1,3 @@
-
 package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.Components.CrewType;
@@ -94,16 +93,16 @@ public class ShipBoardAttributes {
 
         if (!removeFlag) {
 
-            if (crewType == CrewType.Purple) {
+            if (crewType == CrewType.PURPLE) {
                 this.purpleAlien = true;
-            } else if (crewType == CrewType.Brown) {
+            } else if (crewType == CrewType.BROWN) {
                 this.brownAlien = true;
             }
         } else {
 
-            if (crewType == CrewType.Purple) {
+            if (crewType == CrewType.PURPLE) {
                 this.purpleAlien = false;
-            } else if (crewType == CrewType.Brown) {
+            } else if (crewType == CrewType.BROWN) {
                 this.brownAlien = false;
             }
         }

@@ -9,17 +9,17 @@ class CannonTest {
 
     // Test constants
     private static final SideType[] TEST_SIDES = {
-            SideType.Smooth,
-            SideType.Double,
-            SideType.Single,
-            SideType.Universal
+            SideType.SMOOTH,
+            SideType.DOUBLE,
+            SideType.SINGLE,
+            SideType.UNIVERSAL
     };
 
     private static final SideType[] SPECIAL_FRONT_SIDES = {
-            SideType.Special, // Front side is Special
-            SideType.Double,
-            SideType.Single,
-            SideType.Universal
+            SideType.SPECIAL, // Front side is SPECIAL
+            SideType.DOUBLE,
+            SideType.SINGLE,
+            SideType.UNIVERSAL
     };
 
     @Test

@@ -20,7 +20,7 @@ class DeckTest {
     void setUp() {
         // set up gameInformation
         gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         // set up deck
         deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
     }

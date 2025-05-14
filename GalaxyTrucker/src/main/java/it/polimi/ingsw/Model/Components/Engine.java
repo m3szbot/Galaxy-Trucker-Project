@@ -20,14 +20,9 @@ public class Engine extends Component {
     public Engine(@JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
         super(sides);
         this.single = single;
-        while (this.getBack() != SideType.Special) {
+        while (this.getBack() != SideType.SPECIAL) {
             this.rotate();
         }
-    }
-
-    @JsonProperty("single")
-    public void setSingle(boolean single) {
-        this.single = single;
     }
 
     /**
@@ -36,6 +31,11 @@ public class Engine extends Component {
 
     public boolean isSingle() {
         return single;
+    }
+
+    @JsonProperty("single")
+    public void setSingle(boolean single) {
+        this.single = single;
     }
 
     @Override

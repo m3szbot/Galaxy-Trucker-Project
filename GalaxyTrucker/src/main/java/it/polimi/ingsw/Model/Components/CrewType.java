@@ -7,5 +7,5 @@ package it.polimi.ingsw.Model.Components;
  */
 
 public enum CrewType {
-    Purple, Brown, Human
+    PURPLE, BROWN, HUMAN
 }

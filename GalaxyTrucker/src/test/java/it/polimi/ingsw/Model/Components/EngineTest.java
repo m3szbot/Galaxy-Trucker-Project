@@ -9,17 +9,17 @@ class EngineTest {
 
     // Test constants
     private static final SideType[] TEST_SIDES = {
-            SideType.Smooth,
-            SideType.Double,
-            SideType.Special,  // Back side is Special
-            SideType.Universal
+            SideType.SMOOTH,
+            SideType.DOUBLE,
+            SideType.SPECIAL,  // Back side is SPECIAL
+            SideType.UNIVERSAL
     };
 
     private static final SideType[] ROTATABLE_SIDES = {
-            SideType.Special,// Front side is Special (should rotate)
-            SideType.Universal,//Right
-            SideType.Double,//Back
-            SideType.Smooth//Left
+            SideType.SPECIAL,// Front side is SPECIAL (should rotate)
+            SideType.UNIVERSAL,//Right
+            SideType.DOUBLE,//Back
+            SideType.SMOOTH//Left
     };
 
     @Test
@@ -28,10 +28,10 @@ class EngineTest {
         Engine engine = new Engine(TEST_SIDES, true);
 
         // Assert
-        assertEquals(SideType.Smooth, engine.getFront());
-        assertEquals(SideType.Double, engine.getRight());
-        assertEquals(SideType.Special, engine.getBack());  // Special should be at back
-        assertEquals(SideType.Universal, engine.getLeft());
+        assertEquals(SideType.SMOOTH, engine.getFront());
+        assertEquals(SideType.DOUBLE, engine.getRight());
+        assertEquals(SideType.SPECIAL, engine.getBack());  // SPECIAL should be at back
+        assertEquals(SideType.UNIVERSAL, engine.getLeft());
         assertTrue(engine.isSingle());
         assertEquals("Engine", engine.getComponentName());
     }
@@ -41,8 +41,8 @@ class EngineTest {
         // Arrange & Act
         Engine engine = new Engine(ROTATABLE_SIDES, false);
 
-        // Assert - Should have rotated until Special is at back
-        assertEquals(SideType.Special, engine.getBack());
+        // Assert - Should have rotated until SPECIAL is at back
+        assertEquals(SideType.SPECIAL, engine.getBack());
     }
 
     @Test
@@ -115,10 +115,10 @@ class EngineTest {
 
         // Assert
         assertTrue(engine.isSingle());
-        assertEquals(SideType.Smooth, engine.getFront());
-        assertEquals(SideType.Double, engine.getRight());
-        assertEquals(SideType.Special, engine.getBack());
-        assertEquals(SideType.Universal, engine.getLeft());
+        assertEquals(SideType.SMOOTH, engine.getFront());
+        assertEquals(SideType.DOUBLE, engine.getRight());
+        assertEquals(SideType.SPECIAL, engine.getBack());
+        assertEquals(SideType.UNIVERSAL, engine.getLeft());
     }
 
     @Test

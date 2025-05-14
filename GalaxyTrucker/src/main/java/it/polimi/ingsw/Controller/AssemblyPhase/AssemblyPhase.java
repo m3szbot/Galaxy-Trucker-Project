@@ -37,13 +37,6 @@ public class AssemblyPhase {
     }
 
     /**
-     * Returns the protocol managing component booking and placement.
-     */
-    public AssemblyProtocol getAssemblyProtocol() {
-        return assemblyProtocol;
-    }
-
-    /**
      * Sets the current state of the game and triggers its enter logic.
      *
      * @param newState the new state to switch to
@@ -62,13 +55,6 @@ public class AssemblyPhase {
     }
 
     /**
-     * Updates the running flag that controls the game loop.
-     */
-    public void setRunning(boolean value) {
-        running.set(value);
-    }
-
-    /**
      * Starts the game, initializes the state, sets up user input thread,
      * and runs the main non-blocking game loop.
      */
@@ -83,36 +69,54 @@ public class AssemblyPhase {
             }).start();
         }
 
-        new Thread(() -> {while (running.get()) {
-            if (assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
-                if (assemblyProtocol.getHourGlass().getState() == 3) {
-                    setRunning(false);
-                    break;
+        new Thread(() -> {
+            while (running.get()) {
+                if (assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
+                    if (assemblyProtocol.getHourGlass().getState() == 3) {
+                        setRunning(false);
+                        break;
+                    }
+                } else {
+                    if (assemblyProtocol.getHourGlass().getState() == 2) {
+                        setRunning(false);
+                        break;
+                    }
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
                 }
             }
-            else{
-                if (assemblyProtocol.getHourGlass().getState() == 2) {
-                    setRunning(false);
-                    break;
-                }
-            }
-            try { Thread.sleep(100); } catch (InterruptedException ignored) {}
-        }}).start();
+        }).start();
 
-        message = "Assembly phase has ended";
-        for (Player player: gameInformation.getPlayerList() ) {
+        message = "ASSEMBLY phase has ended";
+        for (Player player : gameInformation.getPlayerList()) {
             DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
             dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
 
-        for (Player player: gameInformation.getPlayerList() ) {
+        for (Player player : gameInformation.getPlayerList()) {
             DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setCommand("advancePhase");
             ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
 
+    }
+
+    /**
+     * Updates the running flag that controls the game loop.
+     */
+    public void setRunning(boolean value) {
+        running.set(value);
+    }
+
+    /**
+     * Returns the protocol managing component booking and placement.
+     */
+    public AssemblyProtocol getAssemblyProtocol() {
+        return assemblyProtocol;
     }
 /*
       //main fatto a caso da gecky per fare test

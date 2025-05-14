@@ -9,31 +9,31 @@ class ShieldTest {
 
     // Test constants
     private static final SideType[] FRONT_RIGHT_SPECIAL_SIDES = {
-            SideType.Special, // front (0)
-            SideType.Special, // right (1)
-            SideType.Smooth,  // back (2)
-            SideType.Universal // left (3)
+            SideType.SPECIAL, // front (0)
+            SideType.SPECIAL, // right (1)
+            SideType.SMOOTH,  // back (2)
+            SideType.UNIVERSAL // left (3)
     };
 
     private static final SideType[] FRONT_BACK_SPECIAL_SIDES = {
-            SideType.Special, // front (0)
-            SideType.Double,   // right (1)
-            SideType.Special,  // back (2)
-            SideType.Single    // left (3)
+            SideType.SPECIAL, // front (0)
+            SideType.DOUBLE,   // right (1)
+            SideType.SPECIAL,  // back (2)
+            SideType.SINGLE    // left (3)
     };
 
     private static final SideType[] RIGHT_LEFT_SPECIAL_SIDES = {
-            SideType.Smooth,   // front (0)
-            SideType.Special,  // right (1)
-            SideType.Double,   // back (2)
-            SideType.Special   // left (3)
+            SideType.SMOOTH,   // front (0)
+            SideType.SPECIAL,  // right (1)
+            SideType.DOUBLE,   // back (2)
+            SideType.SPECIAL   // left (3)
     };
 
     private static final SideType[] BACK_LEFT_SPECIAL_SIDES = {
-            SideType.Smooth,   // front (0)
-            SideType.Universal,// right (1)
-            SideType.Special,  // back (2)
-            SideType.Special   // left (3)
+            SideType.SMOOTH,   // front (0)
+            SideType.UNIVERSAL,// right (1)
+            SideType.SPECIAL,  // back (2)
+            SideType.SPECIAL   // left (3)
     };
 
     @Test

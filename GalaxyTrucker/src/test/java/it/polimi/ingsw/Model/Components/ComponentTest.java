@@ -9,10 +9,10 @@ class ComponentTest {
 
     // Test constants
     private static final SideType[] TEST_SIDES = {
-            SideType.Smooth,
-            SideType.Double,
-            SideType.Single,
-            SideType.Universal
+            SideType.SMOOTH,
+            SideType.DOUBLE,
+            SideType.SINGLE,
+            SideType.UNIVERSAL
     };
 
     @Test
@@ -21,10 +21,10 @@ class ComponentTest {
         Component component = new Component(TEST_SIDES);
 
         // Assert
-        assertEquals(SideType.Smooth, component.getFront());
-        assertEquals(SideType.Double, component.getRight());
-        assertEquals(SideType.Single, component.getBack());
-        assertEquals(SideType.Universal, component.getLeft());
+        assertEquals(SideType.SMOOTH, component.getFront());
+        assertEquals(SideType.DOUBLE, component.getRight());
+        assertEquals(SideType.SINGLE, component.getBack());
+        assertEquals(SideType.UNIVERSAL, component.getLeft());
     }
 
     @Test
@@ -44,20 +44,20 @@ class ComponentTest {
         // Arrange
         Component component = new Component();
         SideType[] newSides = {
-                SideType.Special,
-                SideType.Universal,
-                SideType.Smooth,
-                SideType.Double
+                SideType.SPECIAL,
+                SideType.UNIVERSAL,
+                SideType.SMOOTH,
+                SideType.DOUBLE
         };
 
         // Act
         component.setSides(newSides);
 
         // Assert
-        assertEquals(SideType.Special, component.getFront());
-        assertEquals(SideType.Universal, component.getRight());
-        assertEquals(SideType.Smooth, component.getBack());
-        assertEquals(SideType.Double, component.getLeft());
+        assertEquals(SideType.SPECIAL, component.getFront());
+        assertEquals(SideType.UNIVERSAL, component.getRight());
+        assertEquals(SideType.SMOOTH, component.getBack());
+        assertEquals(SideType.DOUBLE, component.getLeft());
     }
 
     @Test
@@ -69,10 +69,10 @@ class ComponentTest {
         component.rotate();
 
         // Assert
-        assertEquals(SideType.Universal, component.getFront()); // Original left
-        assertEquals(SideType.Smooth, component.getRight());    // Original front
-        assertEquals(SideType.Double, component.getBack());     // Original right
-        assertEquals(SideType.Single, component.getLeft());     // Original back
+        assertEquals(SideType.UNIVERSAL, component.getFront()); // Original left
+        assertEquals(SideType.SMOOTH, component.getRight());    // Original front
+        assertEquals(SideType.DOUBLE, component.getBack());     // Original right
+        assertEquals(SideType.SINGLE, component.getLeft());     // Original back
     }
 
     @Test

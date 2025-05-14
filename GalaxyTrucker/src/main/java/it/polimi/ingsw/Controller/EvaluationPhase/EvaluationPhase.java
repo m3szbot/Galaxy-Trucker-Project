@@ -30,7 +30,7 @@ public class EvaluationPhase implements Startable {
      */
     public void start(GameInformation gameInformation) {
         String message;
-        gameMessenger.setGamePhaseToAll(GamePhase.Evaluation);
+        gameMessenger.setGamePhaseToAll(GamePhase.EVALUATION);
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
 

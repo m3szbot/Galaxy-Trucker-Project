@@ -20,7 +20,7 @@ class AssemblyProtocolTest {
     void setUp() {
         // set up gameInformation
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         // set up players
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);

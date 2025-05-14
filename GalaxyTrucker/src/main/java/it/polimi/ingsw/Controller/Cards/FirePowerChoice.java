@@ -6,7 +6,6 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 public interface FirePowerChoice {
 
@@ -47,7 +46,7 @@ public interface FirePowerChoice {
             try {
                 if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
 
-                    message = "Double cannons will be automatically chosen from the ones that gives more fire power" +
+                    message = "DOUBLE cannons will be automatically chosen from the ones that gives more fire power" +
                             "to the ones that gives less. Please enter the number of double cannons you want to" +
                             "activate: ";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);

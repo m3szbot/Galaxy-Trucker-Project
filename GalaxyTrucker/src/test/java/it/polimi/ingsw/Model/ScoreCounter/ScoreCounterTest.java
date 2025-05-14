@@ -24,7 +24,7 @@ class ScoreCounterTest {
     void setUp() {
         // re-setup gameInformation, flightBoard, scoreCounter for test game
         gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         flightBoard = gameInformation.getFlightBoard();
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);
@@ -80,7 +80,7 @@ class ScoreCounterTest {
 
     @Test
     void testGameOnePlayerEmptyShip() {
-        gameInformation.setUpGameInformation(GameType.TestGame, 4);
+        gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
         flightBoard = gameInformation.getFlightBoard();
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
         scoreCounter = new ScoreCounter(flightBoard, gameInformation.getGameType());

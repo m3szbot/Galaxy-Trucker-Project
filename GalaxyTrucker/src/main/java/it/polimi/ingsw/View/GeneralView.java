@@ -50,13 +50,13 @@ public abstract class GeneralView {
      * @return identifier number
      */
     private int componentSideTranslator(SideType sideType) {
-        if (sideType.equals(SideType.Smooth))
+        if (sideType.equals(SideType.SMOOTH))
             return 0;
-        else if (sideType.equals(SideType.Single))
+        else if (sideType.equals(SideType.SINGLE))
             return 1;
-        else if (sideType.equals(SideType.Double))
+        else if (sideType.equals(SideType.DOUBLE))
             return 2;
-        else if (sideType.equals(SideType.Universal))
+        else if (sideType.equals(SideType.UNIVERSAL))
             return 3;
         else
             return 4;

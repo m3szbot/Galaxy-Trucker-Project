@@ -19,7 +19,7 @@ class GeneralViewTUITest {
     @BeforeEach
     void setup() {
         gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         dataContainer = new DataContainer();
         // abstract class cannot be instantiated
         generalViewTUI = new EvaluationViewTUI();

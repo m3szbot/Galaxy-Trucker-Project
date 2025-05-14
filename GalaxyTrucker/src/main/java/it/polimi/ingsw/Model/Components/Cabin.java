@@ -22,6 +22,10 @@ public class Cabin extends Component {
         super(sides);
     }
 
+    public CrewType getCrewType() {
+        return crewType;
+    }
+
     /**
      * method to set the crew type. Has to be called at the end of the assembling phase.
      *
@@ -32,13 +36,9 @@ public class Cabin extends Component {
     public void setCrewType(CrewType crewType) {
         this.crewType = crewType;
 
-        if (crewType == CrewType.Purple || crewType == CrewType.Brown) {
+        if (crewType == CrewType.PURPLE || crewType == CrewType.BROWN) {
             numberOfCurrentInhabitant = 1;
         }
-    }
-
-    public CrewType getCrewType() {
-        return crewType;
     }
 
     //redundancy

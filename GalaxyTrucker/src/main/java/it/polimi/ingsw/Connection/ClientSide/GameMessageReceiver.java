@@ -28,7 +28,7 @@ public class GameMessageReceiver implements Runnable {
 
     public GameMessageReceiver(GeneralView[] views, ObjectInputStream in, AtomicBoolean running) {
 
-        GamePhase[] phases = {GamePhase.Assembly, GamePhase.Correction, GamePhase.Flight, GamePhase.Evaluation};
+        GamePhase[] phases = {GamePhase.ASSEMBLY, GamePhase.CORRECTION, GamePhase.FLIGHT, GamePhase.EVALUATION};
 
         for (int i = 0; i < views.length; i++) {
 
@@ -112,7 +112,7 @@ public class GameMessageReceiver implements Runnable {
         }
     }
 
-    private void setGamePhase(GamePhase gamePhase){
+    private void setGamePhase(GamePhase gamePhase) {
         this.currentPhase = gamePhase;
     }
 

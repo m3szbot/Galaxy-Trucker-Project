@@ -9,10 +9,10 @@ class CabinTest {
 
     // Test constants
     private static final SideType[] TEST_SIDES = {
-            SideType.Smooth,
-            SideType.Double,
-            SideType.Single,
-            SideType.Universal
+            SideType.SMOOTH,
+            SideType.DOUBLE,
+            SideType.SINGLE,
+            SideType.UNIVERSAL
     };
 
     @Test
@@ -48,7 +48,7 @@ class CabinTest {
     void removeInhabitant_shouldDecrementCount() {
         // Arrange
         Cabin cabin = new Cabin(TEST_SIDES);
-        cabin.setCrewType(CrewType.Human); // Defaults to 2 inhabitants
+        cabin.setCrewType(CrewType.HUMAN); // Defaults to 2 inhabitants
 
         // Act
         cabin.removeInhabitant();
@@ -61,7 +61,7 @@ class CabinTest {
     void removeInhabitant_whenZero_shouldNotGoNegative() {
         // Arrange
         Cabin cabin = new Cabin(TEST_SIDES);
-        cabin.setCrewType(CrewType.Purple); // Sets to 1 inhabitant
+        cabin.setCrewType(CrewType.PURPLE); // Sets to 1 inhabitant
         cabin.removeInhabitant(); // Should be 0 now
 
         // Act
@@ -87,7 +87,7 @@ class CabinTest {
         Cabin cabin = mapper.readValue(json, Cabin.class);
 
         // Assert
-        assertEquals(CrewType.Human, cabin.getCrewType());
+        assertEquals(CrewType.HUMAN, cabin.getCrewType());
         assertEquals(2, cabin.getNumberOfCurrentInhabitant());
         assertArrayEquals(TEST_SIDES, new SideType[]{
                 cabin.getFront(),
