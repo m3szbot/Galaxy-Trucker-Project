@@ -142,12 +142,15 @@ public class ClientSocketHandler extends Thread {
                     System.err.println("Error while sending data to the client");
                 }
 
-                System.out.println("Client + " + clientSocket.getInetAddress() + " was kicked because of inactivity");
+                System.out.println("Client + " + clientSocket.getInetAddress() + " was kicked out because of inactivity");
 
                 try {
+                    //closing resources
+                    dataReceiver.close();
+                    dataSender.close();
                     clientSocket.close();
                 } catch (IOException e2) {
-                    System.err.println("Critical error while closing client socket");
+                    System.err.println("Critical error while closing client socket and streams");
                 }
 
                 if(centralServer.getLock().isLocked()){
@@ -161,7 +164,7 @@ public class ClientSocketHandler extends Thread {
 
                 if(trials == MAXTRIALS){
                     System.out.println("Client " + clientSocket.getInetAddress() + " (" + nickName + ")" +
-                            " was kicked because of too many input failures. The client probably had" +
+                            " was kicked out because of too many input failures. The client probably had" +
                             " malicious intent");
                 }
                 else {
@@ -169,9 +172,12 @@ public class ClientSocketHandler extends Thread {
                 }
 
                 try {
+                    //closing resources
+                    dataSender.close();
+                    dataReceiver.close();
                     clientSocket.close();
                 } catch (IOException e2) {
-                    System.err.println("Critical error while closing client socket");
+                    System.err.println("Critical error while closing client socket and streams");
                 }
 
                 if(centralServer.getLock().isLocked()){
@@ -375,7 +381,7 @@ public class ClientSocketHandler extends Thread {
         else {
             centralServer.addPlayerToCurrentStartingGame(playerToAdd);
         }
-        message = nickName + " has joined the game!";
+        message = nickName + " joined the game!";
         notifyAllPlayers(message);
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket, dataSender, dataReceiver);
 

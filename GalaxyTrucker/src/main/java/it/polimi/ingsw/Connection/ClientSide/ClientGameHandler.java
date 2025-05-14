@@ -83,6 +83,8 @@ public class ClientGameHandler {
 
     private void startSCK(GeneralView[] views) {
 
+        System.out.println("The game is starting!");
+
         ObjectOutputStream out = clientInfo.getOutputStream();
         ObjectInputStream in = clientInfo.getInputStream();
 

@@ -31,8 +31,17 @@ public class Game implements Runnable {
         gameInformation.setGameCode(gameCode);
         numberOfJoinedPlayers = 0;
 
+
     }
 
+    public void setUpPhases(){
+
+        initializationPhase = new InitializationPhase();
+        assemblyPhase = new AssemblyPhase(gameInformation);
+        correctionPhase = new CorrectionPhase(gameInformation);
+        flightPhase = new FlightPhase(gameInformation);
+        evaluationPhase = new EvaluationPhase(gameInformation);
+    }
     public boolean isFull() {
 
         return (gameInformation.getMaxNumberOfPlayers() == numberOfJoinedPlayers);

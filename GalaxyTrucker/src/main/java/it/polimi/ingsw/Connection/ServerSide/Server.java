@@ -114,6 +114,7 @@ public class Server {
     public void startCurrentGame() {
 
         currentStartingGame.changeGameState(GameState.Playing);
+        currentStartingGame.setUpPhases();
         currentStartingGame.run();
         gameCode++;
         addGame(currentStartingGame);

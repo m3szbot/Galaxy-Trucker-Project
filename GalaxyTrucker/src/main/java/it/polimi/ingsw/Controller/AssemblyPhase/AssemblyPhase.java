@@ -32,7 +32,7 @@ public class AssemblyPhase {
     /**
      * Initializes the game with provided game information.
      */
-    public AssemblyPhase() {
+    public AssemblyPhase(GameInformation gameInformation) {
         assemblyProtocol = new AssemblyProtocol(gameInformation);
     }
 

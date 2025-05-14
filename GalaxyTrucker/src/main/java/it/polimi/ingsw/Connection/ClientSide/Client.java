@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
+import java.io.IOException;
+
 /**
  * Client class. The client lifecycle is composed of
  * three phases. The welcoming phase consists in asking
@@ -24,12 +26,21 @@ public class Client {
 
 
         if(joiner.start(clientInfo) == 0){
+            System.out.println("Thread concluso");
             gamehandler.start(clientInfo);
         }
 
-        /*
-        If the result code is != 0, the program ends.
-         */
+        try {
+
+            //closing resources
+
+            clientInfo.getOutputStream().close();
+            clientInfo.getInputStream().close();
+            clientInfo.getServerSocket().close();
+
+        } catch (IOException e) {
+           System.err.println("Critical error while closing server socket and streams");
+        }
 
     }
 
