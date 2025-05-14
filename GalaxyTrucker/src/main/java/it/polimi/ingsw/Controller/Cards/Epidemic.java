@@ -23,12 +23,13 @@ public class Epidemic extends Card {
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
 
     }
+
     @Override
 
     public void resolve(GameInformation gameInformation) {
@@ -37,16 +38,11 @@ public class Epidemic extends Card {
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
-            removeAdjacentAstronauts(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation.getFlightBoard(), gameInformation.getGameCode());
+            removeAdjacentAstronauts(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
-            dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-        }
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
     }
 
@@ -55,11 +51,10 @@ public class Epidemic extends Card {
      * adventure card is being solved
      *
      * @param player
-     * @param flightBoard target player
      * @author Carlo
      */
 
-    private void removeAdjacentAstronauts(Player player, FlightBoard flightBoard, int gameCode) {
+    private void removeAdjacentAstronauts(Player player, GameInformation gameInformation) {
 
         String message;
         DataContainer dataContainer;
@@ -157,10 +152,6 @@ public class Epidemic extends Card {
         player.getShipBoard().getShipBoardAttributes().updateCrewMembers(-numberOfRemovedInhabitants);
         message = "Player " + player.getNickName() + "lost " + numberOfRemovedInhabitants +
                 " inhabitants from the epidemic!";
-        for (Player player1 : flightBoard.getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player1);
-            dataContainer.setMessage(message);
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player1);
-        }
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
     }
 }

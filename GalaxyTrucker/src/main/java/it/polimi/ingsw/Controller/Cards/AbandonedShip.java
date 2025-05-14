@@ -56,10 +56,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
             if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= lossNumber) {
 
                 message = "Do you want to solve the card ? ";
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                 try {
                     if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
@@ -70,14 +67,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                         changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
 
                         message = player.getNickName() + "has solved the card!";
-                        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-
-                        }
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
                         break;
                     }
@@ -88,14 +78,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         }
 
         message = "Nobody solved the card!";
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-
-        }
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
         gameInformation.getFlightBoard().updateFlightBoard();
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
@@ -104,5 +87,4 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
         }
     }
-
 }

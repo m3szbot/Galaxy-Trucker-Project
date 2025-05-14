@@ -22,7 +22,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
@@ -40,23 +40,14 @@ public class Sabotage extends Card implements SmallestCrew {
         if (destroyRandomComponent(smallestCrewPlayer, gameInformation.getFlightBoard())) {
 
             message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
-            for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-            }
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
         } else {
 
             message = "Player " + smallestCrewPlayer.getNickName() +
                     "was lucky enough to not get hit!";
-            for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-            }
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();

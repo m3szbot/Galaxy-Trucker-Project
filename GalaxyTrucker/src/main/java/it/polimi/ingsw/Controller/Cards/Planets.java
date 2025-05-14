@@ -90,19 +90,13 @@ public class Planets extends Card implements GoodsGain, Movable {
         for (Player player : players) {
 
             message = "Would you like to land on a planet ?";
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
             try {
                 if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
 
                     message = "Enter the planet you want to land on(1-" + numberOfPlanets + "): ";
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                     while (true) {
 
@@ -114,12 +108,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                                 message = "Player " + player.getNickName() +
                                         "has landed on planet " + planetChosen + " !";
-                                for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                                    dataContainer.setMessage(message);
-                                    dataContainer.setCommand("printMessage");
-                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                                }
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                                 freePlanet--;
 
                                 planetOccupation[planetChosen - 1] = true;
@@ -147,19 +136,13 @@ public class Planets extends Card implements GoodsGain, Movable {
                             } else {
 
                                 message = "The planet you selected has already been occupied";
-                                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                                dataContainer.setMessage(message);
-                                dataContainer.setCommand("printMessage");
-                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                             }
                         } else {
 
                             message = "The planet you chose is invalid";
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                         }
 
@@ -167,12 +150,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                     if (freePlanet == 0) {
                         message = "All planets were occupied!";
-                        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                        }
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                         break;
                     }
 
@@ -180,21 +158,13 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                     message = "Player " + player.getNickName() +
                             " decided to not land on any planet!";
-                    for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                    }
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+
                 }
             } catch (PlayerDisconnectedException e) {
                 gameInformation.disconnectPlayer(player);
                 message = e.getMessage();
-                for (Player player1 : gameInformation.getPlayerList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                    dataContainer.setMessage(message);
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
         }
 
