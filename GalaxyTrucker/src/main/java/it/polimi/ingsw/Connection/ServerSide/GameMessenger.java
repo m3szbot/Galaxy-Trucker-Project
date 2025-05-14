@@ -223,6 +223,7 @@ public class GameMessenger {
             try {
 
                 playerObjectoutputStreamMap.get(player).writeObject(getPlayerContainer(player));
+                playerObjectoutputStreamMap.get(player).flush();
 
             } catch (IOException e) {
                 System.err.println();
