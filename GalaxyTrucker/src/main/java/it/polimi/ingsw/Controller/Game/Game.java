@@ -37,6 +37,7 @@ public class Game implements Runnable {
     public void setUpPhases(){
 
         initializationPhase = new InitializationPhase();
+        initializationPhase.start(gameInformation);
         assemblyPhase = new AssemblyPhase(gameInformation);
         correctionPhase = new CorrectionPhase(gameInformation);
         flightPhase = new FlightPhase(gameInformation);
@@ -102,8 +103,6 @@ public class Game implements Runnable {
 
 
     public void run() {
-
-        initializationPhase.start(gameInformation);
         assemblyPhase.start(gameInformation);
         correctionPhase.start(gameInformation);
         flightPhase.start(gameInformation);
