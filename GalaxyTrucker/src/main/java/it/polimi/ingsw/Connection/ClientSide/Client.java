@@ -26,7 +26,6 @@ public class Client {
 
 
         if(joiner.start(clientInfo) == 0){
-            System.out.println("Thread concluso");
             gamehandler.start(clientInfo);
         }
 
