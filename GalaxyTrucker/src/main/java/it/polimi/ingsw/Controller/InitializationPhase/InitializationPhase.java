@@ -21,7 +21,9 @@ public class InitializationPhase implements Startable {
      */
     @Override
     public void start(GameInformation gameInformation) {
+        System.out.println("debug,  inizzializzazione iniziata");
         gameInformation.setUpGameInformation(gameInformation.getGameType(), gameInformation.getMaxNumberOfPlayers());
+        System.out.println("Debug, lunghezza array carte: " + gameInformation.getCardsList().size());
     }
 
 }
