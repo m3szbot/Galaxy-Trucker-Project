@@ -74,7 +74,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                                 "has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
-                        giveGoods(gameInformation.getFlightBoard().getPlayerOrderList().get(i), goods, gameInformation.getFlightBoard(), gameInformation);
+                        giveGoods(gameInformation.getFlightBoard().getPlayerOrderList().get(i), goods, gameInformation);
                         changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), daysLost, gameInformation.getFlightBoard());
 
                     } else {

@@ -72,8 +72,9 @@ public class AssemblyPhase {
      * Starts the game, initializes the state, sets up user input thread,
      * and runs the main non-blocking game loop.
      */
-    public void start(GameInformation gameInformation) {
+    public void start(GameInformation gameInformation) throws InterruptedException {
         this.gameInformation = gameInformation;
+
         for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;
             new Thread(() -> {
@@ -83,7 +84,7 @@ public class AssemblyPhase {
             }).start();
         }
 
-        new Thread(() -> {while (running.get()) {
+        Thread t = new Thread(() -> {while (running.get()) {
             if (assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
                 if (assemblyProtocol.getHourGlass().getState() == 3) {
                     setRunning(false);
@@ -97,7 +98,9 @@ public class AssemblyPhase {
                 }
             }
             try { Thread.sleep(100); } catch (InterruptedException ignored) {}
-        }}).start();
+        }});
+        t.start();
+        t.join();
 
         message = "Assembly phase has ended";
         for (Player player: gameInformation.getPlayerList() ) {
