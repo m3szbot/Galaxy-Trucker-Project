@@ -52,13 +52,17 @@ public class EvaluationPhase implements Startable {
 
 
     /**
-     * Calculate and assign final points for each player
-     *
-     * @param gameInformation
+     * Calculate and assign final points for each player.
      */
     private void assignPlayerCredits(GameInformation gameInformation) {
-        ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getFlightBoard(), gameInformation.getGameType());
+        ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getGameType());
+        // calculate player credits
+        scoreCounter.calculatePlayerScores(gameInformation.getFlightBoard());
+        // assign player credits to their shipboards
         for (Player player : gameInformation.getPlayerList()) {
+            player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
+        }
+        for (Player player : gameInformation.getDisconnectedPlayerList()) {
             player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
         }
     }
