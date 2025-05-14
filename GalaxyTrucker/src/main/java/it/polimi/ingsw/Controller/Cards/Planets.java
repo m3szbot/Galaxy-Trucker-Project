@@ -66,7 +66,6 @@ public class Planets extends Card implements GoodsGain, Movable {
             printGoods(planet4);
         }
 
-
     }
 
     @Override
@@ -115,19 +114,19 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                                 if (planetChosen == 1) {
 
-                                    giveGoods(player, planet1, gameInformation.getFlightBoard(), gameInformation);
+                                    giveGoods(player, planet1, gameInformation);
 
                                 } else if (planetChosen == 2) {
 
-                                    giveGoods(player, planet2, gameInformation.getFlightBoard(), gameInformation);
+                                    giveGoods(player, planet2, gameInformation);
 
                                 } else if (planetChosen == 3) {
 
-                                    giveGoods(player, planet3, gameInformation.getFlightBoard(), gameInformation);
+                                    giveGoods(player, planet3, gameInformation);
 
                                 } else {
 
-                                    giveGoods(player, planet4, gameInformation.getFlightBoard(), gameInformation);
+                                    giveGoods(player, planet4, gameInformation);
 
                                 }
 

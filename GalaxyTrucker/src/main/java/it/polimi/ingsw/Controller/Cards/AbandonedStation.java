@@ -58,7 +58,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                     if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
                         //player decides to solve the card
 
-                        giveGoods(player, goods, gameInformation.getFlightBoard(), gameInformation);
+                        giveGoods(player, goods, gameInformation);
                         changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
 
                         message = player.getNickName() + "has solved the card!";
@@ -75,7 +75,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
         message = "Nobody solved the card!";
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
-        
+
         gameInformation.getFlightBoard().updateFlightBoard();
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
