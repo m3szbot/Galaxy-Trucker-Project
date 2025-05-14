@@ -3,14 +3,11 @@ package it.polimi.ingsw.Connection.ServerSide;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class used to communicate with players during the game.
@@ -21,19 +18,16 @@ import java.util.Map;
 public class GameMessenger {
 
     private Map<Player, Socket> playerSocketMap = new HashMap<>();
+    private Map<Player, ObjectOutputStream> playerObjectoutputStreamMap = new HashMap<>();
+    private Map<Player, ObjectInputStream> playerObjectInputStreamMap = new HashMap<>();
     private List<Player> playerRMIList = new ArrayList<>();
     private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
 
-    /**
-     * To call when a player is added to the game
-     *
-     * @param player
-     * @param socket null if the player chose RMI
-     */
-
-    public void addPlayerSocket(Player player, Socket socket) {
+    public void addPlayerSocket(Player player, Socket socket, ObjectOutputStream outputStream, ObjectInputStream inputStream){
 
         this.playerSocketMap.put(player, socket);
+        this.playerObjectInputStreamMap.put(player, inputStream);
+        this.playerObjectoutputStreamMap.put(player, outputStream);
         this.playerDataContainerMap.put(player, new DataContainer());
 
     }
@@ -56,6 +50,14 @@ public class GameMessenger {
 
     }
 
+    public Collection<ObjectOutputStream> getPlayersOutputStreams(){
+        return playerObjectoutputStreamMap.values();
+    }
+
+    public Collection<ObjectInputStream> getPlayerInputStreams(){
+        return playerObjectInputStreamMap.values();
+    }
+
     /**
      * @param player
      * @return the string that the player sent to the server
@@ -68,7 +70,7 @@ public class GameMessenger {
             //TODO
         } else {
             try {
-                return (new DataInputStream((playerSocketMap.get(player)).getInputStream())).readUTF();
+                return playerObjectInputStreamMap.get(player).readUTF();
             } catch (IOException e) {
 
                 System.err.println("Error while reading from client");
@@ -212,8 +214,6 @@ public class GameMessenger {
 
     public void sendPlayerData(Player player) {
 
-        Socket playerSocket = playerSocketMap.get(player);
-
         if (playerRMIList.contains(player)) {
             //RMI
             //TODO
@@ -222,7 +222,7 @@ public class GameMessenger {
 
             try {
 
-                (new ObjectOutputStream(playerSocket.getOutputStream())).writeObject(playerDataContainerMap.get(player));
+                playerObjectoutputStreamMap.get(player).writeObject(getPlayerContainer(player));
 
             } catch (IOException e) {
                 System.err.println();

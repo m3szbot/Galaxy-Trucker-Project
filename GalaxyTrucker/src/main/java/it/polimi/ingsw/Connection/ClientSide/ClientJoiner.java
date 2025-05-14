@@ -13,6 +13,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *  Client joiner is responsible for the second phase of the client
@@ -42,8 +43,8 @@ public class ClientJoiner {
 
     private boolean checkTrials(int trials){
 
-        if(trials > 5){
-            System.out.println("You entered too much wrong information and therefore are slowing" +
+        if(trials >= 5){
+            System.out.println("You entered too much wrong information and therefore are slowing down " +
                     "the server, you have been kicked out");
             return true;
         }
@@ -71,17 +72,17 @@ public class ClientJoiner {
         ObjectOutputStream dataSender;
         Scanner scanner;
         AtomicBoolean terminatedFlag = new AtomicBoolean(false);
-        AtomicBoolean isKicked = new AtomicBoolean(false);
-        AtomicBoolean connectionLost = new AtomicBoolean(false);
+        AtomicBoolean abnormallyTerminatedFlag = new AtomicBoolean(false);
+        AtomicReference<String> userInput = new AtomicReference<>(null);
 
         try {
             socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
             clientInfo.setServerSocket(socket);
             dataSender = new ObjectOutputStream(socket.getOutputStream());
             dataSender.flush();
-            System.out.println("Output stream aperto e flushato");
-            System.out.println(socket.isConnected());
             dataReceiver = new ObjectInputStream(socket.getInputStream());
+            clientInfo.setInputStream(dataReceiver);
+            clientInfo.setOutputStream(dataSender);
             dataSender.writeObject(clientInfo);
             dataSender.flush();
             scanner = new Scanner(System.in);
@@ -101,25 +102,30 @@ public class ClientJoiner {
 
                     if(checkTrials(trials)){
                         terminatedFlag.set(true);
-                        isKicked.set(true);
+                        abnormallyTerminatedFlag.set(true);
                         break;
                     }
 
-                    String message = (String) dataReceiver.readObject();
+                    String message = dataReceiver.readUTF();
 
                     if(message.equals("added")){
                         terminatedFlag.set(true);
 
+                        String updatedNickName = dataReceiver.readUTF();
+                        clientInfo.setNickname(updatedNickName);
+
+                    }
+                    else if(message.equals("start")){
                         break;
                     }
                     else if(message.equals("increment trials")){
                         trials++;
                     }
-                    else if(message.equals("The server kicked you out because of inactivity!")){
+                    else if(message.equals("terminate")){
 
-                        System.out.println(message);
                         terminatedFlag.set(true);
-                        isKicked.set(true);
+                        abnormallyTerminatedFlag.set(true);
+
                         break;
                     }
                     else {
@@ -129,31 +135,48 @@ public class ClientJoiner {
 
                 }
 
-            }catch (IOException e){
-                connectionLost.set(true);
+            }catch (IOException e) {
+                abnormallyTerminatedFlag.set(true);
                 terminatedFlag.set(true);
                 System.err.println("An error was encountered while receiving data from the server");
-            } catch (ClassNotFoundException e) {
-                connectionLost.set(true);
-                terminatedFlag.set(true);
-                System.err.println("Error while receiving message from the server");
             }
 
+        });
+
+        Thread inputThread = new Thread(() -> {
+            while(true){
+                userInput.set(scanner.nextLine());
+            }
         });
 
         //One thread to send message to the server
 
         Thread messageSender = new Thread(() -> {
 
+            inputThread.setDaemon(true);
+            inputThread.start();
+
             while(!terminatedFlag.get()) {
 
-                try {
-                    dataSender.writeObject(scanner.nextLine());
-                    dataSender.flush();
-                } catch (IOException e) {
-                    connectionLost.set(true);
-                    terminatedFlag.set(true);
-                    System.err.println("An error was encountered while sending data to the server");
+                if(userInput.get() != null) {
+
+                    try {
+
+                        dataSender.writeUTF(userInput.getAndSet(null));
+                        dataSender.flush();
+
+                    } catch (IOException e) {
+                        abnormallyTerminatedFlag.set(true);
+                        terminatedFlag.set(true);
+                        System.err.println("An error was encountered while sending data to the server");
+                    }
+                }
+
+                try{
+                    Thread.sleep(100);
+
+                } catch (InterruptedException e) {
+                    System.err.println("Sender thread was abnormally interrupted");
                 }
 
             }
@@ -166,24 +189,23 @@ public class ClientJoiner {
         try {
 
             messageReceiver.join();
-            //the sender is interrupted when the receiver is terminated, i.e,
-            //when a connection problem occurred, or when he is kicked, or when he joined a game
-            messageSender.interrupt();
+            messageSender.join();
 
-        } catch (InterruptedException e) {
-            System.err.println("Error: message receiver was interrupted abnormally");
+        } catch (InterruptedException e1) {
+            System.err.println("Error: message receiver or sender was interrupted abnormally");
+            return -1;
+
         }
 
-        if(isKicked.get()){
-            return 0;
-        }
-        else if(connectionLost.get()){
+        if(abnormallyTerminatedFlag.get()){
             return -1;
         }
         else{
-            return 1;
+            return 0;
         }
     }
+
+    //TODO
 
     private int startRMI(ClientInfo clientInfo){
 

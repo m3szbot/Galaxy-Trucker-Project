@@ -8,7 +8,6 @@ import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import it.polimi.ingsw.View.GeneralView;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -84,17 +83,10 @@ public class ClientGameHandler {
 
     private void startSCK(GeneralView[] views) {
 
-        ObjectInputStream in;
-        ObjectOutputStream out;
-        AtomicBoolean running = new AtomicBoolean(true);
+        ObjectOutputStream out = clientInfo.getOutputStream();
+        ObjectInputStream in = clientInfo.getInputStream();
 
-        try {
-            in = new ObjectInputStream(clientInfo.getServerSocket().getInputStream());
-            out = new ObjectOutputStream(clientInfo.getServerSocket().getOutputStream());
-        } catch (IOException e) {
-            System.err.println("A critical error occurred while opening streams");
-            return;
-        }
+        AtomicBoolean running = new AtomicBoolean(true);
 
         Thread messageReceiver = new Thread(new GameMessageReceiver(views, in, running));
         Thread messageSender = new Thread(new GameMessageSender(out, running));
@@ -105,16 +97,17 @@ public class ClientGameHandler {
         try {
 
             messageReceiver.join();
+            messageSender.join();
 
             try {
                 in.close();
                 out.close();
             } catch (IOException e) {
-                System.err.println("Error while closing sockets");
+                System.err.println("Error while closing streams");
             }
 
         } catch (InterruptedException e) {
-            System.err.println("Receiver thread was interrupted abnormally");
+            System.err.println("Receiver or sender thread was interrupted abnormally");
 
             try {
 
@@ -123,7 +116,7 @@ public class ClientGameHandler {
 
             } catch (IOException ex) {
 
-                System.err.println("Error while closing sockets");
+                System.err.println("Error while closing streams");
 
             }
         }

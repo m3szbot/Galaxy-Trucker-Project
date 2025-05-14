@@ -3,6 +3,8 @@ package it.polimi.ingsw.Connection.ClientSide;
 import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 
@@ -26,6 +28,24 @@ public class ClientInfo implements Serializable {
     private transient String serverIp;
     private final static int serverPort = 5200;
     private transient Socket serverSocket;
+    private transient ObjectInputStream inputStream;
+    private transient ObjectOutputStream outputStream;
+
+    public ObjectInputStream getInputStream() {
+        return inputStream;
+    }
+
+    public ObjectOutputStream getOutputStream() {
+        return outputStream;
+    }
+
+    public void setInputStream(ObjectInputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public void setOutputStream(ObjectOutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
 
     public Socket getServerSocket() {
         return serverSocket;

@@ -44,6 +44,12 @@ public class Server {
         this.portNumber = 5200;
     }
 
+    public Game getGame(int gameCode) throws IndexOutOfBoundsException{
+
+       return games.get(gameCode);
+
+    }
+
     public int getPort(){
         return portNumber;
     }

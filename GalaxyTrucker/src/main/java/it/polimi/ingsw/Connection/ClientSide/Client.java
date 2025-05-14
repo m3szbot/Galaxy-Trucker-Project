@@ -22,21 +22,13 @@ public class Client {
 
         welcomer.start(clientInfo);
 
-        if(clientInfo.getGameCode() != -1){
-            //the player wants to rejoin an interrupted game.
-            //TODO
 
-        }
-
-        int resultCode = joiner.start(clientInfo);
-
-        if(resultCode == 1){
-            System.out.println("Waiting for other players to join...");
+        if(joiner.start(clientInfo) == 0){
             gamehandler.start(clientInfo);
         }
 
         /*
-        If the result code is != 1, the program ends.
+        If the result code is != 0, the program ends.
          */
 
     }

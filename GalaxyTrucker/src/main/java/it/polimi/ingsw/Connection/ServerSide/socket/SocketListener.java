@@ -41,6 +41,7 @@ public class SocketListener implements Runnable{
                 clientSocket = serverSocket.accept();
                 //setting a 1-minute timeout to handle clients inactivity
                 clientSocket.setSoTimeout(60000);
+                System.out.println(clientSocket.getInetAddress() + " is connected");
 
                 new ClientSocketHandler(clientSocket, centralServer).start();
             }
