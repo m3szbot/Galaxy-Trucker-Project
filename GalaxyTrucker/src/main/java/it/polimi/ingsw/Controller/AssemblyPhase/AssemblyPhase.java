@@ -79,7 +79,14 @@ public class AssemblyPhase {
             int threadInt = i;
             new Thread(() -> {
                 while (running.get() || end.get() < gameInformation.getMaxNumberOfPlayers()) {
-                    AssemblyThread assemblyThread = new AssemblyThread(gameInformation, gameInformation.getPlayerList().get(threadInt), assemblyProtocol, running, end);
+                    Runnable task = new AssemblyThread(
+                            gameInformation,
+                            gameInformation.getPlayerList().get(threadInt),
+                            assemblyProtocol,
+                            running,
+                            end
+                    );
+                    new Thread(task).start();  // ← qui lanci il thread che esegue il Runnable
                 }
             }).start();
         }
