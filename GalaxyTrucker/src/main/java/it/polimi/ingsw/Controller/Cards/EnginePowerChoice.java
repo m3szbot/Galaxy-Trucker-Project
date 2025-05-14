@@ -40,13 +40,10 @@ public interface EnginePowerChoice {
         if (player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
             //player have the possibility to increase his engine power with batteries
 
-            message = "You're engine power is " + defaultEnginePower +
+            message = "Your engine power is " + defaultEnginePower +
                     ", but you still have " + player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() + " double engine." +
                     " Would you like to use double engines to increase you're engine power ?";
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
             /*
             With the new clientMessenger tool, the client answers yes or no.
              */
@@ -56,10 +53,7 @@ public interface EnginePowerChoice {
                     //player decide to activate some double engines
 
                     message = "How many double engines would you like to activate ? ";
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                     while (true) {
 
@@ -71,10 +65,7 @@ public interface EnginePowerChoice {
                         }
 
                         message = "The value you entered is incorrect, please enter a valid one: ";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                     }
 
@@ -84,10 +75,7 @@ public interface EnginePowerChoice {
                     while (temp > 0) {
 
                         message = "Enter coordinates of the battery you want to use: ";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                         while (true) {
 
@@ -100,10 +88,7 @@ public interface EnginePowerChoice {
                             }
 
                             message = "Invalid coordinates, reenter coordinates: ";
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                         }
 
@@ -122,11 +107,7 @@ public interface EnginePowerChoice {
             } catch (PlayerDisconnectedException e) {
                 gameInformation.disconnectPlayer(player);
                 message = e.getMessage();
-                for (Player player1 : gameInformation.getPlayerList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                    dataContainer.setMessage(message);
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
 
         }

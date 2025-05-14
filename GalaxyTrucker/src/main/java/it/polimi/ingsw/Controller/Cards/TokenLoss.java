@@ -76,21 +76,14 @@ public interface TokenLoss {
 
             message = "You must remove " + numberOfCrewToRemove + " inhabitants." +
                     " Enter coordinates of cabin: ";
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
             try {
                 coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
                 gameInformation.disconnectPlayer(player);
                 message = e.getMessage();
-                for (Player player1 : gameInformation.getPlayerList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                    dataContainer.setMessage(message);
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
 
             component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
@@ -121,10 +114,7 @@ public interface TokenLoss {
                     while (true) {
 
                         message = "Enter number of inhabitants to remove: ";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                         int numberOfRemovedCrew = 0;
                         try {
@@ -132,11 +122,7 @@ public interface TokenLoss {
                         } catch (PlayerDisconnectedException e) {
                             gameInformation.disconnectPlayer(player);
                             message = e.getMessage();
-                            for (Player player1 : gameInformation.getPlayerList()) {
-                                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                                dataContainer.setMessage(message);
-                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                            }
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                         }
 
                         if (numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove && numberOfRemovedCrew > 0) {
@@ -151,29 +137,20 @@ public interface TokenLoss {
                         }
 
                         message = "The number of inhabitants you entered is incorrect";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                     }
 
                 } else {
 
                     message = "The cabin you selected is empty";
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                 }
             } else {
 
                 message = "The component you entered is not a cabin";
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
             }
         }
@@ -217,21 +194,14 @@ public interface TokenLoss {
 
                     message = "You must remove " + numberOfGoodsToRemove + " " + goodColor + " goods, " +
                             "enter coordinate of storage component: ";
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                     try {
                         coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
                     } catch (PlayerDisconnectedException e) {
                         gameInformation.disconnectPlayer(player);
                         message = e.getMessage();
-                        for (Player player1 : gameInformation.getPlayerList()) {
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                            dataContainer.setMessage(message);
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                        }
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
                     component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
@@ -244,21 +214,14 @@ public interface TokenLoss {
                             while (true) {
 
                                 message = "Enter number of " + goodColor + " goods that you want to remove: ";
-                                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                                dataContainer.setMessage(message);
-                                dataContainer.setCommand("printMessage");
-                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                                 try {
                                     numberOfRemovedGoods = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInt(player);
                                 } catch (PlayerDisconnectedException e) {
                                     gameInformation.disconnectPlayer(player);
                                     message = e.getMessage();
-                                    for (Player player1 : gameInformation.getPlayerList()) {
-                                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                                        dataContainer.setMessage(message);
-                                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                                    }
+                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                                 }
                                 goodsRemoved[i] = numberOfRemovedGoods;
 
@@ -279,27 +242,18 @@ public interface TokenLoss {
                                 }
 
                                 message = "The number of goods you entered is invalid";
-                                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                                dataContainer.setMessage(message);
-                                dataContainer.setCommand("printMessage");
-                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                             }
 
                         } else {
                             message = "The storage component you selected does not contain " + goodColor + " goods";
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
                         }
 
                     } else {
                         message = "The component you selected is not a storage";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
                     }
 
                 }
@@ -335,21 +289,14 @@ public interface TokenLoss {
 
                 int numberOfRemovedBatteries = 0;
                 message = "Enter coordinate of the battery station: ";
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                 try {
                     coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
                 } catch (PlayerDisconnectedException e) {
                     gameInformation.disconnectPlayer(player);
                     message = e.getMessage();
-                    for (Player player1 : gameInformation.getPlayerList()) {
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                        dataContainer.setMessage(message);
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                    }
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
@@ -358,21 +305,14 @@ public interface TokenLoss {
 
                         while (true) {
                             message = "Enter number of batteries you want to remove: ";
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                             try {
                                 numberOfRemovedBatteries = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInt(player);
                             } catch (PlayerDisconnectedException e) {
                                 gameInformation.disconnectPlayer(player);
                                 message = e.getMessage();
-                                for (Player player1 : gameInformation.getPlayerList()) {
-                                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                                    dataContainer.setMessage(message);
-                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                                }
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                             }
 
                             if (numberOfRemovedBatteries <= ((Battery) component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove && numberOfRemovedBatteries > 0) {
@@ -386,26 +326,17 @@ public interface TokenLoss {
                             }
 
                             message = "The number of batteries you entered is invalid";
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                         }
 
                     } else {
                         message = "The battery station you entered is empty";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
                     }
                 } else {
                     message = "The component you entered is not a battery";
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
                 }
             }
 
