@@ -130,4 +130,25 @@ class ScoreCounterTest {
 
     }
 
+    @Test
+    void TwoPlayersOneLeastLinks() {
+        // order: 8 6
+        // least exposed links: 4
+        Component component = new Component(singleSides);
+        // playerA 6
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
+        playerA.getShipBoard().addComponent(component, 7, 8);
+        playerA.getShipBoard().addComponent(component, 7, 9);
+        // playerB 12
+        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getFirst());
+        playerA.getShipBoard().addComponent(component, 7, 8);
+        // check correct ships
+        assertFalse(playerA.getShipBoard().isErroneous());
+        assertFalse(playerB.getShipBoard().isErroneous());
+        // calculate scores
+        scoreCounter.calculatePlayerScores(flightBoard);
+        assertEquals(12, scoreCounter.getPlayerScore(playerB));
+        assertEquals(6, scoreCounter.getPlayerScore(playerA));
+    }
+
 }
