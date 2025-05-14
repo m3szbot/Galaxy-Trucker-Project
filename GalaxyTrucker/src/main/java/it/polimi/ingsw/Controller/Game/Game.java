@@ -11,9 +11,9 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class Game implements Runnable {
 
+    private final int gameCode;
     private GameState gameState;
     private GameInformation gameInformation;
-    private final int gameCode;
     private InitializationPhase initializationPhase;
     private AssemblyPhase assemblyPhase;
     private CorrectionPhase correctionPhase;
@@ -34,7 +34,7 @@ public class Game implements Runnable {
 
     }
 
-    public void setUpPhases(){
+    public void setUpPhases() {
 
         initializationPhase = new InitializationPhase();
         initializationPhase.start(gameInformation);
@@ -43,6 +43,7 @@ public class Game implements Runnable {
         flightPhase = new FlightPhase(gameInformation);
         evaluationPhase = new EvaluationPhase(gameInformation);
     }
+
     public boolean isFull() {
 
         return (gameInformation.getMaxNumberOfPlayers() == numberOfJoinedPlayers);
@@ -57,10 +58,9 @@ public class Game implements Runnable {
         gameInformation.setMaxNumberOfPlayers(numberOfPlayers);
     }
 
-    public int getGameCode(){
+    public int getGameCode() {
         return gameCode;
     }
-
 
 
     public void addPlayer(Player player, boolean first) {
@@ -89,11 +89,11 @@ public class Game implements Runnable {
         this.gameState = gameState;
     }
 
-    public boolean isNickNameRepeated(String nickname){
+    public boolean isNickNameRepeated(String nickname) {
 
-        for(Player player: gameInformation.getPlayerList()){
+        for (Player player : gameInformation.getPlayerList()) {
 
-            if(nickname.equals(player.getNickName()))
+            if (nickname.equals(player.getNickName()))
                 return true;
 
         }
@@ -102,10 +102,17 @@ public class Game implements Runnable {
     }
 
 
+    /**
+     * Start the different phases of the game.
+     */
     public void run() {
+        System.out.println("Starting assembly phase...");
         assemblyPhase.start(gameInformation);
+        System.out.println("Starting correction phase...");
         correctionPhase.start(gameInformation);
+        System.out.println("Starting flight phase...");
         flightPhase.start(gameInformation);
+        System.out.println("Starting evaluation phase...");
         evaluationPhase.start(gameInformation);
 
     }
