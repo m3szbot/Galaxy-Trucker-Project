@@ -8,6 +8,8 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -34,7 +36,7 @@ public class Server {
     private Color currentColor;
     private int portNumber;
 
-    public Server(){
+    public Server() {
         this.gameCode = 0;
         this.currentStartingGame = new Game(gameCode);
         ClientMessenger.addGame(gameCode);
@@ -44,13 +46,32 @@ public class Server {
         this.portNumber = 5200;
     }
 
-    public Game getGame(int gameCode) throws IndexOutOfBoundsException{
+    public static void main(String[] args) {
 
-       return games.get(gameCode);
+        Server server = new Server();
+        server.start();
+
 
     }
 
-    public int getPort(){
+    public void start() {
+        try {
+            System.out.printf("Server started with IP:\n%s\n", InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+        new Thread(socketListener).start();
+        new Thread(rmiListener).start();
+
+    }
+
+    public Game getGame(int gameCode) throws IndexOutOfBoundsException {
+
+        return games.get(gameCode);
+
+    }
+
+    public int getPort() {
         return portNumber;
     }
 
@@ -82,19 +103,15 @@ public class Server {
         }
     }
 
-    public Game getCurrentStartingGame(){
+    public Game getCurrentStartingGame() {
         return currentStartingGame;
     }
 
-    private void addGame(Game game) {
-        games.add(game);
-    }
+    //Method overloading, the second one is used to add the first player to a
 
     public ReentrantLock getLock() {
         return lock;
     }
-
-    //Method overloading, the second one is used to add the first player to a
 
     public void addPlayerToCurrentStartingGame(Player player) {
 
@@ -123,19 +140,8 @@ public class Server {
         ClientMessenger.addGame(gameCode);
     }
 
-    public static void main(String[] args){
-
-        Server server = new Server();
-        server.start();
-
-
-    }
-
-    public void start() {
-
-        new Thread(socketListener).start();
-        new Thread(rmiListener).start();
-
+    private void addGame(Game game) {
+        games.add(game);
     }
 
 }
