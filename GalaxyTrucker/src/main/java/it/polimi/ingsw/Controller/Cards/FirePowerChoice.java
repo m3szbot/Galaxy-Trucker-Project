@@ -38,14 +38,11 @@ public interface FirePowerChoice {
         if (forwardDoubleCannons + notForwardDoubleCannons > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
             //player can increase firePower.
 
-            message = "You're fire power is " + defaultFirePower +
+            message = "Your fire power is " + defaultFirePower +
                     ", but you still have " + forwardDoubleCannons + " double cannons pointing forward (+2 each) and " +
                     notForwardDoubleCannons + " double cannons not pointing forward (+1 each). " +
                     " Would you like to use double cannons to increase you're engine power ?";
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
             try {
                 if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
@@ -53,10 +50,7 @@ public interface FirePowerChoice {
                     message = "Double cannons will be automatically chosen from the ones that gives more fire power" +
                             "to the ones that gives less. Please enter the number of double cannons you want to" +
                             "activate: ";
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                     while (true) {
 
@@ -68,10 +62,8 @@ public interface FirePowerChoice {
                         }
 
                         message = "The value you entered is incorrect, please enter a valid one: ";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+
                     }
 
 
@@ -80,10 +72,7 @@ public interface FirePowerChoice {
                     while (doubleCannonsToActivate > 0) {
 
                         message = "Enter coordinates of the battery you want to use: ";
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        dataContainer.setCommand("printMessage");
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                         while (true) {
 
@@ -96,10 +85,7 @@ public interface FirePowerChoice {
                             }
 
                             message = "Invalid coordinate, reenter coordinate: ";
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                         }
 
@@ -120,11 +106,7 @@ public interface FirePowerChoice {
             } catch (PlayerDisconnectedException e) {
                 gameInformation.disconnectPlayer(player);
                 message = e.getMessage();
-                for (Player player1 : gameInformation.getPlayerList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                    dataContainer.setMessage(message);
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
 
         }

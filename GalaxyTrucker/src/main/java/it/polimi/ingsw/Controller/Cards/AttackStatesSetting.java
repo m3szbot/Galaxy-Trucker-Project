@@ -40,12 +40,8 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() + " has defeated the" +
                         "enemies!";
-                for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+
                 results[i] = AttackStates.EnemyDefeated;
                 break;
 
@@ -53,24 +49,16 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() + " equalized the" +
                         "enemies!";
-                for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+
                 results[i] = AttackStates.Equalized;
 
             } else {
 
                 message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() + " has been" +
                         " defeated by the enemies!";
-                for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+
                 results[i] = AttackStates.PlayerDefeated;
 
             }

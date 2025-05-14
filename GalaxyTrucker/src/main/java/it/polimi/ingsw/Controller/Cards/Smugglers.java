@@ -65,22 +65,14 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
             if (results[i] == AttackStates.EnemyDefeated) {
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                 try {
                     if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
                                 "has collected the reward!";
-                        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                        }
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
                         giveGoods(gameInformation.getFlightBoard().getPlayerOrderList().get(i), goods, gameInformation.getFlightBoard(), gameInformation);
                         changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), daysLost, gameInformation.getFlightBoard());
@@ -89,22 +81,13 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
                                 "hasn't collected the reward!";
-                        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                        }
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
                     }
                 } catch (PlayerDisconnectedException e) {
                     gameInformation.disconnectPlayer(player);
                     message = e.getMessage();
-                    for (Player player1 : gameInformation.getPlayerList()) {
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                        dataContainer.setMessage(message);
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                    }
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
 
                 break;

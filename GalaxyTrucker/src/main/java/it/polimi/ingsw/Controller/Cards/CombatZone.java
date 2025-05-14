@@ -84,23 +84,13 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         message = "Player " + lowestInhabitantNumberPlayer.getNickName() + " lost " + daysLost +
                 " flight days as he is the one with the lowest number of inhabitants!";
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-        }
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
         inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
 
         message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
                 " crew members as he is the one with the weakest engine power!";
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-        }
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
         //rolling the dice for each shot and then hitting
         for (int i = 0; i < blows.length; i++) {
@@ -109,12 +99,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
-            dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-        }
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
     }
 

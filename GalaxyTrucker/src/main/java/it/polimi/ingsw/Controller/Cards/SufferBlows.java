@@ -273,10 +273,7 @@ public interface SufferBlows {
             message = "A small cannon blow is directed on position ["
                     + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                     directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
             try {
                 if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
@@ -292,11 +289,7 @@ public interface SufferBlows {
             } catch (PlayerDisconnectedException e) {
                 gameInformation.disconnectPlayer(player);
                 message = e.getMessage();
-                for (Player player1 : gameInformation.getPlayerList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                    dataContainer.setMessage(message);
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
 
         }
@@ -322,10 +315,7 @@ public interface SufferBlows {
                             + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                             direction + "!\nDo you want to defend yourself with the " +
                             "double cannon pointing towards its direction ?";
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                     try {
                         if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) { //player decides to defend themselves
@@ -339,11 +329,7 @@ public interface SufferBlows {
                     } catch (PlayerDisconnectedException e) {
                         gameInformation.disconnectPlayer(player);
                         message = e.getMessage();
-                        for (Player player1 : gameInformation.getPlayerList()) {
-                            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                            dataContainer.setMessage(message);
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                        }
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
 
                 } else { //player don't have batteries
@@ -384,10 +370,7 @@ public interface SufferBlows {
                 message = "A small asteroid is directed on position ["
                         + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                         direction + "!\nDo you want to defend yourself with shields ?";
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
                 try {
                     if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) { //player decides to defend themselves
@@ -402,11 +385,7 @@ public interface SufferBlows {
                 } catch (PlayerDisconnectedException e) {
                     gameInformation.disconnectPlayer(player);
                     message = e.getMessage();
-                    for (Player player1 : gameInformation.getPlayerList()) {
-                        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                        dataContainer.setMessage(message);
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                    }
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
             } else {
 
@@ -445,38 +424,20 @@ public interface SufferBlows {
             message = "Player " + player.getNickName() + " has been hit by a " +
                     blowType.toString().toLowerCase() + " at position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
-
-            for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-            }
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
         } else if (xCoord != -1) {
 
             message = "Player " + player.getNickName() + " wasn't damaged by the " +
                     blowType.toString().toLowerCase() + " that hit position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
-
-            for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-            }
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
         } else {
 
             message = "Player " + player.getNickName() + " dodged the " +
                     blowType.toString().toLowerCase() + " coming at him from the " + direction + "!";
-
-            for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-            }
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
 
         }
     }
@@ -488,10 +449,7 @@ public interface SufferBlows {
         int[] coordinates = new int[2];
 
         message = "Enter the coordinates of the battery want to use: ";
-        dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-        dataContainer.setMessage(message);
-        dataContainer.setCommand("printMessage");
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
         while (true) {
 
@@ -500,11 +458,7 @@ public interface SufferBlows {
             } catch (PlayerDisconnectedException e) {
                 gameInformation.disconnectPlayer(player);
                 message = e.getMessage();
-                for (Player player1 : gameInformation.getPlayerList()) {
-                    dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player1);
-                    dataContainer.setMessage(message);
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player1);
-                }
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
 
             if (player.getShipBoard().getComponent(coordinates[0], coordinates[1]) != null) {
@@ -517,10 +471,7 @@ public interface SufferBlows {
             }
 
             message = "Invalid coordinates, reenter coordinates: ";
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
         }
 
