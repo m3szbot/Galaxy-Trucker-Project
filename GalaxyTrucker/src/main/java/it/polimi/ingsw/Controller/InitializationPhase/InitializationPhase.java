@@ -23,6 +23,7 @@ public class InitializationPhase implements Startable {
     public void start(GameInformation gameInformation) {
         System.out.println("Initialization phase started");
         gameInformation.setUpGameInformation(gameInformation.getGameType(), gameInformation.getMaxNumberOfPlayers());
+        System.out.println("Initialization phase ended");
     }
 
 }

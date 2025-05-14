@@ -30,6 +30,7 @@ public class CorrectionPhase implements Startable {
      * @param gameInformation
      */
     public void start(GameInformation gameInformation) {
+        System.out.println("Correction phase started");
         gameMessenger.setGamePhaseToAll(GamePhase.CORRECTION);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads
@@ -50,6 +51,7 @@ public class CorrectionPhase implements Startable {
         removeErroneousShipboardPlayers(gameInformation);
 
         // end of correction phase, advance to next phase
+        System.out.println("Correction phase ended");
     }
 
     /**

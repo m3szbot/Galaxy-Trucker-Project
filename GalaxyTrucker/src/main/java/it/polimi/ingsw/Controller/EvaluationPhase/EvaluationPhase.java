@@ -29,6 +29,7 @@ public class EvaluationPhase implements Startable {
      * @param gameInformation
      */
     public void start(GameInformation gameInformation) {
+        System.out.println("Evaluation phase started");
         String message;
         gameMessenger.setGamePhaseToAll(GamePhase.EVALUATION);
         // assign player credits to shipBoard
@@ -47,7 +48,7 @@ public class EvaluationPhase implements Startable {
         // end of evaluationPhase
         // end of game
         gameMessenger.endGame();
-
+        System.out.println("Evaluation phase ended");
     }
 
 
