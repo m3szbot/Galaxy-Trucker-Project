@@ -20,7 +20,6 @@ public class AssemblyProtocol {
     public Object lockUncoveredList = new Object();
     public Object lockCoveredList = new Object();
     public Object lockDecksList = new Object();
-    public Object lockFlightBoard = new Object();
 
     private HourGlass hourGlass;
     // cards
