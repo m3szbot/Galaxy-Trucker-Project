@@ -8,6 +8,8 @@ import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
+
 class GeneralViewTUITest {
     /**
      * gameInformation structure to test prints of models
@@ -42,8 +44,26 @@ class GeneralViewTUITest {
     }
 
     @Test
-    public void printShipboard() {
+    public void printEmptyShipboard() {
         ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
+        dataContainer.setShipBoard(shipBoard);
+        generalViewTUI.printShipboard(dataContainer);
+    }
+
+    @Test
+    public void printFilledShipboard() {
+        int componentIndex;
+        Random randomizer = new Random();
+
+        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
+        // fill shipboard with random components
+        for (int i = 0; i < shipBoard.getMatrixCols(); i++) {
+            for (int j = 0; j < shipBoard.getMatrixRows(); j++) {
+                componentIndex = randomizer.nextInt(gameInformation.getComponentList().size());
+                shipBoard.addComponent(gameInformation.getComponentList().get(componentIndex), i + 1, j + 1);
+            }
+        }
+
         dataContainer.setShipBoard(shipBoard);
         generalViewTUI.printShipboard(dataContainer);
     }
