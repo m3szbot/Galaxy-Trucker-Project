@@ -10,6 +10,8 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -62,7 +64,7 @@ public class AssemblyPhase {
     public void start(GameInformation gameInformation) throws InterruptedException {
         this.gameInformation = gameInformation;
         gameInformation.setGamePhaseServerClient(GamePhase.Assembly);
-
+        /*
         for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;
             new Thread(() -> {
@@ -77,6 +79,12 @@ public class AssemblyPhase {
                     new Thread(task).start();  // ← qui lanci il thread che esegue il Runnable
                 }
             }).start();
+        }
+        */
+
+        ExecutorService executor = Executors.newFixedThreadPool(gameInformation.getPlayerList().size());
+        for (Player player : gameInformation.getPlayerList()) {
+            executor.submit(new AssemblyThread(gameInformation, player, assemblyProtocol, running, end));
         }
 
         Thread t = new Thread(() -> {

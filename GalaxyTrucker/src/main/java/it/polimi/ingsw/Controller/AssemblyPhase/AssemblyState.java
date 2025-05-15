@@ -43,7 +43,7 @@ public class AssemblyState implements GameState {
         if (actionTaken) return; // Ignore input after an action is taken
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setShipBoard(player.getShipBoard());
-        dataContainer.setCommand("printShipBoard");
+        dataContainer.setCommand("printShipboard");
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
