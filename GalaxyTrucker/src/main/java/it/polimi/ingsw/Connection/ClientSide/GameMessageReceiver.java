@@ -43,34 +43,40 @@ public class GameMessageReceiver implements Runnable {
 
     public void run() {
 
+        DataContainer container;
+        int result;
+
         while (running.get()) {
 
             try {
-                DataContainer container = (DataContainer) in.readObject();
 
-                if (executeCommand(container.getCommand(), container) == -1) {
+                container = (DataContainer) in.readObject();
+                result = executeCommand(container.getCommand(), container);
+
+                if (result == -1) {
 
                     running.set(false);
                     System.out.println("The game has ended, press any key to quit");
 
                 }
+                else if(result == 0) {
 
-                if (callView(container) == -1) {
-                    running.set(false);
-                    System.out.println("You have been disconnected, press any key to quit");
+                    if (callView(container) == -1) {
+                        running.set(false);
+                        System.out.println("You have been disconnected");
+                    }
                 }
 
 
             } catch (IOException e) {
 
                 running.set(false);
-                System.err.println("Critical error while receiving messages, you have been disconnected, press" +
-                        " any key to quit");
+                System.err.println("Critical error while receiving messages, you have been disconnected");
 
             } catch (ClassNotFoundException e) {
 
                 running.set(false);
-                System.err.println("DataContainer class not recognized, you have been disconnected, press any key to quit");
+                System.err.println("DataContainer class not recognized, you have been disconnected");
 
             }
 
@@ -82,6 +88,7 @@ public class GameMessageReceiver implements Runnable {
 
         if (command.equals("setGamePhase")) {
             setGamePhase(dataContainer.getGamePhase());
+            return -2;
         } else if (command.equals("endGame")) {
             return -1;
         }

@@ -18,7 +18,7 @@ import java.util.*;
 public class GameMessenger {
 
     private Map<Player, Socket> playerSocketMap = new HashMap<>();
-    private Map<Player, ObjectOutputStream> playerObjectoutputStreamMap = new HashMap<>();
+    private Map<Player, ObjectOutputStream> playerObjectOutputStreamMap = new HashMap<>();
     private Map<Player, ObjectInputStream> playerObjectInputStreamMap = new HashMap<>();
     private List<Player> playerRMIList = new ArrayList<>();
     private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
@@ -27,7 +27,7 @@ public class GameMessenger {
 
         this.playerSocketMap.put(player, socket);
         this.playerObjectInputStreamMap.put(player, inputStream);
-        this.playerObjectoutputStreamMap.put(player, outputStream);
+        this.playerObjectOutputStreamMap.put(player, outputStream);
         this.playerDataContainerMap.put(player, new DataContainer());
 
     }
@@ -44,6 +44,56 @@ public class GameMessenger {
 
     }
 
+    /**
+     * Clears the player resources. Used at the end of the game or when a player is
+     * disconnected
+     * @param player
+     */
+
+    public void clearPlayerResources(Player player){
+
+        try{
+            playerObjectOutputStreamMap.get(player).close();
+            playerObjectInputStreamMap.get(player).close();
+            playerSocketMap.get(player).close();
+            playerObjectOutputStreamMap.remove(player);
+            playerObjectInputStreamMap.remove(player);
+            playerSocketMap.remove(player);
+
+        } catch (IOException e) {
+           System.err.println("Error while closing " + player.getNickName() + " resources");
+        }
+
+    }
+
+    /**
+     * Clears all players resources. Need to be used only at the end of the game, i.e,
+     * not for a simple disconnection.
+     */
+
+    public void clearAllResources(){
+
+        try{
+
+            for(ObjectOutputStream outputStream: playerObjectOutputStreamMap.values()){
+                outputStream.close();
+            }
+
+            for(ObjectInputStream inputStream: playerObjectInputStreamMap.values()){
+                inputStream.close();
+            }
+
+            for(Socket socket: playerSocketMap.values()){
+                socket.close();
+            }
+
+        }
+        catch (IOException e){
+           System.err.println("Error while closing all players resources");
+        }
+
+    }
+
     public String getPlayerString(Player player) throws PlayerDisconnectedException {
 
         return getPlayerInput(player);
@@ -51,7 +101,7 @@ public class GameMessenger {
     }
 
     public Collection<ObjectOutputStream> getPlayersOutputStreams(){
-        return playerObjectoutputStreamMap.values();
+        return playerObjectOutputStreamMap.values();
     }
 
     public Collection<ObjectInputStream> getPlayerInputStreams(){
@@ -222,8 +272,8 @@ public class GameMessenger {
 
             try {
 
-                playerObjectoutputStreamMap.get(player).writeObject(getPlayerContainer(player));
-                playerObjectoutputStreamMap.get(player).flush();
+                playerObjectOutputStreamMap.get(player).writeObject(getPlayerContainer(player));
+                playerObjectOutputStreamMap.get(player).flush();
 
             } catch (IOException e) {
                 System.err.println();

@@ -350,13 +350,15 @@ public class GameInformation {
     }
 
     /**
-     * Moves player from connectedPlayerList to disconnectedPlayerList.
+     * Moves player from connectedPlayerList to disconnectedPlayerList. It
+     * also clears the player resources (carlo).
      *
      * @author Boti
      */
     private void disconnectPlayer(Player player) {
         connectedPlayerList.remove(player);
         disconnectedPlayerList.add(player);
+        ClientMessenger.getGameMessenger(gameCode).clearPlayerResources(player);
     }
 
     /**

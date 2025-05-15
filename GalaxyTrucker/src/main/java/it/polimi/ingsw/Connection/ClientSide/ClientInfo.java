@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Bean class which stores the client info, including
@@ -24,12 +25,22 @@ public class ClientInfo implements Serializable {
     private String nickname;
     private transient ConnectionType connectionType;
     private transient ViewType viewType;
-    private int gameCode = -1;
+    private int gameCode;
     private transient String serverIp;
     private final static int serverPort = 5200;
     private transient Socket serverSocket;
     private transient ObjectInputStream inputStream;
     private transient ObjectOutputStream outputStream;
+    private transient AtomicReference<String> userInput;
+
+    public ClientInfo(){
+        userInput = new AtomicReference<>(null);
+        gameCode = -1;
+    }
+
+    public AtomicReference<String> getUserInput() {
+        return userInput;
+    }
 
     public ObjectInputStream getInputStream() {
         return inputStream;

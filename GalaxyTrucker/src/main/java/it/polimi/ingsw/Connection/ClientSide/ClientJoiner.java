@@ -73,7 +73,7 @@ public class ClientJoiner {
         Scanner scanner;
         AtomicBoolean terminatedFlag = new AtomicBoolean(false);
         AtomicBoolean abnormallyTerminatedFlag = new AtomicBoolean(false);
-        AtomicReference<String> userInput = new AtomicReference<>(null);
+        AtomicReference<String> userInput = clientInfo.getUserInput();
 
         try {
             socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
@@ -143,18 +143,7 @@ public class ClientJoiner {
 
         });
 
-        Thread inputThread = new Thread(() -> {
-            while(true){
-                userInput.set(scanner.nextLine());
-            }
-        });
-
-        //One thread to send message to the server
-
         Thread messageSender = new Thread(() -> {
-
-            inputThread.setDaemon(true);
-            inputThread.start();
 
             while(!terminatedFlag.get()) {
 
