@@ -71,7 +71,7 @@ public class GameMessenger {
      * not for a simple disconnection.
      */
 
-    public void clearAllResources(){
+    private void clearAllResources(){
 
         try{
 
@@ -329,6 +329,7 @@ public class GameMessenger {
             dataContainer.setCommand("endGame");
             sendPlayerData(player);
         }
+        clearAllResources();
 
         // RMI
 
