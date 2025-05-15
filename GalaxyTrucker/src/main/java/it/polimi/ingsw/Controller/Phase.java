@@ -8,15 +8,22 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
  * Abstract Phase class defining the contract for the specific phase classes.
- * Defines methods used by all phases.
+ * Defines attributes and methods used by all phases.
  *
  * @author Boti
  */
 public abstract class Phase {
-    // necessary field for all subclasses
-    private final GameInformation gameInformation;
-    private final GameMessenger gameMessenger;
+    // common attributes for all phases
+    // protected so that subclasses can inherit and access them
+    protected final GameInformation gameInformation;
+    protected final GameMessenger gameMessenger;
 
+    /**
+     * Subclasses must use Phase constructor by calling:
+     * super(gameInformation)
+     * Superclass attributes are inherited,
+     * but must be set to protected so that subclasses can access them.
+     */
     public Phase(GameInformation gameInformation) {
         this.gameInformation = gameInformation;
         this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());

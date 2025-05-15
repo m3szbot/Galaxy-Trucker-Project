@@ -1,8 +1,6 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
-import it.polimi.ingsw.Controller.Game.Startable;
+import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -15,22 +13,23 @@ import java.util.concurrent.TimeUnit;
 /**
  * players correct their shipboards after assembly
  */
-public class CorrectionPhase implements Startable {
-    final GameMessenger gameMessenger;
+public class CorrectionPhase extends Phase {
+    // gameInformation, gameMessenger attributes inherited from Phase
 
+    /**
+     * Calls Phase constructor, sets inherited attributes gameInformation, gameMessenger.
+     */
     public CorrectionPhase(GameInformation gameInformation) {
-        this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
+        super(gameInformation);
     }
 
     /**
      * Start correction phase.
      * Launches player threads and waits for their termination (player shipboard corrected),
      * or times out (player shipboard incorrect, player gets removed).
-     *
-     * @param gameInformation
      */
-    public void start(GameInformation gameInformation) {
-        gameInformation.setGamePhaseServerClient(GamePhase.Correction);
+    public void start() {
+        setGamePhaseToAll(GamePhase.Correction);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads
         for (Player player : gameInformation.getPlayerList()) {

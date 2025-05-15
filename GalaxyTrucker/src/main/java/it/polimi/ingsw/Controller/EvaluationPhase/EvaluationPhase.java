@@ -1,8 +1,6 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
-import it.polimi.ingsw.Controller.Game.Startable;
+import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
@@ -16,20 +14,21 @@ import java.util.Map;
 /**
  * calculates final scores of players after flight phase ends
  */
-public class EvaluationPhase implements Startable {
-    final GameMessenger gameMessenger;
+public class EvaluationPhase extends Phase {
+    // gameInformation, gameMessenger attributes inherited from Phase
 
+    /**
+     * Calls Phase constructor, sets inherited attributes gameInformation, gameMessenger.
+     */
     public EvaluationPhase(GameInformation gameInformation) {
-        this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
+        super(gameInformation);
     }
 
     /**
      * Start evaluationPhase. Calculates player scores and prints scoreboard for all players.
-     *
-     * @param gameInformation
      */
-    public void start(GameInformation gameInformation) {
-        gameInformation.setGamePhaseServerClient(GamePhase.Evaluation);
+    public void start() {
+        setGamePhaseToAll(GamePhase.Evaluation);
         String message;
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
