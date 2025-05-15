@@ -318,7 +318,8 @@ public class GameMessenger {
      */
     public void disconnectPlayer(GameInformation gameInformation, Player player) {
         clearPlayerResources(player);
-        gameInformation.disconnectPlayer(player);
+        gameInformation.getPlayerList().remove(player);
+        gameInformation.getDisconnectedPlayerList().add(player);
     }
 
     /**
@@ -328,7 +329,7 @@ public class GameMessenger {
      * @param player
      */
 
-    public void clearPlayerResources(Player player) {
+    private void clearPlayerResources(Player player) {
 
         try {
             playerObjectOutputStreamMap.get(player).close();
@@ -348,7 +349,8 @@ public class GameMessenger {
      * Reconnects player to the game.
      */
     public void reconnectPlayer(GameInformation gameInformation, Player player) {
-        gameInformation.reconnectPlayer(player);
+        gameInformation.getDisconnectedPlayerList().remove(player);
+        gameInformation.getPlayerList().add(player);
     }
 
 }
