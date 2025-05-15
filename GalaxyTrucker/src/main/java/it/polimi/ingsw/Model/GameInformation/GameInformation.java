@@ -348,22 +348,4 @@ public class GameInformation {
     public void removePlayers(Player player) {
         connectedPlayerList.remove(player);
     }
-
-    /**
-     * Moves player from connectedList to disconnectedList
-     */
-    public void disconnectPlayer(Player player) {
-        connectedPlayerList.remove(player);
-        disconnectedPlayerList.add(player);
-    }
-
-    /**
-     * Moves player from disconnectedList to connectedList
-     */
-    public void reconnectPlayer(Player player) {
-        disconnectedPlayerList.remove(player);
-        connectedPlayerList.add(player);
-    }
-
-
 }
