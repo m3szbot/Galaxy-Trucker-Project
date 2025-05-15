@@ -50,7 +50,7 @@ public class CorrectionThread implements Runnable {
                 coordinates = gameMessenger.getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
                 // handle disconnected player
-                gameInformation.disconnectPlayer(player);
+                gameMessenger.disconnectPlayer(gameInformation, player);
                 return;
             }
 
