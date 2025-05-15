@@ -7,7 +7,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,33 +30,38 @@ class FlightBoardTest {
 
     @BeforeEach
     void setUp() {
+        // set up gameInformation
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NORMALGAME);
-
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
+        // set up players
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
+        gameInformation.addPlayers(playerA);
+        gameInformation.addPlayers(playerB);
+        gameInformation.addPlayers(playerC);
+        gameInformation.addPlayers(playerD);
 
-        // set up gameInformation
-        GameInformation gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
-
+        // set up flightboard
         flightBoard = new FlightBoard(GameType.NORMALGAME, gameInformation.getCardsList());
     }
 
     @Test
     void TestSetUp() {
         assertEquals(12, flightBoard.getCardsNumber());
+        assertEquals(4, gameInformation.getPlayerList().size());
     }
 
     @Test
     void addOnePlayer() {
+        assertFalse(flightBoard.isInGame(playerA));
         int tile = flightBoard.getStartingTiles().getLast();
         flightBoard.addPlayer(playerA, tile);
         assertEquals(tile, flightBoard.getPlayerTile(playerA));
         assertEquals(1, flightBoard.getPlayerOrder(playerA));
         assertEquals(1, flightBoard.getPlayerOrderList().size());
+        assertTrue(flightBoard.isInGame(playerA));
     }
 
     @Test
@@ -202,24 +207,62 @@ class FlightBoardTest {
         assertEquals(11, flightBoard.getCardsNumber());
     }
 
-    // TODO
+    /**
+     * Add 4 players from different threads concurrently.
+     * All try to add to the first tile, which causes conflicts of occupation.
+     */
     @Test
     void concurrentAddPlayer() {
-        // add all players from different threads
-        // the starting tiles should cause conflicts of occupation
+        assertEquals(4, gameInformation.getPlayerList().size());
+        // add players
+        Map<Player, Thread> threadMap = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
             Thread thread = new Thread(() -> {
-                while (true) {
+                System.out.println("Launching new thread");
+                while (!flightBoard.isInGame(player)) {
                     try {
+                        System.out.printf("Trying to add player to %d\n", flightBoard.getStartingTiles().getFirst());
                         flightBoard.addPlayer(player, flightBoard.getStartingTiles().getFirst());
-                        break;
                     } catch (IndexOutOfBoundsException e) {
+                        System.out.printf("Failed to add player to %d\n", flightBoard.getStartingTiles().getFirst());
                     }
                 }
-
             });
+            thread.start();
+            threadMap.put(player, thread);
         }
+        // wait for threads to finish
+        for (Thread thread : threadMap.values()) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        // check results
         assertEquals(4, flightBoard.getPlayerOrderList().size());
+        // create set of positions and check it's size - each tile should be different
+        Set<Integer> playerPositions = new HashSet<>();
+        for (Player player : flightBoard.getPlayerOrderList()) {
+            playerPositions.add(flightBoard.getPlayerTile(player));
+        }
+        assertEquals(4, playerPositions.size());
     }
 
+    @Test
+    void addPlayersCheckOrder() {
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
+        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getFirst());
+        flightBoard.addPlayer(playerC, flightBoard.getStartingTiles().getFirst());
+        flightBoard.addPlayer(playerD, flightBoard.getStartingTiles().getFirst());
+        // playerOrderList sorted in descending order automatically after adding a player
+        assertEquals(playerA, flightBoard.getPlayerOrderList().get(3));
+        assertEquals(4, flightBoard.getPlayerOrder(playerA));
+        assertEquals(playerB, flightBoard.getPlayerOrderList().get(2));
+        assertEquals(3, flightBoard.getPlayerOrder(playerB));
+        assertEquals(playerC, flightBoard.getPlayerOrderList().get(1));
+        assertEquals(2, flightBoard.getPlayerOrder(playerC));
+        assertEquals(playerD, flightBoard.getPlayerOrderList().get(0));
+        assertEquals(1, flightBoard.getPlayerOrder(playerD));
+    }
 }
