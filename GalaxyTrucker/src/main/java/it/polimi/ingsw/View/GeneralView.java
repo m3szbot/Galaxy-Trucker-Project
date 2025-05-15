@@ -44,39 +44,6 @@ public abstract class GeneralView {
                 componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
     }
 
-    private String[] getComponentLines(Component component){
-        return new String[] {
-                String.format("+---%d---+", componentSideTranslator(component.getFront())),
-                "|       |",
-                String.format("%d  %s  %d",
-                        componentSideTranslator(component.getLeft()),
-                        component.getComponentName().substring(0, 3),
-                        componentSideTranslator(component.getRight())),
-                "|       |",
-                String.format("+---%d---+", componentSideTranslator(component.getBack()))
-        };
-    }
-
-    private String[] getInvalidCell() {
-        return new String[] {
-                "+---.---+",
-                "|       |",
-                "X  XXX  X",
-                "|       |",
-                "+---.---+"
-        };
-    }
-
-    private String[] getEmptyCell() {
-        return new String[] {
-                "+---.---+",
-                "|       |",
-                ".  ...  .",
-                "|       |",
-                "+---.---+"
-        };
-    }
-
     /**
      * Returns a number identifying the given side's type
      *
@@ -115,12 +82,12 @@ public abstract class GeneralView {
         int rows = shipBoard.getMatrixRows();
         int cols = shipBoard.getMatrixCols();
 
-        for (int i = 0; i < rows; i++) {
+        for (int i = 4; i < rows - 3; i++) {
 
             //Printing every line singularly, this way we can obtain a table form
             for (int line = 0; line < 5; line++) {
 
-                for (int j = 0; j < cols; j++) {
+                for (int j = 3; j < cols - 2; j++) {
 
                     String[] cellLines;
 
@@ -141,6 +108,39 @@ public abstract class GeneralView {
             System.out.println();
         }
 
+    }
+
+    private String[] getInvalidCell() {
+        return new String[]{
+                "         ",
+                "         ",
+                "         ",
+                "         ",
+                "         "
+        };
+    }
+
+    private String[] getEmptyCell() {
+        return new String[]{
+                "+---.---+",
+                "|       |",
+                ".  ...  .",
+                "|       |",
+                "+---.---+"
+        };
+    }
+
+    private String[] getComponentLines(Component component) {
+        return new String[]{
+                String.format("+---%d---+", componentSideTranslator(component.getFront())),
+                "|       |",
+                String.format("%d  %s  %d",
+                        componentSideTranslator(component.getLeft()),
+                        component.getComponentName().substring(0, 3),
+                        componentSideTranslator(component.getRight())),
+                "|       |",
+                String.format("+---%d---+", componentSideTranslator(component.getBack()))
+        };
     }
 
     public void printCard(DataContainer dataContainer) {

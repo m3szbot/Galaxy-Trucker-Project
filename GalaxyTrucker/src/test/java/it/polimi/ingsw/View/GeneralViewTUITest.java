@@ -3,6 +3,7 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,4 +40,12 @@ class GeneralViewTUITest {
         dataContainer.setMessage("Hello world!\n");
         generalViewTUI.printMessage(dataContainer);
     }
+
+    @Test
+    public void printShipboard() {
+        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
+        dataContainer.setShipBoard(shipBoard);
+        generalViewTUI.printShipboard(dataContainer);
+    }
+
 }
