@@ -71,7 +71,7 @@ public class AssemblyThread implements Runnable {
                 //Scanner scanner = new Scanner(System.in);
                 while (running.get() || end.get() != gameInformation.getPlayerList().size()) {
                     //String input = scanner.nextLine();
-                    //System.out.println("prova");
+                    System.out.println("prova");
                     try {
                         String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
                         inputQueue.offer(input);
@@ -98,7 +98,7 @@ public class AssemblyThread implements Runnable {
 
             // Main non-blocking game loop
             while (running.get() || end.get() < gameInformation.getPlayerList().size()) {
-                //System.out.println("prova2");
+                System.out.println("prova2");
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignored) {
