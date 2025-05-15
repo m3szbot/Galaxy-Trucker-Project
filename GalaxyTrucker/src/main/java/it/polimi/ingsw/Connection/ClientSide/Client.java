@@ -21,9 +21,12 @@ public class Client {
         ClientJoiner joiner = new ClientJoiner();
         ClientGameHandler gamehandler = new ClientGameHandler();
         ClientInfo clientInfo = new ClientInfo();
+        InputDaemon inputDaemon = new InputDaemon(clientInfo.getUserInput());
 
         welcomer.start(clientInfo);
 
+        inputDaemon.setDaemon(true);
+        inputDaemon.start();
 
         if(joiner.start(clientInfo) == 0){
             gamehandler.start(clientInfo);
@@ -36,6 +39,7 @@ public class Client {
             clientInfo.getOutputStream().close();
             clientInfo.getInputStream().close();
             clientInfo.getServerSocket().close();
+            System.out.println("Resources closed successfully");
 
         } catch (IOException e) {
            System.err.println("Critical error while closing server socket and streams");

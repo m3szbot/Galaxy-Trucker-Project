@@ -90,7 +90,7 @@ public class ClientGameHandler {
         AtomicBoolean running = new AtomicBoolean(true);
 
         Thread messageReceiver = new Thread(new GameMessageReceiver(views, in, running));
-        Thread messageSender = new Thread(new GameMessageSender(out, running));
+        Thread messageSender = new Thread(new GameMessageSender(out, running, clientInfo.getUserInput()));
 
         messageReceiver.start();
         messageSender.start();
