@@ -44,6 +44,39 @@ public abstract class GeneralView {
                 componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
     }
 
+    private String[] getComponentLines(Component component){
+        return new String[] {
+                String.format("+---%d---+", componentSideTranslator(component.getFront())),
+                "|       |",
+                String.format("%d  %s  %d",
+                        componentSideTranslator(component.getLeft()),
+                        component.getComponentName().substring(0, 3),
+                        componentSideTranslator(component.getRight())),
+                "|       |",
+                String.format("+---%d---+", componentSideTranslator(component.getBack()))
+        };
+    }
+
+    private String[] getInvalidCell() {
+        return new String[] {
+                "+---.---+",
+                "|       |",
+                "X  XXX  X",
+                "|       |",
+                "+---.---+"
+        };
+    }
+
+    private String[] getEmptyCell() {
+        return new String[] {
+                "+---.---+",
+                "|       |",
+                ".  ...  .",
+                "|       |",
+                "+---.---+"
+        };
+    }
+
     /**
      * Returns a number identifying the given side's type
      *
@@ -79,44 +112,34 @@ public abstract class GeneralView {
         Component[][] shipStructure = shipBoard.getStructureMatrix();
         boolean[][] validPositions = shipBoard.getMatr();
 
-        for (int i = 0; i < shipBoard.getMatrixRows(); i++) {
+        int rows = shipBoard.getMatrixRows();
+        int cols = shipBoard.getMatrixCols();
 
-            for (int j = 0; j < shipBoard.getMatrixCols(); j++) {
+        for (int i = 0; i < rows; i++) {
 
-                if (!validPositions[i][j]) {
-                    //position is invalid
-                    System.out.printf("""
-                            +---.---+
-                            |       |
-                            X  XXX    X
-                            |       |
-                            +---.---+
-                            """);
+            //Printing every line singularly, this way we can obtain a table form
+            for (int line = 0; line < 5; line++) {
 
-                } else {
+                for (int j = 0; j < cols; j++) {
 
-                    if (shipStructure[i][j] == null) {
-                        //position is valid but no component is found
-                        System.out.printf("""
-                                +---.---+
-                                |       |
-                                .  ...    .
-                                |       |
-                                +---.---+
-                                """);
+                    String[] cellLines;
 
+                    if (!validPositions[i][j]) {
+                        cellLines = getInvalidCell();
+                    } else if (shipStructure[i][j] == null) {
+                        cellLines = getEmptyCell();
                     } else {
-                        //position is valid and component is found
-                        printComponent(shipStructure[i][j]);
+                        cellLines = getComponentLines(shipStructure[i][j]);
                     }
+
+                    System.out.print(cellLines[line] + " ");
                 }
 
-
+                System.out.println();
             }
 
-            System.out.printf("\n");
+            System.out.println();
         }
-
 
     }
 

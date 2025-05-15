@@ -64,7 +64,7 @@ public class GameMessenger {
         } else {
             try {
                 return playerObjectInputStreamMap.get(player).readUTF();
-            } catch (IOException e) {
+            } catch (IOException e){
 
                 System.err.println("Error while reading from client");
                 e.printStackTrace();
