@@ -106,11 +106,8 @@ public abstract class GeneralView {
 
                     System.out.print(cellLines[line] + " ");
                 }
-
                 System.out.println();
             }
-
-            System.out.println();
         }
 
     }
