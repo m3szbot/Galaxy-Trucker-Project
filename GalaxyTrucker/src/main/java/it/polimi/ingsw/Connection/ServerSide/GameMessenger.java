@@ -126,17 +126,6 @@ public class GameMessenger {
                 System.err.println("Error while reading from client");
                 e.printStackTrace();
 
-                //closing player socket
-
-                try {
-                    playerSocketMap.get(player).close();
-                } catch (IOException ex) {
-                    System.err.println("Error while closing disconnected player socket");
-                }
-
-                playerSocketMap.remove(player);
-                playerDataContainerMap.remove(player);
-
                 throw new PlayerDisconnectedException(player);
 
             }
