@@ -24,8 +24,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Giacomo
  */
 public class AssemblyPhase extends Phase {
-
-    private GameState currentState;
     private AtomicBoolean running = new AtomicBoolean(true);
     private AtomicInteger end = new AtomicInteger(0);
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
@@ -69,10 +67,10 @@ public class AssemblyPhase extends Phase {
 
         setGamePhaseToAll(GamePhase.Assembly);
 
-        /*message = "Prova assurbanipal";
-        for(Player player: gameInformation.getPlayerList()){
-            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);;
-        }*/
+       message = "Prova assurbanipal";
+        for(Player player: gameInformation.getPlayerList()) {
+            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
+        }
 
 
 
