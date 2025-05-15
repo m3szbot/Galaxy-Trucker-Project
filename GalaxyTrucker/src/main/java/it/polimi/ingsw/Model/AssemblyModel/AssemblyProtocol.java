@@ -21,6 +21,7 @@ public class AssemblyProtocol {
     public Object lockCoveredList = new Object();
     public Object lockDecksList = new Object();
     public Object lockFlightBoard = new Object();
+
     private HourGlass hourGlass;
     // cards
     private Deck blockedDeck;
@@ -28,7 +29,6 @@ public class AssemblyProtocol {
     // components - synchronized lists! - concurrent access by multiple players
     private List<Component> coveredList;
     private List<Component> uncoveredList;
-
     // ConcurrentMap does NOT allow null values!
     // Components currently in hand (viewMap).
     // Does not contain player entry if no component in hand (no nulls).
@@ -39,7 +39,7 @@ public class AssemblyProtocol {
     private GameType gameType;
     private FlightBoard flightBoard;
     private int gameCode;
-
+    private Random randomizer;
 
     /**
      * Initializes the assembly protocol with the game setup.
@@ -69,6 +69,7 @@ public class AssemblyProtocol {
         gameType = gameInformation.getGameType();
         flightBoard = gameInformation.getFlightBoard();
         gameCode = gameInformation.getGameCode();
+        randomizer = new Random();
     }
 
     /**
@@ -143,16 +144,17 @@ public class AssemblyProtocol {
     }
 
     /**
-     * Draws a new component for the player and updates the current view.
+     * Draws a new random component for the player and updates the current view.
      * Moves the previous component in hand (if any) to the uncovered list.
      *
      * @param player the player drawing a component
      */
     public void newComponent(Player player) {
         addComponentInHandToUncoveredList(player);
-        // add new card to player's hand
+        // add new random component to player's hand
         if (!coveredList.isEmpty()) {
-            inHandMap.put(player, coveredList.removeFirst());
+            int randomIndex = randomizer.nextInt(uncoveredList.size());
+            inHandMap.put(player, coveredList.remove(randomIndex));
         } else {
             throw new IndexOutOfBoundsException("Covered list empty");
         }
