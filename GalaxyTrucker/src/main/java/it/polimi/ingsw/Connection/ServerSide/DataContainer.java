@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 
 public class DataContainer implements Serializable {
+
     private String command;
     private GamePhase gamePhase;
     private String message;

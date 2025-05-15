@@ -68,9 +68,7 @@ public class AssemblyPhase extends Phase {
         setGamePhaseToAll(GamePhase.Assembly);
 
        message = "Prova assurbanipal";
-        for(Player player: gameInformation.getPlayerList()) {
-            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
-        }
+       gameMessenger.sendMessageToALl(message);
 
 
 

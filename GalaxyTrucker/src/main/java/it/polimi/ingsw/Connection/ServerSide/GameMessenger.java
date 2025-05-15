@@ -209,6 +209,7 @@ public class GameMessenger {
 
                 playerObjectOutputStreamMap.get(player).writeObject(getPlayerContainer(player));
                 playerObjectOutputStreamMap.get(player).flush();
+                playerObjectOutputStreamMap.get(player).reset();
 
             } catch (IOException e) {
                 System.err.println();

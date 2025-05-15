@@ -49,7 +49,10 @@ public class GameMessageReceiver implements Runnable {
 
             try {
 
+                System.out.println("Receiving object");
                 container = (DataContainer) in.readObject();
+                System.out.println("Object received");
+                System.out.println("Command of data container: " + container.getCommand());
                 executeCommand(container.getCommand(), container);
 
 
@@ -101,28 +104,23 @@ public class GameMessageReceiver implements Runnable {
             running.set(false);
         }
 
-
         try {
 
             Method method = currentView.getClass().getMethod(methodName, DataContainer.class);
-            System.out.println("Trying to invoke method: " + methodName + " on " + currentView.getClass().getName());
             method.invoke(currentView, container);
 
 
         } catch (NoSuchMethodException e1) {
             running.set(false);
-            System.err.println("Trying to invoke method: " + methodName + " on " + currentView.getClass().getName());
             System.err.println("Critical error while accessing view method: method not found ");
             System.out.println("You have been disconnected");
         } catch (IllegalAccessException e2){
             running.set(false);
-            System.err.println("Trying to invoke method: " + methodName + " on " + currentView.getClass().getName());
             System.err.println("Critical error while accessing view method: method does not have access to the definition of the specified class");
             System.out.println("You have been disconnected");
          }
         catch (InvocationTargetException e3){
             running.set(false);
-            System.err.println("Trying to invoke method: " + methodName + " on " + currentView.getClass().getName());
             System.err.println("Critical error while accessing view method: the method invoked did not behave correctly");
             System.out.println("You have been disconnected");
         }
