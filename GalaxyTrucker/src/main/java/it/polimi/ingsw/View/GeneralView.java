@@ -69,6 +69,8 @@ public abstract class GeneralView {
      */
 
     public void printShipboard(DataContainer dataContainer) {
+        int indexRow = 3;
+        int indexColumn = 2;
 
         ShipBoard shipBoard = dataContainer.getShipBoard();
 
@@ -82,16 +84,19 @@ public abstract class GeneralView {
         int rows = shipBoard.getMatrixRows();
         int cols = shipBoard.getMatrixCols();
 
-        for (int i = 4; i < rows - 3; i++) {
+        for (int i = indexRow; i < rows - 3; i++) {
 
             //Printing every line singularly, this way we can obtain a table form
             for (int line = 0; line < 5; line++) {
 
-                for (int j = 3; j < cols - 2; j++) {
+                for (int j = indexColumn; j < cols - 2; j++) {
 
                     String[] cellLines;
-
-                    if (!validPositions[i][j]) {
+                    if (i == 3 && j != 2) {
+                        cellLines = getIndexCell(j + 1);
+                    } else if (j == 2 && i != 3) {
+                        cellLines = getIndexCell(i + 1);
+                    } else if (!validPositions[i][j]) {
                         cellLines = getInvalidCell();
                     } else if (shipStructure[i][j] == null) {
                         cellLines = getEmptyCell();
@@ -108,6 +113,16 @@ public abstract class GeneralView {
             System.out.println();
         }
 
+    }
+
+    private String[] getIndexCell(int index) {
+        return new String[]{
+                "         ",
+                "         ",
+                String.format("    %d    ", index),
+                "         ",
+                "         ",
+        };
     }
 
     private String[] getInvalidCell() {
