@@ -20,7 +20,6 @@ public class GameMessageReceiver implements Runnable {
 
     private GeneralView[] views;
     private ObjectInputStream in;
-    private GamePhase currentPhase;
     private AtomicBoolean running;
     private int viewIndex;
 

@@ -274,7 +274,6 @@ public class GameMessenger {
         clearPlayerResources(player);
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
-        sendMessageToALl(String.format("%s has been disconnected", player));
     }
 
     /**

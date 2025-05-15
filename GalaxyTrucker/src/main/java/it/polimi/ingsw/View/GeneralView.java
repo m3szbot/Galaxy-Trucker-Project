@@ -113,6 +113,8 @@ public abstract class GeneralView {
 
 
             }
+
+            System.out.printf("\n");
         }
 
 
