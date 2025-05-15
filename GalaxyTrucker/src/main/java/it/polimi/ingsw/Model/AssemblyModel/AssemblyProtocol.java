@@ -153,7 +153,7 @@ public class AssemblyProtocol {
         addComponentInHandToUncoveredList(player);
         // add new random component to player's hand
         if (!coveredList.isEmpty()) {
-            int randomIndex = randomizer.nextInt(uncoveredList.size());
+            int randomIndex = randomizer.nextInt(coveredList.size());
             inHandMap.put(player, coveredList.remove(randomIndex));
         } else {
             throw new IndexOutOfBoundsException("Covered list empty");
