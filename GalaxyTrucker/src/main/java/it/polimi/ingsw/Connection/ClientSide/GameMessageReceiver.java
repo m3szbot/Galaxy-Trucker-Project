@@ -44,39 +44,26 @@ public class GameMessageReceiver implements Runnable {
     public void run() {
 
         DataContainer container;
-        int result;
 
         while (running.get()) {
 
             try {
 
                 container = (DataContainer) in.readObject();
-                result = executeCommand(container.getCommand(), container);
-
-                if (result == -1) {
-
-                    running.set(false);
-                    System.out.println("The game has ended, press any key to quit");
-
-                }
-                else if(result == 0) {
-
-                    if (callView(container) == -1) {
-                        running.set(false);
-                        System.out.println("You have been disconnected");
-                    }
-                }
+                executeCommand(container.getCommand(), container);
 
 
             } catch (IOException e) {
 
                 running.set(false);
-                System.err.println("Critical error while receiving messages, you have been disconnected");
+                System.err.println("Critical error while receiving messages");
+                System.out.println("You have been disconnected");
 
             } catch (ClassNotFoundException e) {
 
                 running.set(false);
-                System.err.println("DataContainer class not recognized, you have been disconnected");
+                System.err.println("DataContainer class not recognized");
+                System.out.println("You have been disconnected");
 
             }
 
@@ -84,27 +71,34 @@ public class GameMessageReceiver implements Runnable {
 
     }
 
-    private int executeCommand(String command, DataContainer dataContainer) {
+    private void executeCommand(String command, DataContainer dataContainer) {
 
         if (command.equals("setGamePhase")) {
+
             setGamePhase(dataContainer.getGamePhase());
-            return -2;
+
         } else if (command.equals("endGame")) {
-            return -1;
+
+            running.set(false);
+            System.out.println("The game has ended");
+
+        }else{
+
+            callView(dataContainer);
+
         }
 
-        return 0;
 
     }
 
-    private int callView(DataContainer container) {
+    private void callView(DataContainer container) {
 
         GeneralView currentView = viewMap.get(currentPhase);
         String methodName = container.getCommand();
 
         if (currentView == null) {
             System.err.println("Critical error: view not found");
-            return -1;
+            running.set(false);
         }
 
 
@@ -114,18 +108,20 @@ public class GameMessageReceiver implements Runnable {
 
             method.invoke(currentView, container);
 
-            return 0;
 
         } catch (NoSuchMethodException e1) {
+            running.set(false);
             System.err.println("Critical error while accessing view method: method not found ");
-            return -1;
+            System.out.println("You have been disconnected");
         } catch (IllegalAccessException e2){
+            running.set(false);
            System.err.println("Critical error while accessing view method: method does not have access to the definition of the specified class");
-            return -1;
+           System.out.println("You have been disconnected");
          }
         catch (InvocationTargetException e3){
+            running.set(false);
             System.err.println("Critical error while accessing view method: the method invoked did not behave correctly");
-            return -1;
+            System.out.println("You have been disconnected");
         }
     }
 
