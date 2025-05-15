@@ -4,7 +4,6 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
-import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
  * Abstract Phase class defining the contract for the specific phase classes.
@@ -43,22 +42,4 @@ public abstract class Phase {
         gameMessenger.setGamePhaseToAll(gamePhase);
         gameMessenger.sendMessageToALl(String.format("%s phase is starting...\n", gamePhase));
     }
-
-    /**
-     * Disconnect player from the server.
-     */
-    public void disconnectPlayer(Player player) {
-        gameInformation.getPlayerList().remove(player);
-        gameInformation.getDisconnectedPlayerList().add(player);
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).clearPlayerResources(player);
-    }
-
-    /**
-     * Reconnect player to the server.
-     */
-    public void reconnectPlayer(Player player) {
-        gameInformation.getDisconnectedPlayerList().remove(player);
-        gameInformation.getPlayerList().add(player);
-    }
-
 }

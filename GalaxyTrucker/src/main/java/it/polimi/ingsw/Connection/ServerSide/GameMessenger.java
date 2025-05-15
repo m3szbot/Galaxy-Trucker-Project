@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -23,7 +24,7 @@ public class GameMessenger {
     private List<Player> playerRMIList = new ArrayList<>();
     private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
 
-    public void addPlayerSocket(Player player, Socket socket, ObjectOutputStream outputStream, ObjectInputStream inputStream){
+    public void addPlayerSocket(Player player, Socket socket, ObjectOutputStream outputStream, ObjectInputStream inputStream) {
 
         this.playerSocketMap.put(player, socket);
         this.playerObjectInputStreamMap.put(player, inputStream);
@@ -44,68 +45,10 @@ public class GameMessenger {
 
     }
 
-    /**
-     * Clears the player resources. Used at the end of the game or when a player is
-     * disconnected
-     * @param player
-     */
-
-    public void clearPlayerResources(Player player){
-
-        try{
-            playerObjectOutputStreamMap.get(player).close();
-            playerObjectInputStreamMap.get(player).close();
-            playerSocketMap.get(player).close();
-            playerObjectOutputStreamMap.remove(player);
-            playerObjectInputStreamMap.remove(player);
-            playerSocketMap.remove(player);
-
-        } catch (IOException e) {
-           System.err.println("Error while closing " + player.getNickName() + " resources");
-        }
-
-    }
-
-    /**
-     * Clears all players resources. Need to be used only at the end of the game, i.e,
-     * not for a simple disconnection.
-     */
-
-    private void clearAllResources(){
-
-        try{
-
-            for(ObjectOutputStream outputStream: playerObjectOutputStreamMap.values()){
-                outputStream.close();
-            }
-
-            for(ObjectInputStream inputStream: playerObjectInputStreamMap.values()){
-                inputStream.close();
-            }
-
-            for(Socket socket: playerSocketMap.values()){
-                socket.close();
-            }
-
-        }
-        catch (IOException e){
-           System.err.println("Error while closing all players resources");
-        }
-
-    }
-
     public String getPlayerString(Player player) throws PlayerDisconnectedException {
 
         return getPlayerInput(player);
 
-    }
-
-    public Collection<ObjectOutputStream> getPlayersOutputStreams(){
-        return playerObjectOutputStreamMap.values();
-    }
-
-    public Collection<ObjectInputStream> getPlayerInputStreams(){
-        return playerObjectInputStreamMap.values();
     }
 
     /**
@@ -134,6 +77,14 @@ public class GameMessenger {
 
         return null;
 
+    }
+
+    public Collection<ObjectOutputStream> getPlayersOutputStreams() {
+        return playerObjectOutputStreamMap.values();
+    }
+
+    public Collection<ObjectInputStream> getPlayerInputStreams() {
+        return playerObjectInputStreamMap.values();
     }
 
     public int getPlayerInt(Player player) throws PlayerDisconnectedException {
@@ -322,6 +273,71 @@ public class GameMessenger {
 
         // RMI
 
+    }
+
+    /**
+     * Clears all players resources. Need to be used only at the end of the game, i.e,
+     * not for a simple disconnection.
+     */
+
+    private void clearAllResources() {
+
+        try {
+
+            for (ObjectOutputStream outputStream : playerObjectOutputStreamMap.values()) {
+                outputStream.close();
+            }
+
+            for (ObjectInputStream inputStream : playerObjectInputStreamMap.values()) {
+                inputStream.close();
+            }
+
+            for (Socket socket : playerSocketMap.values()) {
+                socket.close();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error while closing all players resources");
+        }
+
+    }
+
+    /**
+     * Disconnects the player from the game.
+     */
+    public void disconnectPlayer(GameInformation gameInformation, Player player) {
+        clearPlayerResources(player);
+        gameInformation.disconnectPlayer(player);
+    }
+
+    /**
+     * Clears the player resources. Used at the end of the game or when a player is
+     * disconnected
+     *
+     * @param player
+     */
+
+    public void clearPlayerResources(Player player) {
+
+        try {
+            playerObjectOutputStreamMap.get(player).close();
+            playerObjectInputStreamMap.get(player).close();
+            playerSocketMap.get(player).close();
+            playerObjectOutputStreamMap.remove(player);
+            playerObjectInputStreamMap.remove(player);
+            playerSocketMap.remove(player);
+
+        } catch (IOException e) {
+            System.err.println("Error while closing " + player.getNickName() + " resources");
+        }
+
+    }
+
+    /**
+     * Reconnects player to the game.
+     */
+    public void reconnectPlayer(GameInformation gameInformation, Player player) {
+        gameInformation.reconnectPlayer(player);
     }
 
 }
