@@ -33,6 +33,7 @@ public class FlightPhase extends Phase {
         }
 
         System.out.println("Flight phase ended");
+
     }
 
 }
