@@ -41,14 +41,14 @@ public class AssemblyState implements GameState {
     public void handleInput(String input, AssemblyThread assemblyPhase) {
 
         if (actionTaken) return; // Ignore input after an action is taken
-        /*DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
+        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setShipBoard(player.getShipBoard());
         dataContainer.setCommand("printShipboard");
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
         dataContainer.setCommand("printComponent");
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);*/
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)";
         //view.sendMessageToPlayer(message, player);
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
