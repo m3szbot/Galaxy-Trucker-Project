@@ -1,62 +1,35 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
-import it.polimi.ingsw.Controller.Game.Startable;
+import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
-import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class FlightPhase implements Startable {
-    Map<Player, FlightView> playerViewMap;
+public class FlightPhase extends Phase {
 
     public FlightPhase(GameInformation gameInformation) {
-        playerViewMap = new HashMap<>();
-        // create player-specific flight views
-        for (Player player : gameInformation.getPlayerList()) {
-            playerViewMap.put(player, new FlightViewTUI());
-        }
-
+        super(gameInformation);
     }
 
-    public void start(GameInformation gameInformation) {
-        gameInformation.setGamePhaseServerClient(GamePhase.Flight);
+    public void start() {
+        setGamePhaseToAll(GamePhase.Flight);
+
         DataContainer dataContainer;
-
-        for (Player player : gameInformation.getPlayerList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setCommand("setGamePhase");
-            dataContainer.setGamePhase(GamePhase.Flight);
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-        }
-
         FlightBoard flightBoard = gameInformation.getFlightBoard();
-        int gameCode = gameInformation.getGameCode();
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-            dataContainer.setMessage("FlightPhase is starting ...\n");
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
-        }
-
+        // send flightBoard to players
         for (Player player : flightBoard.getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
+            dataContainer = gameMessenger.getPlayerContainer(player);
             dataContainer.setFlightBoard(flightBoard);
             dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+            gameMessenger.sendPlayerData(player);
         }
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameCode).getPlayerContainer(player);
-            dataContainer.setCommand("advancePhase");
-            ClientMessenger.getGameMessenger(gameCode).sendPlayerData(player);
+        // resolve cards
+        while (flightBoard.getCardsNumber() > 0) {
+            flightBoard.getNewCard().resolve(gameInformation);
         }
 
         System.out.println("Flight phase ended");
