@@ -6,22 +6,21 @@ package it.polimi.ingsw.Controller.InitializationPhase;
  * @author Ludo
  */
 
-import it.polimi.ingsw.Controller.Game.Startable;
+import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GamePhase;
 
-public class InitializationPhase implements Startable {
-
-    public InitializationPhase() {
+public class InitializationPhase extends Phase {
+    public InitializationPhase(GameInformation gameInformation) {
+        super(gameInformation);
     }
 
     /**
      * start is to be called in the main in order to initialize the objects of the game
-     *
-     * @param gameInformation
      */
     @Override
-    public void start(GameInformation gameInformation) {
-        System.out.println("Initialization phase started");
+    public void start() {
+        setGamePhaseToAll(GamePhase.Initialization);
         gameInformation.setUpGameInformation(gameInformation.getGameType(), gameInformation.getMaxNumberOfPlayers());
         System.out.println("Initialization phase ended");
     }
