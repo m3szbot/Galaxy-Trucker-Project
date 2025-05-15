@@ -19,7 +19,7 @@ public class FlightPhase extends Phase {
         DataContainer dataContainer;
         FlightBoard flightBoard = gameInformation.getFlightBoard();
 
-        // send flightBoard to players
+        // send initial flightBoard to players
         for (Player player : flightBoard.getPlayerOrderList()) {
             dataContainer = gameMessenger.getPlayerContainer(player);
             dataContainer.setFlightBoard(flightBoard);
