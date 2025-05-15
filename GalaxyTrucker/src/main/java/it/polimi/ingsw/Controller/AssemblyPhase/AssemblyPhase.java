@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Giacomo
  */
 public class AssemblyPhase extends Phase {
+
     private GameState currentState;
     private AtomicBoolean running = new AtomicBoolean(true);
     private AtomicInteger end = new AtomicInteger(0);
