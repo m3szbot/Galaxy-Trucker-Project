@@ -162,7 +162,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                 }
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }

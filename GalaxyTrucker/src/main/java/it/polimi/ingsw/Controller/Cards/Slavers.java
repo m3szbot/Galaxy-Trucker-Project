@@ -84,7 +84,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
                     }
                 } catch (PlayerDisconnectedException e) {
-                    gameInformation.getGamePhase().disconnectPlayer(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
