@@ -31,7 +31,7 @@ class FlightBoardTest {
     @BeforeEach
     void setUp() {
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
+        gameInformation.setGameType(GameType.NORMALGAME);
 
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);
@@ -40,9 +40,9 @@ class FlightBoardTest {
 
         // set up gameInformation
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 
-        flightBoard = new FlightBoard(GameType.NormalGame, gameInformation.getCardsList());
+        flightBoard = new FlightBoard(GameType.NORMALGAME, gameInformation.getCardsList());
     }
 
     @Test

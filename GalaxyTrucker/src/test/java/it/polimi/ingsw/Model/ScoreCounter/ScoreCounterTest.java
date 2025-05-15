@@ -36,7 +36,7 @@ class ScoreCounterTest {
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
 
-        singleSides = new SideType[]{SideType.SINGLE, SideType.SINGLE, SideType.SINGLE, SideType.SINGLE};
+        singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
     }
 
     @Test

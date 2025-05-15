@@ -19,7 +19,7 @@ class GameInformationTest {
     @BeforeEach
     void setUp() {
         this.gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
+        gameInformation.setGameType(GameType.NORMALGAME);
     }
 
     @AfterEach
@@ -40,8 +40,8 @@ class GameInformationTest {
 
     @Test
     void testSetUpCards() throws IOException {
-        GameType gameType1 = GameType.TestGame;
-        GameType gameType2 = GameType.NormalGame;
+        GameType gameType1 = GameType.TESTGAME;
+        GameType gameType2 = GameType.NORMALGAME;
 
         gameInformation.setUpGameInformation(gameType1, 4);
         assertNotNull(gameInformation.getCardsList());
@@ -63,14 +63,14 @@ class GameInformationTest {
     @Test
     void test2SetUpCards() throws IOException {
         // Test with TestGame type
-        gameInformation.setUpGameInformation(GameType.TestGame, 4);
+        gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
         List<Card> cards = gameInformation.getCardsList();
         assertNotNull(cards, "Cards list should not be null");
         assertFalse(cards.isEmpty(), "Cards list should not be empty");
 
         // Verify NormalGame contains mixed levels
         gameInformation.getCardsList().clear();
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         cards = gameInformation.getCardsList();
         assertNotNull(cards, "Cards list should not be null");
         assertFalse(cards.isEmpty(), "Cards list should not be empty");
@@ -78,7 +78,7 @@ class GameInformationTest {
 
     @Test
     void testSetUpComponents() throws IOException {
-        gameInformation.setUpGameInformation(GameType.NormalGame, 4);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         assertNotNull(gameInformation.getComponentList());
         for (int i = 0; i < gameInformation.getComponentList().size(); i++) {
             assertNotNull(gameInformation.getComponentList().get(i));
@@ -116,7 +116,7 @@ class GameInformationTest {
     void testRemovePlayers() {
         Player player1 = new Player("Ludo", Color.RED, gameInformation);
         Player player2 = new Player("Boti", Color.BLUE, gameInformation);
-        gameInformation.setGameType(GameType.NormalGame);
+        gameInformation.setGameType(GameType.NORMALGAME);
         gameInformation.setMaxNumberOfPlayers(3);
         gameInformation.addPlayers(player1);
         gameInformation.addPlayers(player2);
@@ -131,7 +131,7 @@ class GameInformationTest {
 
     @Test
     void testSetUpFlightBoard() throws IOException {
-        GameType gameType1 = GameType.NormalGame;
+        GameType gameType1 = GameType.NORMALGAME;
         gameInformation.setUpGameInformation(gameType1, 4);
         assertNotNull(gameInformation.getCardsList());
         assertNotNull(gameInformation.getFlightBoard());
@@ -139,8 +139,8 @@ class GameInformationTest {
 
     @Test
     void testSetGameType() {
-        GameType gameType1 = GameType.TestGame;
-        GameType gameType2 = GameType.NormalGame;
+        GameType gameType1 = GameType.TESTGAME;
+        GameType gameType2 = GameType.NORMALGAME;
 
         gameInformation.setGameType(gameType1);
         assertEquals(gameType1, gameInformation.getGameType());

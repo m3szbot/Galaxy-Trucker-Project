@@ -17,7 +17,7 @@ public class ShipBoardTest {
 
     @BeforeEach
     void setUp() {
-        shipBoard = new ShipBoard(GameType.NormalGame);
+        shipBoard = new ShipBoard(GameType.NORMALGAME);
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
                 System.out.print(shipBoard.getMatr()[i][j] + "");
@@ -144,26 +144,25 @@ public class ShipBoardTest {
     }
 
 
-
     /**
      * Stampa la griglia 12×12 con bordi, nome del componente (3 car.)
      * al centro e valori numerici dei lati.
-     *
+     * <p>
      * Layout di ogni cella (7×5):
      * +-------+
      * |   F   |
      * |L NNN R|
      * |   B   |
      * +-------+
-     *
+     * <p>
      * Forbidden  = "XXXXXXX"
      * Empty cell = spazi vuoti
      */
     public void printAsciiBoard(ShipBoard shipBoard) {
 
-        final int SIZE      = 12;
-        final String HEDGE  = "+-------";    // bordo orizzontale di una cella
-        final String HRULE  = HEDGE.repeat(SIZE) + "+";
+        final int SIZE = 12;
+        final String HEDGE = "+-------";    // bordo orizzontale di una cella
+        final String HRULE = HEDGE.repeat(SIZE) + "+";
         System.out.print("    ");            // spazio per intestazione righe / colonne
         for (int c = 1; c <= SIZE; c++) {
             System.out.printf("   %2d   ", c);
@@ -200,8 +199,8 @@ public class ShipBoardTest {
                 if (comp == null) {
                     System.out.print("|       ");
                 } else {
-                    String name  = pad(comp.getComponentName(), 3);
-                    String left  = num(side(comp.getLeft()));
+                    String name = pad(comp.getComponentName(), 3);
+                    String left = num(side(comp.getLeft()));
                     String right = num(side(comp.getRight()));
                     System.out.print("|" + left + " " + name + " " + right);
                 }
@@ -231,26 +230,38 @@ public class ShipBoardTest {
      * Helpers
      * ---------------------------------------------------------------------- */
 
-    /** Mappa SideType in numero intero: Single=1, Double=2, Universal=3,
-     *  Special=9, Smooth=0, null=-  */
-    private int side(SideType s) {
-        if (s == null)      return -1;
-        switch (s) {
-            case Single     : return 1;
-            case Double     : return 2;
-            case Universal  : return 3;
-            case Special    : return 9;
-            case Smooth     : return 0;
-            default         : return -1;
-        }
-    }
-
-    /** Converte il numero in stringa a 1 char, spazio se 0 o -1. */
+    /**
+     * Converte il numero in stringa a 1 char, spazio se 0 o -1.
+     */
     private String num(int n) {
         return (n <= 0) ? " " : Integer.toString(n);
     }
 
-    /** Rende una stringa lunga esattamente len, tagliando o padding con spazi. */
+    /**
+     * Mappa SideType in numero intero: Single=1, Double=2, Universal=3,
+     * Special=9, Smooth=0, null=- 
+     */
+    private int side(SideType s) {
+        if (s == null) return -1;
+        switch (s) {
+            case Single:
+                return 1;
+            case Double:
+                return 2;
+            case Universal:
+                return 3;
+            case Special:
+                return 9;
+            case Smooth:
+                return 0;
+            default:
+                return -1;
+        }
+    }
+
+    /**
+     * Rende una stringa lunga esattamente len, tagliando o padding con spazi.
+     */
     private String pad(String s, int len) {
         if (s == null) s = "";
         return s.length() >= len ? s.substring(0, len)
