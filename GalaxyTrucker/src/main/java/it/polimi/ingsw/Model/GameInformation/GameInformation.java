@@ -9,8 +9,6 @@ package it.polimi.ingsw.Model.GameInformation;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Controller.Cards.Blow;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Cards.CardBuilder;
@@ -53,17 +51,6 @@ public class GameInformation {
         this.gamePhase = gamePhase;
     }
 
-    /**
-     * Sets the given gamePhase and sends messages of it for both server and client.
-     */
-    public void setGamePhaseServerClient(GamePhase gamePhase) {
-        GameMessenger gameMessenger = ClientMessenger.getGameMessenger(getGameCode());
-        setGamePhase(gamePhase);
-        System.out.printf("%s phase is starting...\n", gamePhase);
-        gameMessenger.setGamePhaseToAll(gamePhase);
-        gameMessenger.sendMessageToALl(String.format("%s phase is starting...\n", gamePhase));
-
-    }
 
     public int getGameCode() {
         return this.gameCode;
@@ -368,7 +355,7 @@ public class GameInformation {
      *
      * @author Boti
      */
-    public void disconnectPlayer(Player player) {
+    private void disconnectPlayer(Player player) {
         connectedPlayerList.remove(player);
         disconnectedPlayerList.add(player);
         ClientMessenger.getGameMessenger(gameCode).clearPlayerResources(player);
@@ -379,9 +366,7 @@ public class GameInformation {
      *
      * @author Boti
      */
-    public void reconnectPlayer(Player player) {
-        // TODO send current phase to reconnected player
-        // TODO notify suspended player threads or launch new thread
+    private void reconnectPlayer(Player player) {
         disconnectedPlayerList.remove(player);
         connectedPlayerList.add(player);
     }
