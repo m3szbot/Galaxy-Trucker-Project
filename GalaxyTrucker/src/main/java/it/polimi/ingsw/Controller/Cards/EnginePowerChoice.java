@@ -105,7 +105,7 @@ public interface EnginePowerChoice {
                     return defaultEnginePower;
                 }
             } catch (PlayerDisconnectedException e) {
-                gameInformation.disconnectPlayer(player);
+                gameInformation.getGamePhase().disconnectPlayer(player);
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }

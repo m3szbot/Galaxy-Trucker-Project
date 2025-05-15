@@ -81,7 +81,7 @@ public interface TokenLoss {
             try {
                 coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.disconnectPlayer(player);
+                gameInformation.getGamePhase().disconnectPlayer(player);
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -120,7 +120,7 @@ public interface TokenLoss {
                         try {
                             numberOfRemovedCrew = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInt(player);
                         } catch (PlayerDisconnectedException e) {
-                            gameInformation.disconnectPlayer(player);
+                            gameInformation.getGamePhase().disconnectPlayer(player);
                             message = e.getMessage();
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                         }
@@ -199,7 +199,7 @@ public interface TokenLoss {
                     try {
                         coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.disconnectPlayer(player);
+                        gameInformation.getGamePhase().disconnectPlayer(player);
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -219,7 +219,7 @@ public interface TokenLoss {
                                 try {
                                     numberOfRemovedGoods = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInt(player);
                                 } catch (PlayerDisconnectedException e) {
-                                    gameInformation.disconnectPlayer(player);
+                                    gameInformation.getGamePhase().disconnectPlayer(player);
                                     message = e.getMessage();
                                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                                 }
@@ -294,7 +294,7 @@ public interface TokenLoss {
                 try {
                     coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
                 } catch (PlayerDisconnectedException e) {
-                    gameInformation.disconnectPlayer(player);
+                    gameInformation.getGamePhase().disconnectPlayer(player);
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
@@ -310,7 +310,7 @@ public interface TokenLoss {
                             try {
                                 numberOfRemovedBatteries = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInt(player);
                             } catch (PlayerDisconnectedException e) {
-                                gameInformation.disconnectPlayer(player);
+                                gameInformation.getGamePhase().disconnectPlayer(player);
                                 message = e.getMessage();
                                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                             }

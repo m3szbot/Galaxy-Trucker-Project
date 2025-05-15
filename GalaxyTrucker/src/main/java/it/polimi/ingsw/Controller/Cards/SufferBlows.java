@@ -287,7 +287,7 @@ public interface SufferBlows {
 
                 }
             } catch (PlayerDisconnectedException e) {
-                gameInformation.disconnectPlayer(player);
+                gameInformation.getGamePhase().disconnectPlayer(player);
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -327,7 +327,7 @@ public interface SufferBlows {
                             return removeComponent(player, xCoord, yCoord, gameInformation.getFlightBoard());
                         }
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.disconnectPlayer(player);
+                        gameInformation.getGamePhase().disconnectPlayer(player);
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -383,7 +383,7 @@ public interface SufferBlows {
 
                     }
                 } catch (PlayerDisconnectedException e) {
-                    gameInformation.disconnectPlayer(player);
+                    gameInformation.getGamePhase().disconnectPlayer(player);
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
@@ -456,7 +456,7 @@ public interface SufferBlows {
             try {
                 coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.disconnectPlayer(player);
+                gameInformation.getGamePhase().disconnectPlayer(player);
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }

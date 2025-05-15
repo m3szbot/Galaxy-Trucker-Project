@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
@@ -22,20 +23,22 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Giacomo
  */
-public class AssemblyPhase {
+public class AssemblyPhase extends Phase {
     private GameState currentState;
     private AtomicBoolean running = new AtomicBoolean(true);
     private AtomicInteger end = new AtomicInteger(0);
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
-    private GameInformation gameInformation;
     private AssemblyProtocol assemblyProtocol;
     private String message;
+
+
 
 
     /**
      * Initializes the game with provided game information.
      */
     public AssemblyPhase(GameInformation gameInformation) {
+        super(gameInformation);
         assemblyProtocol = new AssemblyProtocol(gameInformation);
     }
 
@@ -61,9 +64,17 @@ public class AssemblyPhase {
      * Starts the game, initializes the state, sets up user input thread,
      * and runs the main non-blocking game loop.
      */
-    public void start(GameInformation gameInformation) throws InterruptedException {
-        this.gameInformation = gameInformation;
+    public void start(){
+
         gameInformation.setGamePhaseServerClient(GamePhase.Assembly);
+
+        /*message = "Prova assurbanipal";
+        for(Player player: gameInformation.getPlayerList()){
+            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);;
+        }*/
+
+
+
         /*
         for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;
@@ -107,19 +118,17 @@ public class AssemblyPhase {
             }
         });
         t.start();
-        t.join();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         message = "Assembly phase has ended";
         for (Player player : gameInformation.getPlayerList()) {
             DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
             dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
-        }
-
-        for (Player player : gameInformation.getPlayerList()) {
-            DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-            dataContainer.setCommand("advancePhase");
             ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
 

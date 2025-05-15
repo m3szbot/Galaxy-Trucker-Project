@@ -63,58 +63,62 @@ public class AssemblyThread implements Runnable {
     public void run() {
         // For now, the initial state is set using only the first player.
         // Later, threads should be launched for all players.
-        setState(new AssemblyState(assemblyProtocol, associatedPlayer));
+        while (running.get() || end.get() < gameInformation.getMaxNumberOfPlayers()) {
+            setState(new AssemblyState(assemblyProtocol, associatedPlayer));
 
-        // Separate thread for reading user input from the console
-        new Thread(() -> {
-            //Scanner scanner = new Scanner(System.in);
-            while (running.get() || end.get() != gameInformation.getPlayerList().size()) {
-                //String input = scanner.nextLine();
-                try {String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
-                    inputQueue.offer(input);
+            // Separate thread for reading user input from the console
+            new Thread(() -> {
+                //Scanner scanner = new Scanner(System.in);
+                while (running.get() || end.get() != gameInformation.getPlayerList().size()) {
+                    //String input = scanner.nextLine();
+                    //System.out.println("prova");
+                    try {
+                        String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
+                        inputQueue.offer(input);
+                    } catch (PlayerDisconnectedException e) {
+                        gameInformation.disconnectPlayer(associatedPlayer);
+                        String message = e.getMessage();
+                        for (Player player : gameInformation.getPlayerList()) {
+                            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
+                        }
+                    }
+
                 }
-                catch (PlayerDisconnectedException e) {
-                    gameInformation.disconnectPlayer(associatedPlayer);
-                    String message = e.getMessage();
-                    for (Player player : gameInformation.getPlayerList()) {
-                        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
-                        dataContainer.setMessage(message);
-                        ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
+            }).start();
+
+            new Thread(() -> {
+                while (running.get() == false && isfinished == false) {
+                    if (!amIChoosing) {
+                        setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
                     }
                 }
+            }).start();
 
-            }
-        }).start();
-
-        new Thread(() -> {
-            while(running.get()==false && isfinished==false) {
-                if(!amIChoosing) {
-                    setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
+            // Main non-blocking game loop
+            while (running.get() || end.get() < gameInformation.getPlayerList().size()) {
+                //System.out.println("prova2");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
                 }
-            }
-        }).start();
 
-        // Main non-blocking game loop
-        while (running.get() || end.get() < gameInformation.getPlayerList().size()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
+                // Handle user input if available
+                String input = inputQueue.poll();
+                if (input != null) {
+                    currentState.handleInput(input, this);
+                }
+                // Update current game state (e.g., timers, state transitions)
+                currentState.update(this);
             }
 
-            // Handle user input if available
-            String input = inputQueue.poll();
-            if (input != null) {
-                currentState.handleInput(input, this);
-            }
-            // Update current game state (e.g., timers, state transitions)
-            currentState.update(this);
+            String message = "Game Over";
+            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(associatedPlayer);
+            dataContainer.setMessage(message);
+            dataContainer.setCommand("printMessage");
+            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(associatedPlayer);
+
         }
-
-        String message = "Game Over";
-        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(associatedPlayer);
-        dataContainer.setMessage(message);
-        dataContainer.setCommand("printMessage");
-        ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(associatedPlayer);
-
     }
 }
