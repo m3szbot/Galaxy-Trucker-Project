@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -20,22 +18,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameMessageReceiver implements Runnable {
 
-    private Map<GamePhase, GeneralView> viewMap = new HashMap<>();
+    private GeneralView[] views;
     private ObjectInputStream in;
     private GamePhase currentPhase;
     private AtomicBoolean running;
+    private int viewIndex;
 
 
     public GameMessageReceiver(GeneralView[] views, ObjectInputStream in, AtomicBoolean running) {
 
-        GamePhase[] phases = {GamePhase.Assembly, GamePhase.Correction, GamePhase.Flight, GamePhase.Evaluation};
-
-        for (int i = 0; i < views.length; i++) {
-
-            this.viewMap.put(phases[i], views[i]);
-
-        }
-
+        this.views = views;
         this.in = in;
         this.running = running;
 
@@ -49,10 +41,7 @@ public class GameMessageReceiver implements Runnable {
 
             try {
 
-                System.out.println("Receiving object");
                 container = (DataContainer) in.readObject();
-                System.out.println("Object received");
-                System.out.println("Command of data container: " + container.getCommand());
                 executeCommand(container.getCommand(), container);
 
 
@@ -96,7 +85,7 @@ public class GameMessageReceiver implements Runnable {
 
     private void callView(DataContainer container) {
 
-        GeneralView currentView = viewMap.get(currentPhase);
+        GeneralView currentView = views[viewIndex];
         String methodName = container.getCommand();
 
         if (currentView == null) {
@@ -127,7 +116,14 @@ public class GameMessageReceiver implements Runnable {
     }
 
     private void setGamePhase(GamePhase gamePhase){
-        this.currentPhase = gamePhase;
+
+        switch (gamePhase){
+            case Assembly -> viewIndex = 0;
+            case Correction -> viewIndex = 1;
+            case Flight -> viewIndex = 2;
+            case Evaluation -> viewIndex = 3;
+        }
+
     }
 
 }
