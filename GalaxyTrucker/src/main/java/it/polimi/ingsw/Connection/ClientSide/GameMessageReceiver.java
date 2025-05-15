@@ -109,8 +109,15 @@ public class GameMessageReceiver implements Runnable {
 
             return 0;
 
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.err.println("Critical error while accessing view method ");
+        } catch (NoSuchMethodException e1) {
+            System.err.println("Critical error while accessing view method: method not found ");
+            return -1;
+        } catch (IllegalAccessException e2){
+           System.err.println("Critical error while accessing view method: method does not have access to the definition of the specified class");
+            return -1;
+         }
+        catch (InvocationTargetException e3){
+            System.err.println("Critical error while accessing view method: the method invoked did not behave correctly");
             return -1;
         }
     }

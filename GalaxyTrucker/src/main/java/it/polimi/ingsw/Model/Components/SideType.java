@@ -3,6 +3,8 @@ package it.polimi.ingsw.Model.Components;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.io.Serializable;
+
 /**
  * Enum that represents the side of a component
  *
@@ -10,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 
 
-public enum SideType {
+public enum SideType implements Serializable {
     Smooth("Smooth"),
     Single("Single"),
     Double("Double"),

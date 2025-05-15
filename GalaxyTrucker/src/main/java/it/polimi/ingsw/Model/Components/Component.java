@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.Model.ShipBoard.Visitor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = Storage.class, name = "Storage"),
 })
 
-public class Component implements Visitable {
+public class Component implements Visitable, Serializable {
 
     private SideType front;
     private SideType right;
