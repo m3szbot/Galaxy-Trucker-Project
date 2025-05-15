@@ -107,11 +107,7 @@ public class Game implements Runnable {
      */
     public void run() {
         System.out.println("Starting assembly phase...");
-        try {
-            assemblyPhase.start();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        assemblyPhase.start();
         System.out.println("Starting correction phase...");
         correctionPhase.start();
         System.out.println("Starting flight phase...");
