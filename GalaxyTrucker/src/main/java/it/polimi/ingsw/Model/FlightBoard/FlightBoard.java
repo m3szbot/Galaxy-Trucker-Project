@@ -4,6 +4,7 @@ import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  * @author Boti
  */
 
-public class FlightBoard {
+public class FlightBoard implements Serializable {
     // number of tiles on the flightBoard
     private final int numberOfTiles;
     // free starting tiles

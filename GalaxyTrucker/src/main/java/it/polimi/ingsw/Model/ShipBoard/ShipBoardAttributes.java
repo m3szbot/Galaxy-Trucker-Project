@@ -3,7 +3,9 @@ package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.Components.CrewType;
 
-public class ShipBoardAttributes {
+import java.io.Serializable;
+
+public class ShipBoardAttributes implements Serializable {
     // Represents the structure of the ship
     private int drivingPower; // The ship's driving power
     private float firePower; // The ship's firepower

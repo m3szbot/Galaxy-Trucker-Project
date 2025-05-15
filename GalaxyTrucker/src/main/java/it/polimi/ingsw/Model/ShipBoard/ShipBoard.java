@@ -3,9 +3,10 @@ package it.polimi.ingsw.Model.ShipBoard;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ShipBoard {
+public class ShipBoard implements Serializable {
     // x: column
     // y: row
 

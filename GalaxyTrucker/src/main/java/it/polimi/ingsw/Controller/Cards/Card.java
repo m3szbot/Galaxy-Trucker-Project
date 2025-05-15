@@ -2,13 +2,15 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 
+import java.io.Serializable;
+
 /**
  * Abstract class that is the superclass of every card class.
  *
  * @author carlo
  */
 
-public abstract class Card {
+public abstract class Card implements Serializable {
 
     protected int cardLevel;
     protected String cardName;
