@@ -47,7 +47,8 @@ public interface GoodsGain {
         try {
             discardingPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
         } catch (PlayerDisconnectedException e) {
-            gameInformation.getGamePhase().disconnectPlayer(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+            ;
             message = e.getMessage();
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
         }
@@ -61,7 +62,8 @@ public interface GoodsGain {
             try {
                 coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -117,7 +119,8 @@ public interface GoodsGain {
                     try {
                         discardingPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.getGamePhase().disconnectPlayer(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        ;
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -134,7 +137,8 @@ public interface GoodsGain {
                 try {
                     discardingPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                 } catch (PlayerDisconnectedException e) {
-                    gameInformation.getGamePhase().disconnectPlayer(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    ;
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
@@ -149,7 +153,8 @@ public interface GoodsGain {
             try {
                 discardingPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -170,7 +175,8 @@ public interface GoodsGain {
         try {
             rearrangementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
         } catch (PlayerDisconnectedException e) {
-            gameInformation.getGamePhase().disconnectPlayer(player);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+            ;
             message = e.getMessage();
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
         }
@@ -188,7 +194,8 @@ public interface GoodsGain {
             try {
                 sourceCoordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -199,7 +206,8 @@ public interface GoodsGain {
             try {
                 destCoordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -270,7 +278,8 @@ public interface GoodsGain {
                     try {
                         rearrangementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.getGamePhase().disconnectPlayer(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        ;
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -285,7 +294,8 @@ public interface GoodsGain {
                 try {
                     rearrangementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                 } catch (PlayerDisconnectedException e) {
-                    gameInformation.getGamePhase().disconnectPlayer(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    ;
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
@@ -300,7 +310,8 @@ public interface GoodsGain {
             try {
                 rearrangementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -327,7 +338,8 @@ public interface GoodsGain {
             try {
                 placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -340,7 +352,8 @@ public interface GoodsGain {
                 try {
                     coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
                 } catch (PlayerDisconnectedException e) {
-                    gameInformation.getGamePhase().disconnectPlayer(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    ;
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
@@ -393,7 +406,8 @@ public interface GoodsGain {
                         try {
                             placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                         } catch (PlayerDisconnectedException e) {
-                            gameInformation.getGamePhase().disconnectPlayer(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                            ;
                             message = e.getMessage();
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                         }
@@ -409,7 +423,8 @@ public interface GoodsGain {
                     try {
                         placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.getGamePhase().disconnectPlayer(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        ;
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -427,7 +442,8 @@ public interface GoodsGain {
                     try {
                         placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.getGamePhase().disconnectPlayer(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        ;
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -455,7 +471,8 @@ public interface GoodsGain {
             try {
                 placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }
@@ -468,7 +485,8 @@ public interface GoodsGain {
                 try {
                     coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
                 } catch (PlayerDisconnectedException e) {
-                    gameInformation.getGamePhase().disconnectPlayer(player);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    ;
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                 }
@@ -536,7 +554,8 @@ public interface GoodsGain {
                         try {
                             placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                         } catch (PlayerDisconnectedException e) {
-                            gameInformation.getGamePhase().disconnectPlayer(player);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                            ;
                             message = e.getMessage();
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                         }
@@ -552,7 +571,8 @@ public interface GoodsGain {
                     try {
                         placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.getGamePhase().disconnectPlayer(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        ;
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -571,7 +591,8 @@ public interface GoodsGain {
                     try {
                         placementPhaseFlag = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player);
                     } catch (PlayerDisconnectedException e) {
-                        gameInformation.getGamePhase().disconnectPlayer(player);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        ;
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
                     }
@@ -599,7 +620,8 @@ public interface GoodsGain {
             try {
                 goods[i] = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerInt(player);
             } catch (PlayerDisconnectedException e) {
-                gameInformation.getGamePhase().disconnectPlayer(player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
             }

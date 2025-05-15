@@ -150,36 +150,31 @@ public class GameMessenger {
     }
 
     /**
-     * Send message to all players.
-     * Command is set to "printMessage".ú
+     * Set gamePhase for all players' client.
      * TODO: rmi
-     *
-     * @author Boti
      */
-    public void sendMessageToALl(String message) {
+    public void setGamePhaseToAll(GamePhase gamePhase) {
         // socket
         for (Player player : playerSocketMap.keySet()) {
-            sendPlayerMessage(player, message);
+            setPlayerGamePhase(player, gamePhase);
         }
-
-        // rmi
+        // RMI
     }
 
     /**
-     * Send a message to print to the given player's client.
-     * Command is set to "printMessage".
+     * Sets gamePhase of player's client.
      * <p>
      * TODO: rmi
      *
      * @author Boti
      */
-    public void sendPlayerMessage(Player player, String message) {
+    public void setPlayerGamePhase(Player player, GamePhase gamePhase) {
         // socket
         if (playerSocketMap.containsKey(player)) {
             DataContainer dataContainer = getPlayerContainer(player);
             dataContainer.clearContainer();
-            dataContainer.setCommand("printMessage");
-            dataContainer.setMessage(message);
+            dataContainer.setCommand("setGamePhase");
+            dataContainer.setGamePhase(gamePhase);
             sendPlayerData(player);
         }
         // RMI
@@ -222,37 +217,6 @@ public class GameMessenger {
             }
 
         }
-    }
-
-    /**
-     * Set gamePhase for all players' client.
-     * TODO: rmi
-     */
-    public void setGamePhaseToAll(GamePhase gamePhase) {
-        // socket
-        for (Player player : playerSocketMap.keySet()) {
-            setPlayerGamePhase(player, gamePhase);
-        }
-        // RMI
-    }
-
-    /**
-     * Sets gamePhase of player's client.
-     * <p>
-     * TODO: rmi
-     *
-     * @author Boti
-     */
-    public void setPlayerGamePhase(Player player, GamePhase gamePhase) {
-        // socket
-        if (playerSocketMap.containsKey(player)) {
-            DataContainer dataContainer = getPlayerContainer(player);
-            dataContainer.clearContainer();
-            dataContainer.setCommand("setGamePhase");
-            dataContainer.setGamePhase(gamePhase);
-            sendPlayerData(player);
-        }
-        // RMI
     }
 
     /**
@@ -309,6 +273,7 @@ public class GameMessenger {
         clearPlayerResources(player);
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
+        sendMessageToALl(String.format("%s has been disconnected", player));
     }
 
     /**
@@ -335,11 +300,48 @@ public class GameMessenger {
     }
 
     /**
+     * Send message to all players.
+     * Command is set to "printMessage".ú
+     * TODO: rmi
+     *
+     * @author Boti
+     */
+    public void sendMessageToALl(String message) {
+        // socket
+        for (Player player : playerSocketMap.keySet()) {
+            sendPlayerMessage(player, message);
+        }
+
+        // rmi
+    }
+
+    /**
+     * Send a message to print to the given player's client.
+     * Command is set to "printMessage".
+     * <p>
+     * TODO: rmi
+     *
+     * @author Boti
+     */
+    public void sendPlayerMessage(Player player, String message) {
+        // socket
+        if (playerSocketMap.containsKey(player)) {
+            DataContainer dataContainer = getPlayerContainer(player);
+            dataContainer.clearContainer();
+            dataContainer.setCommand("printMessage");
+            dataContainer.setMessage(message);
+            sendPlayerData(player);
+        }
+        // RMI
+    }
+
+    /**
      * Reconnects player to the game.
      */
     public void reconnectPlayer(GameInformation gameInformation, Player player) {
         gameInformation.getDisconnectedPlayerList().remove(player);
         gameInformation.getPlayerList().add(player);
+        sendMessageToALl(String.format("%s has been reconnected", player));
     }
 
 }

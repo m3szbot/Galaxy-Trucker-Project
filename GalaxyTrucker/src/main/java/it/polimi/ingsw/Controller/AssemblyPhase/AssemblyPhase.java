@@ -67,7 +67,7 @@ public class AssemblyPhase extends Phase {
      */
     public void start(){
 
-        gameInformation.setGamePhaseServerClient(GamePhase.Assembly);
+        setGamePhaseToAll(GamePhase.Assembly);
 
         /*message = "Prova assurbanipal";
         for(Player player: gameInformation.getPlayerList()){
