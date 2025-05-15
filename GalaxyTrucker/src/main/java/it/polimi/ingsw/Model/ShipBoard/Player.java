@@ -4,7 +4,9 @@ package it.polimi.ingsw.Model.ShipBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
     // The nickname of the player
     private String nickName;
     // The color associated with the player
