@@ -98,7 +98,7 @@ public class AssemblyThread implements Runnable {
 
             // Main non-blocking game loop
             while (running.get() || end.get() < gameInformation.getPlayerList().size()) {
-                System.out.println("prova2");
+                //System.out.println("prova2");
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignored) {
@@ -114,10 +114,7 @@ public class AssemblyThread implements Runnable {
             }
 
             String message = "Game Over";
-            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(associatedPlayer);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(associatedPlayer);
+            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(associatedPlayer, message);
 
         }
     }
