@@ -67,9 +67,6 @@ public class AssemblyPhase extends Phase {
 
         setGamePhaseToAll(GamePhase.Assembly);
 
-       message = "Prova assurbanipal";
-       gameMessenger.sendMessageToALl(message);
-
 
 
         /*
