@@ -45,12 +45,14 @@ public class ComponentChoiceState implements GameState {
     @Override
     public void enter(AssemblyThread assemblyPhase) {
         components = new ArrayList<>(assemblyPhase.getAssemblyProtocol().getUncoveredList());
+        int i = 0;
         for(Component component : components) {
-            message = component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack()  + " Left: " + component.getLeft();
+            message = i + ": " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack()  + " Left: " + component.getLeft();
             DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
             dataContainer.setMessage(message);
             dataContainer.setCommand("printMessage");
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+            i++;
         }
         message = "Enter the number of the component you would like:";
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);

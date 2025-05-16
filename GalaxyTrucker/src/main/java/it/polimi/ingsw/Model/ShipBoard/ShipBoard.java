@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
@@ -96,7 +97,11 @@ public class ShipBoard implements Serializable {
             matr[5][9] = false;
         }
 
-        addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 7);
+        try {
+            addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 7);
+        } catch (NotPermittedPlacementException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Component getComponent(int col, int row) {
@@ -135,37 +140,40 @@ public class ShipBoard implements Serializable {
      * @param row       The y-coordinate of the component.
      * @author Giacomo
      */
-    public void addComponent(Component component, int col, int row) {
+    public void addComponent(Component component, int col, int row) throws NotPermittedPlacementException {
         col = col - 1;
         row = row - 1;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         if (matr[row][col] == true) {
             structureMatrix[row][col] = component;
+            List<Object> list = component.accept(visitor);
+            if ((Integer) list.get(0) == 1) {
+                shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
+            } else if ((Integer) list.get(0) == 2) {
+                shipBoardAttributes.updateNumberDoubleEngines(1);
+            }
+            if ((Float) list.get(1) == 1) {
+                shipBoardAttributes.updateFirePower((Float) list.get(1));
+            } else if ((Float) list.get(1) == 2) {
+                if (component.getFront().equals(SideType.Special)) {
+                    shipBoardAttributes.updateNumberForwardDoubleCannons(1);
+                } else {
+                    shipBoardAttributes.updateNumberNotForwardDoubleCannons(1);
+                }
+            }
+            shipBoardAttributes.updateCrewMembers((Integer) list.get(2));
+            shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
+            boolean[] sides = (boolean[]) list.get(4);
+            for (int i = 0; i < 4; i++) {
+                shipBoardAttributes.updateCoveredSides(i, sides[i], true);
+            }
+            shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
+            shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
+        }
+        else{
+            throw new NotPermittedPlacementException();
         }
         //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
-        List<Object> list = component.accept(visitor);
-        if ((Integer) list.get(0) == 1) {
-            shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
-        } else if ((Integer) list.get(0) == 2) {
-            shipBoardAttributes.updateNumberDoubleEngines(1);
-        }
-        if ((Float) list.get(1) == 1) {
-            shipBoardAttributes.updateFirePower((Float) list.get(1));
-        } else if ((Float) list.get(1) == 2) {
-            if (component.getFront().equals(SideType.Special)) {
-                shipBoardAttributes.updateNumberForwardDoubleCannons(1);
-            } else {
-                shipBoardAttributes.updateNumberNotForwardDoubleCannons(1);
-            }
-        }
-        shipBoardAttributes.updateCrewMembers((Integer) list.get(2));
-        shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
-        boolean[] sides = (boolean[]) list.get(4);
-        for (int i = 0; i < 4; i++) {
-            shipBoardAttributes.updateCoveredSides(i, sides[i], true);
-        }
-        shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
-        shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
     }
 
     /**

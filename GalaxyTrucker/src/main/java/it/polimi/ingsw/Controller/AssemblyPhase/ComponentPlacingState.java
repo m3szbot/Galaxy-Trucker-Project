@@ -59,9 +59,13 @@ public class ComponentPlacingState implements GameState {
 
         if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
             if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 1, num2) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 + 1, num2) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1, num2 - 1) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1, num2 + 1) != null) {
-                assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
-                synchronized (assemblyProtocol.lockCoveredList) {
-                    assemblyPhase.getAssemblyProtocol().newComponent(player);
+                try {
+                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
+                    synchronized (assemblyProtocol.lockCoveredList) {
+                        assemblyPhase.getAssemblyProtocol().newComponent(player);
+                    }
+                } catch (NotPermittedPlacementException e) {
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Your are not allowed to place your component here");
                 }
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             } else{
