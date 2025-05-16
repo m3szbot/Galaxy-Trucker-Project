@@ -123,6 +123,7 @@ public class AssemblyState implements GameState {
             case "end":
                 actionTaken = true;
                 assemblyPhase.setState(new ChooseStartingPositionState(protocol, player));
+                break;
             default:
                 message = "Invalid command";
                 dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
