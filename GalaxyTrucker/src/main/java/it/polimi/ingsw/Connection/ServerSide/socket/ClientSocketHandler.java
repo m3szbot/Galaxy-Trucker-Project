@@ -265,7 +265,7 @@ public class ClientSocketHandler extends Thread {
 
             } else {
 
-                gameType = GameType.valueOf(input);
+                gameType = GameType.valueOf(input.toUpperCase());
                 centralServer.getCurrentStartingGame().getGameInformation().setGameType(gameType);
                 message = "Game type was set up correctly";
                 dataSender.writeUTF(message);
