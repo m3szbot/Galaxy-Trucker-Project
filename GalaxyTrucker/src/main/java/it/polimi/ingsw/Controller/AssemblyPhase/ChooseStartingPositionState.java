@@ -21,7 +21,6 @@ public class ChooseStartingPositionState implements GameState{
 
     @Override
     public void enter(AssemblyThread assemblyPhase) {
-        assemblyPhase.isfinished = true;
         actionTaken = false;
         List<Integer> tiles  = new ArrayList<>(assemblyProtocol.getFlightBoard().getStartingTiles());
         String message = "In which position do you want to start? (1-4)";

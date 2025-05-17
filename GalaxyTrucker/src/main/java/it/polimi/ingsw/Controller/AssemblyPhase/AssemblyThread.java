@@ -23,7 +23,6 @@ public class AssemblyThread implements Runnable {
     AtomicBoolean running;
     AtomicInteger end;
     Boolean isfinished = false;
-    Boolean amIChoosing = false;
 
 
     public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, AtomicInteger end) {
@@ -63,13 +62,13 @@ public class AssemblyThread implements Runnable {
     public void run() {
         // For now, the initial state is set using only the first player.
         // Later, threads should be launched for all players.
-        while (running.get() || end.get() < gameInformation.getMaxNumberOfPlayers()) {
+        while (end.get() < gameInformation.getMaxNumberOfPlayers()) {
             setState(new AssemblyState(assemblyProtocol, associatedPlayer));
 
             // Separate thread for reading user input from the console
             new Thread(() -> {
                 //Scanner scanner = new Scanner(System.in);
-                while (running.get() || end.get() != gameInformation.getPlayerList().size()) {
+                while (end.get() != gameInformation.getPlayerList().size()) {
                     //String input = scanner.nextLine();
                     //System.out.println("prova");
                     try {
@@ -88,16 +87,8 @@ public class AssemblyThread implements Runnable {
                 }
             }).start();
 
-            new Thread(() -> {
-                while (running.get() == false && isfinished == false) {
-                    if (!amIChoosing) {
-                        setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
-                    }
-                }
-            }).start();
-
             // Main non-blocking game loop
-            while (running.get() || end.get() < gameInformation.getPlayerList().size()) {
+            while (running.get() ) {
                 //System.out.println("prova2");
                 try {
                     Thread.sleep(100);
@@ -113,9 +104,15 @@ public class AssemblyThread implements Runnable {
                 currentState.update(this);
             }
 
-            String message = "Game Over";
-            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(associatedPlayer, message);
-
+            setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
+            while ( running.get() == false && end.get() < gameInformation.getPlayerList().size() ) {
+                if(isfinished) end.set(end.get() + 1);
+                String input = inputQueue.poll();
+                if (input != null) currentState.handleInput(input, this);
+                currentState.update(this);
+                try { Thread.sleep(100); }
+                catch (InterruptedException ignored) {}
+            }
         }
     }
 }

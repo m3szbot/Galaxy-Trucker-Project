@@ -16,11 +16,13 @@ public class AssemblingEndState implements GameState {
 
     @Override
     public void enter(AssemblyThread assemblyPhase) {
+        assemblyPhase.isfinished = true;
         String message = "Do you want to turn the hourglass? (yes or wait)";
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setMessage(message);
         dataContainer.setCommand("printMessage");
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+
     }
 
     @Override
@@ -28,7 +30,7 @@ public class AssemblingEndState implements GameState {
        switch (input.toLowerCase()) {
            case "yes":
                if(assemblyProtocol.getHourGlass().isFinished() == true){
-                   assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList() );
+                   assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList());
                }
                else{
                    String message = "HourGlass is already running";
