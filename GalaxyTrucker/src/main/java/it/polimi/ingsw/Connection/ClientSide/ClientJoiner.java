@@ -70,7 +70,6 @@ public class ClientJoiner {
         Socket socket;
         ObjectInputStream dataReceiver;
         ObjectOutputStream dataSender;
-        Scanner scanner;
         AtomicBoolean terminatedFlag = new AtomicBoolean(false);
         AtomicBoolean abnormallyTerminatedFlag = new AtomicBoolean(false);
         AtomicReference<String> userInput = clientInfo.getUserInput();
@@ -85,7 +84,6 @@ public class ClientJoiner {
             clientInfo.setOutputStream(dataSender);
             dataSender.writeObject(clientInfo);
             dataSender.flush();
-            scanner = new Scanner(System.in);
 
         } catch (IOException e) {
             System.err.println("Error while connecting to the server");

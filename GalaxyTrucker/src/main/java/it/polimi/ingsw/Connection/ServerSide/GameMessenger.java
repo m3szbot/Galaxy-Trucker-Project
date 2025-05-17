@@ -271,9 +271,9 @@ public class GameMessenger {
      * Disconnects the player from the game.
      */
     public void disconnectPlayer(GameInformation gameInformation, Player player) {
-        clearPlayerResources(player);
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
+        clearPlayerResources(player);
     }
 
     /**

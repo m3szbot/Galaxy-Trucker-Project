@@ -23,6 +23,7 @@ import java.net.SocketTimeoutException;
 
 public class ClientSocketHandler extends Thread {
 
+    private static final int MAXTRIALS = 5;
     private Socket clientSocket;
     private Server centralServer;
     private ObjectInputStream dataReceiver;
@@ -30,7 +31,6 @@ public class ClientSocketHandler extends Thread {
     private Player playerToAdd = null;
     private String nickName;
     private int trials;
-    private static final int MAXTRIALS = 5;
 
 
     public ClientSocketHandler(Socket clientSocket, Server centralServer) {
@@ -68,56 +68,52 @@ public class ClientSocketHandler extends Thread {
             return;
         }
 
-        if(clientInfo.getGameCode() != -1){
-           //tries to rejoin
-           startRejoining(clientInfo.getGameCode());
-        }
-        else{
+        if (clientInfo.getGameCode() != -1) {
+            //tries to rejoin
+            startRejoining(clientInfo.getGameCode());
+        } else {
             startLobby();
         }
     }
 
-    private void startLobby(){
+    private void startLobby() {
 
         String message;
 
-        while(true) {
+        while (true) {
 
             try {
 
-                message = "Press 'enter' key to enter in a game: ";
+                message = "Press 'Enter' key to enter in a game: ";
 
                 dataSender.writeUTF(message);
                 dataSender.flush();
 
                 if (checkEnterKey()) {
 
-                    if(joinGame()){
+                    if (joinGame()) {
 
-                       if(isEmpty()){
-                           //first player joining
-                           makeFirstPlayerJoin();
-                       }
-                       else{
-                           //not first player joining
-                           makeNonFirstPlayerJoin();
-                       }
+                        if (isEmpty()) {
+                            //first player joining
+                            makeFirstPlayerJoin();
+                        } else {
+                            //not first player joining
+                            makeNonFirstPlayerJoin();
+                        }
 
-                       centralServer.getLock().unlock();
+                        centralServer.getLock().unlock();
 
 
-                       break;
+                        break;
 
-                    }
-                    else{
+                    } else {
                         message = "Somebody is already joining a new game, please wait.";
 
                         dataSender.writeUTF(message);
                         dataSender.flush();
                     }
 
-                }
-                else{
+                } else {
 
                     message = "The string you entered is invalid!";
                     dataSender.writeUTF(message);
@@ -128,8 +124,7 @@ public class ClientSocketHandler extends Thread {
 
                 }
 
-            }
-            catch (SocketTimeoutException e){
+            } catch (SocketTimeoutException e) {
 
                 message = "The server kicked you out because of inactivity!";
                 try {
@@ -153,21 +148,19 @@ public class ClientSocketHandler extends Thread {
                     System.err.println("Critical error while closing client socket and streams");
                 }
 
-                if(centralServer.getLock().isLocked()){
+                if (centralServer.getLock().isLocked()) {
                     centralServer.getLock().unlock();
                 }
 
                 break;
 
-            }
-            catch (IOException e1) {
+            } catch (IOException e1) {
 
-                if(trials == MAXTRIALS){
+                if (trials == MAXTRIALS) {
                     System.out.println("Client " + clientSocket.getInetAddress() + " (" + nickName + ")" +
                             " was kicked out because of too many input failures. The client probably had" +
                             " malicious intent");
-                }
-                else {
+                } else {
                     System.err.println("Client " + clientSocket.getInetAddress() + " has disconnected while in lobby");
                 }
 
@@ -180,7 +173,7 @@ public class ClientSocketHandler extends Thread {
                     System.err.println("Critical error while closing client socket and streams");
                 }
 
-                if(centralServer.getLock().isLocked()){
+                if (centralServer.getLock().isLocked()) {
                     centralServer.getLock().unlock();
                 }
 
@@ -193,16 +186,16 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void startRejoining(int gameCode){
+    private void startRejoining(int gameCode) {
 
         Game game;
         String message;
 
         try {
 
-           game = centralServer.getGame(gameCode);
+            game = centralServer.getGame(gameCode);
 
-        }catch (IndexOutOfBoundsException e1){
+        } catch (IndexOutOfBoundsException e1) {
 
             try {
 
@@ -212,8 +205,8 @@ public class ClientSocketHandler extends Thread {
                 dataSender.writeUTF(message);
                 return;
 
-            }catch (IOException e2){
-                System.err.println("Client " + clientSocket.getInetAddress() + "has disconnected!");
+            } catch (IOException e2) {
+                System.err.println("Client " + clientSocket.getInetAddress() + " has disconnected!");
             }
 
         }
@@ -225,23 +218,23 @@ public class ClientSocketHandler extends Thread {
 
     private boolean checkEnterKey() throws IOException {
 
-        if(dataReceiver.readUTF().isEmpty()){
+        if (dataReceiver.readUTF().isEmpty()) {
             return true;
         }
         return false;
     }
 
-    private boolean joinGame(){
+    private boolean joinGame() {
 
-       return centralServer.getLock().tryLock();
+        return centralServer.getLock().tryLock();
 
     }
 
-    private boolean isEmpty(){
+    private boolean isEmpty() {
         return centralServer.getCurrentStartingGame().getGameState() == GameState.Empty;
     }
 
-    private void makeFirstPlayerJoin() throws IOException{
+    private void makeFirstPlayerJoin() throws IOException {
 
         int numberOfPlayers;
         GameType gameType;
@@ -260,14 +253,8 @@ public class ClientSocketHandler extends Thread {
         dataSender.flush();
 
         while (true) {
-
-
             input = dataReceiver.readUTF();
-
-
-            input = input.toUpperCase();
-
-            if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
+            if (!input.equalsIgnoreCase("TESTGAME") && !input.equalsIgnoreCase("NORMALGAME")) {
 
                 message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
                 dataSender.writeUTF(message);
@@ -278,7 +265,7 @@ public class ClientSocketHandler extends Thread {
 
             } else {
 
-                gameType = GameType.valueOf(input);
+                gameType = GameType.valueOf(input.toUpperCase());
                 centralServer.getCurrentStartingGame().getGameInformation().setGameType(gameType);
                 message = "Game type was set up correctly";
                 dataSender.writeUTF(message);
@@ -298,9 +285,9 @@ public class ClientSocketHandler extends Thread {
 
             try {
 
-                numberOfPlayers = Integer.parseInt( dataReceiver.readUTF());
+                numberOfPlayers = Integer.parseInt(dataReceiver.readUTF());
 
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
 
                 message = "You didn't enter a number! Please enter one: ";
                 dataSender.writeUTF(message);
@@ -333,12 +320,12 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void makeNonFirstPlayerJoin() throws IOException{
+    private void makeNonFirstPlayerJoin() throws IOException {
 
         String message;
         String input;
 
-        if (centralServer.getCurrentStartingGame().isNickNameRepeated(nickName)){
+        if (centralServer.getCurrentStartingGame().isNickNameRepeated(nickName)) {
 
             while (true) {
 
@@ -370,25 +357,24 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void addPlayerToGame(boolean isFirstPlayer, int numberOfPlayers, GameType gameType) throws IOException{
+    private void addPlayerToGame(boolean isFirstPlayer, int numberOfPlayers, GameType gameType) throws IOException {
         String message;
 
         playerToAdd = new Player(nickName, centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
 
-        if(isFirstPlayer){
+        if (isFirstPlayer) {
             centralServer.addPlayerToCurrentStartingGame(playerToAdd, gameType, numberOfPlayers);
-        }
-        else {
+        } else {
             centralServer.addPlayerToCurrentStartingGame(playerToAdd);
         }
         message = nickName + " joined the game!";
         notifyAllPlayers(message);
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayerSocket(playerToAdd, clientSocket, dataSender, dataReceiver);
 
-        if(isFirstPlayer) {
-            message = "You have succesfully created the game (game code " + centralServer.getCurrentGameCode() + ")";
+        if (isFirstPlayer) {
+            message = "You have successfully created the game (game code " + centralServer.getCurrentGameCode() + ")";
 
-        }else{
+        } else {
             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
         }
         dataSender.writeUTF(message);
@@ -411,9 +397,9 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void notifyAllPlayers(String message) throws IOException{
+    private void notifyAllPlayers(String message) throws IOException {
 
-        for(ObjectOutputStream out: ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).getPlayersOutputStreams()){
+        for (ObjectOutputStream out : ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).getPlayersOutputStreams()) {
             out.writeUTF(message);
             out.flush();
         }
