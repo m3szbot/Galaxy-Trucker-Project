@@ -52,13 +52,23 @@ public class ComponentPlacingState implements GameState {
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyPhase) {
-        String[] parts = input.split("[ ,]");
-        int num1 = Integer.parseInt(parts[0]);
-        int num2 = Integer.parseInt(parts[1]);
+        input.replaceAll("[^\\d]", " ");
+        String[] parts = input.trim().split("[ ,]+"); //trim eliminates white spaces at the beginning and at the end
+        if (parts.length != 2) {
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Not valid format!");
+            return;
+        }
+
+            int num1 = Integer.parseInt(parts[0]);
+            int num2 = Integer.parseInt(parts[1]);
+
 
 
         if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-            if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 1, num2) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 + 1, num2) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1, num2 - 1) != null || assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1, num2 + 1) != null) {
+            if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 2, num2-1) != null ||
+                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 , num2-1) != null ||
+                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1-1, num2 - 2) != null ||
+                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1-1, num2 ) != null) {
                 try {
                     assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
                     synchronized (assemblyProtocol.lockCoveredList) {
