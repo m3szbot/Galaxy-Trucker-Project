@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class AssemblyPhase extends Phase {
     private AtomicBoolean running = new AtomicBoolean(true);
-    private AtomicInteger end = new AtomicInteger(0);
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private AssemblyProtocol assemblyProtocol;
     private String message;
@@ -84,10 +83,12 @@ public class AssemblyPhase extends Phase {
         }
         */
 
+        CountDownLatch allPlayersReady = new CountDownLatch(gameInformation.getPlayerList().size());
         ExecutorService executor = Executors.newFixedThreadPool(gameInformation.getPlayerList().size());
         for (Player player : gameInformation.getPlayerList()) {
-            executor.submit(new AssemblyThread(gameInformation, player, assemblyProtocol, running, end));
+            executor.submit(new AssemblyThread(gameInformation, player, assemblyProtocol, running, allPlayersReady));
         }
+
 
         Thread t = new Thread(() -> {
             while (running.get()) {
@@ -109,21 +110,14 @@ public class AssemblyPhase extends Phase {
             }
         });
         t.start();
+
         try {
+            allPlayersReady.await();
             t.join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        executor.shutdown();
-        try {
-            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executor.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
+        executor.shutdownNow();
 
         message = "Assembly phase has ended";
         for (Player player : gameInformation.getPlayerList()) {

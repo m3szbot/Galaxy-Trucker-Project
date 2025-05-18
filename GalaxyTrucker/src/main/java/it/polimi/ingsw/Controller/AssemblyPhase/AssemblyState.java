@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -91,12 +92,23 @@ public class AssemblyState implements GameState {
                 break;
             case "turn":
                 actionTaken = true;
-                message = "Turn the hourglass";
-                dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
-                assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(),ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerSocketMap().keySet().stream().toList() );
+                if(assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)){
+                    if(assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 2){
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'");
+                    }else{
+                        message = "Turn the hourglass";
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
+                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                    }
+                } else{
+                    if(assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 1){
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'");
+                    }else{
+                        message = "Turn the hourglass";
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
+                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                    }
+                }
                 assemblyPhase.setState(new AssemblyState(protocol, player));
                 break;
             case "show":

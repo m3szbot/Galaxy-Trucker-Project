@@ -10,6 +10,7 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,16 +22,18 @@ public class AssemblyThread implements Runnable {
     private GameState currentState;
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     AtomicBoolean running;
-    AtomicInteger end;
-    Boolean isfinished = false;
+    CountDownLatch latch;
+    AtomicBoolean isfinished = new AtomicBoolean(false);
+    AtomicBoolean amIChoosing = new AtomicBoolean(false);
+    AtomicBoolean end = new AtomicBoolean(false);
 
 
-    public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, AtomicInteger end) {
+    public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, CountDownLatch latch) {
         this.gameInformation = gameInformation;
         this.associatedPlayer = player;
         this.assemblyProtocol = assemblyProtocol;
         this.running = running;
-        this.end = end;
+        this.latch = latch;
     }
 
     /**
@@ -62,13 +65,12 @@ public class AssemblyThread implements Runnable {
     public void run() {
         // For now, the initial state is set using only the first player.
         // Later, threads should be launched for all players.
-        while (end.get() < gameInformation.getMaxNumberOfPlayers()) {
             setState(new AssemblyState(assemblyProtocol, associatedPlayer));
 
             // Separate thread for reading user input from the console
             new Thread(() -> {
                 //Scanner scanner = new Scanner(System.in);
-                while (end.get() != gameInformation.getPlayerList().size()) {
+                while (!end.get()) {
                     //String input = scanner.nextLine();
                     //System.out.println("prova");
                     try {
@@ -83,9 +85,9 @@ public class AssemblyThread implements Runnable {
                             ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
                         }
                     }
-
                 }
             }).start();
+
 
             // Main non-blocking game loop
             while (running.get() ) {
@@ -104,15 +106,16 @@ public class AssemblyThread implements Runnable {
                 currentState.update(this);
             }
 
-            setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
-            while ( running.get() == false && end.get() < gameInformation.getPlayerList().size() ) {
-                if(isfinished) end.set(end.get() + 1);
-                String input = inputQueue.poll();
-                if (input != null) currentState.handleInput(input, this);
-                currentState.update(this);
-                try { Thread.sleep(100); }
-                catch (InterruptedException ignored) {}
+            if(!amIChoosing.get()) {
+                setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
+                while (!isfinished.get()) {
+                    String input = inputQueue.poll();
+                    if(input != null) {currentState.handleInput(input, this);}
+                    currentState.update(this);
+                    try { Thread.sleep(100); }
+                    catch (InterruptedException ignored) {}
+
+                }
             }
-        }
     }
 }
