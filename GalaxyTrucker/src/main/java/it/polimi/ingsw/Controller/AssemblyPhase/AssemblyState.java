@@ -67,9 +67,7 @@ public class AssemblyState implements GameState {
                 actionTaken = true;
                 synchronized (assemblyPhase.getAssemblyProtocol().lockCoveredList) {
                     assemblyPhase.getAssemblyProtocol().newComponent(player);
-                    System.out.println(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).toString());;
                 }
-
                 assemblyPhase.setState(new AssemblyState(protocol, player));
                 break;
             case "choose":
@@ -98,7 +96,7 @@ public class AssemblyState implements GameState {
                     }else{
                         message = "Turn the hourglass";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
-                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
                     }
                 } else{
                     if(assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 1){
@@ -106,7 +104,7 @@ public class AssemblyState implements GameState {
                     }else{
                         message = "Turn the hourglass";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
-                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
                     }
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));

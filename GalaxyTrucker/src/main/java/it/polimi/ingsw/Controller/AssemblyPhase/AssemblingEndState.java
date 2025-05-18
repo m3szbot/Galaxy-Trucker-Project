@@ -39,7 +39,7 @@ public class AssemblingEndState implements GameState {
                    if (assemblyPhase.gameInformation.getGameType().equals(GameType.NORMALGAME)) {
                        if (assemblyProtocol.getHourGlass().getState() == 2) {
                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
                            assemblyPhase.latch.countDown();
                        } else {
                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList());
