@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -28,14 +29,16 @@ public class AssemblyPhase extends Phase {
     private String message;
 
 
-
-
     /**
      * Initializes the game with provided game information.
      */
     public AssemblyPhase(GameInformation gameInformation) {
         super(gameInformation);
         assemblyProtocol = new AssemblyProtocol(gameInformation);
+    }
+
+    public GameMessenger getGameMessenger() {
+        return gameMessenger;
     }
 
     /**
@@ -60,7 +63,7 @@ public class AssemblyPhase extends Phase {
      * Starts the game, initializes the state, sets up user input thread,
      * and runs the main non-blocking game loop.
      */
-    public void start(){
+    public void start() {
 
         setGamePhaseToAll(GamePhase.Assembly);
 
