@@ -1,14 +1,14 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class used to communicate with players during the game.
@@ -18,26 +18,31 @@ import java.util.*;
 
 public class GameMessenger {
 
-    private Map<Player, Socket> playerSocketMap = new HashMap<>();
-    private Map<Player, ObjectOutputStream> playerObjectOutputStreamMap = new HashMap<>();
-    private Map<Player, ObjectInputStream> playerObjectInputStreamMap = new HashMap<>();
-    private List<Player> playerRMIList = new ArrayList<>();
-    private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
+    private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
 
-    public void addPlayerSocket(Player player, Socket socket, ObjectOutputStream outputStream, ObjectInputStream inputStream) {
+    public List<Player> getPlayersSocket(){
 
-        this.playerSocketMap.put(player, socket);
-        this.playerObjectInputStreamMap.put(player, inputStream);
-        this.playerObjectOutputStreamMap.put(player, outputStream);
-        this.playerDataContainerMap.put(player, new DataContainer());
+        List<Player> players = new ArrayList<>();
+
+        for(Player player: dataExchangerMap.keySet()){
+            if(dataExchangerMap.get(player).getConnectionType() == ConnectionType.SOCKET){
+                players.add(player);
+            }
+        }
+
+        return players;
 
     }
 
-    public void addPlayerRMI(Player player) {
-        playerRMIList.add(player);
+    public void addPlayer(Player player, DataExchanger dataExchanger){
+        playerDataContainerMap.put(player, new DataContainer());
+        dataExchangerMap.put(player, dataExchanger);
     }
+
 
     private void sendErrorMessage(String message, Player player) {
+
         DataContainer dataContainer = getPlayerContainer(player);
         dataContainer.setCommand("printMessage");
         dataContainer.setMessage(message);
@@ -58,33 +63,16 @@ public class GameMessenger {
 
     private String getPlayerInput(Player player) throws PlayerDisconnectedException {
 
-        if (playerRMIList.contains(player)) {
-            //RMI
-            //TODO
-        } else {
-            try {
-                return playerObjectInputStreamMap.get(player).readUTF();
-            } catch (IOException e){
+        try {
 
-                System.err.println("Error while reading from client");
-                e.printStackTrace();
+            return dataExchangerMap.get(player).receiveMessage(true);
+        } catch (IOException e) {
 
-                throw new PlayerDisconnectedException(player);
-
-            }
+            System.err.println("Error while obtaining data from client");
+            throw new PlayerDisconnectedException(player);
 
         }
 
-        return null;
-
-    }
-
-    public Collection<ObjectOutputStream> getPlayersOutputStreams() {
-        return playerObjectOutputStreamMap.values();
-    }
-
-    public Collection<ObjectInputStream> getPlayerInputStreams() {
-        return playerObjectInputStreamMap.values();
     }
 
     public int getPlayerInt(Player player) throws PlayerDisconnectedException {
@@ -145,39 +133,28 @@ public class GameMessenger {
         }
     }
 
-    public Map<Player, Socket> getPlayerSocketMap() {
-        return playerSocketMap;
-    }
-
     /**
      * Set gamePhase for all players' client.
-     * TODO: rmi
      */
     public void setGamePhaseToAll(GamePhase gamePhase) {
-        // socket
-        for (Player player : playerSocketMap.keySet()) {
+
+        for (Player player : dataExchangerMap.keySet()) {
             setPlayerGamePhase(player, gamePhase);
         }
-        // RMI
+
     }
 
     /**
      * Sets gamePhase of player's client.
      * <p>
-     * TODO: rmi
-     *
-     * @author Boti
      */
     public void setPlayerGamePhase(Player player, GamePhase gamePhase) {
-        // socket
-        if (playerSocketMap.containsKey(player)) {
-            DataContainer dataContainer = getPlayerContainer(player);
-            dataContainer.clearContainer();
-            dataContainer.setCommand("setGamePhase");
-            dataContainer.setGamePhase(gamePhase);
-            sendPlayerData(player);
-        }
-        // RMI
+
+        DataContainer dataContainer = getPlayerContainer(player);
+        dataContainer.setCommand("setGamePhase");
+        dataContainer.setGamePhase(gamePhase);
+        sendPlayerData(player);
+
     }
 
     /**
@@ -199,44 +176,29 @@ public class GameMessenger {
 
     public void sendPlayerData(Player player) {
 
-        if (playerRMIList.contains(player)) {
-            //RMI
-            //TODO
-        } else {
-            //socket
+        try {
 
-            try {
+            dataExchangerMap.get(player).sendDataContainer(getPlayerContainer(player));
 
-                playerObjectOutputStreamMap.get(player).writeObject(getPlayerContainer(player));
-                playerObjectOutputStreamMap.get(player).flush();
-                playerObjectOutputStreamMap.get(player).reset();
-
-            } catch (IOException e) {
-                System.err.println();
-            } finally {
-                playerDataContainerMap.get(player).clearContainer();
-            }
-
+        } catch (IOException e) {
+            System.err.println("Error while sending dataContainer to " + player.getNickName());
         }
+
     }
 
     /**
      * End game for all players.
-     * TODO rmi
-     *
-     * @author Boti
      */
     public void endGame() {
         // socket
-        for (Player player : playerSocketMap.keySet()) {
+        for (Player player : dataExchangerMap.keySet()) {
+
             DataContainer dataContainer = getPlayerContainer(player);
-            dataContainer.clearContainer();
             dataContainer.setCommand("endGame");
             sendPlayerData(player);
         }
         clearAllResources();
 
-        // RMI
 
     }
 
@@ -249,16 +211,8 @@ public class GameMessenger {
 
         try {
 
-            for (ObjectOutputStream outputStream : playerObjectOutputStreamMap.values()) {
-                outputStream.close();
-            }
-
-            for (ObjectInputStream inputStream : playerObjectInputStreamMap.values()) {
-                inputStream.close();
-            }
-
-            for (Socket socket : playerSocketMap.values()) {
-                socket.close();
+            for(DataExchanger dataExchanger: dataExchangerMap.values()){
+                dataExchanger.closeResources();
             }
 
         } catch (IOException e) {
@@ -286,12 +240,8 @@ public class GameMessenger {
     private void clearPlayerResources(Player player) {
 
         try {
-            playerObjectOutputStreamMap.get(player).close();
-            playerObjectInputStreamMap.get(player).close();
-            playerSocketMap.get(player).close();
-            playerObjectOutputStreamMap.remove(player);
-            playerObjectInputStreamMap.remove(player);
-            playerSocketMap.remove(player);
+
+            dataExchangerMap.get(player).closeResources();
 
         } catch (IOException e) {
             System.err.println("Error while closing " + player.getNickName() + " resources");
@@ -302,37 +252,25 @@ public class GameMessenger {
     /**
      * Send message to all players.
      * Command is set to "printMessage".ú
-     * TODO: rmi
-     *
-     * @author Boti
      */
-    public void sendMessageToALl(String message) {
-        // socket
-        for (Player player : playerSocketMap.keySet()) {
+    public void sendMessageToAll(String message) {
+        for (Player player : dataExchangerMap.keySet()) {
             sendPlayerMessage(player, message);
         }
 
-        // rmi
     }
 
     /**
      * Send a message to print to the given player's client.
      * Command is set to "printMessage".
-     * <p>
-     * TODO: rmi
-     *
-     * @author Boti
      */
     public void sendPlayerMessage(Player player, String message) {
-        // socket
-        if (playerSocketMap.containsKey(player)) {
-            DataContainer dataContainer = getPlayerContainer(player);
-            dataContainer.clearContainer();
-            dataContainer.setCommand("printMessage");
-            dataContainer.setMessage(message);
-            sendPlayerData(player);
-        }
-        // RMI
+
+        DataContainer dataContainer = getPlayerContainer(player);
+        dataContainer.setCommand("printMessage");
+        dataContainer.setMessage(message);
+        sendPlayerData(player);
+
     }
 
     /**
@@ -341,7 +279,7 @@ public class GameMessenger {
     public void reconnectPlayer(GameInformation gameInformation, Player player) {
         gameInformation.getDisconnectedPlayerList().remove(player);
         gameInformation.getPlayerList().add(player);
-        sendMessageToALl(String.format("%s has been reconnected", player));
+        sendMessageToAll(String.format("%s has been reconnected", player));
     }
 
 }

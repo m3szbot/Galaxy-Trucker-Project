@@ -48,23 +48,16 @@ public class HourGlass {
                     if (elapsedTime < life) {
                         if(elapsedTime % 5 == 0) {
                             String message = ("Elapsed Time: " + elapsedTime + "s");
-                            for(Player player: players) {
-                                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
-                                dataContainer.setMessage(message);
-                                dataContainer.setCommand("printMessage");
-                                ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
-                            }
+
+                            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendMessageToAll(message);
+
                         }
                         elapsedTime++;
                     } else {
                         String message = "Time's up!";
-                        System.out.println("Time's up!");
-                        for(Player player: players) {
-                            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            dataContainer.setCommand("printMessage");
-                            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerData(player);
-                        }
+                        //System.out.println("Time's up!");
+
+                        ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendMessageToAll(message);
                         scheduler.shutdown(); // Stops the scheduler
                         updateState(); // Updates the state of the hourglass
                         finished = true; // Resets to finished state

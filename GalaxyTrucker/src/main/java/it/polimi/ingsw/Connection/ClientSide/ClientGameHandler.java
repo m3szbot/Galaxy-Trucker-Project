@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
+import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.View.AssemblyView.AssemblyViewTUI;
 import it.polimi.ingsw.View.CorrectionView.CorrectionViewTUI;
@@ -8,8 +8,6 @@ import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import it.polimi.ingsw.View.GeneralView;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -36,13 +34,7 @@ public class ClientGameHandler {
 
         setViews(clientInfo.getViewType(), views);
 
-        if (clientInfo.getConnectionType() == ConnectionType.SOCKET) {
-            startSCK(views);
-
-
-        } else {
-            startRMI(views);
-        }
+        start(views);
 
     }
 
@@ -80,17 +72,16 @@ public class ClientGameHandler {
      * @param views
      */
 
-    private void startSCK(GeneralView[] views) {
+    private void start(GeneralView[] views) {
 
         System.out.println("The game is starting!");
 
-        ObjectOutputStream out = clientInfo.getOutputStream();
-        ObjectInputStream in = clientInfo.getInputStream();
+        DataExchanger dataExchanger = clientInfo.getDataExchanger();
 
         AtomicBoolean running = new AtomicBoolean(true);
 
-        Thread messageReceiver = new Thread(new GameMessageReceiver(views, in, running));
-        Thread messageSender = new Thread(new GameMessageSender(out, running, clientInfo.getUserInput()));
+        Thread messageReceiver = new Thread(new GameMessageReceiver(views, dataExchanger, running));
+        Thread messageSender = new Thread(new GameMessageSender(dataExchanger, running, clientInfo.getUserInput()));
 
         messageReceiver.start();
         messageSender.start();
@@ -107,17 +98,4 @@ public class ClientGameHandler {
 
     }
 
-
-    /**
-     * Starts the player threads that communicate with the server with
-     * RMI protocol
-     *
-     * @param views
-     */
-
-    private void startRMI(GeneralView[] views) {
-
-        //TODO
-
-    }
 }

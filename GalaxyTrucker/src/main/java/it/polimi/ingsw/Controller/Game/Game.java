@@ -89,19 +89,6 @@ public class Game implements Runnable {
         this.gameState = gameState;
     }
 
-    public boolean isNickNameRepeated(String nickname) {
-
-        for (Player player : gameInformation.getPlayerList()) {
-
-            if (nickname.equals(player.getNickName()))
-                return true;
-
-        }
-
-        return false;
-    }
-
-
     /**
      * Start the different phases of the game.
      */

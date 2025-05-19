@@ -30,6 +30,13 @@ public class ClientWelcomer {
 
         input = scanner.nextLine();
 
+        while(input.contains("~")){
+
+            System.out.println("The character '~' cannot be part of you're nickname!");
+            System.out.print("Enter a valid nickname: ");
+            input = scanner.nextLine();
+        }
+
         clientInfo.setNickname(input);
         System.out.println("You're nickname is " + input);
 

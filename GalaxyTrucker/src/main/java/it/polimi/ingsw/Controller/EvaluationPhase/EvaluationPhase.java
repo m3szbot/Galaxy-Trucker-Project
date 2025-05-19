@@ -34,7 +34,7 @@ public class EvaluationPhase extends Phase {
         assignPlayerCredits(gameInformation);
 
         message = getLeaderboardMessage(gameInformation);
-        gameMessenger.sendMessageToALl(message);
+        gameMessenger.sendMessageToAll(message);
 
         // suspend main thread so that players have time to read the leaderboard
         try {

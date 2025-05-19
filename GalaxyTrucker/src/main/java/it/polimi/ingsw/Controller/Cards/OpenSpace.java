@@ -45,7 +45,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
             message = "Player " + players.get(i).getNickName() + " has moved " +
                     enginePowerChosen + " position forward!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }
 

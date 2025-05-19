@@ -4,10 +4,8 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
 
 /**
  * Interface that define a default method which handles a player being
@@ -84,7 +82,7 @@ public interface TokenLoss {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 ;
                 message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
             component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
@@ -124,7 +122,7 @@ public interface TokenLoss {
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                             ;
                             message = e.getMessage();
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         }
 
                         if (numberOfRemovedCrew <= 2 && numberOfRemovedCrew <= numberOfCrewToRemove && numberOfRemovedCrew > 0) {
@@ -204,7 +202,7 @@ public interface TokenLoss {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                         ;
                         message = e.getMessage();
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                     }
                     component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
@@ -225,7 +223,7 @@ public interface TokenLoss {
                                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                                     ;
                                     message = e.getMessage();
-                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                                 }
                                 goodsRemoved[i] = numberOfRemovedGoods;
 
@@ -301,7 +299,7 @@ public interface TokenLoss {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     ;
                     message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
                 component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
 
@@ -318,7 +316,7 @@ public interface TokenLoss {
                                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                                 ;
                                 message = e.getMessage();
-                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                             }
 
                             if (numberOfRemovedBatteries <= ((Battery) component).getBatteryPower() && numberOfRemovedBatteries <= numberOfBatteriesToRemove && numberOfRemovedBatteries > 0) {

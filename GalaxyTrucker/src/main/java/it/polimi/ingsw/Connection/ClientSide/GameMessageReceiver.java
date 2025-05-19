@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.View.GeneralView;
 
@@ -22,13 +23,14 @@ public class GameMessageReceiver implements Runnable {
     private ObjectInputStream in;
     private AtomicBoolean running;
     private int viewIndex;
+    private DataExchanger dataExchanger;
 
 
-    public GameMessageReceiver(GeneralView[] views, ObjectInputStream in, AtomicBoolean running) {
+    public GameMessageReceiver(GeneralView[] views, DataExchanger dataExchanger, AtomicBoolean running) {
 
         this.views = views;
-        this.in = in;
         this.running = running;
+        this.dataExchanger = dataExchanger;
 
     }
 
@@ -40,20 +42,13 @@ public class GameMessageReceiver implements Runnable {
 
             try {
 
-                container = (DataContainer) in.readObject();
+                container = dataExchanger.receiveDataContainer();
                 executeCommand(container.getCommand(), container);
 
 
             } catch (IOException e) {
 
                 running.set(false);
-                System.err.println("Critical error while receiving messages");
-                System.out.println("You have been disconnected");
-
-            } catch (ClassNotFoundException e) {
-
-                running.set(false);
-                System.err.println("DataContainer class not recognized");
                 System.out.println("You have been disconnected");
 
             }

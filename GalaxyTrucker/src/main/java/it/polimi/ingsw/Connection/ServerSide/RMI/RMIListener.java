@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Connection.ServerSide.RMI;
 
-import it.polimi.ingsw.Connection.ServerSide.Server;
-
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
@@ -17,24 +15,22 @@ import java.rmi.registry.LocateRegistry;
 
 public class RMIListener implements Runnable{
 
-    private Server centralServer;
+    private final RMICommunicatorImpl rmiCommunicator;
 
-    public RMIListener(Server centralServer){
-
-        this.centralServer = centralServer;
-
+    public RMIListener(RMICommunicatorImpl rmiCommunicator){
+        this.rmiCommunicator = rmiCommunicator;
     }
 
-   public void run(){
+    public void run(){
 
        try {
            LocateRegistry.createRegistry(1099);
 
-           RMIJoinerImpl rmiJoiner = new RMIJoinerImpl(centralServer);
 
-           Naming.bind("Joiner", rmiJoiner);
+           Naming.bind("RMICommunicator", rmiCommunicator);
 
            System.out.println("Rmi listener is activated and is listening...");
+
 
        } catch (RemoteException e) {
            System.err.println("Errow while initializing RMI");

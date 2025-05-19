@@ -1,10 +1,9 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
+import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
 import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,33 +28,24 @@ public class ClientInfo implements Serializable {
     private transient String serverIp;
     private final static int serverPort = 5200;
     private transient Socket serverSocket;
-    private transient ObjectInputStream inputStream;
-    private transient ObjectOutputStream outputStream;
     private transient AtomicReference<String> userInput;
+    private transient DataExchanger dataExchanger;
 
     public ClientInfo(){
         userInput = new AtomicReference<>(null);
         gameCode = -1;
     }
 
+    public void setDataExchanger(DataExchanger dataExchanger){
+        this.dataExchanger = dataExchanger;
+    }
+
+    public DataExchanger getDataExchanger() {
+        return dataExchanger;
+    }
+
     public AtomicReference<String> getUserInput() {
         return userInput;
-    }
-
-    public ObjectInputStream getInputStream() {
-        return inputStream;
-    }
-
-    public ObjectOutputStream getOutputStream() {
-        return outputStream;
-    }
-
-    public void setInputStream(ObjectInputStream inputStream) {
-        this.inputStream = inputStream;
-    }
-
-    public void setOutputStream(ObjectOutputStream outputStream) {
-        this.outputStream = outputStream;
     }
 
     public Socket getServerSocket() {

@@ -84,13 +84,13 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         message = "Player " + lowestInhabitantNumberPlayer.getNickName() + " lost " + daysLost +
                 " flight days as he is the one with the lowest number of inhabitants!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
 
         message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
                 " crew members as he is the one with the weakest engine power!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         //rolling the dice for each shot and then hitting
         for (int i = 0; i < blows.length; i++) {
@@ -99,7 +99,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
     }
 

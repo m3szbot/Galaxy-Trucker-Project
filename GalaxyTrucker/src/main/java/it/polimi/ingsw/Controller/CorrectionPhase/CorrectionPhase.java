@@ -65,7 +65,7 @@ public class CorrectionPhase extends Phase {
                 toRemove.add(player);
                 message = String.format("Player %s didn't correct his shipboard in time and got removed\n",
                         player.getNickName());
-                gameMessenger.sendMessageToALl(message);
+                gameMessenger.sendMessageToAll(message);
             }
         }
         // find disconnected players to remove
@@ -75,7 +75,7 @@ public class CorrectionPhase extends Phase {
                 for (Player target : gameInformation.getPlayerList()) {
                     message = String.format("Player %s didn't correct his shipboard in time and got removed\n",
                             player.getNickName());
-                    gameMessenger.sendMessageToALl(message);
+                    gameMessenger.sendMessageToAll(message);
                 }
             }
         }

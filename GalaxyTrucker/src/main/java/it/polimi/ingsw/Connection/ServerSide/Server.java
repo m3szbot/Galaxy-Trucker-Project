@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicatorImpl;
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMIListener;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketListener;
 import it.polimi.ingsw.Controller.Game.Game;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,15 +37,23 @@ public class Server {
     private ReentrantLock lock = new ReentrantLock();
     private Color currentColor;
     private int portNumber;
+    private RMICommunicatorImpl rmiCommunicator;
+    private List<String> nicknameList;
 
     public Server() {
         this.gameCode = 0;
         this.currentStartingGame = new Game(gameCode);
         ClientMessenger.addGame(gameCode);
+        try {
+            this.rmiCommunicator = new RMICommunicatorImpl(this);
+        } catch (RemoteException e) {
+           System.err.println("Error while generating rmiCommunicator");
+        }
+        this.rmiListener = new RMIListener(rmiCommunicator);
         this.socketListener = new SocketListener(this);
-        this.rmiListener = new RMIListener(this);
         this.currentColor = Color.RED;
         this.portNumber = 5200;
+        this.nicknameList = new ArrayList<>();
     }
 
     public static void main(String[] args) {
@@ -60,6 +70,7 @@ public class Server {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
+
         new Thread(socketListener).start();
         new Thread(rmiListener).start();
 
@@ -113,10 +124,33 @@ public class Server {
         return lock;
     }
 
+    private void addNickname(String nickname){
+        this.nicknameList.add(nickname);
+    }
+
     public void addPlayerToCurrentStartingGame(Player player) {
 
         currentStartingGame.addPlayer(player, false);
 
+    }
+
+    /**
+     *
+     * @param nickname
+     * @return true if the nickName is already present
+     */
+
+    public boolean checkNickname(String nickname){
+       if(nicknameList.contains(nickname)){
+           return true;
+       }
+       else{
+           return false;
+       }
+    }
+
+    public void addNickName(String nickName){
+        nicknameList.add(nickName);
     }
 
     public void addPlayerToCurrentStartingGame(Player player, GameType gameType, int numberOfPlayers) {
