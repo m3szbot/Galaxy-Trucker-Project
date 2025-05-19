@@ -7,9 +7,8 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class used to communicate with players during the game.
@@ -19,8 +18,8 @@ import java.util.Map;
 
 public class GameMessenger {
 
-    private Map<Player, DataExchanger> dataExchangerMap = new HashMap<>();
-    private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
+    private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
 
     public List<Player> getPlayersSocket(){
 
