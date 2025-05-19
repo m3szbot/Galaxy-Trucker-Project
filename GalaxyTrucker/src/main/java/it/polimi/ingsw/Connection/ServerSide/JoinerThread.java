@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicatorImpl;
-import it.polimi.ingsw.Connection.ServerSide.joining.TimeExceededException;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -91,35 +90,6 @@ public class JoinerThread extends Thread{
             }
 
         }
-        catch (TimeExceededException e){
-
-            String message;
-
-            try {
-                dataExchanger.sendMessage(e.getMessage(), false);
-                message = "terminate";
-                dataExchanger.sendMessage(message, false);
-            } catch (IOException ex) {
-                System.err.println("Error while sending data to the client");
-            }
-
-            System.out.println("Client + " + clientSocket.getInetAddress() + " was kicked out because of inactivity");
-
-            try {
-                //closing resources
-                dataExchanger.closeResources();
-                if(clientSocket != null){
-                    clientSocket.close();
-                }
-            } catch (IOException e2) {
-                System.err.println("Critical error while closing client socket and streams");
-            }
-
-            if (centralServer.getLock().isLocked()) {
-                centralServer.getLock().unlock();
-            }
-
-        }
         catch (IOException e) {
 
             if (trials == MAXTRIALS) {
@@ -147,7 +117,7 @@ public class JoinerThread extends Thread{
         }
     }
 
-    private void startLobby() throws TimeExceededException, IOException {
+    private void startLobby()throws IOException {
 
         String message;
 
@@ -244,7 +214,7 @@ public class JoinerThread extends Thread{
         return centralServer.getCurrentStartingGame().getGameState() == GameState.Empty;
     }
 
-    private void makeFirstPlayerJoin() throws TimeExceededException, IOException {
+    private void makeFirstPlayerJoin() throws IOException {
 
         int numberOfPlayers;
         GameType gameType;
