@@ -305,8 +305,7 @@ public abstract class GeneralView {
     }
 
     /**
-     * Return String list of the 5 component lines.
-     * TODO
+     * Return String list of the 5 component lines, excluding the \n at the end of the lines.
      */
     private List<String> getComponentLines(Component component) {
         String componentString = getCorrectComponentString(component);
