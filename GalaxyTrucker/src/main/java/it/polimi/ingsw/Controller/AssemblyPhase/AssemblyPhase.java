@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -10,10 +11,7 @@ import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,12 +23,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class AssemblyPhase extends Phase {
     private AtomicBoolean running = new AtomicBoolean(true);
-    private AtomicInteger end = new AtomicInteger(0);
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private AssemblyProtocol assemblyProtocol;
     private String message;
-
-
 
 
     /**
@@ -39,6 +34,10 @@ public class AssemblyPhase extends Phase {
     public AssemblyPhase(GameInformation gameInformation) {
         super(gameInformation);
         assemblyProtocol = new AssemblyProtocol(gameInformation);
+    }
+
+    public GameMessenger getGameMessenger() {
+        return gameMessenger;
     }
 
     /**
@@ -63,7 +62,7 @@ public class AssemblyPhase extends Phase {
      * Starts the game, initializes the state, sets up user input thread,
      * and runs the main non-blocking game loop.
      */
-    public void start(){
+    public void start() {
 
         setGamePhaseToAll(GamePhase.Assembly);
 
@@ -87,10 +86,12 @@ public class AssemblyPhase extends Phase {
         }
         */
 
+        CountDownLatch allPlayersReady = new CountDownLatch(gameInformation.getPlayerList().size());
         ExecutorService executor = Executors.newFixedThreadPool(gameInformation.getPlayerList().size());
         for (Player player : gameInformation.getPlayerList()) {
-            executor.submit(new AssemblyThread(gameInformation, player, assemblyProtocol, running, end));
+            executor.submit(new AssemblyThread(gameInformation, player, assemblyProtocol, running, allPlayersReady));
         }
+
 
         Thread t = new Thread(() -> {
             while (running.get()) {
@@ -112,11 +113,14 @@ public class AssemblyPhase extends Phase {
             }
         });
         t.start();
+
         try {
+            allPlayersReady.await();
             t.join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        executor.shutdownNow();
 
         message = "Assembly phase has ended";
         for (Player player : gameInformation.getPlayerList()) {
@@ -141,27 +145,5 @@ public class AssemblyPhase extends Phase {
     public AssemblyProtocol getAssemblyProtocol() {
         return assemblyProtocol;
     }
-/*
-      //main fatto a caso da gecky per fare test
-    public static void main(String[] args) {
-        AssemblyPhase ass;
-        Player gecky;
-        GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        gameInformation.setUpPlayers(gecky = new Player("Gecky", Color.RED, gameInformation), 1);
-        try {gameInformation.setUpCards(GameType.NormalGame);} catch (Exception e){e.printStackTrace();}
-        try  {gameInformation.setUpComponents();} catch (Exception e){e.printStackTrace();}
-        ass = new AssemblyPhase(gameInformation);
-        ass.start();
-    }
-*/
-    /**
-     * Temporary main method for standalone testing.
-     * Should be moved into a class where GameInformation is initialized.
-     */
 
-
-    /*public static void main(String[] args) {
-        new AssemblyGame().start();
-    }*/
 }

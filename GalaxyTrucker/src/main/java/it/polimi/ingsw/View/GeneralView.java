@@ -2,8 +2,7 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.Components.Component;
-import it.polimi.ingsw.Model.Components.SideType;
+import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 /**
@@ -32,22 +31,71 @@ public abstract class GeneralView {
      * Print the component given as parameter. Called by other public print methods
      */
     private void printComponent(Component component) {
-        System.out.printf("""
-                        +---%d---+
-                        |       |
-                        %d  %s  %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()), componentSideTranslator(component.getLeft()),
-                component.getComponentName().substring(0, 3),
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+        // line 1
+        System.out.printf("+---%d---+\n", componentSideTranslator(component.getFront()));
+        //  line 2: component name
+        System.out.printf("| %s |\n", component.getComponentName().substring(0, 5));
+        // line 3-4: component specific prints
+        // alien support
+        if (component instanceof AlienSupport) {
+            if (((AlienSupport) component).isPurple()) {
+                System.out.printf("%d  Pur  %d\n",
+                        componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()));
+            } else {
+                System.out.printf("%d  Bro  %d\n",
+                        componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()));
+            }
+            System.out.printf("|       |\n");
+        }
+        // battery
+        else if (component instanceof Battery) {
+            System.out.printf("%d   %d   %d\n",
+                    componentSideTranslator(component.getLeft()),
+                    component.getBatteryPower(),
+                    componentSideTranslator(component.getRight()));
+            System.out.printf("|       |\n");
+        }
+
+        // line 5
+
+        System.out.printf("%d       %d\n", componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()));
+        System.out.printf("|       |\n");
+
+
+        // print Red or Blue storage + storage size
+        if (component instanceof Storage) {
+            if (((Storage) component).isRed()) {
+                System.out.printf("| Red  |\n");
+            } else {
+                System.out.println("| Blu  |\n");
+            }
+        }
+        // print Single or Double cannon
+        else if (component instanceof Cannon) {
+            if (((Cannon) component).isSingle()) {
+                System.out.printf("|   x1   |\n");
+            } else {
+                System.out.printf("|   x2   |\n");
+            }
+        }
+        //print Single or Double engine
+        else if (component instanceof Engine) {
+            if (((Engine) component).isSingle()) {
+                System.out.printf("|   x1  |\n");
+            } else {
+                System.out.printf("|   x2  |\n");
+            }
+        } else {
+            System.out.println("|       |");
+        }
+        System.out.printf("+---%d---+\n", componentSideTranslator(component.getBack()));
     }
 
     /**
      * Returns a number identifying the given side's type
      *
      * @return identifier number
+     * @author Boti
      */
     private int componentSideTranslator(SideType sideType) {
         if (sideType.equals(SideType.Smooth))

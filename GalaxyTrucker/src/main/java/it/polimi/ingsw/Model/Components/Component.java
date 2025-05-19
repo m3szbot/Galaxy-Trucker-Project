@@ -98,6 +98,20 @@ public class Component implements Visitable, Serializable {
         return "Connector";
     }
 
+    public List<Object> getAllIndexes() {
+        ArrayList<Object> indexes = new ArrayList<>();
+        indexes.add(getDrivingPower()); //0
+        indexes.add(getFirePower()); //1
+        indexes.add(getCrewMembers()); //2
+        indexes.add(getBatteryPower()); //3
+        indexes.add(getCoveredSides()); //4
+        indexes.add(getAvailableRedSlots()); //5
+        indexes.add(getAvailableBlueSlots()); //6
+        indexes.add(amIASupport()); //7
+        indexes.add(amIAStorage()); //8
+        return indexes;
+    }
+
     //Da qui in poi codice aggiunto da Giacomo per provare ad implementare il visitor pattern
     public int getDrivingPower() {
         return 0;
@@ -135,26 +149,8 @@ public class Component implements Visitable, Serializable {
         return false;
     }
 
-    public List<Object> getAllIndexes() {
-        ArrayList<Object> indexes = new ArrayList<>();
-        indexes.add(getDrivingPower()); //0
-        indexes.add(getFirePower()); //1
-        indexes.add(getCrewMembers()); //2
-        indexes.add(getBatteryPower()); //3
-        indexes.add(getCoveredSides()); //4
-        indexes.add(getAvailableRedSlots()); //5
-        indexes.add(getAvailableBlueSlots()); //6
-        indexes.add(amIASupport()); //7
-        indexes.add(amIAStorage()); //8
-        return indexes;
-    }
-
-
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
-
-    ;
-
 }

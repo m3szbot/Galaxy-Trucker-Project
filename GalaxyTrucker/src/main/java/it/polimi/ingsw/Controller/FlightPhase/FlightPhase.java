@@ -15,6 +15,7 @@ public class FlightPhase extends Phase {
 
     public void start() {
         setGamePhaseToAll(GamePhase.Flight);
+        System.out.println("Flight phase has started");
 
         DataContainer dataContainer;
         FlightBoard flightBoard = gameInformation.getFlightBoard();

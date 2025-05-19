@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class AssemblingEndState implements GameState {
@@ -16,6 +17,13 @@ public class AssemblingEndState implements GameState {
 
     @Override
     public void enter(AssemblyThread assemblyPhase) {
+        assemblyPhase.isfinished.set(true);
+        if(!assemblyPhase.running.get()){
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
+            assemblyPhase.end.set(true);
+            assemblyPhase.latch.countDown();
+            return;
+        }
         String message = "Do you want to turn the hourglass? (yes or wait)";
         DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
         dataContainer.setMessage(message);
@@ -27,8 +35,24 @@ public class AssemblingEndState implements GameState {
     public void handleInput(String input, AssemblyThread assemblyPhase) {
        switch (input.toLowerCase()) {
            case "yes":
-               if(assemblyProtocol.getHourGlass().isFinished() == true){
-                   assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayersSocket().stream().toList() );
+               if(assemblyProtocol.getHourGlass().isFinished() == true) {
+                   if (assemblyPhase.gameInformation.getGameType().equals(GameType.NORMALGAME)) {
+                       if (assemblyProtocol.getHourGlass().getState() == 2) {
+                           ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
+                           assemblyPhase.latch.countDown();
+                       } else {
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                       }
+                   }else{
+                       if (assemblyProtocol.getHourGlass().getState() == 2){
+                           ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                           assemblyPhase.latch.countDown();
+                       }else{
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList());
+                       }
+                   }
                }
                else{
                    String message = "HourGlass is already running";
@@ -36,8 +60,8 @@ public class AssemblingEndState implements GameState {
                    dataContainer.setMessage(message);
                    dataContainer.setCommand("printMessage");
                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
-                   assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                }
+               assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                break;
            default:
                String message = "Invalid input";

@@ -13,7 +13,6 @@ public class Player implements Serializable {
     private Color color;
     // The player's ship board, representing their ship in the game
     private ShipBoard shipBoard;
-    private ViewType viewType;
 
     /**
      * Constructor for the Player class.
@@ -57,13 +56,6 @@ public class Player implements Serializable {
         return shipBoard;
     }
 
-    /**
-     * @return viewType
-     * @author Boti
-     */
-    public ViewType getViewType() {
-        return viewType;
-    }
 }
 
 

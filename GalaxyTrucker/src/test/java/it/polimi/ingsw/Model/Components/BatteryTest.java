@@ -27,7 +27,7 @@ class BatteryTest {
                 battery.getBack(),
                 battery.getLeft()
         });
-        assertEquals(3, battery.getNumberOfCurrentBatteries());
+        assertEquals(3, battery.getBatteryPower());
         assertEquals("Battery", battery.getComponentName());
         assertEquals(3, battery.getBatteryPower());
     }
@@ -39,7 +39,7 @@ class BatteryTest {
 
         // Assert
         assertNotNull(battery);
-        assertEquals(0, battery.getNumberOfCurrentBatteries()); // Default int is 0
+        assertEquals(0, battery.getBatteryPower()); // Default int is 0
     }
 
     @Test
@@ -51,7 +51,7 @@ class BatteryTest {
         battery.removeBattery();
 
         // Assert
-        assertEquals(1, battery.getNumberOfCurrentBatteries());
+        assertEquals(1, battery.getBatteryPower());
     }
 
     @Test
@@ -63,7 +63,7 @@ class BatteryTest {
         battery.removeBattery();
 
         // Assert
-        assertEquals(0, battery.getNumberOfCurrentBatteries());
+        assertEquals(0, battery.getBatteryPower());
     }
 
     @Test
@@ -82,7 +82,7 @@ class BatteryTest {
         Battery battery = mapper.readValue(json, Battery.class);
 
         // Assert
-        assertEquals(2, battery.getNumberOfCurrentBatteries());
+        assertEquals(2, battery.getBatteryPower());
         assertArrayEquals(TEST_SIDES, new SideType[]{
                 battery.getFront(),
                 battery.getRight(),
@@ -106,6 +106,6 @@ class BatteryTest {
         Battery battery = mapper.readValue(json, Battery.class);
 
         // Assert
-        assertEquals(0, battery.getNumberOfCurrentBatteries());
+        assertEquals(0, battery.getBatteryPower());
     }
 }
