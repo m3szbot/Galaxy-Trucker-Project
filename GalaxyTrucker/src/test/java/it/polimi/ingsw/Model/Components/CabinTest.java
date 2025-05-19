@@ -27,7 +27,7 @@ class CabinTest {
                 cabin.getBack(),
                 cabin.getLeft()
         });
-        assertEquals(2, cabin.getNumberOfCurrentInhabitant()); // Default value
+        assertEquals(2, cabin.getCrewMembers()); // Default value
         assertEquals("Cabin", cabin.getComponentName());
         assertEquals(2, cabin.getCrewMembers());
         assertNull(cabin.getCrewType()); // Not set initially
@@ -40,7 +40,7 @@ class CabinTest {
 
         // Assert
         assertNotNull(cabin);
-        assertEquals(2, cabin.getNumberOfCurrentInhabitant());
+        assertEquals(2, cabin.getCrewMembers());
         assertNull(cabin.getCrewType());
     }
 
@@ -54,7 +54,7 @@ class CabinTest {
         cabin.removeInhabitant();
 
         // Assert
-        assertEquals(1, cabin.getNumberOfCurrentInhabitant());
+        assertEquals(1, cabin.getCrewMembers());
     }
 
     @Test
@@ -68,7 +68,7 @@ class CabinTest {
         cabin.removeInhabitant(); // Attempt to go below 0
 
         // Assert
-        assertEquals(0, cabin.getNumberOfCurrentInhabitant());
+        assertEquals(0, cabin.getCrewMembers());
     }
 
     @Test
@@ -88,7 +88,7 @@ class CabinTest {
 
         // Assert
         assertEquals(CrewType.Human, cabin.getCrewType());
-        assertEquals(2, cabin.getNumberOfCurrentInhabitant());
+        assertEquals(2, cabin.getCrewMembers());
         assertArrayEquals(TEST_SIDES, new SideType[]{
                 cabin.getFront(),
                 cabin.getRight(),
@@ -113,7 +113,7 @@ class CabinTest {
 
         // Assert
         assertNull(cabin.getCrewType());
-        assertEquals(2, cabin.getNumberOfCurrentInhabitant());
+        assertEquals(2, cabin.getCrewMembers());
     }
 
 }

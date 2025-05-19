@@ -24,11 +24,6 @@ public class Cannon extends Component {
 
     }
 
-    @JsonProperty("single")
-    public void setSingle(boolean single) {
-        this.single = single;
-    }
-
     /**
      * @return true if cannon is single.
      */
@@ -37,23 +32,24 @@ public class Cannon extends Component {
         return single;
     }
 
+    @JsonProperty("single")
+    public void setSingle(boolean single) {
+        this.single = single;
+    }
+
     @Override
     public String getComponentName() {
         return "Cannon";
     }
 
-    //aggiunte
-
     @Override
     public float getFirePower() {
-        if (single) {
-            if (this.getFront().equals(SideType.Special)) {
-                return 1;
-            } else {
-                return 0.5f;
-            }
-        } else {
-            return 2;
+        int firePower = 1;
+        if (!single)
+            firePower = 2;
+        if (this.getFront().equals(SideType.Special)) {
+            return firePower;
         }
+        return firePower * 0.5f;
     }
 }

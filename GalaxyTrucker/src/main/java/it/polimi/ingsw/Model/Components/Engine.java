@@ -25,17 +25,17 @@ public class Engine extends Component {
         }
     }
 
-    @JsonProperty("single")
-    public void setSingle(boolean single) {
-        this.single = single;
-    }
-
     /**
      * @return true if the engine is single
      */
 
     public boolean isSingle() {
         return single;
+    }
+
+    @JsonProperty("single")
+    public void setSingle(boolean single) {
+        this.single = single;
     }
 
     @Override
@@ -45,11 +45,9 @@ public class Engine extends Component {
 
     @Override
     public int getDrivingPower() {
-        if (single) {
-            return 1;
-        } else {
+        if (!single)
             return 2;
-        }
+        return 1;
     }
 }
 
