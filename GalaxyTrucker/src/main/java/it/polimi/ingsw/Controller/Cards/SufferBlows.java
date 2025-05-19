@@ -290,7 +290,7 @@ public interface SufferBlows {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 ;
                 message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
         }
@@ -331,7 +331,7 @@ public interface SufferBlows {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                         ;
                         message = e.getMessage();
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                     }
 
                 } else { //player don't have batteries
@@ -388,7 +388,7 @@ public interface SufferBlows {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     ;
                     message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
             } else {
 
@@ -427,20 +427,20 @@ public interface SufferBlows {
             message = "Player " + player.getNickName() + " has been hit by a " +
                     blowType.toString().toLowerCase() + " at position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else if (xCoord != -1) {
 
             message = "Player " + player.getNickName() + " wasn't damaged by the " +
                     blowType.toString().toLowerCase() + " that hit position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else {
 
             message = "Player " + player.getNickName() + " dodged the " +
                     blowType.toString().toLowerCase() + " coming at him from the " + direction + "!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }
     }
@@ -462,7 +462,7 @@ public interface SufferBlows {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 ;
                 message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
             if (player.getShipBoard().getComponent(coordinates[0], coordinates[1]) != null) {

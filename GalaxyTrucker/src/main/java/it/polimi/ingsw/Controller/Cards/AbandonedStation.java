@@ -3,8 +3,6 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Controller.FlightPhase.FlightPhase;
-import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -64,19 +62,19 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                         changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
 
                         message = player.getNickName() + "has solved the card!";
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         break;
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
             }
         }
 
         message = "Nobody solved the card!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         gameInformation.getFlightBoard().updateFlightBoard();
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {

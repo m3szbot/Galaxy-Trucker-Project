@@ -28,7 +28,7 @@ public class AssemblingEndState implements GameState {
        switch (input.toLowerCase()) {
            case "yes":
                if(assemblyProtocol.getHourGlass().isFinished() == true){
-                   assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerSocketMap().keySet().stream().toList() );
+                   assemblyProtocol.getHourGlass().twist(assemblyProtocol, ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayersSocket().stream().toList() );
                }
                else{
                    String message = "HourGlass is already running";

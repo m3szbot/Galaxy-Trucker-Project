@@ -40,13 +40,13 @@ public class Sabotage extends Card implements SmallestCrew {
         if (destroyRandomComponent(smallestCrewPlayer, gameInformation.getFlightBoard())) {
 
             message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else {
 
             message = "Player " + smallestCrewPlayer.getNickName() +
                     "was lucky enough to not get hit!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }
 

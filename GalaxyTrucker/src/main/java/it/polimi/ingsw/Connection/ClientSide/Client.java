@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
+import it.polimi.ingsw.Model.GameInformation.ConnectionType;
+
 import java.io.IOException;
 
 /**
@@ -36,9 +38,12 @@ public class Client {
 
             //closing resources
 
-            clientInfo.getOutputStream().close();
-            clientInfo.getInputStream().close();
-            clientInfo.getServerSocket().close();
+            if(clientInfo.getConnectionType() == ConnectionType.SOCKET) {
+
+                clientInfo.getDataExchanger().closeResources();
+                clientInfo.getServerSocket().close();
+
+            }
             System.out.println("Resources closed successfully");
 
         } catch (IOException e) {

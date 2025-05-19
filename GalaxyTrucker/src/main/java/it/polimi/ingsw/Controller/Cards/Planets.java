@@ -108,7 +108,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                                 message = "Player " + player.getNickName() +
                                         "has landed on planet " + planetChosen + " !";
-                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                                 freePlanet--;
 
                                 planetOccupation[planetChosen - 1] = true;
@@ -150,7 +150,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                     if (freePlanet == 0) {
                         message = "All planets were occupied!";
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         break;
                     }
 
@@ -158,13 +158,13 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                     message = "Player " + player.getNickName() +
                             " decided to not land on any planet!";
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 }
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
         }
 

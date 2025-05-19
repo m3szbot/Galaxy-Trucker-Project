@@ -1,17 +1,20 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Connection.ServerSide.RMI.RMIJoiner;
+import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicator;
+import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
 import it.polimi.ingsw.Model.GameInformation.ConnectionType;
-import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.GameInformation.ViewType;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -27,11 +30,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientJoiner {
 
+    private AtomicReference<String> userInput;
+
     public int start(ClientInfo clientInfo){
 
         if (clientInfo.getViewType() == ViewType.TUI) {
 
-            return startCLI(clientInfo);
+            return startTUI(clientInfo);
 
 
         } else {
@@ -51,44 +56,108 @@ public class ClientJoiner {
         return false;
     }
 
-    private int startCLI(ClientInfo clientInfo){
+    private void changeNickName(ClientInfo clientInfo){
 
-        if(clientInfo.getConnectionType() == ConnectionType.SOCKET) {
+        System.out.println("You're nickname has already been chosen, please enter a new one: ");
 
-            return startSCK(clientInfo);
+        while(userInput.get() == null);
+
+        clientInfo.setNickname(userInput.getAndSet(null));
+
+    }
+
+    private int startTUI(ClientInfo clientInfo){
+
+        DataExchanger dataExchanger;
+        Socket socket;
+        AtomicBoolean terminatedFlag = new AtomicBoolean(false);
+        AtomicBoolean abnormallyTerminatedFlag = new AtomicBoolean(false);
+        this.userInput = clientInfo.getUserInput();
+
+        if(clientInfo.getConnectionType() == ConnectionType.SOCKET){
+
+            try {
+                socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
+                clientInfo.setServerSocket(socket);
+                ObjectOutputStream dataSender = new ObjectOutputStream(socket.getOutputStream());
+                dataSender.flush();
+                ObjectInputStream dataReceiver = new ObjectInputStream(socket.getInputStream());
+
+                dataSender.writeUTF(clientInfo.getNickname());
+                dataSender.flush();
+
+                String input = dataReceiver.readUTF();
+
+                while(!input.equals("nicknameSet")){
+
+                    System.out.println(input);
+
+                    while(userInput.get() == null);
+
+                    dataSender.writeUTF(userInput.getAndSet(null));
+                    dataSender.flush();
+                    input = dataReceiver.readUTF();
+
+                }
+
+                System.out.println("You're nickname was changed successfully");
+
+                input = dataReceiver.readUTF();
+                clientInfo.setNickname(input);
+
+                dataExchanger = new DataExchanger(socket, dataSender, dataReceiver, ConnectionType.SOCKET);
+                clientInfo.setDataExchanger(dataExchanger);
+
+            } catch (IOException e) {
+                System.err.println("Error while connecting to the server");
+                return -1;
+            }
 
         }
         else{
 
-            return startRMI(clientInfo);
+            RMICommunicator rmiCommunicator;
+
+            try {
+
+                boolean flag = false;
+
+                rmiCommunicator = (RMICommunicator) Naming.lookup("rmi://localhost/RMICommunicator");
+                rmiCommunicator.registerClient(InetAddress.getLocalHost().getHostAddress());
+
+                while(rmiCommunicator.checkNicknameAvailability(clientInfo.getNickname())){
+                    flag = true;
+
+                    changeNickName(clientInfo);
+
+                }
+
+                if(flag) {
+
+                    System.out.println("You're nickname was changed successfully");
+
+                }
+
+                dataExchanger = new DataExchanger(rmiCommunicator, clientInfo.getNickname(), rmiCommunicator.getCurrentGameCode(), ConnectionType.RMI);
+                rmiCommunicator.makeClientJoin(clientInfo.getNickname());
+
+            } catch (NotBoundException | RemoteException | MalformedURLException | UnknownHostException e) {
+                System.err.println("Error while connecting to the server registry");
+                return -1;
+            }
 
         }
-    }
 
-    private int startSCK(ClientInfo clientInfo){
-
-        Socket socket;
-        ObjectInputStream dataReceiver;
-        ObjectOutputStream dataSender;
-        AtomicBoolean terminatedFlag = new AtomicBoolean(false);
-        AtomicBoolean abnormallyTerminatedFlag = new AtomicBoolean(false);
-        AtomicReference<String> userInput = clientInfo.getUserInput();
+        clientInfo.setDataExchanger(dataExchanger);
 
         try {
-            socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
-            clientInfo.setServerSocket(socket);
-            dataSender = new ObjectOutputStream(socket.getOutputStream());
-            dataSender.flush();
-            dataReceiver = new ObjectInputStream(socket.getInputStream());
-            clientInfo.setInputStream(dataReceiver);
-            clientInfo.setOutputStream(dataSender);
-            dataSender.writeObject(clientInfo);
-            dataSender.flush();
+
+            dataExchanger.sendMessage(String.valueOf(clientInfo.getGameCode()), false);
 
         } catch (IOException e) {
-            System.err.println("Error while connecting to the server");
-            return -1;
+            System.err.println("Critical error while sending gameCode to server");
         }
+
         //One thread to receive feedback from the server
 
         Thread messageReceiver = new Thread(() -> {
@@ -104,13 +173,10 @@ public class ClientJoiner {
                         break;
                     }
 
-                    String message = dataReceiver.readUTF();
+                    String message = dataExchanger.receiveMessage(false);
 
                     if(message.equals("added")){
                         terminatedFlag.set(true);
-
-                        String updatedNickName = dataReceiver.readUTF();
-                        clientInfo.setNickname(updatedNickName);
 
                     }
                     else if(message.equals("start")){
@@ -149,8 +215,7 @@ public class ClientJoiner {
 
                     try {
 
-                        dataSender.writeUTF(userInput.getAndSet(null));
-                        dataSender.flush();
+                        dataExchanger.sendMessage(userInput.getAndSet(null), false);
 
                     } catch (IOException e) {
                         abnormallyTerminatedFlag.set(true);
@@ -190,217 +255,6 @@ public class ClientJoiner {
         else{
             return 0;
         }
-    }
-
-    //TODO
-
-    private int startRMI(ClientInfo clientInfo){
-
-        AtomicBoolean isKicked = new AtomicBoolean(false);
-        RMIJoiner joiner;
-        int trials = 0;
-
-        try {
-
-            joiner = (RMIJoiner) Naming.lookup("rmi://localhost/Joiner");
-
-        }catch (NotBoundException | RemoteException | MalformedURLException e){
-            System.err.println("Error while connecting to the host registry");
-            return -1;
-        }
-
-        Scanner scanner = new Scanner(System.in);
-        String input;
-
-        Thread timer = new Thread(() -> {
-            try {
-                Thread.sleep(60000);
-                isKicked.set(true);
-            } catch (InterruptedException e) {
-                //player answer before the time is finished
-            }
-        });
-
-        try {
-
-
-            while (true) {
-
-                timer.start();
-                System.out.println("Press 'enter' key to enter in a game: ");
-
-                if (checkTrials(trials)) {
-                    return 0;
-                }
-
-                if (scanner.nextLine().isEmpty()) {
-
-                    if (isKicked.get()) {
-
-                        System.out.println("The server kicked you out because of inactivity!");
-
-                        return 0;
-                    }
-
-                    timer.interrupt();
-                    timer.start();
-
-                    if (joiner.joinGame()) {
-
-                        if (joiner.isFirstPlayer()) {
-
-                            int numberOfPlayers;
-                            GameType gameType;
-
-                            System.out.println("You are the first player joining the game!");
-                            System.out.println("Enter the game type (TESTGAME/NORMALGAME): ");
-
-                            while (true) {
-
-                                input = scanner.nextLine();
-
-                                if (isKicked.get()) {
-
-                                    System.out.println("The server kicked you out because of inactivity!");
-                                    joiner.releaseLock();
-
-                                    return 0;
-                                }
-
-                                timer.interrupt();
-                                timer.start();
-
-                                input = input.toUpperCase();
-
-                                if (!input.equals("TESTGAME") && !input.equals("NORMALGAME")) {
-
-                                    System.out.println("The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ");
-                                    trials++;
-
-                                } else {
-
-                                    gameType = GameType.valueOf(input);
-                                    System.out.println("Game type was set up correctly");
-
-                                    break;
-                                }
-
-                                if (checkTrials(trials)) {
-                                    return 0;
-                                }
-
-                            }
-
-                            System.out.println("Enter the number of players of the game (2-4): ");
-
-                            while (true) {
-
-                                numberOfPlayers = scanner.nextInt();
-
-                                if (isKicked.get()) {
-
-                                    System.out.println("The server kicked you out because of inactivity!");
-                                    joiner.releaseLock();
-                                    return 0;
-                                }
-
-                                timer.interrupt();
-                                timer.start();
-
-                                if (numberOfPlayers < 2 || numberOfPlayers > 4) {
-
-                                    System.out.println("The number of players you entered is invalid, please enter a valid value (2-4): ");
-                                    trials++;
-
-                                } else {
-
-                                    System.out.println("Number of players was set up correctly");
-                                    break;
-                                }
-
-                                if (checkTrials(trials)) {
-                                    return 0;
-                                }
-
-                            }
-
-                            joiner.addPlayer(clientInfo, gameType, numberOfPlayers);
-                            System.out.println("You have been added to the game (game code " + joiner.getGameCode() + ")");
-                            joiner.releaseLock();
-                            return 1;
-
-                        }
-                        //the player is not the first one
-                        if (joiner.isNameRepeated(clientInfo.getNickname())) {
-
-                            while (true) {
-
-                                System.out.println("You're nickname has already been chosen, please enter a new one: ");
-
-                                input = scanner.nextLine();
-
-                                if (isKicked.get()) {
-
-                                    System.out.println("The server kicked you out because of inactivity!");
-                                    joiner.releaseLock();
-                                    return 0;
-                                }
-
-                                timer.interrupt();
-                                timer.start();
-
-                                if (!joiner.isNameRepeated(input)) {
-
-                                    System.out.println("You're nickname is now " + input);
-                                    clientInfo.setNickname(input);
-                                    break;
-                                }
-
-                                trials++;
-                                if (checkTrials(trials)) {
-                                    return 0;
-                                }
-
-                            }
-
-                        }
-
-                        joiner.addPlayer(clientInfo);
-                        System.out.println("You have joined the game of " + joiner.getCurrentGameCreator() + "(game code " + joiner.getGameCode() + ")");
-                        joiner.releaseLock();
-                        return 1;
-
-                    } else {
-
-                        System.out.println("Somebody is already joining the game, please wait.");
-                        timer.interrupt();
-
-                    }
-
-                } else {
-
-                    if (isKicked.get()) {
-
-                        System.out.println("The server kicked you out because of inactivity!");
-
-                        return 0;
-                    }
-                    trials++;
-
-                    System.out.println("The string you entered is invalid!");
-
-                    timer.interrupt();
-
-                }
-
-            }
-
-        }catch (RemoteException e){
-
-            System.err.println("Connection error while comunicating with the server");
-            return 0;
-        }
-
     }
 
 }

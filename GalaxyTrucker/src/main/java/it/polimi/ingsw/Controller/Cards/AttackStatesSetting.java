@@ -3,9 +3,6 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 
 /**
  * Abstract class that extends cards and implements a method used
@@ -40,7 +37,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() + " has defeated the" +
                         "enemies!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 results[i] = AttackStates.EnemyDefeated;
                 break;
@@ -49,7 +46,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() + " equalized the" +
                         "enemies!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 results[i] = AttackStates.Equalized;
 
@@ -57,7 +54,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() + " has been" +
                         " defeated by the enemies!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 results[i] = AttackStates.PlayerDefeated;
 

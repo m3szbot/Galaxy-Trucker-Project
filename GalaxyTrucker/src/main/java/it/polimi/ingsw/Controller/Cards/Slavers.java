@@ -71,7 +71,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
                                 "has collected the reward!";
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredit);
                         changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), daysLost, gameInformation.getFlightBoard());
@@ -80,13 +80,13 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
                                 " hasn't collected the reward!";
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
 
                 break;

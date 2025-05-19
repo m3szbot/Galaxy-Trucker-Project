@@ -67,7 +67,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                         changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
 
                         message = player.getNickName() + "has solved the card!";
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         break;
                     }
@@ -78,7 +78,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         }
 
         message = "Nobody solved the card!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
         gameInformation.getFlightBoard().updateFlightBoard();
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);

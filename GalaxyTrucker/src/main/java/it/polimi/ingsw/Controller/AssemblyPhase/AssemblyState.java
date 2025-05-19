@@ -96,7 +96,7 @@ public class AssemblyState implements GameState {
                 dataContainer.setMessage(message);
                 dataContainer.setCommand("printMessage");
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
-                assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(),ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerSocketMap().keySet().stream().toList() );
+                assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(),ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayersSocket().stream().toList() );
                 assemblyPhase.setState(new AssemblyState(protocol, player));
                 break;
             case "show":

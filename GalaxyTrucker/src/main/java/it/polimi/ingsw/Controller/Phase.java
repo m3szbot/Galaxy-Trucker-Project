@@ -40,6 +40,6 @@ public abstract class Phase {
         System.out.printf("%s phase is starting...\n", gamePhase);
         // clients
         gameMessenger.setGamePhaseToAll(gamePhase);
-        gameMessenger.sendMessageToALl(String.format("%s phase is starting...\n", gamePhase));
+        gameMessenger.sendMessageToAll(String.format("%s phase is starting...\n", gamePhase));
     }
 }

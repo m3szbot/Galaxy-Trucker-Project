@@ -1,7 +1,8 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
+import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
+
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -13,13 +14,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class GameMessageSender implements Runnable {
 
-    private ObjectOutputStream out;
+    private DataExchanger dataExchanger;
     private AtomicBoolean running;
     private AtomicReference<String> userInput;
 
-    public GameMessageSender(ObjectOutputStream out, AtomicBoolean running, AtomicReference<String> userInput) {
+    public GameMessageSender(DataExchanger dataExchanger, AtomicBoolean running, AtomicReference<String> userInput) {
 
-        this.out = out;
+        this.dataExchanger = dataExchanger;
         this.running = running;
         this.userInput = userInput;
 
@@ -34,8 +35,7 @@ public class GameMessageSender implements Runnable {
 
                 try {
 
-                    out.writeUTF(userInput.getAndSet(null));
-                    out.flush();
+                    dataExchanger.sendMessage(userInput.getAndSet(null), false);
 
                 } catch (IOException e) {
 

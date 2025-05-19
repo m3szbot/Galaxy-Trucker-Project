@@ -4,7 +4,6 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.Component;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -42,7 +41,7 @@ public class Epidemic extends Card {
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
     }
 
@@ -152,6 +151,6 @@ public class Epidemic extends Card {
         player.getShipBoard().getShipBoardAttributes().updateCrewMembers(-numberOfRemovedInhabitants);
         message = "Player " + player.getNickName() + "lost " + numberOfRemovedInhabitants +
                 " inhabitants from the epidemic!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToALl(message);
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
     }
 }
