@@ -145,27 +145,5 @@ public class AssemblyPhase extends Phase {
     public AssemblyProtocol getAssemblyProtocol() {
         return assemblyProtocol;
     }
-/*
-      //main fatto a caso da gecky per fare test
-    public static void main(String[] args) {
-        AssemblyPhase ass;
-        Player gecky;
-        GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        gameInformation.setUpPlayers(gecky = new Player("Gecky", Color.RED, gameInformation), 1);
-        try {gameInformation.setUpCards(GameType.NormalGame);} catch (Exception e){e.printStackTrace();}
-        try  {gameInformation.setUpComponents();} catch (Exception e){e.printStackTrace();}
-        ass = new AssemblyPhase(gameInformation);
-        ass.start();
-    }
-*/
-    /**
-     * Temporary main method for standalone testing.
-     * Should be moved into a class where GameInformation is initialized.
-     */
 
-
-    /*public static void main(String[] args) {
-        new AssemblyGame().start();
-    }*/
 }
