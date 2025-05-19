@@ -1,6 +1,7 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
@@ -17,10 +18,12 @@ class GeneralViewTUITest {
     GameInformation gameInformation;
     DataContainer dataContainer;
     GeneralView generalViewTUI;
+    Random randomizer;
 
 
     @BeforeEach
     void setup() {
+        randomizer = new Random();
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         dataContainer = new DataContainer();
@@ -30,9 +33,11 @@ class GeneralViewTUITest {
 
     @Test
     public void printComponent() {
+        int randIndex;
         // print random components from component list
         for (int i = 0; i < 5; i++) {
-            dataContainer.setComponent(gameInformation.getComponentList().get(i * 8));
+            randIndex = randomizer.nextInt(gameInformation.getComponentList().size());
+            dataContainer.setComponent(gameInformation.getComponentList().get(randIndex));
             generalViewTUI.printComponent(dataContainer);
         }
     }
@@ -53,14 +58,16 @@ class GeneralViewTUITest {
     @Test
     public void printFilledShipboard() {
         int componentIndex;
-        Random randomizer = new Random();
-
         ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
         // fill shipboard with random components
         for (int i = 0; i < shipBoard.getMatrixCols(); i++) {
             for (int j = 0; j < shipBoard.getMatrixRows(); j++) {
                 componentIndex = randomizer.nextInt(gameInformation.getComponentList().size());
-                shipBoard.addComponent(gameInformation.getComponentList().get(componentIndex), i + 1, j + 1);
+                try {
+                    shipBoard.addComponent(gameInformation.getComponentList().get(componentIndex), i + 1, j + 1);
+                } catch (NotPermittedPlacementException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
