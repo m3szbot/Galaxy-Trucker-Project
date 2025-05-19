@@ -35,7 +35,7 @@ class GeneralViewTUITest {
     public void printComponent() {
         int randIndex;
         // print random components from component list
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             randIndex = randomizer.nextInt(gameInformation.getComponentList().size());
             dataContainer.setComponent(gameInformation.getComponentList().get(randIndex));
             generalViewTUI.printComponent(dataContainer);
