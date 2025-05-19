@@ -27,10 +27,6 @@ public class Battery extends Component {
         this.numberOfCurrentBatteries = numberOfCurrentBatteries;
     }
 
-    public int getNumberOfCurrentBatteries() {
-        return numberOfCurrentBatteries;
-    }
-
     public void removeBattery() {
         if (numberOfCurrentBatteries > 0) {
             numberOfCurrentBatteries--;
