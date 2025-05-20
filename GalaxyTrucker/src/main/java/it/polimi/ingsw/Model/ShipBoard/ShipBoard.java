@@ -194,7 +194,7 @@ public class ShipBoard implements Serializable {
             for (int j = 1; j < 12; j++) {
                 if (structureMatrix[i][j] != null) {
                     if (!checkCorrectJunctions(i, j)) {
-                        System.out.println("Component" + (j + 1) + " " + (i + 1) + " is not well connected");
+                        //System.out.println("Component " + (j + 1) + " " + (i + 1) + " is not well connected");
                         matrErrors[i][j] = true;
                         errors++;
                     }
