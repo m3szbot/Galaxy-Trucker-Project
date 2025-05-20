@@ -44,9 +44,9 @@ class AssemblyProtocolTest {
         assertThrows(IllegalArgumentException.class, () -> {
             assemblyProtocol.showDeck(0);
         });
-        assertNotNull(assemblyProtocol.showDeck(1));
-        assertNotNull(assemblyProtocol.showDeck(2));
-        assertNotNull(assemblyProtocol.showDeck(3));
+        assertEquals(3, assemblyProtocol.showDeck(1).getNumCards());
+        assertEquals(3, assemblyProtocol.showDeck(2).getNumCards());
+        assertEquals(3, assemblyProtocol.showDeck(3).getNumCards());
         assertEquals(0, assemblyProtocol.getUncoveredList().size());
         assertNull(assemblyProtocol.getInHandMap().get(playerA));
         assertEquals(0, assemblyProtocol.getBookedMap().get(playerA).size());

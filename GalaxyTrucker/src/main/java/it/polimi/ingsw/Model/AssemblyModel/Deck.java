@@ -29,6 +29,7 @@ public class Deck {
      * Construct a deck based on gameType.
      */
     public Deck(List<Card> cardsList, GameType gameType) {
+        inUse = false;
         cards = new ArrayList<>();
         // add cards to the deck
         if (gameType.equals(GameType.NORMALGAME)) {
