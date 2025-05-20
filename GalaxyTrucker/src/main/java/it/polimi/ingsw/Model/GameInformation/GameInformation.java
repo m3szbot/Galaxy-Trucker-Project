@@ -80,10 +80,11 @@ public class GameInformation {
     }
 
     /**
-     * Creates adventure cards list and shuffles it.
+     * Creates adventure cards list of required size based on gameType (keeps only necessary cards) and shuffles it.
      */
     private void setUpCards() throws IOException {
-
+        // create all cards
+        List<Card> tmpList = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(new File("src/main/resources/Cards.json"));
         CardBuilder cardBuilder = new CardBuilder();
@@ -207,11 +208,26 @@ public class GameInformation {
 
                 }
 
-                cardsList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredit(gainedCredit).buildRequirementNumber(requirementNumber).buildLossNumber(lossNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).getBuiltCard());
+                tmpList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredit(gainedCredit).buildRequirementNumber(requirementNumber).buildLossNumber(lossNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).getBuiltCard());
 
             }
 
         }
+        Collections.shuffle(tmpList);
+        // keep only necessary cards
+        // Normal Game: 4 decks of: 2 level 2 + 1 level 1 card (12 tot)
+        // Test Game: 4 decks of: 2 level 1 cardsList (8 tot)
+        // NORMAL GAME
+        int levelOneCardCount = 4;
+        int levelTwoCardCount = 8;
+        // TEST GAME
+        if (gameType.equals(GameType.TESTGAME)) {
+            levelOneCardCount = 8;
+            levelTwoCardCount = 0;
+        }
+        // create actual cardsList
+        cardListCreator(1, levelOneCardCount, tmpList);
+        cardListCreator(2, levelTwoCardCount, tmpList);
         Collections.shuffle(cardsList);
     }
 
@@ -281,6 +297,25 @@ public class GameInformation {
             return ElementType.valueOf(node.get(field).asText());
         } else {
             return ElementType.Default;
+        }
+    }
+
+    /**
+     * Adds required number of cards of given level to cardsList.
+     *
+     * @param levelCardCount    required number of cards of given level.
+     * @param completeCardsList gameInformation complete cards list.
+     * @author Boti
+     */
+    private void cardListCreator(int level, int levelCardCount, List<Card> completeCardsList) {
+        int i = 0;
+        while (levelCardCount > 0) {
+            if (completeCardsList.get(i).getCardLevel() == level) {
+                cardsList.add(completeCardsList.get(i));
+                completeCardsList.remove(i);
+                levelCardCount--;
+            }
+            i++;
         }
     }
 

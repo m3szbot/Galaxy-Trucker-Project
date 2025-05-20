@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.FlightBoard;
 
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
@@ -52,9 +53,45 @@ class FlightBoardTest {
     }
 
     @Test
-    void TestSetUp() {
+    void testNormalSetUp() {
+        assertEquals(4, gameInformation.getPlayerList().size());
         assertEquals(12, flightBoard.getCardsNumber());
         assertEquals(4, gameInformation.getPlayerList().size());
+        int levelOneCount = 0, levelTwoCount = 0;
+        for (Card card : flightBoard.getCardsStack()) {
+            if (card.getCardLevel() == 1)
+                levelOneCount++;
+            else
+                levelTwoCount++;
+        }
+        assertEquals(4, levelOneCount);
+        assertEquals(8, levelTwoCount);
+    }
+
+    @Test
+    void testTestSetup() {
+        // test new gameInformation
+        gameInformation = new GameInformation();
+        gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
+        gameInformation.addPlayers(playerA);
+        gameInformation.addPlayers(playerB);
+        gameInformation.addPlayers(playerC);
+        gameInformation.addPlayers(playerD);
+        assertEquals(GameType.TESTGAME, gameInformation.getGameType());
+        assertEquals(4, gameInformation.getPlayerList().size());
+
+        // test new flightBoard
+        flightBoard = gameInformation.getFlightBoard();
+        assertEquals(8, gameInformation.getCardsList().size());
+        int levelOneCount = 0, levelTwoCount = 0;
+        for (Card card : flightBoard.getCardsStack()) {
+            if (card.getCardLevel() == 1)
+                levelOneCount++;
+            else
+                levelTwoCount++;
+        }
+        assertEquals(8, levelOneCount);
+        assertEquals(0, levelTwoCount);
     }
 
     @Test
