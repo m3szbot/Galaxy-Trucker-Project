@@ -63,15 +63,16 @@ public class AssemblyThread implements Runnable {
 
     @Override
     public void run() {
-        // For now, the initial state is set using only the first player.
-        // Later, threads should be launched for all players.
+        try {
+            // For now, the initial state is set using only the first player.
+            // Later, threads should be launched for all players.
             setState(new AssemblyState(assemblyProtocol, associatedPlayer));
 
             // Separate thread for reading user input from the console
             new Thread(() -> {
                 AtomicBoolean disconnected = new AtomicBoolean(false);
                 while (!end.get()) {
-                    if(!disconnected.get()) {
+                    if (!disconnected.get()) {
                         try {
                             String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
                             inputQueue.offer(input);
@@ -85,10 +86,11 @@ public class AssemblyThread implements Runnable {
                                 ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
                             }
                         }
-                    }else{
+                    } else {
                         try {
                             Thread.sleep(1000);
-                        } catch (InterruptedException ignored) {}
+                        } catch (InterruptedException ignored) {
+                        }
 
                         if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
                             disconnected.set(false);
@@ -101,7 +103,7 @@ public class AssemblyThread implements Runnable {
 
 
             // Main non-blocking game loop
-            while (running.get() ) {
+            while (running.get()) {
                 //System.out.println("prova2");
                 try {
                     Thread.sleep(100);
@@ -121,12 +123,19 @@ public class AssemblyThread implements Runnable {
                 setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
                 while (!isfinished.get()) {
                     String input = inputQueue.poll();
-                    if(input != null) {currentState.handleInput(input, this);}
+                    if (input != null) {
+                        currentState.handleInput(input, this);
+                    }
                     currentState.update(this);
-                    try { Thread.sleep(100); }
-                    catch (InterruptedException ignored) {}
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ignored) {
+                    }
 
                 }
             }
+        }finally {
+            latch.countDown();
+        }
     }
 }
