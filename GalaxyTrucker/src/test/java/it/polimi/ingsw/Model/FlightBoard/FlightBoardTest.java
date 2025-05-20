@@ -43,8 +43,7 @@ class FlightBoardTest {
         gameInformation.addPlayers(playerC);
         gameInformation.addPlayers(playerD);
 
-        // set up flightboard
-        flightBoard = new FlightBoard(GameType.NORMALGAME, gameInformation.getCardsList());
+        flightBoard = gameInformation.getFlightBoard();
     }
 
     @Test
