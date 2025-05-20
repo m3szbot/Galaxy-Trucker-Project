@@ -96,7 +96,7 @@ public class FlightBoard implements Serializable {
             }
         }
         if (levelOneCardCount != 0 || levelTwoCardCount != 0) {
-            throw new IllegalStateException("GameType requirements not respected for deck cards.");
+            throw new IllegalStateException("GameType requirements not respected for flightBoard cards.");
         }
     }
 

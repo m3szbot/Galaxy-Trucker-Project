@@ -50,7 +50,7 @@ public class Deck {
             }
         }
         if (levelOneCardCount != 0 || levelTwoCardCount != 0) {
-            throw new IllegalStateException("GameType requirements not respected for deck cards.");
+            throw new IllegalStateException("GameType requirements not respected for Deck cards.");
         }
     }
 
