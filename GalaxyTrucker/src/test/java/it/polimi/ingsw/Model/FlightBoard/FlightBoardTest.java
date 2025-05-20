@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Model.FlightBoard;
 
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +29,7 @@ class FlightBoardTest {
     FlightBoard flightBoard;
     GameInformation gameInformation;
     Player playerA, playerB, playerC, playerD;
+    FlightViewTUI flightViewTUI;
 
     @BeforeEach
     void setUp() {
@@ -44,6 +47,8 @@ class FlightBoardTest {
         gameInformation.addPlayers(playerD);
 
         flightBoard = gameInformation.getFlightBoard();
+
+        flightViewTUI = new FlightViewTUI();
     }
 
     @Test
@@ -263,5 +268,14 @@ class FlightBoardTest {
         assertEquals(2, flightBoard.getPlayerOrder(playerC));
         assertEquals(playerD, flightBoard.getPlayerOrderList().get(0));
         assertEquals(1, flightBoard.getPlayerOrder(playerD));
+    }
+
+    @Test
+    void printCards() {
+        DataContainer dataContainer = new DataContainer();
+        while (flightBoard.getCardsNumber() > 0) {
+            dataContainer.setCard(flightBoard.getNewCard());
+            flightViewTUI.printCard(dataContainer);
+        }
     }
 }

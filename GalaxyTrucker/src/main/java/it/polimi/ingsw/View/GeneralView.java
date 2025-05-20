@@ -343,7 +343,7 @@ public abstract class GeneralView {
 
         String cardName = card.getCardName();
 
-        System.out.printf("Current card:    %s\n", cardName);
+        System.out.printf("Current card: %s\n", cardName);
 
         card.showCard();
 
