@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Cabin extends Component {
 
     private CrewType crewType;
-    private int numberOfCurrentInhabitant = 2;
+    private int numberOfCurrentInhabitants = 2;
 
     public Cabin() {
     }
@@ -20,6 +20,10 @@ public class Cabin extends Component {
     @JsonCreator
     public Cabin(@JsonProperty("sides") SideType[] sides) {
         super(sides);
+    }
+
+    public CrewType getCrewType() {
+        return crewType;
     }
 
     /**
@@ -33,22 +37,13 @@ public class Cabin extends Component {
         this.crewType = crewType;
 
         if (crewType == CrewType.Purple || crewType == CrewType.Brown) {
-            numberOfCurrentInhabitant = 1;
+            numberOfCurrentInhabitants = 1;
         }
     }
 
-    public CrewType getCrewType() {
-        return crewType;
-    }
-
-    //redundancy
-    public int getNumberOfCurrentInhabitant() {
-        return numberOfCurrentInhabitant;
-    }
-
     public void removeInhabitant() {
-        if (numberOfCurrentInhabitant > 0) {
-            numberOfCurrentInhabitant--;
+        if (numberOfCurrentInhabitants > 0) {
+            numberOfCurrentInhabitants--;
         }
     }
 
@@ -58,6 +53,6 @@ public class Cabin extends Component {
 
     @Override
     public int getCrewMembers() {
-        return numberOfCurrentInhabitant;
+        return numberOfCurrentInhabitants;
     }
 }

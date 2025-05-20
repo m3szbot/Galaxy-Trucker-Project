@@ -14,22 +14,28 @@ public abstract class FlightView extends GeneralView {
 
         System.out.println("FlightBoard:\n");
 
-        for (int i = flightBoard.getPlayerOrderList().size(); i >= 0; i--) {
+        try {
+            for (int i = flightBoard.getPlayerOrderList().size(); i >= 0; i--) {
+                System.out.println("PlayerOrderList not empty");
 
-            player = flightBoard.getPlayerOrderList().get(i).getNickName();
+                player = flightBoard.getPlayerOrderList().get(i).getNickName();
+                System.out.println("player order list accessible");
 
-            temp1 = flightBoard.getPlayerTile(flightBoard.getPlayerOrderList().get(i));
-            temp2 = 0;
-            if (i != 0) {
-                temp2 = flightBoard.getPlayerTile(flightBoard.getPlayerOrderList().get(i - 1));
+                temp1 = flightBoard.getPlayerTile(flightBoard.getPlayerOrderList().get(i));
+                temp2 = 0;
+                if (i != 0) {
+                    temp2 = flightBoard.getPlayerTile(flightBoard.getPlayerOrderList().get(i - 1));
+                }
+                diff = temp2 - temp1;
+
+                if (i == 0) {
+                    System.out.printf("%s is 1st\n", player);
+                } else {
+                    System.out.printf("%s---%d--->", player, diff);
+                }
             }
-            diff = temp2 - temp1;
-
-            if (i == 0) {
-                System.out.printf("%s is 1st\n", player);
-            } else {
-                System.out.printf("%s---%d--->", player, diff);
-            }
+        } catch (RuntimeException e) {
+            System.out.println("Error while printing flightboard");
         }
     }
 

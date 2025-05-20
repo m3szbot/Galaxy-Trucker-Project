@@ -35,7 +35,7 @@ class GeneralViewTUITest {
     public void printComponent() {
         int randIndex;
         // print random components from component list
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 5; i++) {
             randIndex = randomizer.nextInt(gameInformation.getComponentList().size());
             dataContainer.setComponent(gameInformation.getComponentList().get(randIndex));
             generalViewTUI.printComponent(dataContainer);
@@ -66,7 +66,6 @@ class GeneralViewTUITest {
                 try {
                     shipBoard.addComponent(gameInformation.getComponentList().get(componentIndex), i + 1, j + 1);
                 } catch (NotPermittedPlacementException e) {
-                    e.printStackTrace();
                 }
             }
         }

@@ -10,7 +10,7 @@ class CannonTest {
     // Test constants
     private static final SideType[] TEST_SIDES = {
             SideType.Smooth,
-            SideType.Double,
+            SideType.Special,
             SideType.Single,
             SideType.Universal
     };
@@ -67,12 +67,12 @@ class CannonTest {
     }
 
     @Test
-    void getFirePower_whenNotSingle_shouldReturn2() {
+    void getFirePower_Double_Lateral() {
         // Arrange
         Cannon cannon = new Cannon(TEST_SIDES, false);
 
         // Act & Assert
-        assertEquals(2.0f, cannon.getFirePower(), 0.001f);
+        assertEquals(1.0f, cannon.getFirePower(), 0.001f);
     }
 
     @Test
@@ -83,7 +83,7 @@ class CannonTest {
                 {
                     "name": "Cannon",
                     "single": true,
-                    "sides": ["Smooth", "Double", "Single", "Universal"]
+                    "sides": ["Smooth", "Special", "Single", "Universal"]
                 }
                 """;
 
