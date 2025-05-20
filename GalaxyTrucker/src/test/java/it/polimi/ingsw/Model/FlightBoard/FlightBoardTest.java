@@ -276,6 +276,10 @@ class FlightBoardTest {
         while (flightBoard.getCardsNumber() > 0) {
             dataContainer.setCard(flightBoard.getNewCard());
             flightViewTUI.printCard(dataContainer);
+            dataContainer.clearContainer();
+            // print line between cards
+            dataContainer.setMessage("");
+            flightViewTUI.printMessage(dataContainer);
         }
     }
 }

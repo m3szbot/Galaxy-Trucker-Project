@@ -20,6 +20,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameInformation {
@@ -79,7 +80,7 @@ public class GameInformation {
     }
 
     /**
-     * creates the complete list of cards based on the type of game
+     * Creates adventure cards list and shuffles it.
      */
     private void setUpCards() throws IOException {
 
@@ -211,11 +212,11 @@ public class GameInformation {
             }
 
         }
-
+        Collections.shuffle(cardsList);
     }
 
     /**
-     * creates component objects
+     * Creates component list and shuffles it.
      */
     private void setUpComponents() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -238,6 +239,7 @@ public class GameInformation {
         componentList = mapper.readValue(new File("src/main/resources/Components.json"),
                 mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
         );
+        Collections.shuffle(componentList);
 
     }
 

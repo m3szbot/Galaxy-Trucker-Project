@@ -39,7 +39,7 @@ class GameInformationTest {
 
 
     @Test
-    void testSetUpCards() throws IOException {
+    void testSetUpCards() {
         GameType gameType1 = GameType.TESTGAME;
         GameType gameType2 = GameType.NORMALGAME;
 

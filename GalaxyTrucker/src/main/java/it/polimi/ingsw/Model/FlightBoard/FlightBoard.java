@@ -67,9 +67,9 @@ public class FlightBoard implements Serializable {
         eliminatedList = new ArrayList<>();
         gaveUpList = new ArrayList<>();
         cardsStack = new Stack<>();
+        Collections.shuffle(cardsList);
         for (int i = 0; i < cardCount; i++)
             cardsStack.push(cardsList.get(i));
-        Collections.shuffle(cardsStack);
     }
 
     /**
