@@ -104,8 +104,9 @@ class ScoreCounterTest {
         // 4 3 2 1 goods points
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
         Storage storage = new Storage(singleSides, true, 4);
-        playerA.getShipBoard().addComponent(storage, 7, 8);
         storage.addGoods(new int[]{1, 1, 1, 1});
+        playerA.getShipBoard().addComponent(storage, 7, 8);
+
         // TODO update goods in shibpoard attributes
         // check correct shipboard and goods
         assertFalse(playerA.getShipBoard().isErroneous());
