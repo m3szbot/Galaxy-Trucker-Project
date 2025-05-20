@@ -72,6 +72,32 @@ public class FlightBoard implements Serializable {
         cardsStack = new Stack<>();
         cardsStack.addAll(cardList);
         Collections.shuffle(cardsStack);
+
+        checkGameTypeRequirements(gameType);
+    }
+
+    /**
+     * Check for gameType specific requirements.
+     */
+    private void checkGameTypeRequirements(GameType gameType) {
+        // NORMAL GAME
+        int levelOneCardCount = 4;
+        int levelTwoCardCount = 8;
+        // TEST GAME
+        if (gameType.equals(GameType.TESTGAME)) {
+            levelOneCardCount = 8;
+            levelTwoCardCount = 0;
+        }
+        for (Card card : cardsStack) {
+            if (card.getCardLevel() == 1) {
+                levelOneCardCount--;
+            } else {
+                levelTwoCardCount--;
+            }
+        }
+        if (levelOneCardCount != 0 || levelTwoCardCount != 0) {
+            throw new IllegalStateException("GameType requirements not respected for deck cards.");
+        }
     }
 
 
