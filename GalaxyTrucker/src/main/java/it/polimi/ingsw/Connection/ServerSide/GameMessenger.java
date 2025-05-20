@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -21,12 +21,12 @@ public class GameMessenger {
     private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
 
-    public List<Player> getPlayersSocket(){
+    public List<Player> getPlayersSocket() {
 
         List<Player> players = new ArrayList<>();
 
-        for(Player player: dataExchangerMap.keySet()){
-            if(dataExchangerMap.get(player).getConnectionType() == ConnectionType.SOCKET){
+        for (Player player : dataExchangerMap.keySet()) {
+            if (dataExchangerMap.get(player).getConnectionType() == ConnectionType.SOCKET) {
                 players.add(player);
             }
         }
@@ -35,7 +35,7 @@ public class GameMessenger {
 
     }
 
-    public void addPlayer(Player player, DataExchanger dataExchanger){
+    public void addPlayer(Player player, DataExchanger dataExchanger) {
         playerDataContainerMap.put(player, new DataContainer());
         dataExchangerMap.put(player, dataExchanger);
     }
@@ -211,7 +211,7 @@ public class GameMessenger {
 
         try {
 
-            for(DataExchanger dataExchanger: dataExchangerMap.values()){
+            for (DataExchanger dataExchanger : dataExchangerMap.values()) {
                 dataExchanger.closeResources();
             }
 
@@ -250,6 +250,15 @@ public class GameMessenger {
     }
 
     /**
+     * Reconnects player to the game.
+     */
+    public void reconnectPlayer(GameInformation gameInformation, Player player) {
+        gameInformation.getDisconnectedPlayerList().remove(player);
+        gameInformation.getPlayerList().add(player);
+        sendMessageToAll(String.format("%s has been reconnected", player));
+    }
+
+    /**
      * Send message to all players.
      * Command is set to "printMessage".ú
      */
@@ -273,19 +282,10 @@ public class GameMessenger {
 
     }
 
-    /**
-     * Reconnects player to the game.
-     */
-    public void reconnectPlayer(GameInformation gameInformation, Player player) {
-        gameInformation.getDisconnectedPlayerList().remove(player);
-        gameInformation.getPlayerList().add(player);
-        sendMessageToAll(String.format("%s has been reconnected", player));
-    }
-
     public Boolean isPlayerConnected(Player player, GameInformation gameInformation) {
-        if(gameInformation.getDisconnectedPlayerList().contains(player)){
+        if (gameInformation.getDisconnectedPlayerList().contains(player)) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
+import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ViewType;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -30,7 +30,7 @@ public class ClientWelcomer {
 
         input = scanner.nextLine();
 
-        while(input.contains("~")){
+        while (input.contains("~")) {
 
             System.out.println("The character '~' cannot be part of you're nickname!");
             System.out.print("Enter a valid nickname: ");
@@ -83,10 +83,10 @@ public class ClientWelcomer {
         input = scanner.nextLine();
         input = input.toLowerCase();
 
-        while(true){
+        while (true) {
 
 
-            if(input.equals("y")){
+            if (input.equals("y")) {
 
                 System.out.print("Enter the game code of the interrupted game: ");
 
@@ -96,7 +96,7 @@ public class ClientWelcomer {
                     clientInfo.setGameCode(gameCode);
                     break;
 
-                }catch (InputMismatchException e){
+                } catch (InputMismatchException e) {
 
                     System.out.println("The input is incorrect, you must enter an integer.");
                     continue;
@@ -104,8 +104,7 @@ public class ClientWelcomer {
                 }
 
 
-            }
-            else if(input.equals("n")){
+            } else if (input.equals("n")) {
 
                 break;
 

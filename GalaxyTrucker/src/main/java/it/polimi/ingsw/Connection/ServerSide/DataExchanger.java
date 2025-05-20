@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicator;
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicatorImpl;
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,6 +15,7 @@ import java.net.Socket;
 
 public class DataExchanger {
 
+    private final int MAXTRIALS = 5;
     private RMICommunicatorImpl rmiCommunicatorServerSide;
     private RMICommunicator rmiCommunicatorClientSide;
     private ObjectInputStream inputStream;
@@ -23,60 +24,63 @@ public class DataExchanger {
     private String nickname;
     private ConnectionType connectionType;
     private Integer trials;
-    private final int MAXTRIALS = 5;
 
-    public DataExchanger(RMICommunicatorImpl rmiCommunicatorServerSide, String nickname, int gameCode, ConnectionType connectionType){
+    public DataExchanger(RMICommunicatorImpl rmiCommunicatorServerSide, String nickname, int gameCode, ConnectionType connectionType) {
         this.rmiCommunicatorServerSide = rmiCommunicatorServerSide;
         this.nickname = nickname;
         this.connectionType = connectionType;
     }
 
-    public DataExchanger(RMICommunicator rmiCommunicatorClientSide, String nickname, int gameCode, ConnectionType connectionType){
+    public DataExchanger(RMICommunicator rmiCommunicatorClientSide, String nickname, int gameCode, ConnectionType connectionType) {
         this.rmiCommunicatorClientSide = rmiCommunicatorClientSide;
         this.nickname = nickname;
         this.connectionType = connectionType;
     }
 
-    public DataExchanger(Socket clientSocket, ObjectOutputStream outputStream, ObjectInputStream inputStream, ConnectionType connectionType){
+    public DataExchanger(Socket clientSocket, ObjectOutputStream outputStream, ObjectInputStream inputStream, ConnectionType connectionType) {
         this.clientSocket = clientSocket;
         this.outputStream = outputStream;
         this.inputStream = inputStream;
         this.connectionType = connectionType;
     }
 
-    public Socket getClientSocket(){
+    public Socket getClientSocket() {
         return clientSocket;
     }
 
-    public void setTrials(Integer trials){
+    public void setTrials(Integer trials) {
         this.trials = trials;
     }
 
-    public ObjectInputStream getInputStream(){
+    public ObjectInputStream getInputStream() {
         return inputStream;
     }
 
-    public ObjectOutputStream getOutputStream(){
+    public ObjectOutputStream getOutputStream() {
         return outputStream;
     }
 
     public RMICommunicatorImpl getServerRmiCommunicator() {
         return rmiCommunicatorServerSide;
     }
-    public RMICommunicator getRmiCommunicatorClientSide(){return rmiCommunicatorClientSide;};
+
+    public RMICommunicator getRmiCommunicatorClientSide() {
+        return rmiCommunicatorClientSide;
+    }
+
+    ;
 
     public ConnectionType getConnectionType() {
         return connectionType;
     }
 
-    public String receiveMessage(boolean isServer) throws IOException{
+    public String receiveMessage(boolean isServer) throws IOException {
 
-        if(connectionType == ConnectionType.SOCKET){
+        if (connectionType == ConnectionType.SOCKET) {
 
-            if(isServer){
+            if (isServer) {
                 return inputStream.readUTF();
-            }
-            else{
+            } else {
                 try {
                     return ((DataContainer) inputStream.readObject()).getMessage();
                 } catch (ClassNotFoundException e) {
@@ -84,19 +88,17 @@ public class DataExchanger {
                 }
             }
 
-        }
-        else{
+        } else {
 
-            if(isServer) {
+            if (isServer) {
 
-                if(trials.equals(MAXTRIALS)){
+                if (trials.equals(MAXTRIALS)) {
                     throw new IOException();
                 }
 
                 return rmiCommunicatorServerSide.getPlayerInput(nickname);
 
-            }
-            else{
+            } else {
 
 
                 return rmiCommunicatorClientSide.getContainer(nickname).getMessage();
@@ -107,16 +109,15 @@ public class DataExchanger {
         return null;
     }
 
-    public DataContainer receiveDataContainer() throws IOException{
+    public DataContainer receiveDataContainer() throws IOException {
 
-        if(connectionType == ConnectionType.SOCKET){
+        if (connectionType == ConnectionType.SOCKET) {
             try {
                 return (DataContainer) inputStream.readObject();
             } catch (ClassNotFoundException e) {
                 System.err.println("Container not received correctly");
             }
-        }
-        else{
+        } else {
 
             return rmiCommunicatorClientSide.getContainer(nickname);
 
@@ -124,26 +125,25 @@ public class DataExchanger {
         return null;
     }
 
-    public void sendDataContainer(DataContainer dataContainer) throws IOException{
+    public void sendDataContainer(DataContainer dataContainer) throws IOException {
 
-       if(connectionType == ConnectionType.SOCKET){
+        if (connectionType == ConnectionType.SOCKET) {
 
-          outputStream.writeObject(dataContainer);
-          outputStream.flush();
-          outputStream.reset();
+            outputStream.writeObject(dataContainer);
+            outputStream.flush();
+            outputStream.reset();
 
-       }
-       else{
+        } else {
 
-           rmiCommunicatorServerSide.setPlayerContainer(nickname, dataContainer);
-       }
+            rmiCommunicatorServerSide.setPlayerContainer(nickname, dataContainer);
+        }
     }
 
-    public void sendMessage(String message, boolean isServer) throws IOException{
+    public void sendMessage(String message, boolean isServer) throws IOException {
 
-        if(connectionType == ConnectionType.SOCKET){
+        if (connectionType == ConnectionType.SOCKET) {
 
-            if(isServer){
+            if (isServer) {
 
                 DataContainer dataContainer = new DataContainer();
                 dataContainer.setMessage(message);
@@ -151,22 +151,20 @@ public class DataExchanger {
                 outputStream.writeObject(dataContainer);
                 outputStream.flush();
 
-            }else{
+            } else {
 
                 outputStream.writeUTF(message);
                 outputStream.flush();
 
             }
 
-        }
-        else{
+        } else {
 
-            if(!isServer){
+            if (!isServer) {
 
                 rmiCommunicatorClientSide.setPlayerInput(nickname, message);
 
-            }
-            else {
+            } else {
 
                 DataContainer container = new DataContainer();
                 container.setMessage(message);
@@ -178,16 +176,15 @@ public class DataExchanger {
 
     }
 
-    public void closeResources() throws IOException{
+    public void closeResources() throws IOException {
 
-        if(connectionType == ConnectionType.SOCKET){
+        if (connectionType == ConnectionType.SOCKET) {
 
             clientSocket.close();
             inputStream.close();
             outputStream.close();
 
-        }
-        else{
+        } else {
             rmiCommunicatorServerSide.clearPlayer(nickname);
         }
 

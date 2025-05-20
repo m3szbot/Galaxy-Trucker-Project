@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
+import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.View.AssemblyView.AssemblyViewTUI;
 import it.polimi.ingsw.View.CorrectionView.CorrectionViewTUI;
 import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;

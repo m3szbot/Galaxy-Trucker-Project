@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicator;
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
+import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicator;
+import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,10 +19,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- *  Client joiner is responsible for the second phase of the client
- *  lifecycle, i.e, making the client join a game. It returns 1, if the client
- *  join the game correctly, 0 if he is kicked, -1 if he encountered a connection
- *  issue.
+ * Client joiner is responsible for the second phase of the client
+ * lifecycle, i.e, making the client join a game. It returns 1, if the client
+ * join the game correctly, 0 if he is kicked, -1 if he encountered a connection
+ * issue.
  *
  * @author carlo
  */
@@ -32,7 +32,7 @@ public class ClientJoiner {
 
     private AtomicReference<String> userInput;
 
-    public int start(ClientInfo clientInfo){
+    public int start(ClientInfo clientInfo) {
 
         if (clientInfo.getViewType() == ViewType.TUI) {
 
@@ -46,27 +46,7 @@ public class ClientJoiner {
         return 0; //if no returns have been activated, the player is automatically kicked.
     }
 
-    private boolean checkTrials(int trials){
-
-        if(trials >= 5){
-            System.out.println("You entered too much wrong information and therefore are slowing down " +
-                    "the server, you have been kicked out");
-            return true;
-        }
-        return false;
-    }
-
-    private void changeNickName(ClientInfo clientInfo){
-
-        System.out.println("You're nickname has already been chosen, please enter a new one: ");
-
-        while(userInput.get() == null);
-
-        clientInfo.setNickname(userInput.getAndSet(null));
-
-    }
-
-    private int startTUI(ClientInfo clientInfo){
+    private int startTUI(ClientInfo clientInfo) {
 
         DataExchanger dataExchanger;
         Socket socket;
@@ -74,7 +54,7 @@ public class ClientJoiner {
         AtomicBoolean abnormallyTerminatedFlag = new AtomicBoolean(false);
         this.userInput = clientInfo.getUserInput();
 
-        if(clientInfo.getConnectionType() == ConnectionType.SOCKET){
+        if (clientInfo.getConnectionType() == ConnectionType.SOCKET) {
 
             try {
                 socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
@@ -88,11 +68,11 @@ public class ClientJoiner {
 
                 String input = dataReceiver.readUTF();
 
-                while(!input.equals("nicknameSet")){
+                while (!input.equals("nicknameSet")) {
 
                     System.out.println(input);
 
-                    while(userInput.get() == null);
+                    while (userInput.get() == null) ;
 
                     dataSender.writeUTF(userInput.getAndSet(null));
                     dataSender.flush();
@@ -113,8 +93,7 @@ public class ClientJoiner {
                 return -1;
             }
 
-        }
-        else{
+        } else {
 
             RMICommunicator rmiCommunicator;
 
@@ -125,14 +104,14 @@ public class ClientJoiner {
                 rmiCommunicator = (RMICommunicator) Naming.lookup("rmi://localhost/RMICommunicator");
                 rmiCommunicator.registerClient(InetAddress.getLocalHost().getHostAddress());
 
-                while(rmiCommunicator.checkNicknameAvailability(clientInfo.getNickname())){
+                while (rmiCommunicator.checkNicknameAvailability(clientInfo.getNickname())) {
                     flag = true;
 
                     changeNickName(clientInfo);
 
                 }
 
-                if(flag) {
+                if (flag) {
 
                     System.out.println("You're nickname was changed successfully");
 
@@ -162,12 +141,12 @@ public class ClientJoiner {
 
         Thread messageReceiver = new Thread(() -> {
 
-            try{
+            try {
                 int trials = 0;
 
-                while(true){
+                while (true) {
 
-                    if(checkTrials(trials)){
+                    if (checkTrials(trials)) {
                         terminatedFlag.set(true);
                         abnormallyTerminatedFlag.set(true);
                         break;
@@ -175,31 +154,27 @@ public class ClientJoiner {
 
                     String message = dataExchanger.receiveMessage(false);
 
-                    if(message.equals("added")){
+                    if (message.equals("added")) {
                         terminatedFlag.set(true);
 
-                    }
-                    else if(message.equals("start")){
+                    } else if (message.equals("start")) {
                         break;
-                    }
-                    else if(message.equals("increment trials")){
+                    } else if (message.equals("increment trials")) {
                         trials++;
-                    }
-                    else if(message.equals("terminate")){
+                    } else if (message.equals("terminate")) {
 
                         terminatedFlag.set(true);
                         abnormallyTerminatedFlag.set(true);
 
                         break;
-                    }
-                    else {
+                    } else {
 
                         System.out.println(message);
                     }
 
                 }
 
-            }catch (IOException e) {
+            } catch (IOException e) {
                 abnormallyTerminatedFlag.set(true);
                 terminatedFlag.set(true);
                 System.err.println("An error was encountered while receiving data from the server");
@@ -209,9 +184,9 @@ public class ClientJoiner {
 
         Thread messageSender = new Thread(() -> {
 
-            while(!terminatedFlag.get()) {
+            while (!terminatedFlag.get()) {
 
-                if(userInput.get() != null) {
+                if (userInput.get() != null) {
 
                     try {
 
@@ -224,7 +199,7 @@ public class ClientJoiner {
                     }
                 }
 
-                try{
+                try {
                     Thread.sleep(100);
 
                 } catch (InterruptedException e) {
@@ -249,12 +224,31 @@ public class ClientJoiner {
 
         }
 
-        if(abnormallyTerminatedFlag.get()){
+        if (abnormallyTerminatedFlag.get()) {
             return -1;
-        }
-        else{
+        } else {
             return 0;
         }
+    }
+
+    private void changeNickName(ClientInfo clientInfo) {
+
+        System.out.println("You're nickname has already been chosen, please enter a new one: ");
+
+        while (userInput.get() == null) ;
+
+        clientInfo.setNickname(userInput.getAndSet(null));
+
+    }
+
+    private boolean checkTrials(int trials) {
+
+        if (trials >= 5) {
+            System.out.println("You entered too much wrong information and therefore are slowing down " +
+                    "the server, you have been kicked out");
+            return true;
+        }
+        return false;
     }
 
 }

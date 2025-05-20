@@ -6,8 +6,8 @@ package it.polimi.ingsw.View.SetUpView;
  * @author Ludo
  */
 
+import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 

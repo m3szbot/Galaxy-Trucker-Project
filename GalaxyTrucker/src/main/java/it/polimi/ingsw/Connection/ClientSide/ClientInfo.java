@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
-import it.polimi.ingsw.Model.GameInformation.ViewType;
+import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.Serializable;
 import java.net.Socket;
@@ -21,27 +21,27 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientInfo implements Serializable {
 
+    private final static int serverPort = 5200;
     private String nickname;
     private transient ConnectionType connectionType;
     private transient ViewType viewType;
     private int gameCode;
     private transient String serverIp;
-    private final static int serverPort = 5200;
     private transient Socket serverSocket;
     private transient AtomicReference<String> userInput;
     private transient DataExchanger dataExchanger;
 
-    public ClientInfo(){
+    public ClientInfo() {
         userInput = new AtomicReference<>(null);
         gameCode = -1;
     }
 
-    public void setDataExchanger(DataExchanger dataExchanger){
-        this.dataExchanger = dataExchanger;
-    }
-
     public DataExchanger getDataExchanger() {
         return dataExchanger;
+    }
+
+    public void setDataExchanger(DataExchanger dataExchanger) {
+        this.dataExchanger = dataExchanger;
     }
 
     public AtomicReference<String> getUserInput() {
@@ -60,28 +60,28 @@ public class ClientInfo implements Serializable {
         return connectionType;
     }
 
-    public int getGameCode() {
-        return gameCode;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public ViewType getViewType() {
-        return viewType;
-    }
-
     public void setConnectionType(ConnectionType connectionType) {
         this.connectionType = connectionType;
+    }
+
+    public int getGameCode() {
+        return gameCode;
     }
 
     public void setGameCode(int gameCode) {
         this.gameCode = gameCode;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public ViewType getViewType() {
+        return viewType;
     }
 
     public void setViewType(ViewType viewType) {

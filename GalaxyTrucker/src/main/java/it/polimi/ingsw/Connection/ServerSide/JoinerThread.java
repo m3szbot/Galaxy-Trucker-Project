@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicatorImpl;
 import it.polimi.ingsw.Controller.Game.GameState;
-import it.polimi.ingsw.Model.GameInformation.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -11,18 +11,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class JoinerThread extends Thread{
+public class JoinerThread extends Thread {
 
 
+    private final int MAXTRIALS = 5;
     private DataExchanger dataExchanger;
     private Server centralServer;
     private int clientGameCode;
     private Socket clientSocket;
     private String nickName;
     private Integer trials = 0;
-    private final int MAXTRIALS = 5;
 
-    public JoinerThread(Socket clientSocket, ConnectionType connectionType, Server centralServer){
+    public JoinerThread(Socket clientSocket, ConnectionType connectionType, Server centralServer) {
 
         try {
 
@@ -34,7 +34,7 @@ public class JoinerThread extends Thread{
 
             this.nickName = inputStream.readUTF();
 
-            while(centralServer.checkNickname(nickName)){
+            while (centralServer.checkNickname(nickName)) {
 
                 outputStream.writeUTF("You're nickname has already been chosen, please enter a new one: ");
                 outputStream.flush();
@@ -51,13 +51,13 @@ public class JoinerThread extends Thread{
             dataExchanger = new DataExchanger(clientSocket, outputStream, inputStream, connectionType);
 
 
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Error while opening streams");
         }
 
     }
 
-    public JoinerThread(RMICommunicatorImpl rmiCommunicator, ConnectionType connectionType, String nickName, Server centralServer){
+    public JoinerThread(RMICommunicatorImpl rmiCommunicator, ConnectionType connectionType, String nickName, Server centralServer) {
 
         dataExchanger = new DataExchanger(rmiCommunicator, nickName, centralServer.getCurrentGameCode(), connectionType);
         this.nickName = nickName;
@@ -89,8 +89,7 @@ public class JoinerThread extends Thread{
                 startLobby();
             }
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
 
             if (trials == MAXTRIALS) {
                 System.out.println("Client " + clientSocket.getInetAddress() + " (" + nickName + ")" +
@@ -103,7 +102,7 @@ public class JoinerThread extends Thread{
             try {
                 //closing resources
                 dataExchanger.closeResources();
-                if(clientSocket != null){
+                if (clientSocket != null) {
                     clientSocket.close();
                 }
 
@@ -117,7 +116,7 @@ public class JoinerThread extends Thread{
         }
     }
 
-    private void startLobby()throws IOException {
+    private void startLobby() throws IOException {
 
         String message;
 
@@ -332,7 +331,7 @@ public class JoinerThread extends Thread{
 
     }
 
-    private void notifyAllPlayers(String message){
+    private void notifyAllPlayers(String message) {
 
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendMessageToAll(message);
 
