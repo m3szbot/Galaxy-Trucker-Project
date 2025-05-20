@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 class EvaluationPhaseTest {
     GameInformation gameInformation;
-    ClientMessenger clientMessenger;
 
     FlightBoard flightBoard;
     EvaluationPhase evaluationPhase;
@@ -23,8 +22,7 @@ class EvaluationPhaseTest {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 
         // set up GameMessenger used by Phase
-        clientMessenger = new ClientMessenger();
-        clientMessenger.addGame(gameInformation.getGameCode());
+        ClientMessenger.addGame(gameInformation.getGameCode());
 
         // add players
         Player playerA, playerB, playerC, playerD;

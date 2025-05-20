@@ -21,7 +21,6 @@ class CorrectionPhaseTest {
     private final InputStream originalInput = System.in;
 
     GameInformation gameInformation;
-    ClientMessenger clientMessenger;
 
     CorrectionPhase correctionPhase;
     Player playerA, playerB, playerC, playerD;
@@ -34,8 +33,7 @@ class CorrectionPhaseTest {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 
         // set up GameMessenger used by Phase
-        clientMessenger = new ClientMessenger();
-        clientMessenger.addGame(gameInformation.getGameCode());
+        ClientMessenger.addGame(gameInformation.getGameCode());
 
         // add players
         playerA = new Player("A", Color.BLUE, gameInformation);
