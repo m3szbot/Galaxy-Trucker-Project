@@ -72,9 +72,10 @@ public abstract class GeneralView {
                         |       |
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isPurple() ? "Pur" : "Bro",
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getLeft()), component.isPurple() ? "Pur" : "Bro", componentSideTranslator(component.getRight()),
+                componentSideTranslator(component.getBack()));
     }
 
     /**
@@ -88,9 +89,10 @@ public abstract class GeneralView {
                         |       |
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.getBatteryPower(),
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getLeft()), component.getBatteryPower(), componentSideTranslator(component.getRight()),
+                componentSideTranslator(component.getBack()));
     }
 
     /**
@@ -115,9 +117,11 @@ public abstract class GeneralView {
                         |   %d   |
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), crew, component.getCrewMembers(),
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getLeft()), crew, componentSideTranslator(component.getRight()),
+                component.getCrewMembers(),
+                componentSideTranslator(component.getBack()));
     }
 
     /**
@@ -131,9 +135,10 @@ public abstract class GeneralView {
                         |       |
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isSingle() ? 1 : 2,
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getLeft()), component.isSingle() ? 1 : 2, componentSideTranslator(component.getRight()),
+                componentSideTranslator(component.getBack()));
     }
 
     /**
@@ -147,9 +152,10 @@ public abstract class GeneralView {
                         |       |
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isSingle() ? 1 : 2,
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getLeft()), component.isSingle() ? 1 : 2, componentSideTranslator(component.getRight()),
+                componentSideTranslator(component.getBack()));
     }
 
     /**
@@ -163,15 +169,17 @@ public abstract class GeneralView {
                         |       |
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()),
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()),
+                componentSideTranslator(component.getBack()));
     }
 
     /**
      * Get string of Storage
      */
     private String getComponentString(Storage component) {
+        int slots = component.getAvailableRedSlots() + component.getAvailableBlueSlots();
         return String.format("""
                         +---%d---+
                         | %s |
@@ -179,11 +187,11 @@ public abstract class GeneralView {
                         |%d %d %d %d|
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isRed() ? "Red" : "Blu",
-                component.getAvailableRedSlots() + component.getAvailableBlueSlots(),
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getLeft()), component.isRed() ? "Red" : "Blu", slots, componentSideTranslator(component.getRight()),
                 component.getGoods()[0], component.getGoods()[1], component.getGoods()[2], component.getGoods()[3],
-                componentSideTranslator(component.getRight()), componentSideTranslator(component.getBack()));
+                componentSideTranslator(component.getBack()));
     }
 
     /**
@@ -197,7 +205,8 @@ public abstract class GeneralView {
                         |       |
                         +---%d---+
                         """,
-                componentSideTranslator(component.getFront()), component.getComponentName().substring(0, 5),
+                componentSideTranslator(component.getFront()),
+                component.getComponentName().substring(0, 5),
                 componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()),
                 componentSideTranslator(component.getBack()));
     }
