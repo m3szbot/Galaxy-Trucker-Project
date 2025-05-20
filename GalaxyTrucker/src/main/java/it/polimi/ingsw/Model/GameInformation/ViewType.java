@@ -8,6 +8,6 @@ import java.io.Serializable;
  * @author Ludo
  */
 
-public enum ViewType {
+public enum ViewType implements Serializable {
     TUI, GUI;
 }

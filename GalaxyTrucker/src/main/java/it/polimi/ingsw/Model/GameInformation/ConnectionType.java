@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model.GameInformation;
 
+import java.io.Serializable;
+
 /**
  * The connection type can be chosen by the player when
  * he joins the game
@@ -7,6 +9,6 @@ package it.polimi.ingsw.Model.GameInformation;
  * @author carlo
  */
 
-public enum ConnectionType {
+public enum ConnectionType implements Serializable {
     RMI, SOCKET;
 }
