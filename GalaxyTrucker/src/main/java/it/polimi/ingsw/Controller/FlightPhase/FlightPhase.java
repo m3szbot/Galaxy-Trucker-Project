@@ -37,11 +37,13 @@ public class FlightPhase extends Phase {
             card = flightBoard.getNewCard();
 
             for (Player player : flightBoard.getPlayerOrderList()) {
+
                 dataContainer = gameMessenger.getPlayerContainer(player);
                 dataContainer.setCard(card);
                 dataContainer.setCommand("printCard");
                 gameMessenger.sendPlayerData(player);
                 dataContainer.clearContainer();
+
             }
             card.resolve(gameInformation);
         }
