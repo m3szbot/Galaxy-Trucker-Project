@@ -31,14 +31,6 @@ public class FlightViewTUITest {
         randomizer = new Random();
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
-        Player player1 = new Player("l1", Color.RED, gameInformation);
-        Player player2 = new Player("l2", Color.BLUE, gameInformation);
-        Player player3 = new Player("l3", Color.GREEN, gameInformation);
-        Player player4 = new Player("l4", Color.YELLOW, gameInformation);
-        gameInformation.addPlayers(player1);
-        gameInformation.addPlayers(player2);
-        gameInformation.addPlayers(player3);
-        gameInformation.addPlayers(player4);
 
         for (Player player : gameInformation.getPlayerList()) {
 
@@ -63,9 +55,21 @@ public class FlightViewTUITest {
     public void printFlightBoardTest() {
         FlightBoard flightBoard = new FlightBoard(GameType.NORMALGAME, gameInformation.getCardsList());
 
-        for (Player player : gameInformation.getPlayerList()) {
-            flightBoard.getPlayerOrderList().add(player);
-        }
+        Player player1 = new Player("Player1", Color.RED, gameInformation);
+        Player player2 = new Player("Player2", Color.BLUE, gameInformation);
+        Player player3 = new Player("Player3", Color.GREEN, gameInformation);
+        Player player4 = new Player("Player4", Color.YELLOW, gameInformation);
+
+        gameInformation.addPlayers(player1);
+        gameInformation.addPlayers(player2);
+        gameInformation.addPlayers(player3);
+        gameInformation.addPlayers(player4);
+
+        flightBoard.addPlayer(player1, 7);
+        flightBoard.addPlayer(player2, 4);
+        flightBoard.addPlayer(player3, 2);
+        flightBoard.addPlayer(player4, 1);
+
         dataContainer.setFlightBoard(flightBoard);
         assertNotNull(dataContainer);
         flightView.printFlightBoard(dataContainer);
