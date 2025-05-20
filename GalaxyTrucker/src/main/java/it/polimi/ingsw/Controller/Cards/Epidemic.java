@@ -33,8 +33,6 @@ public class Epidemic extends Card {
 
     public void resolve(GameInformation gameInformation) {
 
-        DataContainer dataContainer;
-
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             removeAdjacentAstronauts(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);

@@ -342,7 +342,6 @@ public abstract class GeneralView {
     private void printCard(Card card) {
 
         String cardName = card.getCardName();
-        String cardAttributes;
 
         System.out.printf("Current card:    %s\n", cardName);
 
