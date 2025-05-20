@@ -106,6 +106,7 @@ class ScoreCounterTest {
         Storage storage = new Storage(singleSides, true, 4);
         playerA.getShipBoard().addComponent(storage, 7, 8);
         storage.addGoods(new int[]{1, 1, 1, 1});
+        // TODO update goods in shibpoard attributes
         // check correct shipboard and goods
         assertFalse(playerA.getShipBoard().isErroneous());
         assertEquals(1, playerA.getShipBoard().getShipBoardAttributes().getGoods()[0]);
@@ -138,11 +139,11 @@ class ScoreCounterTest {
         Component component = new Component(singleSides);
         // playerA 6
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
-        playerA.getShipBoard().addComponent(component, 7, 8);
-        playerA.getShipBoard().addComponent(component, 7, 9);
+        playerA.getShipBoard().addComponent(component, 8, 7);
+        playerA.getShipBoard().addComponent(component, 9, 7);
         // playerB 12
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getFirst());
-        playerA.getShipBoard().addComponent(component, 7, 8);
+        playerA.getShipBoard().addComponent(component, 8, 7);
         // check correct ships
         assertFalse(playerA.getShipBoard().isErroneous());
         assertFalse(playerB.getShipBoard().isErroneous());

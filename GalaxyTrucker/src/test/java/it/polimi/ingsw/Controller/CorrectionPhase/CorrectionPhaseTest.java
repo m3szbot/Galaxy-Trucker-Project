@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -11,14 +13,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CorrectionPhaseTest {
     private final InputStream originalInput = System.in;
+
     GameInformation gameInformation;
+    ClientMessenger clientMessenger;
+
     CorrectionPhase correctionPhase;
     Player playerA, playerB, playerC, playerD;
     Component singleComponent, doubleComponent;
@@ -27,11 +31,12 @@ class CorrectionPhaseTest {
     void setUp() {
         // set up gameInformation
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        try {
-            gameInformation.setUpComponents();
-        } catch (IOException e) {
-        }
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
+
+        // set up GameMessenger used by Phase
+        clientMessenger = new ClientMessenger();
+        clientMessenger.addGame(gameInformation.getGameCode());
+
         // add players
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);
@@ -54,6 +59,35 @@ class CorrectionPhaseTest {
         System.setIn(originalInput);
     }
 
+    @Test
+    void start() {
+        correctionPhase.start();
+    }
+
+    /**
+     * playerA has 3 erroneous components, removes the one connecting them to the shipboard so others fall of
+     * and shipboard becomes valid - player A doesn't get removed
+     */
+    @Test
+    void RemoveOneComponent() {
+        int errors;
+        try {
+            playerA.getShipBoard().addComponent(singleComponent, 7, 8);
+            playerA.getShipBoard().addComponent(doubleComponent, 6, 8);
+            playerA.getShipBoard().addComponent(doubleComponent, 8, 8);
+        } catch (NotPermittedPlacementException e) {
+        }
+        errors = playerA.getShipBoard().checkErrors();
+        assertEquals(3, errors);
+
+        // correct playerA's shipboard
+        inputSimulator("7\n8\n");
+        correctionPhase.start();
+        errors = playerA.getShipBoard().checkErrors();
+        assertEquals(0, errors);
+        assertEquals(4, gameInformation.getPlayerList().size());
+    }
+
     /**
      * Simulates keyboard input for automated tests (inputs not permitted)
      * The scanner is created only after calling correctionPhase.start()
@@ -66,44 +100,21 @@ class CorrectionPhaseTest {
         System.setIn(inputStream);
     }
 
-    @Test
-    void start() {
-        correctionPhase.start(gameInformation);
-    }
-
-    /**
-     * playerA has 3 erroneous components, removes the one connecting them to the shipboard so others fall of
-     * and shipboard becomes valid - player A doesn't get removed
-     */
-    @Test
-    void RemoveOneComponent() {
-        int errors;
-        playerA.getShipBoard().addComponent(singleComponent, 7, 8);
-        playerA.getShipBoard().addComponent(doubleComponent, 6, 8);
-        playerA.getShipBoard().addComponent(doubleComponent, 8, 8);
-        errors = playerA.getShipBoard().checkErrors();
-        assertEquals(3, errors);
-
-        // correct playerA's shipboard
-        inputSimulator("7\n8\n");
-        correctionPhase.start(gameInformation);
-        errors = playerA.getShipBoard().checkErrors();
-        assertEquals(0, errors);
-        assertEquals(4, gameInformation.getPlayerList().size());
-    }
-
     /**
      * playerA has erroneous shipboard, times out (2 minutes) and gets removed from the game
      */
     @Test
     void kickPlayerErroneousShipboard() {
         int errors;
-        playerA.getShipBoard().addComponent(singleComponent, 7, 8);
-        playerA.getShipBoard().addComponent(doubleComponent, 6, 8);
+        try {
+            playerA.getShipBoard().addComponent(singleComponent, 7, 8);
+            playerA.getShipBoard().addComponent(doubleComponent, 6, 8);
+        } catch (NotPermittedPlacementException e) {
+        }
         errors = playerA.getShipBoard().checkErrors();
         assertEquals(2, errors);
 
-        correctionPhase.start(gameInformation);
+        correctionPhase.start();
         assertEquals(3, gameInformation.getPlayerList().size());
 
     }
