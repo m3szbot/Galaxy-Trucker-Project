@@ -10,49 +10,55 @@ import java.util.List;
 
 /**
  * Represents one of the decks of cards used in the assembly phase of the game.
+ * The deck is initialized based on the game type.
+ * It selects specific cards of level 2 and 1 from the provided list.
  *
  * @author Giacomo, Boti
  */
 public class Deck {
+    // constants
+    public static final int NORMAL_LEVEL_ONE_CARD_COUNT = 1;
+    public static final int NORMAL_LEVEL_TWO_CARD_COUNT = 2;
+    public static final int TEST_LEVEL_ONE_CARD_COUNT = 2;
+    public static final int TEST_LEVEL_TWO_CARD_COUNT = 0;
+
     private boolean inUse; // Indicates if the deck is in use
     private List<Card> cards; // List storing the deck's cards
 
     /**
-     * Construct a deck from the cards passed (only pass the needed cards!).
-     * Throws error if gameType requirements are not respected.
-     *
-     * @param deckCards only the necessary cards for the deck.
-     * @param gameType  to check gameType requirements.
+     * Construct a deck based on gameType.
      */
-    public Deck(List<Card> deckCards, GameType gameType) {
+    public Deck(List<Card> cardsList, GameType gameType) {
         cards = new ArrayList<>();
+        // add cards to the deck
+        if (gameType.equals(GameType.NORMALGAME)) {
+            addCardToDeck(cardsList, 2);
+            addCardToDeck(cardsList, 2);
+            addCardToDeck(cardsList, 1);
+        }
+        // TestGame
+        else {
+            addCardToDeck(cardsList, 1);
+            addCardToDeck(cardsList, 1);
+        }
         Collections.shuffle(cards);
-        checkGameTypeRequirements(gameType);
     }
 
     /**
-     * Check for gameType specific requirements.
+     * Add card of selected level to the current deck and remove it from gameInformation cardsList
+     *
+     * @param level level of the card
      */
-    private void checkGameTypeRequirements(GameType gameType) {
-        // NORMAL GAME
-        int levelOneCardCount = 1;
-        int levelTwoCardCount = 2;
-        // TEST GAME
-        if (gameType.equals(GameType.TESTGAME)) {
-            levelOneCardCount = 2;
-            levelTwoCardCount = 0;
+    private void addCardToDeck(List<Card> cardsList, int level) {
+        int i = 0;
+        Collections.shuffle(cardsList);
+        // find card of required level
+        while (cardsList.get(i).getCardLevel() != level) {
+            i++;
         }
-        for (Card card : cards) {
-            if (card.getCardLevel() == 1) {
-                levelOneCardCount--;
-            } else {
-                levelTwoCardCount--;
-            }
-        }
-        if (levelOneCardCount != 0 || levelTwoCardCount != 0) {
-            throw new IllegalStateException("GameType requirements not respected for Deck cards.");
-        }
+        this.cards.add(cardsList.remove(i));
     }
+
 
     /**
      * Returns the number of cards currently in the deck.

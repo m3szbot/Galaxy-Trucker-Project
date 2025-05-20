@@ -13,6 +13,7 @@ import it.polimi.ingsw.Controller.Cards.Blow;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Cards.CardBuilder;
 import it.polimi.ingsw.Controller.Cards.ElementType;
+import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -218,12 +219,12 @@ public class GameInformation {
         // Normal Game: 4 decks of: 2 level 2 + 1 level 1 card (12 tot)
         // Test Game: 4 decks of: 2 level 1 cardsList (8 tot)
         // NORMAL GAME
-        int levelOneCardCount = 4;
-        int levelTwoCardCount = 8;
+        int levelOneCardCount = Deck.NORMAL_LEVEL_ONE_CARD_COUNT * 4;
+        int levelTwoCardCount = Deck.NORMAL_LEVEL_TWO_CARD_COUNT * 4;
         // TEST GAME
         if (gameType.equals(GameType.TESTGAME)) {
-            levelOneCardCount = 8;
-            levelTwoCardCount = 0;
+            levelOneCardCount = Deck.TEST_LEVEL_ONE_CARD_COUNT * 4;
+            levelTwoCardCount = Deck.TEST_LEVEL_TWO_CARD_COUNT * 4;
         }
         // create actual cardsList
         cardListCreator(1, levelOneCardCount, tmpList);

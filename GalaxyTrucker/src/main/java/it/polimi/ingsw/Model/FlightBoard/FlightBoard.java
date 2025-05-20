@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.FlightBoard;
 
 import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -81,12 +82,12 @@ public class FlightBoard implements Serializable {
      */
     private void checkGameTypeRequirements(GameType gameType) {
         // NORMAL GAME
-        int levelOneCardCount = 4;
-        int levelTwoCardCount = 8;
+        int levelOneCardCount = Deck.NORMAL_LEVEL_ONE_CARD_COUNT * 4;
+        int levelTwoCardCount = Deck.NORMAL_LEVEL_TWO_CARD_COUNT * 4;
         // TEST GAME
         if (gameType.equals(GameType.TESTGAME)) {
-            levelOneCardCount = 8;
-            levelTwoCardCount = 0;
+            levelOneCardCount = Deck.TEST_LEVEL_ONE_CARD_COUNT * 4;
+            levelTwoCardCount = Deck.TEST_LEVEL_TWO_CARD_COUNT * 4;
         }
         for (Card card : cardsStack) {
             if (card.getCardLevel() == 1) {
