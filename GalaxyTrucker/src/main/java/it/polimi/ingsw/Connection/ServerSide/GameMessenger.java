@@ -283,4 +283,12 @@ public class GameMessenger {
         sendMessageToAll(String.format("%s has been reconnected", player));
     }
 
+    public Boolean isPlayerConnected(Player player, GameInformation gameInformation) {
+        if(gameInformation.getDisconnectedPlayerList().contains(player)){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 }

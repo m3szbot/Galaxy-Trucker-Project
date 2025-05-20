@@ -62,8 +62,6 @@ public class ComponentPlacingState implements GameState {
             int num1 = Integer.parseInt(parts[0]);
             int num2 = Integer.parseInt(parts[1]);
 
-
-
         if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
             if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 2, num2-1) != null ||
                     assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 , num2-1) != null ||
@@ -79,7 +77,7 @@ public class ComponentPlacingState implements GameState {
                 }
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             } else{
-                // di al giocatore che il componente non è adiacente e a nulla.
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "You can't place your component here, it would float in the air");
             }
         }else{
             String message = "Your hand is empty";

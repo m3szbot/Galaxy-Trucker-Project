@@ -69,20 +69,31 @@ public class AssemblyThread implements Runnable {
 
             // Separate thread for reading user input from the console
             new Thread(() -> {
-                //Scanner scanner = new Scanner(System.in);
+                AtomicBoolean disconnected = new AtomicBoolean(false);
                 while (!end.get()) {
-                    //String input = scanner.nextLine();
-                    //System.out.println("prova");
-                    try {
-                        String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
-                        inputQueue.offer(input);
-                    } catch (PlayerDisconnectedException e) {
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation,associatedPlayer);
-                        String message = e.getMessage();
-                        for (Player player : gameInformation.getPlayerList()) {
-                            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
+                    if(!disconnected.get()) {
+                        try {
+                            String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
+                            inputQueue.offer(input);
+                        } catch (PlayerDisconnectedException e) {
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
+                            String message = e.getMessage();
+                            disconnected.set(true);
+                            for (Player player : gameInformation.getPlayerList()) {
+                                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
+                                dataContainer.setMessage(message);
+                                ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
+                            }
+                        }
+                    }else{
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ignored) {}
+
+                        if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
+                            disconnected.set(false);
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode())
+                                    .sendPlayerMessage(associatedPlayer, "Welcome back! You have been reconnected.");
                         }
                     }
                 }
