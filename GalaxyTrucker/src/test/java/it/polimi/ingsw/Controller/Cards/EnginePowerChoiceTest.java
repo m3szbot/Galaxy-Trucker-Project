@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
@@ -40,7 +41,7 @@ class EnginePowerChoiceTest {
     void initialize() {
 
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.TestGame);
+        gameInformation.setGameType(GameType.TESTGAME);
 
         player = new Player("player", Color.BLUE, gameInformation);
     }
@@ -88,7 +89,7 @@ class EnginePowerChoiceTest {
     }
 
     @Test
-    void twoDoubleEnginesActivated() {
+    void twoDoubleEnginesActivated() throws NotPermittedPlacementException {
 
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(1);
         player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(2);
@@ -104,7 +105,7 @@ class EnginePowerChoiceTest {
     }
 
     @Test
-    void threeEnginesActivatedWithIncorrectValues() {
+    void threeEnginesActivatedWithIncorrectValues() throws NotPermittedPlacementException {
 
         player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
         player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(4);

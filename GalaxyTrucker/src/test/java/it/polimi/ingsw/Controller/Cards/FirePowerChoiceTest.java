@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
@@ -38,7 +39,7 @@ class FirePowerChoiceTest {
     void initialize() {
 
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.TestGame);
+        gameInformation.setGameType(GameType.TESTGAME);
 
         player = new Player("player", Color.BLUE, gameInformation);
     }
@@ -90,7 +91,7 @@ class FirePowerChoiceTest {
     }
 
     @Test
-    void threeDoubleCannonsActivated() {
+    void threeDoubleCannonsActivated() throws NotPermittedPlacementException {
 
         player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);
@@ -110,7 +111,7 @@ class FirePowerChoiceTest {
     }
 
     @Test
-    void threeDoubleCannonsActivatedWithIncorrectValues() {
+    void threeDoubleCannonsActivatedWithIncorrectValues() throws NotPermittedPlacementException {
 
         player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
         player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);

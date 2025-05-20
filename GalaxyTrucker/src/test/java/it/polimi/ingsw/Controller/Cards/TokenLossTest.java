@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -38,7 +39,7 @@ class TokenLossTest {
     void initialize() {
 
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.TestGame);
+        gameInformation.setGameType(GameType.TESTGAME);
 
         CardBuilder cardBuilder = new CardBuilder();
         cardBuilder.buildCardName("Epidemic").buildCardLevel(1);
@@ -53,7 +54,7 @@ class TokenLossTest {
 
         }
 
-        flightBoard = new FlightBoard(GameType.TestGame, cardsList);
+        flightBoard = new FlightBoard(GameType.TESTGAME, cardsList);
 
         player = new Player("player", Color.BLUE, gameInformation);
     }
@@ -64,7 +65,7 @@ class TokenLossTest {
     }
 
     @Test
-    void removingInhabitantsWithWrongEnteredValues() {
+    void removingInhabitantsWithWrongEnteredValues() throws NotPermittedPlacementException {
 
         Cabin humanCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single});
         humanCabin.setCrewType(CrewType.Human);
@@ -107,7 +108,7 @@ class TokenLossTest {
     }
 
     @Test
-    void removingGoodsWithWrongEnteredValues() {
+    void removingGoodsWithWrongEnteredValues() throws NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 5, 5);
@@ -178,7 +179,7 @@ class TokenLossTest {
     }
 
     @Test
-    void remvovingBatteries() {
+    void remvovingBatteries() throws NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, false, 5), 5, 5);
@@ -227,7 +228,7 @@ class TokenLossTest {
     }
 
     @Test
-    void notEnoughBatteries() {
+    void notEnoughBatteries() throws NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Double, SideType.Double}, 2), 9, 9);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Double, SideType.Double}, 3), 10, 10);

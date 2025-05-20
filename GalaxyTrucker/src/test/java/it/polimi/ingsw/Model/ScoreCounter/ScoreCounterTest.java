@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.ScoreCounter;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.Components.Storage;
@@ -97,7 +98,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void OneOfEachGoodScore() {
+    void OneOfEachGoodScore() throws NotPermittedPlacementException {
         // 8 order points
         // 4 least exposed links points?
         // 4 3 2 1 goods points
@@ -117,7 +118,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void LostOneComponentScores() {
+    void LostOneComponentScores() throws NotPermittedPlacementException {
         // add and remove 1 component
         // 8 order + 4 least links - 1 component
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
@@ -131,7 +132,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void TwoPlayersOneLeastLinks() {
+    void TwoPlayersOneLeastLinks() throws NotPermittedPlacementException {
         // order: 8 6
         // least exposed links: 4
         Component component = new Component(singleSides);

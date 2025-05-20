@@ -24,11 +24,8 @@ class FlightPhaseTest {
     void setUp() {
         // set up gameInformation
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.NormalGame);
-        try {
-            gameInformation.setUpComponents();
-        } catch (IOException e) {
-        }
+        gameInformation.setGameType(GameType.NORMALGAME);
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         // add players
         playerA = new Player("A", Color.BLUE, gameInformation);
         playerB = new Player("B", Color.RED, gameInformation);

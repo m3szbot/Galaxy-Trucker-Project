@@ -4,7 +4,9 @@ import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
@@ -12,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FlightViewTUITest {
 
@@ -27,6 +31,28 @@ public class FlightViewTUITest {
         randomizer = new Random();
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
+        Player player1 = new Player("l1", Color.RED, gameInformation);
+        Player player2 = new Player("l2", Color.BLUE, gameInformation);
+        Player player3 = new Player("l3", Color.GREEN, gameInformation);
+        Player player4 = new Player("l4", Color.YELLOW, gameInformation);
+        gameInformation.addPlayers(player1);
+        gameInformation.addPlayers(player2);
+        gameInformation.addPlayers(player3);
+        gameInformation.addPlayers(player4);
+
+        for (Player player : gameInformation.getPlayerList()) {
+
+            for (int i = 0; i < 12; i++) {
+                for (int j = 0; j < 12; j++) {
+                    System.out.print(player.getShipBoard().getMatr()[i][j] + "");
+                }
+            }
+            for (int i = 0; i < 12; i++) {
+                for (int j = 0; j < 12; j++) {
+                    System.out.print(player.getShipBoard().getStructureMatrix()[i][j] + "");
+                }
+            }
+        }
         dataContainer = new DataContainer();
         // abstract class cannot be instantiated
         generalViewTUI = new EvaluationViewTUI();
@@ -41,6 +67,7 @@ public class FlightViewTUITest {
             flightBoard.getPlayerOrderList().add(player);
         }
         dataContainer.setFlightBoard(flightBoard);
+        assertNotNull(dataContainer);
         flightView.printFlightBoard(dataContainer);
     }
 }

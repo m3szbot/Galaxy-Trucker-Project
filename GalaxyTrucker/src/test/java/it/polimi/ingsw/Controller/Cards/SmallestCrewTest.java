@@ -48,7 +48,7 @@ public class SmallestCrewTest {
 
         //creating a fictitious game model
         GameInformation gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.TestGame);
+        gameInformation.setGameType(GameType.TESTGAME);
 
         //creating a deck of only one type of card, easy to initialize, as
         //cards are futile for this test.
@@ -66,7 +66,7 @@ public class SmallestCrewTest {
 
         }
 
-        flightBoard = new FlightBoard(GameType.TestGame, cardsList);
+        flightBoard = new FlightBoard(GameType.TESTGAME, cardsList);
 
         player1 = new Player("player1", Color.BLUE, gameInformation);
         player2 = new Player("player2", Color.GREEN, gameInformation);

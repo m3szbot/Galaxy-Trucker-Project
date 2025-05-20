@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.Components.Storage;
@@ -40,7 +41,7 @@ class GoodsGainTest {
     void initialize() {
 
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.TestGame);
+        gameInformation.setGameType(GameType.TESTGAME);
 
         CardBuilder cardBuilder = new CardBuilder();
         cardBuilder.buildCardName("Epidemic").buildCardLevel(1);
@@ -55,7 +56,7 @@ class GoodsGainTest {
 
         }
 
-        flightBoard = new FlightBoard(GameType.TestGame, cardsList);
+        flightBoard = new FlightBoard(GameType.TESTGAME, cardsList);
 
         player = new Player("player", Color.BLUE, gameInformation);
     }
@@ -66,7 +67,7 @@ class GoodsGainTest {
     }
 
     @Test
-    void playerOnlyDiscardGoodsWithWrongEnteredValues() {
+    void playerOnlyDiscardGoodsWithWrongEnteredValues() throws NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
@@ -86,7 +87,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, gameInformation);
+        operator.giveGoods(player, new int[]{0, 0, 0, 0}, gameInformation);
 
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).isEmpty());
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 0);
@@ -99,7 +100,7 @@ class GoodsGainTest {
     }
 
     @Test
-    void playerRearrangeGoodsWithWrongEnteredValues() {
+    void playerRearrangeGoodsWithWrongEnteredValues() throws NotPermittedPlacementException {
 
         //source red storage component
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
@@ -132,7 +133,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{0, 0, 0, 0}, flightBoard, gameInformation);
+        operator.giveGoods(player, new int[]{0, 0, 0, 0}, gameInformation);
 
         assertTrue(sourceStorage.getAvailableRedSlots() == 4);
         assertTrue(destStorage.getAvailableBlueSlots() == 0);
@@ -146,7 +147,7 @@ class GoodsGainTest {
     }
 
     @Test
-    void addingRedGoodsWithWrongEnteredValues() {
+    void addingRedGoodsWithWrongEnteredValues() throws NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
@@ -170,7 +171,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{5, 0, 0, 0}, flightBoard, gameInformation);
+        operator.giveGoods(player, new int[]{5, 0, 0, 0}, gameInformation);
 
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 0);
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).isFull());
@@ -184,7 +185,7 @@ class GoodsGainTest {
     }
 
     @Test
-    void addingNonRedGoodsWithWrongEnteredValues() {
+    void addingNonRedGoodsWithWrongEnteredValues() throws NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
@@ -215,7 +216,7 @@ class GoodsGainTest {
 
         flightView = new FlightViewTUI();
 
-        operator.giveGoods(player, new int[]{0, 3, 2, 1}, flightBoard, gameInformation);
+        operator.giveGoods(player, new int[]{0, 3, 2, 1}, gameInformation);
 
         assertTrue(((Storage) player.getShipBoard().getComponent(4, 4)).getAvailableBlueSlots() == 2);
         assertTrue(((Storage) player.getShipBoard().getComponent(5, 5)).getAvailableRedSlots() == 3);

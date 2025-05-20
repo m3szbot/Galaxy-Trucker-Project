@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void addComponent() {
+    void addComponent() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getDrivingPower(), 1);
         shipBoard.removeComponent(7, 8, true);
@@ -44,7 +45,7 @@ public class ShipBoardTest {
 
 
     @Test
-    void addComponent2() {
+    void addComponent2() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getFirePower(), 1);
         shipBoard.removeComponent(7, 8, true);
@@ -52,7 +53,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void addComponent3() {
+    void addComponent3() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().checkSide(0), false);
         assertEquals(shipBoard.getShipBoardAttributes().checkSide(1), true);
@@ -66,7 +67,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void addComponent4() {
+    void addComponent4() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(), 4);
         shipBoard.removeComponent(7, 8, true);
@@ -74,7 +75,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void addComponent5() {
+    void addComponent5() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, 2), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getBatteryPower(), 2);
         shipBoard.removeComponent(7, 8, true);
@@ -82,7 +83,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void addComponent6() {
+    void addComponent6() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 20), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 20);
         shipBoard.removeComponent(7, 8, true);
@@ -90,7 +91,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void addComponent7() {
+    void addComponent7() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, false, 20), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(), 20);
         shipBoard.removeComponent(7, 8, true);
@@ -98,7 +99,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void addComponent8() {
+    void addComponent8() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(), 4);
         shipBoard.addComponent(new AlienSupport(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true), 8, 8);
@@ -111,7 +112,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void CountExternalJunctions() {
+    void CountExternalJunctions() throws NotPermittedPlacementException {
         assertEquals(shipBoard.countExternalJunctions(), 4);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 8);
         assertEquals(shipBoard.countExternalJunctions(), 6);
@@ -120,7 +121,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void testError() { //Correct junctions
+    void testError() throws NotPermittedPlacementException { //Correct junctions
         int errors;
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 7, 8);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);

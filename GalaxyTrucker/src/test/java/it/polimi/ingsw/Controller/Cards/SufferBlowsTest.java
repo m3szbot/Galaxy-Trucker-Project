@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -35,7 +36,7 @@ class SufferBlowsTest {
     void initialize() {
 
         gameInformation = new GameInformation();
-        gameInformation.setGameType(GameType.TestGame);
+        gameInformation.setGameType(GameType.TESTGAME);
 
         CardBuilder cardBuilder = new CardBuilder();
         cardBuilder.buildCardName("Epidemic").buildCardLevel(1);
@@ -50,7 +51,7 @@ class SufferBlowsTest {
 
         }
 
-        flightBoard = new FlightBoard(GameType.TestGame, cardsList);
+        flightBoard = new FlightBoard(GameType.TESTGAME, cardsList);
 
         player = new Player("player", Color.BLUE, gameInformation);
     }
@@ -61,7 +62,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void blowDodgedVertically() throws NoSuchFieldException, IllegalAccessException {
+    void blowDodgedVertically() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Component(), 5, 5);
         player.getShipBoard().addComponent(new Component(), 4, 4);
@@ -88,7 +89,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void blowDodgedHorizontally() throws NoSuchFieldException, IllegalAccessException {
+    void blowDodgedHorizontally() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Component(), 5, 5);
         player.getShipBoard().addComponent(new Component(), 4, 4);
@@ -115,7 +116,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void bigCannonBlowHit() throws NoSuchFieldException, IllegalAccessException {
+    void bigCannonBlowHit() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 7);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
@@ -159,7 +160,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void smallCannonBlowHitTarget() throws NoSuchFieldException, IllegalAccessException {
+    void smallCannonBlowHitTarget() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 5, 7); //target component
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 6, 7); //target component
@@ -194,7 +195,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void smallCannonBlowHitShield() throws NoSuchFieldException, IllegalAccessException {
+    void smallCannonBlowHitShield() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Component(), 6, 6); //target component
         player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}), 5, 5);
@@ -224,7 +225,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void bigMeteorBlowHitTarget() throws NoSuchFieldException, IllegalAccessException {
+    void bigMeteorBlowHitTarget() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 4, 7);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
@@ -263,7 +264,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void bigMeteorBlowWithCannonNotActivated() throws NoSuchFieldException, IllegalAccessException {
+    void bigMeteorBlowWithCannonNotActivated() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 6, 7);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 6);
@@ -324,7 +325,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void bigMeteorBlowWithCannonActivated() throws NoSuchFieldException, IllegalAccessException {
+    void bigMeteorBlowWithCannonActivated() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 7, 8);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, 1), 8, 7);
@@ -358,7 +359,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void smallMeteorBlowHitSmoothSide() throws NoSuchFieldException, IllegalAccessException {
+    void smallMeteorBlowHitSmoothSide() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         //target component
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth}), 6, 6);
@@ -386,7 +387,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void smallMeteorBlowWithShieldActivated() throws NoSuchFieldException, IllegalAccessException {
+    void smallMeteorBlowWithShieldActivated() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         //target component
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 4), 6, 6);
@@ -422,7 +423,7 @@ class SufferBlowsTest {
     }
 
     @Test
-    void smallMeteorBlowHit() throws NoSuchFieldException, IllegalAccessException {
+    void smallMeteorBlowHit() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 4, 7);
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
