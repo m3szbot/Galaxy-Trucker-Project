@@ -1,20 +1,13 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
-import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.io.OutputStream;
-import java.rmi.server.RemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
