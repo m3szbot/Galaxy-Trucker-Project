@@ -1,7 +1,7 @@
-package it.polimi.ingsw.Connection.ServerSide;
+package it.polimi.ingsw.Connection.ServerSide.socket;
 
-import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicatorImpl;
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -10,60 +10,44 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
-public class JoinerThread extends Thread {
+public class ClientSocketHandler extends Thread {
 
 
     private final int MAXTRIALS = 5;
-    private DataExchanger dataExchanger;
+    private SocketDataExchanger dataExchanger;
     private Server centralServer;
     private int clientGameCode;
     private Socket clientSocket;
     private String nickName;
     private Integer trials = 0;
 
-    public JoinerThread(Socket clientSocket, ConnectionType connectionType, Server centralServer) {
+    public ClientSocketHandler(Socket clientSocket, Server centralServer) throws IOException{
 
-        try {
+        this.clientSocket = clientSocket;
+        ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
+        ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+        outputStream.flush();
+        this.centralServer = centralServer;
 
-            this.clientSocket = clientSocket;
-            ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            outputStream.flush();
-            this.centralServer = centralServer;
+        dataExchanger = new SocketDataExchanger(clientSocket, inputStream, outputStream);
 
-            this.nickName = inputStream.readUTF();
-
-            while (centralServer.checkNickname(nickName)) {
-
-                outputStream.writeUTF("You're nickname has already been chosen, please enter a new one: ");
-                outputStream.flush();
-                this.nickName = inputStream.readUTF();
-
-            }
-
-            outputStream.writeUTF("nicknameSet");
-            outputStream.flush();
-            outputStream.writeUTF(this.nickName);
-            outputStream.flush();
-            centralServer.addNickName(nickName);
-
-            dataExchanger = new DataExchanger(clientSocket, outputStream, inputStream, connectionType);
-
-
-        } catch (IOException e) {
-            System.err.println("Error while opening streams");
-        }
+        nickName = dataExchanger.getString();
 
     }
 
-    public JoinerThread(RMICommunicatorImpl rmiCommunicator, ConnectionType connectionType, String nickName, Server centralServer) {
+    private void changePlayerUsername() throws IOException{
 
-        dataExchanger = new DataExchanger(rmiCommunicator, nickName, centralServer.getCurrentGameCode(), connectionType);
-        this.nickName = nickName;
-        dataExchanger.setTrials(trials);
-        this.centralServer = centralServer;
-        centralServer.addNickName(nickName);
+        String message;
+
+        while(centralServer.checkNickname(nickName)){
+
+            message = "nickname '" + nickName + "' has already been chosen, please enter a new one: ";
+            dataExchanger.sendString(message);
+            nickName = dataExchanger.getString();
+
+        }
 
     }
 
@@ -71,9 +55,19 @@ public class JoinerThread extends Thread {
 
         try {
 
+            if(centralServer.checkNickname(nickName)){
+
+                changePlayerUsername();
+
+            }
+
+            dataExchanger.sendString("nickname updated");
+            dataExchanger.sendString(nickName);
+            centralServer.addNickName(nickName);
+
             try {
 
-                this.clientGameCode = Integer.parseInt(dataExchanger.receiveMessage(true));
+                this.clientGameCode = Integer.parseInt(dataExchanger.getString());
 
             } catch (NumberFormatException e) {
                 System.err.println("Error while receiving client game code");
@@ -91,23 +85,31 @@ public class JoinerThread extends Thread {
 
         } catch (IOException e) {
 
+            try {
+
+                centralServer.removeNickName(nickName);
+
+            } catch (IllegalArgumentException ex) {
+                System.out.println(ex.getMessage());
+            }
+
             if (trials == MAXTRIALS) {
                 System.out.println("Client " + clientSocket.getInetAddress() + " (" + nickName + ")" +
                         " was kicked out because of too many input failures. The client probably had" +
                         " malicious intent");
-            } else {
-                System.err.println("Client " + clientSocket.getInetAddress() + " has disconnected while in lobby");
+            }
+            else if(e instanceof SocketTimeoutException){
+                System.out.println("Player was kicked out because of inactivity");
+            }
+            else {
+                System.out.println("Client " + clientSocket.getInetAddress() + " has disconnected while joining a game");
             }
 
             try {
-                //closing resources
                 dataExchanger.closeResources();
-                if (clientSocket != null) {
-                    clientSocket.close();
-                }
 
             } catch (IOException e1) {
-                System.err.println("Critical error while closing resources");
+                System.err.println("Critical error while closing " + clientSocket.getInetAddress() + " resources");
             }
 
             if (centralServer.getLock().isLocked()) {
@@ -124,7 +126,7 @@ public class JoinerThread extends Thread {
 
             message = "Press 'Enter' key to enter in a game: ";
 
-            dataExchanger.sendMessage(message, true);
+            dataExchanger.sendString(message);
 
             if (checkEnterKey()) {
 
@@ -146,58 +148,31 @@ public class JoinerThread extends Thread {
                 } else {
                     message = "Somebody is already joining a new game, please wait.";
 
-                    dataExchanger.sendMessage(message, true);
+                    dataExchanger.sendString(message);
 
                 }
 
             } else {
 
                 message = "The string you entered is invalid!";
-                dataExchanger.sendMessage(message, true);
-                dataExchanger.sendMessage("increment trials", true);
+                dataExchanger.sendString(message);
+                dataExchanger.sendString("increment trials");
                 trials++;
+                checkTrials();
 
             }
         }
 
     }
-    /*
-
+    //TODO
     private void startRejoining(int gameCode) {
 
-        Game game;
-        String message;
-
-        try {
-
-            game = centralServer.getGame(gameCode);
-
-        } catch (IndexOutOfBoundsException e1) {
-
-            try {
-
-                message = "The game code you entered is invalid!";
-                dataSender.writeUTF(message);
-                message = "terminate";
-                dataSender.writeUTF(message);
-                return;
-
-            } catch (IOException e2) {
-                System.err.println("Client " + clientSocket.getInetAddress() + " has disconnected!");
-            }
-
-        }
-
-        //player rejoin game
-        //TODO (BOTI)
 
     }
-
-     */
 
     private boolean checkEnterKey() throws IOException {
 
-        if (dataExchanger.receiveMessage(true).isEmpty()) {
+        if (dataExchanger.getString().isEmpty()) {
             return true;
         }
         return false;
@@ -222,29 +197,29 @@ public class JoinerThread extends Thread {
 
         message = "You are the first player joining the game!";
 
-        dataExchanger.sendMessage(message, true);
+        dataExchanger.sendString(message);
 
         message = "Enter the game type (TESTGAME/NORMALGAME): ";
 
-        dataExchanger.sendMessage(message, true);
+        dataExchanger.sendString(message);
 
         while (true) {
 
-            input = dataExchanger.receiveMessage(true);
+            input = dataExchanger.getString();
 
             if (!input.equalsIgnoreCase("TESTGAME") && !input.equalsIgnoreCase("NORMALGAME")) {
 
                 message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
-                dataExchanger.sendMessage(message, true);
-                dataExchanger.sendMessage("increment trials", true);
+                dataExchanger.sendString(message);
                 trials++;
+                checkTrials();
 
             } else {
 
                 gameType = GameType.valueOf(input.toUpperCase());
                 centralServer.getCurrentStartingGame().getGameInformation().setGameType(gameType);
                 message = "Game type was set up correctly";
-                dataExchanger.sendMessage(message, true);
+                dataExchanger.sendString(message);
 
                 break;
             }
@@ -253,18 +228,20 @@ public class JoinerThread extends Thread {
 
         message = "Enter the number of players of the game (2-4): ";
 
-        dataExchanger.sendMessage(message, true);
+        dataExchanger.sendString(message);
 
         while (true) {
 
             try {
 
-                numberOfPlayers = Integer.parseInt(dataExchanger.receiveMessage(true));
+                numberOfPlayers = Integer.parseInt(dataExchanger.getString());
 
             } catch (NumberFormatException e) {
 
                 message = "You didn't enter a number! Please enter one: ";
-                dataExchanger.sendMessage(message, true);
+                dataExchanger.sendString(message);
+                trials++;
+                checkTrials();
                 continue;
 
             }
@@ -272,13 +249,13 @@ public class JoinerThread extends Thread {
             if (numberOfPlayers < 2 || numberOfPlayers > 4) {
 
                 message = "The number of players you entered is invalid, please enter a valid value (2-4): ";
-                dataExchanger.sendMessage(message, true);
-                dataExchanger.sendMessage("increment trials", true);
+                dataExchanger.sendString(message);
                 trials++;
+                checkTrials();
             } else {
 
                 message = "Number of players was set up correctly";
-                dataExchanger.sendMessage(message, true);
+                dataExchanger.sendString(message);
                 break;
             }
 
@@ -294,6 +271,12 @@ public class JoinerThread extends Thread {
 
         addPlayerToGame(false, 0, null);
 
+    }
+
+    private void checkTrials() throws IOException{
+        if(trials == MAXTRIALS){
+            throw new IOException();
+        }
     }
 
     private void addPlayerToGame(boolean isFirstPlayer, int numberOfPlayers, GameType gameType) throws IOException {
@@ -319,22 +302,27 @@ public class JoinerThread extends Thread {
         } else {
             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
         }
-        dataExchanger.sendMessage(message, true);
-        dataExchanger.sendMessage("added", true);
+        dataExchanger.sendString(message);
+        dataExchanger.sendString("added");
+        dataExchanger.setSocketTimeOut(0);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
             notifyAllPlayers("start");
             centralServer.startCurrentGame();
         }
-
-        dataExchanger.sendMessage("Waiting for other players to join...", true);
+        else {
+            dataExchanger.sendString("Waiting for other players to join...");
+        }
 
     }
 
-    private void notifyAllPlayers(String message) {
+    private void notifyAllPlayers(String message) throws IOException{
 
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendMessageToAll(message);
+        for(SocketDataExchanger dataExchanger: ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).getAllSocketExchangers()){
 
+            dataExchanger.sendString(message);
+
+        }
     }
 
 

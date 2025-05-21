@@ -1,20 +1,13 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
-import it.polimi.ingsw.Connection.ServerSide.RMI.RMICommunicator;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,109 +25,41 @@ public class ClientJoiner {
 
     private AtomicReference<String> userInput;
 
-    public int start(ClientInfo clientInfo) {
+    /**
+     *
+     * @param clientInfo
+     * @return true if the joining process terminated correctly, false otherwise
+     */
+
+    public boolean start(ClientInfo clientInfo){
+
+        userInput = clientInfo.getUserInput();
 
         if (clientInfo.getViewType() == ViewType.TUI) {
 
             return startTUI(clientInfo);
 
 
-        } else {
-            //GUI
         }
 
-        return 0; //if no returns have been activated, the player is automatically kicked.
+        return false;
     }
 
-    private int startTUI(ClientInfo clientInfo) {
+    private boolean startTUI(ClientInfo clientInfo){
 
-        DataExchanger dataExchanger;
-        Socket socket;
+        SocketDataExchanger dataExchanger;
         AtomicBoolean terminatedFlag = new AtomicBoolean(false);
-        AtomicBoolean abnormallyTerminatedFlag = new AtomicBoolean(false);
-        this.userInput = clientInfo.getUserInput();
-
-        if (clientInfo.getConnectionType() == ConnectionType.SOCKET) {
-
-            try {
-                socket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
-                clientInfo.setServerSocket(socket);
-                ObjectOutputStream dataSender = new ObjectOutputStream(socket.getOutputStream());
-                dataSender.flush();
-                ObjectInputStream dataReceiver = new ObjectInputStream(socket.getInputStream());
-
-                dataSender.writeUTF(clientInfo.getNickname());
-                dataSender.flush();
-
-                String input = dataReceiver.readUTF();
-
-                while (!input.equals("nicknameSet")) {
-
-                    System.out.println(input);
-
-                    while (userInput.get() == null) ;
-
-                    dataSender.writeUTF(userInput.getAndSet(null));
-                    dataSender.flush();
-                    input = dataReceiver.readUTF();
-
-                }
-
-                System.out.println("You're nickname was changed successfully");
-
-                input = dataReceiver.readUTF();
-                clientInfo.setNickname(input);
-
-                dataExchanger = new DataExchanger(socket, dataSender, dataReceiver, ConnectionType.SOCKET);
-                clientInfo.setDataExchanger(dataExchanger);
-
-            } catch (IOException e) {
-                System.err.println("Error while connecting to the server");
-                return -1;
-            }
-
-        } else {
-
-            RMICommunicator rmiCommunicator;
-
-            try {
-
-                boolean flag = false;
-
-                rmiCommunicator = (RMICommunicator) Naming.lookup("rmi://localhost/RMICommunicator");
-                rmiCommunicator.registerClient(InetAddress.getLocalHost().getHostAddress());
-
-                while (rmiCommunicator.checkNicknameAvailability(clientInfo.getNickname())) {
-                    flag = true;
-
-                    changeNickName(clientInfo);
-
-                }
-
-                if (flag) {
-
-                    System.out.println("You're nickname was changed successfully");
-
-                }
-
-                dataExchanger = new DataExchanger(rmiCommunicator, clientInfo.getNickname(), rmiCommunicator.getCurrentGameCode(), ConnectionType.RMI);
-                rmiCommunicator.makeClientJoin(clientInfo.getNickname());
-
-            } catch (NotBoundException | RemoteException | MalformedURLException | UnknownHostException e) {
-                System.err.println("Error while connecting to the server registry");
-                return -1;
-            }
-
-        }
-
-        clientInfo.setDataExchanger(dataExchanger);
+        AtomicBoolean errorFlag = new AtomicBoolean(false);
 
         try {
 
-            dataExchanger.sendMessage(String.valueOf(clientInfo.getGameCode()), false);
+            dataExchanger = setUpConnection(clientInfo);
+            clientInfo.setDataExchanger(dataExchanger);
+            dataExchanger.sendString(clientInfo.getNickname());
 
         } catch (IOException e) {
-            System.err.println("Critical error while sending gameCode to server");
+            System.err.println("An error was encountered while setting up the socket connection");
+            return false;
         }
 
         //One thread to receive feedback from the server
@@ -142,30 +67,24 @@ public class ClientJoiner {
         Thread messageReceiver = new Thread(() -> {
 
             try {
-                int trials = 0;
+                String message;
 
                 while (true) {
 
-                    if (checkTrials(trials)) {
-                        terminatedFlag.set(true);
-                        abnormallyTerminatedFlag.set(true);
-                        break;
-                    }
-
-                    String message = dataExchanger.receiveMessage(false);
+                    message = dataExchanger.getString();
 
                     if (message.equals("added")) {
                         terminatedFlag.set(true);
 
-                    } else if (message.equals("start")) {
-                        break;
-                    } else if (message.equals("increment trials")) {
-                        trials++;
-                    } else if (message.equals("terminate")) {
 
-                        terminatedFlag.set(true);
-                        abnormallyTerminatedFlag.set(true);
+                    }
+                    else if(message.equals("nickname updated")){
 
+                        clientInfo.setNickname(dataExchanger.getString());
+                        dataExchanger.sendString(String.valueOf(clientInfo.getGameCode()));
+
+                    }
+                    else if (message.equals("start")) {
                         break;
                     } else {
 
@@ -175,9 +94,9 @@ public class ClientJoiner {
                 }
 
             } catch (IOException e) {
-                abnormallyTerminatedFlag.set(true);
                 terminatedFlag.set(true);
-                System.err.println("An error was encountered while receiving data from the server");
+                errorFlag.set(true);
+                System.err.println("An error was encountered while communicating with the server");
             }
 
         });
@@ -190,11 +109,11 @@ public class ClientJoiner {
 
                     try {
 
-                        dataExchanger.sendMessage(userInput.getAndSet(null), false);
+                        dataExchanger.sendString(userInput.getAndSet(null));
 
                     } catch (IOException e) {
-                        abnormallyTerminatedFlag.set(true);
                         terminatedFlag.set(true);
+                        errorFlag.set(true);
                         System.err.println("An error was encountered while sending data to the server");
                     }
                 }
@@ -203,6 +122,8 @@ public class ClientJoiner {
                     Thread.sleep(100);
 
                 } catch (InterruptedException e) {
+                    terminatedFlag.set(true);
+                    errorFlag.set(true);
                     System.err.println("Sender thread was abnormally interrupted");
                 }
 
@@ -220,35 +141,42 @@ public class ClientJoiner {
 
         } catch (InterruptedException e1) {
             System.err.println("Error: message receiver or sender was interrupted abnormally");
-            return -1;
-
+            errorFlag.set(true);
         }
 
-        if (abnormallyTerminatedFlag.get()) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
-    private void changeNickName(ClientInfo clientInfo) {
-
-        System.out.println("You're nickname has already been chosen, please enter a new one: ");
-
-        while (userInput.get() == null) ;
-
-        clientInfo.setNickname(userInput.getAndSet(null));
+        return !(errorFlag.get());
 
     }
 
-    private boolean checkTrials(int trials) {
 
-        if (trials >= 5) {
-            System.out.println("You entered too much wrong information and therefore are slowing down " +
-                    "the server, you have been kicked out");
-            return true;
+    private SocketDataExchanger setUpConnection(ClientInfo clientInfo) throws IOException{
+
+
+        if(clientInfo.getConnectionType() == ConnectionType.SOCKET){
+
+            SocketDataExchanger dataExchanger;
+
+            Socket clientSocket;
+            ObjectInputStream inputStream;
+            ObjectOutputStream outputStream;
+
+
+            clientSocket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
+            outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            outputStream.flush();
+            inputStream = new ObjectInputStream(clientSocket.getInputStream());
+
+           dataExchanger = new SocketDataExchanger(clientSocket, inputStream, outputStream);
+           return dataExchanger;
+
         }
-        return false;
+        else{
+
+            //RMI
+            return null;
+
+        }
+
     }
 
 }

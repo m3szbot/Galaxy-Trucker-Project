@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
-import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.View.GeneralView;
 
@@ -23,10 +23,10 @@ public class GameMessageReceiver implements Runnable {
     private ObjectInputStream in;
     private AtomicBoolean running;
     private int viewIndex;
-    private DataExchanger dataExchanger;
+    private SocketDataExchanger dataExchanger;
 
 
-    public GameMessageReceiver(GeneralView[] views, DataExchanger dataExchanger, AtomicBoolean running) {
+    public GameMessageReceiver(GeneralView[] views, SocketDataExchanger dataExchanger, AtomicBoolean running) {
 
         this.views = views;
         this.running = running;
@@ -42,7 +42,7 @@ public class GameMessageReceiver implements Runnable {
 
             try {
 
-                container = dataExchanger.receiveDataContainer();
+                container = dataExchanger.getContainer();
                 executeCommand(container.getCommand(), container);
 
 

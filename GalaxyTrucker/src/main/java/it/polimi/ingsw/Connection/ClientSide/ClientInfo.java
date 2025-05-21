@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.Serializable;
@@ -29,18 +29,18 @@ public class ClientInfo implements Serializable {
     private transient String serverIp;
     private transient Socket serverSocket;
     private transient AtomicReference<String> userInput;
-    private transient DataExchanger dataExchanger;
+    private transient SocketDataExchanger dataExchanger;
 
     public ClientInfo() {
         userInput = new AtomicReference<>(null);
         gameCode = -1;
     }
 
-    public DataExchanger getDataExchanger() {
+    public SocketDataExchanger getDataExchanger() {
         return dataExchanger;
     }
 
-    public void setDataExchanger(DataExchanger dataExchanger) {
+    public void setDataExchanger(SocketDataExchanger dataExchanger) {
         this.dataExchanger = dataExchanger;
     }
 

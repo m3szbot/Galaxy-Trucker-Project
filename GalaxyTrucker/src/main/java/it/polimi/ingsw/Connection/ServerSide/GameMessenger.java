@@ -1,13 +1,12 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
-import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,28 +17,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GameMessenger {
 
-    private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Player, SocketDataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
 
-    public List<Player> getPlayersSocket() {
 
-        List<Player> players = new ArrayList<>();
-
-        for (Player player : dataExchangerMap.keySet()) {
-            if (dataExchangerMap.get(player).getConnectionType() == ConnectionType.SOCKET) {
-                players.add(player);
-            }
-        }
-
-        return players;
-
-    }
-
-    public void addPlayer(Player player, DataExchanger dataExchanger) {
+    public void addPlayer(Player player, SocketDataExchanger dataExchanger) {
         playerDataContainerMap.put(player, new DataContainer());
         dataExchangerMap.put(player, dataExchanger);
     }
 
+    public Collection<SocketDataExchanger> getAllSocketExchangers(){
+
+        return dataExchangerMap.values();
+
+    }
 
     private void sendErrorMessage(String message, Player player) {
 
@@ -65,7 +56,7 @@ public class GameMessenger {
 
         try {
 
-            return dataExchangerMap.get(player).receiveMessage(true);
+            return dataExchangerMap.get(player).getString();
         } catch (IOException e) {
 
             System.err.println("Error while obtaining data from client");
@@ -178,7 +169,7 @@ public class GameMessenger {
 
         try {
 
-            dataExchangerMap.get(player).sendDataContainer(getPlayerContainer(player));
+            dataExchangerMap.get(player).sendContainer(getPlayerContainer(player));
 
         } catch (IOException e) {
             System.err.println("Error while sending dataContainer to " + player.getNickName());
@@ -211,7 +202,7 @@ public class GameMessenger {
 
         try {
 
-            for (DataExchanger dataExchanger : dataExchangerMap.values()) {
+            for (SocketDataExchanger dataExchanger : dataExchangerMap.values()) {
                 dataExchanger.closeResources();
             }
 
@@ -260,13 +251,12 @@ public class GameMessenger {
 
     /**
      * Send message to all players.
-     * Command is set to "printMessage".ú
+     * Command is set to "printMessage".
      */
     public void sendMessageToAll(String message) {
         for (Player player : dataExchangerMap.keySet()) {
             sendPlayerMessage(player, message);
         }
-
     }
 
     /**

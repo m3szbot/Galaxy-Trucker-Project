@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Connection.ServerSide.DataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.View.AssemblyView.AssemblyViewTUI;
 import it.polimi.ingsw.View.CorrectionView.CorrectionViewTUI;
@@ -34,7 +34,7 @@ public class ClientGameHandler {
 
         setViews(clientInfo.getViewType(), views);
 
-        start(views);
+        run(views);
 
     }
 
@@ -72,11 +72,11 @@ public class ClientGameHandler {
      * @param views
      */
 
-    private void start(GeneralView[] views) {
+    private void run(GeneralView[] views) {
 
         System.out.println("The game is starting!");
 
-        DataExchanger dataExchanger = clientInfo.getDataExchanger();
+        SocketDataExchanger dataExchanger = clientInfo.getDataExchanger();
 
         AtomicBoolean running = new AtomicBoolean(true);
 

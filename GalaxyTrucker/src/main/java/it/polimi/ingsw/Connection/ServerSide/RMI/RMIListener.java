@@ -1,24 +1,19 @@
 package it.polimi.ingsw.Connection.ServerSide.RMI;
 
-import java.net.MalformedURLException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-
 /**
  * Thread that listen for incoming clients with RMI
  * protocol
  *
  * @author carlo
  */
+/*
 
 public class RMIListener implements Runnable{
 
-    private final RMICommunicatorImpl rmiCommunicator;
+    private ServerInterfaceImpl serverInterface;
 
-    public RMIListener(RMICommunicatorImpl rmiCommunicator){
-        this.rmiCommunicator = rmiCommunicator;
+    public RMIListener(ServerInterfaceImpl serverInterface){
+       this.serverInterface = serverInterface;
     }
 
     public void run(){
@@ -26,8 +21,7 @@ public class RMIListener implements Runnable{
        try {
            LocateRegistry.createRegistry(1099);
 
-
-           Naming.bind("RMICommunicator", rmiCommunicator);
+           Naming.bind("serverInterface", serverInterface);
 
            System.out.println("Rmi listener is activated and is listening...");
 
@@ -45,3 +39,4 @@ public class RMIListener implements Runnable{
 
 
 }
+ */
