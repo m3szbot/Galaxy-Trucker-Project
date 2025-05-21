@@ -13,7 +13,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class AssemblyThread implements Runnable {
     GameInformation gameInformation;
@@ -64,77 +63,77 @@ public class AssemblyThread implements Runnable {
     @Override
     public void run() {
         try {
-            // For now, the initial state is set using only the first player.
-            // Later, threads should be launched for all players.
-            setState(new AssemblyState(assemblyProtocol, associatedPlayer));
+        // For now, the initial state is set using only the first player.
+        // Later, threads should be launched for all players.
+        setState(new AssemblyState(assemblyProtocol, associatedPlayer));
 
-            // Separate thread for reading user input from the console
-            new Thread(() -> {
-                AtomicBoolean disconnected = new AtomicBoolean(false);
-                while (!end.get()) {
-                    if (!disconnected.get()) {
-                        try {
-                            String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
-                            inputQueue.offer(input);
-                        } catch (PlayerDisconnectedException e) {
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
-                            String message = e.getMessage();
-                            disconnected.set(true);
-                            for (Player player : gameInformation.getPlayerList()) {
-                                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
-                                dataContainer.setMessage(message);
-                                ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
-                            }
-                        }
-                    } else {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ignored) {
-                        }
-
-                        if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
-                            disconnected.set(false);
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode())
-                                    .sendPlayerMessage(associatedPlayer, "Welcome back! You have been reconnected.");
+        // Separate thread for reading user input from the console
+        new Thread(() -> {
+            AtomicBoolean disconnected = new AtomicBoolean(false);
+            while (!end.get()) {
+                if (!disconnected.get()) {
+                    try {
+                        String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
+                        inputQueue.offer(input);
+                    } catch (PlayerDisconnectedException e) {
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
+                        String message = e.getMessage();
+                        disconnected.set(true);
+                        for (Player player : gameInformation.getPlayerList()) {
+                            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
+                            dataContainer.setMessage(message);
+                            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
                         }
                     }
+                } else {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ignored) {
+                    }
+
+                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
+                        disconnected.set(false);
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode())
+                                .sendPlayerMessage(associatedPlayer, "Welcome back! You have been reconnected.");
+                    }
                 }
-            }).start();
+            }
+        }).start();
 
 
-            // Main non-blocking game loop
-            while (running.get()) {
-                //System.out.println("prova2");
+        // Main non-blocking game loop
+        while (running.get()) {
+            //System.out.println("prova2");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {
+            }
+
+            // Handle user input if available
+            String input = inputQueue.poll();
+            if (input != null) {
+                currentState.handleInput(input, this);
+            }
+            // Update current game state (e.g., timers, state transitions)
+            currentState.update(this);
+        }
+
+        if (!amIChoosing.get()) {
+            setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
+            while (!isfinished.get()) {
+                String input = inputQueue.poll();
+                if (input != null) {
+                    currentState.handleInput(input, this);
+                }
+                currentState.update(this);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignored) {
                 }
 
-                // Handle user input if available
-                String input = inputQueue.poll();
-                if (input != null) {
-                    currentState.handleInput(input, this);
-                }
-                // Update current game state (e.g., timers, state transitions)
-                currentState.update(this);
             }
-
-            if(!amIChoosing.get()) {
-                setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
-                while (!isfinished.get()) {
-                    String input = inputQueue.poll();
-                    if (input != null) {
-                        currentState.handleInput(input, this);
-                    }
-                    currentState.update(this);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ignored) {
-                    }
-
-                }
-            }
-        }finally {
+        }
+    }finally {
             latch.countDown();
         }
     }

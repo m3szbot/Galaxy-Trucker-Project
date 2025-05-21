@@ -2,12 +2,17 @@ package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Class to test sending data with Data Containers
+ */
+
 class GameMessengerTest {
     GameInformation gameInformation;
-    ClientMessenger clientMessenger;
     GameMessenger gameMessenger;
 
     @BeforeEach
@@ -20,11 +25,19 @@ class GameMessengerTest {
         ClientMessenger.addGame(gameInformation.getGameCode());
         gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
 
+        // add player
+        Player playerA;
+        playerA = new Player("A", Color.BLUE, gameInformation);
+        gameInformation.addPlayers(playerA);
     }
 
     @Test
-    void sendMessage() {
+    void sendMessageToAll() {
+        gameMessenger.sendMessageToAll("Hello world");
+    }
 
+    @Test
+    void sendMessageDC() {
     }
 
 }

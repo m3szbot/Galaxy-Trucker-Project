@@ -25,7 +25,7 @@ public class StarDust extends Card implements Movable {
 
     }
 
-    public void showCard(){
+    public void showCard() {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
@@ -52,6 +52,7 @@ public class StarDust extends Card implements Movable {
             dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
 
     }

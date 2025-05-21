@@ -105,6 +105,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
             dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
 
     }

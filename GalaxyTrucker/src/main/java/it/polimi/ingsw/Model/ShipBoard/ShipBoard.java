@@ -103,7 +103,7 @@ public class ShipBoard implements Serializable {
         col = col - 1;
         row = row - 1;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (matr[row][col] == true) {
+        if (matr[row][col]) {
             structureMatrix[row][col] = component;
             List<Object> list = component.accept(visitor);
             if ((Integer) list.get(0) == 1) {

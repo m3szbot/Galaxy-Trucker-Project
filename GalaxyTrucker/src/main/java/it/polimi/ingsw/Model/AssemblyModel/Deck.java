@@ -16,15 +16,20 @@ import java.util.List;
  * @author Giacomo, Boti
  */
 public class Deck {
+    // constants
+    public static final int NORMAL_LEVEL_ONE_CARD_COUNT = 1;
+    public static final int NORMAL_LEVEL_TWO_CARD_COUNT = 2;
+    public static final int TEST_LEVEL_ONE_CARD_COUNT = 2;
+    public static final int TEST_LEVEL_TWO_CARD_COUNT = 0;
+
     private boolean inUse; // Indicates if the deck is in use
     private List<Card> cards; // List storing the deck's cards
 
     /**
-     * Construct a deck based on gameType
-     * Normal Game: 4 decks of: 2 level 2 + 1 level 1 card (12 tot)
-     * Test Game: 4 decks of: 2 level 1 cardsList (8 tot)
+     * Construct a deck based on gameType.
      */
     public Deck(List<Card> cardsList, GameType gameType) {
+        inUse = false;
         cards = new ArrayList<>();
         // add cards to the deck
         if (gameType.equals(GameType.NORMALGAME)) {

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.FlightBoard;
 
 import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -41,20 +42,20 @@ public class FlightBoard implements Serializable {
     private Stack<Card> cardsStack;
 
     /**
-     * FlightBoard constructor
+     * FlightBoard constructor.
      *
      * @param gameType Game type to set tiles
+     * @param cardList gameInformation cards list.
      */
-    public FlightBoard(GameType gameType, List<Card> cardsList) {
+    public FlightBoard(GameType gameType, List<Card> cardList) {
+        // constants
         this.goodsNumber = new int[]{12, 17, 13, 14};
-        // game constants
-        // normal game
-        int cardCount = 12;
+        // NORMAL GAME
         int numberOfTiles = 24;
         Integer[] startingTiles = new Integer[]{1, 2, 4, 7};
-        // test game
+
+        // TEST GAME
         if (gameType == GameType.TESTGAME) {
-            cardCount = 8;
             numberOfTiles = 18;
             startingTiles = new Integer[]{1, 2, 3, 5};
         }
@@ -62,13 +63,50 @@ public class FlightBoard implements Serializable {
         this.numberOfTiles = numberOfTiles;
         this.startingTiles = new ArrayList<>(Arrays.asList(startingTiles));
 
+        // players
         playerTilesMap = new HashMap<>();
         playerOrderList = new ArrayList<>();
         eliminatedList = new ArrayList<>();
         gaveUpList = new ArrayList<>();
+
+        // cards
         cardsStack = new Stack<>();
-        for (int i = 0; i < cardCount; i++)
-            cardsStack.push(cardsList.get(i));
+        cardsStack.addAll(cardList);
+        Collections.shuffle(cardsStack);
+
+        checkGameTypeRequirements(gameType);
+    }
+
+    /**
+     * Check for gameType specific requirements.
+     */
+    private void checkGameTypeRequirements(GameType gameType) {
+        // NORMAL GAME
+        int levelOneCardCount = Deck.NORMAL_LEVEL_ONE_CARD_COUNT * 4;
+        int levelTwoCardCount = Deck.NORMAL_LEVEL_TWO_CARD_COUNT * 4;
+        // TEST GAME
+        if (gameType.equals(GameType.TESTGAME)) {
+            levelOneCardCount = Deck.TEST_LEVEL_ONE_CARD_COUNT * 4;
+            levelTwoCardCount = Deck.TEST_LEVEL_TWO_CARD_COUNT * 4;
+        }
+        for (Card card : cardsStack) {
+            if (card.getCardLevel() == 1) {
+                levelOneCardCount--;
+            } else {
+                levelTwoCardCount--;
+            }
+        }
+        if (levelOneCardCount != 0 || levelTwoCardCount != 0) {
+            throw new IllegalStateException("GameType requirements not respected for flightBoard cards.");
+        }
+    }
+
+
+    /**
+     * @return flightBoard adventure cards.
+     */
+    public Stack<Card> getCardsStack() {
+        return cardsStack;
     }
 
     /**
@@ -77,6 +115,7 @@ public class FlightBoard implements Serializable {
     public int getCardsNumber() {
         return this.cardsStack.size();
     }
+
 
     /**
      * Get new card from the cardStack

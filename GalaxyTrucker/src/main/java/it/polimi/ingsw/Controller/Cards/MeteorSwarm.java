@@ -54,6 +54,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
             dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
     }
 }

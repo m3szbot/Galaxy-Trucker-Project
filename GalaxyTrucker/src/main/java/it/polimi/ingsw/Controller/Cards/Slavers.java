@@ -34,13 +34,13 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
     public void showCard() {
 
-        System.out.println("Card name: " + getCardName());
+        System.out.println("\nCard name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Days lost: " + daysLost);
         System.out.println("Loss type: " + lossType.toString());
         System.out.println("Loss number: " + lossNumber);
         System.out.println("Gained credit: " + gainedCredit);
-        System.out.println("Requirement number: " + requirementNumber + " (fire power)");
+        System.out.println("Requirement number: " + requirementNumber + " (fire power)\n");
 
 
     }
@@ -104,6 +104,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
             dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
 
     }

@@ -1,9 +1,12 @@
 package it.polimi.ingsw.Model.FlightBoard;
 
+import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +30,7 @@ class FlightBoardTest {
     FlightBoard flightBoard;
     GameInformation gameInformation;
     Player playerA, playerB, playerC, playerD;
+    FlightViewTUI flightViewTUI;
 
     @BeforeEach
     void setUp() {
@@ -44,12 +48,50 @@ class FlightBoardTest {
         gameInformation.addPlayers(playerD);
 
         flightBoard = gameInformation.getFlightBoard();
+
+        flightViewTUI = new FlightViewTUI();
     }
 
     @Test
-    void TestSetUp() {
+    void testNormalSetUp() {
+        assertEquals(4, gameInformation.getPlayerList().size());
         assertEquals(12, flightBoard.getCardsNumber());
         assertEquals(4, gameInformation.getPlayerList().size());
+        int levelOneCount = 0, levelTwoCount = 0;
+        for (Card card : flightBoard.getCardsStack()) {
+            if (card.getCardLevel() == 1)
+                levelOneCount++;
+            else
+                levelTwoCount++;
+        }
+        assertEquals(4, levelOneCount);
+        assertEquals(8, levelTwoCount);
+    }
+
+    @Test
+    void testTestSetup() {
+        // test new gameInformation
+        gameInformation = new GameInformation();
+        gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
+        gameInformation.addPlayers(playerA);
+        gameInformation.addPlayers(playerB);
+        gameInformation.addPlayers(playerC);
+        gameInformation.addPlayers(playerD);
+        assertEquals(GameType.TESTGAME, gameInformation.getGameType());
+        assertEquals(4, gameInformation.getPlayerList().size());
+
+        // test new flightBoard
+        flightBoard = gameInformation.getFlightBoard();
+        assertEquals(8, gameInformation.getCardsList().size());
+        int levelOneCount = 0, levelTwoCount = 0;
+        for (Card card : flightBoard.getCardsStack()) {
+            if (card.getCardLevel() == 1)
+                levelOneCount++;
+            else
+                levelTwoCount++;
+        }
+        assertEquals(8, levelOneCount);
+        assertEquals(0, levelTwoCount);
     }
 
     @Test
@@ -263,5 +305,18 @@ class FlightBoardTest {
         assertEquals(2, flightBoard.getPlayerOrder(playerC));
         assertEquals(playerD, flightBoard.getPlayerOrderList().get(0));
         assertEquals(1, flightBoard.getPlayerOrder(playerD));
+    }
+
+    @Test
+    void printCards() {
+        DataContainer dataContainer = new DataContainer();
+        while (flightBoard.getCardsNumber() > 0) {
+            dataContainer.setCard(flightBoard.getNewCard());
+            flightViewTUI.printCard(dataContainer);
+            dataContainer.clearContainer();
+            // print line between cards
+            dataContainer.setMessage("");
+            flightViewTUI.printMessage(dataContainer);
+        }
     }
 }

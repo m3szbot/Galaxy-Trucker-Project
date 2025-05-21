@@ -34,7 +34,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
     public void showCard() {
 
 
-        System.out.println("Card name: " + getCardName());
+        System.out.println("\nCard name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Days lost: " + daysLost);
         System.out.println("Loss type: " + lossType.toString());
@@ -85,6 +85,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
             dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
     }
 }

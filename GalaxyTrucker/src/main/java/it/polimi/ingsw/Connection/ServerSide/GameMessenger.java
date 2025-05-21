@@ -1,13 +1,23 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.io.OutputStream;
+import java.rmi.server.RemoteObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Class used to communicate with players during the game.
@@ -15,7 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author carlo
  */
 
-public class GameMessenger {
+public class GameMessenger implements ClientServerInvokableMethods {
+    // TODO remove? sync?
+    private final ConcurrentHashMap<Player, Object> playerLocks = new ConcurrentHashMap<>();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private ConcurrentHashMap<Player, SocketDataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
@@ -173,7 +186,14 @@ public class GameMessenger {
 
         } catch (IOException e) {
             System.err.println("Error while sending dataContainer to " + player.getNickName());
+        } finally {
+            getPlayerContainer(player).clearContainer();
         }
+
+    }
+
+    @Override
+    public void setGamePhase(GamePhase gamePhase) {
 
     }
 
@@ -251,12 +271,14 @@ public class GameMessenger {
 
     /**
      * Send message to all players.
-     * Command is set to "printMessage".
+     * Command is set to "printMessage".ú
      */
     public void sendMessageToAll(String message) {
+
         for (Player player : dataExchangerMap.keySet()) {
-            sendPlayerMessage(player, message);
+            executor.submit(() -> sendPlayerMessage(player, message));
         }
+
     }
 
     /**
@@ -264,12 +286,14 @@ public class GameMessenger {
      * Command is set to "printMessage".
      */
     public void sendPlayerMessage(Player player, String message) {
+        Object lock = playerLocks.computeIfAbsent(player, p -> new Object());
 
-        DataContainer dataContainer = getPlayerContainer(player);
-        dataContainer.setCommand("printMessage");
-        dataContainer.setMessage(message);
-        sendPlayerData(player);
-
+        synchronized (lock) {
+            DataContainer dataContainer = getPlayerContainer(player);
+            dataContainer.setCommand("printMessage");
+            dataContainer.setMessage(message);
+            sendPlayerData(player);
+        }
     }
 
     public Boolean isPlayerConnected(Player player, GameInformation gameInformation) {
@@ -279,5 +303,6 @@ public class GameMessenger {
             return true;
         }
     }
+
 
 }

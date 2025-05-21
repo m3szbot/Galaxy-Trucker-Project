@@ -14,32 +14,42 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class DeckTest {
     GameInformation gameInformation;
-    Deck deck;
+    Deck normalDeck, testDeck;
 
     @BeforeEach
     void setUp() {
         // set up gameInformation
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
-        // set up deck
-        deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+        // set up cardsLists
+        normalDeck = new Deck(gameInformation.getCardsList(), GameType.NORMALGAME);
+        testDeck = new Deck(gameInformation.getCardsList(), GameType.TESTGAME);
     }
 
     @Test
     void checkNumCard() {
-        assertEquals(3, deck.getNumCards());
+        assertEquals(3, normalDeck.getNumCards());
+        assertEquals(2, testDeck.getNumCards());
     }
 
     @Test
     void deckCardsRemovedFromGameInformation() {
+        gameInformation = new GameInformation();
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
+
         int count = gameInformation.getCardsList().size();
-        deck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+        normalDeck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+        assertNotEquals(count, gameInformation.getCardsList().size());
+
+        count = gameInformation.getCardsList().size();
+        testDeck = new Deck(gameInformation.getCardsList(), GameType.TESTGAME);
         assertNotEquals(count, gameInformation.getCardsList().size());
     }
 
+
     @Test
     void checkCardLevels() {
-        List<Card> tmp = deck.getCards();
+        List<Card> tmp = normalDeck.getCards();
         tmp.sort(Comparator.comparing(Card::getCardLevel));
         assertEquals(1, tmp.removeFirst().getCardLevel());
         assertEquals(2, tmp.removeFirst().getCardLevel());
@@ -48,11 +58,11 @@ class DeckTest {
 
     @Test
     void checkInUse() {
-        assertEquals(false, deck.getInUse());
-        deck.setInUse(true);
-        assertEquals(true, deck.getInUse());
-        deck.setInUse(false);
-        assertEquals(false, deck.getInUse());
+        assertEquals(false, normalDeck.getInUse());
+        normalDeck.setInUse(true);
+        assertEquals(true, normalDeck.getInUse());
+        normalDeck.setInUse(false);
+        assertEquals(false, normalDeck.getInUse());
     }
 
 }

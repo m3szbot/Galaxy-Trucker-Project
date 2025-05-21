@@ -39,18 +39,21 @@ class GameInformationTest {
 
 
     @Test
-    void testSetUpCards() throws IOException {
-        GameType gameType1 = GameType.TESTGAME;
-        GameType gameType2 = GameType.NORMALGAME;
+    void testSetUpCards() {
+        GameType testgame = GameType.TESTGAME;
+        GameType normalgame = GameType.NORMALGAME;
 
-        gameInformation.setUpGameInformation(gameType1, 4);
+        gameInformation.setUpGameInformation(testgame, 4);
         assertNotNull(gameInformation.getCardsList());
         for (int i = 0; i < gameInformation.getCardsList().size(); i++) {
             Card card = gameInformation.getCardsList().get(i);
             System.out.println(card.getCardName());
             System.out.println(card.getCardLevel());
         }
-        gameInformation.setUpGameInformation(gameType2, 4);
+        assertEquals(8, gameInformation.getCardsList().size());
+
+        gameInformation = new GameInformation();
+        gameInformation.setUpGameInformation(normalgame, 4);
         assertNotNull(gameInformation.getCardsList());
         for (int i = 0; i < gameInformation.getCardsList().size(); i++) {
             assertNotNull(gameInformation.getCardsList().get(i));
@@ -58,6 +61,7 @@ class GameInformationTest {
             assertNotNull(card.getCardName());
             System.out.println(card.getCardName());
         }
+        assertEquals(12, gameInformation.getCardsList().size());
     }
 
     @Test
