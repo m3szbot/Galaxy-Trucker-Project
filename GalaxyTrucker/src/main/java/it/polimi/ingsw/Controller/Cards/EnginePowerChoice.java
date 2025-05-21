@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.Components.Battery;
+import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -68,7 +69,7 @@ public interface EnginePowerChoice {
 
                     }
 
-                    int[] coordinates = new int[2];
+                    int[] coordinates;
                     int temp = doubleEnginesToActivate;
 
                     while (temp > 0) {
@@ -80,9 +81,13 @@ public interface EnginePowerChoice {
 
                             coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
 
-                            if ((player.getShipBoard().getComponent(coordinates[0], coordinates[1]).getComponentName().equals("Battery"))) {
-                                if (((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
-                                    break;
+                            Component component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
+
+                            if (component != null) {
+                                if (component.getComponentName().equals("Battery")) {
+                                    if (((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
+                                        break;
+                                    }
                                 }
                             }
 

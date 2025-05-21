@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Model.Components.Battery;
+import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -40,14 +41,14 @@ public interface FirePowerChoice {
             message = "Your fire power is " + defaultFirePower +
                     ", but you still have " + forwardDoubleCannons + " double cannons pointing forward (+2 each) and " +
                     notForwardDoubleCannons + " double cannons not pointing forward (+1 each). " +
-                    " Would you like to use double cannons to increase you're engine power ?";
+                    " Would you like to use double cannons to increase you're fire power ?";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
             try {
                 if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
 
-                    message = "Double cannons will be automatically chosen from the ones that gives more fire power" +
-                            "to the ones that gives less. Please enter the number of double cannons you want to" +
+                    message = "Double cannons will be automatically chosen from the ones that give more fire power" +
+                            "to the ones that give less. Please enter the number of double cannons you want to" +
                             "activate: ";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
 
@@ -66,7 +67,7 @@ public interface FirePowerChoice {
                     }
 
 
-                    int[] coordinates = new int[2];
+                    int[] coordinates;
 
                     while (doubleCannonsToActivate > 0) {
 
@@ -77,9 +78,13 @@ public interface FirePowerChoice {
 
                             coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
 
-                            if ((player.getShipBoard().getComponent(coordinates[0], coordinates[1]).getComponentName().equals("Battery"))) {
-                                if (((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
-                                    break;
+                            Component component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
+
+                            if (component != null) {
+                                if (component.getComponentName().equals("Battery")) {
+                                    if (((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
+                                        break;
+                                    }
                                 }
                             }
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Phase;
@@ -29,6 +30,14 @@ public class FlightPhase extends Phase {
             dataContainer.setCommand("printFlightBoard");
             gameMessenger.sendPlayerData(player);
             dataContainer.clearContainer();
+
+            gameMessenger.sendPlayerMessage(player, "Your shipboard:\n");
+
+            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+            dataContainer.setShipBoard(player.getShipBoard());
+            dataContainer.setCommand("printShipboard");
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
 
         // resolve cards
@@ -46,6 +55,16 @@ public class FlightPhase extends Phase {
 
             }
             card.resolve(gameInformation);
+
+            for (Player player : flightBoard.getPlayerOrderList()) {
+                gameMessenger.sendPlayerMessage(player, "Your shipboard:\n");
+
+                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
+                dataContainer.setShipBoard(player.getShipBoard());
+                dataContainer.setCommand("printShipboard");
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+                dataContainer.clearContainer();
+            }
         }
 
         System.out.println("Flight phase ended");
