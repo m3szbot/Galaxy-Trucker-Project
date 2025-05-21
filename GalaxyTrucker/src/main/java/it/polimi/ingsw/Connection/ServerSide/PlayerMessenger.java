@@ -14,13 +14,13 @@ import it.polimi.ingsw.View.ViewServerInvokableMethods;
 import java.io.IOException;
 
 /**
- * A Game Messenger service associated to the player.
- * Used by Phases to call methods on Clients.
+ * Messenger service associated to the player.
+ * Used for player specific controller communications.
  * Implements both socket and RMI method calls.
  *
  * @author Boti
  */
-public class PlayerGameMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
+public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
     Player player;
     ConnectionType connectionType;
     // socket
@@ -29,7 +29,7 @@ public class PlayerGameMessenger implements ViewServerInvokableMethods, ClientSe
     // RMI
     // TODO
 
-    public PlayerGameMessenger(Player player, ConnectionType connectionType, SocketDataExchanger socketDataExchanger) {
+    public PlayerMessenger(Player player, ConnectionType connectionType, SocketDataExchanger socketDataExchanger) {
         this.player = player;
         this.connectionType = connectionType;
         if (connectionType.equals(ConnectionType.SOCKET)) {
@@ -67,16 +67,33 @@ public class PlayerGameMessenger implements ViewServerInvokableMethods, ClientSe
         }
     }
 
+    /**
+     * Ends game for Client and clears all client resources in Server.
+     */
     @Override
     public void endGame() {
         if (connectionType.equals(ConnectionType.SOCKET)) {
             dataContainer.clearContainer();
             dataContainer.setCommand("endGame");
             sendDataContainer();
+            clearPlayerResources();
         } else {
 
         }
 
+    }
+
+    /**
+     * Clears all players resources.
+     *
+     * @author carlo
+     */
+    void clearPlayerResources() {
+        try {
+            socketDataExchanger.closeResources();
+        } catch (IOException e) {
+            System.err.println("Error while closing all players resources");
+        }
     }
 
     @Override
@@ -142,5 +159,76 @@ public class PlayerGameMessenger implements ViewServerInvokableMethods, ClientSe
 
         }
 
+    }
+
+    /**
+     * @return the string that the player sent to the server
+     * @author carlo
+     */
+    public String getPlayerString() throws PlayerDisconnectedException {
+        return getPlayerInput();
+    }
+
+    /**
+     * @return the string that the player sent to the server
+     * @author carlo
+     */
+    private String getPlayerInput() throws PlayerDisconnectedException {
+        try {
+            return socketDataExchanger.getString();
+        } catch (IOException e) {
+            System.err.println("Error while obtaining data from client");
+            throw new PlayerDisconnectedException(player);
+        }
+    }
+
+    /**
+     * @return integer that the player sent to the server
+     * @author carlo
+     */
+    public int getPlayerInt() throws PlayerDisconnectedException {
+        String input = getPlayerInput();
+        int value;
+        try {
+            value = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            printMessage("You didn't enter an integer! Please reenter it: ");
+            return getPlayerInt();
+        }
+        return value;
+    }
+
+    /**
+     * @return array of coordinates that the player sent to the server
+     * @author carlo
+     */
+    public int[] getPlayerCoordinates() throws PlayerDisconnectedException {
+        String input = getPlayerInput();
+        int[] coordinates = new int[2];
+        try {
+            String[] parts = input.split(" ");
+            coordinates[0] = Integer.parseInt(parts[0]);
+            coordinates[1] = Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
+            printMessage("You didn't enter the coordinates in the correct syntax (X Y), please reenter them: ");
+            return getPlayerCoordinates();
+        }
+        return coordinates;
+    }
+
+    /**
+     * @return boolean that the player sent to the server
+     * @author carlo
+     */
+    public boolean getPlayerBoolean() throws PlayerDisconnectedException {
+        String input = getPlayerInput();
+        if (input.equalsIgnoreCase("yes")) {
+            return true;
+        } else if (input.equalsIgnoreCase("no")) {
+            return false;
+        } else {
+            printMessage("You didn't enter the correct response, please reenter it (yes/no): ");
+            return getPlayerBoolean();
+        }
     }
 }
