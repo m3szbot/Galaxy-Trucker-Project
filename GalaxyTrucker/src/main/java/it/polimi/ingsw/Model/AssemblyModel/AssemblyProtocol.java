@@ -130,22 +130,6 @@ public class AssemblyProtocol {
     }
 
     /**
-     * Shuffles all cards from the blocked deck and the three side decks,
-     * and returns them as a single deck
-     *
-     * @return a shuffled list of all cards
-     */
-    public List<Card> mergeDecks() {
-        List<Card> mainDeck = new ArrayList<>();
-        mainDeck.addAll(blockedDeck.getCards());
-        mainDeck.addAll(decksList[0].getCards());
-        mainDeck.addAll(decksList[1].getCards());
-        mainDeck.addAll(decksList[2].getCards());
-        Collections.shuffle(mainDeck);
-        return mainDeck;
-    }
-
-    /**
      * Draws a new random component for the player and updates the current view.
      * Moves the previous component in hand (if any) to the uncovered list.
      *

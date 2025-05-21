@@ -100,10 +100,6 @@ class AssemblyProtocolTest {
         });
     }
 
-    @Test
-    void mergeAllDecks() {
-        assertEquals(12, assemblyProtocol.mergeDecks().size());
-    }
 
     @Test
     void exhaustCoveredList() {
