@@ -1,12 +1,14 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import java.io.Serializable;
+
 /**
  * Class that represents a blow
  *
  * @author carlo
  */
 
-public class Blow {
+public class Blow implements Serializable {
 
     private int direction, roll;
     private boolean big;
