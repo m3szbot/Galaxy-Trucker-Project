@@ -26,9 +26,9 @@ public class GameMessenger {
     // TODO remove? sync?
     private final ConcurrentHashMap<Player, Object> playerLocks = new ConcurrentHashMap<>();
     private final ExecutorService executor = Executors.newCachedThreadPool();
-    
+
     // socket
-    private Map<Player, OutputStream> playerStreamMap = new HashMap<>();
+    private Map<Player, OutputStream> playerSocketExchangerMap = new HashMap<>();
     private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
     // RMI
     private Map<Player, RemoteObject> playerRemoteObjectMap = new HashMap<>();

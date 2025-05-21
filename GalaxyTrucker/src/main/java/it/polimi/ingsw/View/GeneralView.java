@@ -17,7 +17,7 @@ import java.util.List;
  * 1 takes DataContainer as parameter (and calls the other version),
  * 1 takes model as parameter.
  */
-public class GeneralView implements ClientViewMethods {
+public class GeneralView implements ViewServerInvokableMethods {
     public static final int COMPONENT_LINES = 5;
     // includes \n at the end of line
     public static final int COMPONENT_CHARACTERS_PER_LINE = 10;
