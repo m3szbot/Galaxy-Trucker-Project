@@ -11,32 +11,134 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * General view class defining the most basic methods reused by others classes.
- * public methods: no parameters!, model extracted from DataContainer
- * private methods: model passed as parameter, always invoked inside public print methods
+ * General view class defining the most basic methods reused by other view classes.
+ * <p>
+ * Each print method has 2 versions:
+ * 1 takes DataContainer as parameter (and calls the other version),
+ * 1 takes model as parameter.
  */
-public abstract class GeneralView {
+public class GeneralView implements ClientViewMethods {
     public static final int COMPONENT_LINES = 5;
     // includes \n at the end of line
     public static final int COMPONENT_CHARACTERS_PER_LINE = 10;
 
 
     public void printMessage(DataContainer dataContainer) {
-        System.out.println(dataContainer.getMessage());
+        if (dataContainer.getMessage() == null)
+            throw new IllegalArgumentException("The DC does not contain a message");
+        printMessage(dataContainer.getMessage());
     }
 
     /**
-     * Print component extracted from the passed dataContainer
-     *
-     * @author Boti
+     * Print a message passed as parameter.
      */
-    public void printComponent(DataContainer dataContainer) {
-        Component component = dataContainer.getComponent();
-        if (component == null) {
-            throw new IllegalArgumentException("The given container does not contain a component");
-        }
+    public void printMessage(String message) {
+        System.out.println(message);
+    }
+
+    /**
+     * Print a component passed as parameter.
+     */
+    public void printComponent(Component component) {
         String componentString = getCorrectComponentString(component);
         System.out.printf(componentString);
+    }
+
+    /**
+     * Print a shipboard passed as parameter.
+     */
+    public void printShipboard(ShipBoard shipBoard) {
+        // row and column to print indexes in
+        int indexRow = 3;
+        int indexColumn = 2;
+        //  shipboard number of rows and cols
+        int rows = shipBoard.getMatrixRows();
+        int cols = shipBoard.getMatrixCols();
+
+        Component[][] shipStructure = shipBoard.getStructureMatrix();
+        boolean[][] validPositions = shipBoard.getMatr();
+        List<String> cellLines;
+
+        for (int i = indexRow; i < rows - 3; i++) {
+            //Printing every line singularly, this way we can obtain a table form
+            for (int line = 0; line < COMPONENT_LINES; line++) {
+
+                for (int j = indexColumn; j < cols - 2; j++) {
+                    // print index row
+                    if (i == 3 && j != 2) {
+                        cellLines = getIndexCell(j + 1);
+                    }
+                    // print index column
+                    else if (j == 2 && i != 3) {
+                        cellLines = getIndexCell(i + 1);
+                    }
+                    // print invalid cells
+                    else if (!validPositions[i][j]) {
+                        cellLines = getInvalidCell();
+                    }
+                    // print empty cells
+                    else if (shipStructure[i][j] == null) {
+                        cellLines = getEmptyCell();
+                    }
+                    // print components
+                    else {
+                        cellLines = getComponentLines(shipStructure[i][j]);
+                    }
+                    System.out.print(cellLines.get(line) + " ");
+                }
+                System.out.println();
+            }
+        }
+
+    }
+
+    /**
+     * Print a card passed as parameter.
+     */
+    public void printCard(Card card) {
+        String cardName = card.getCardName();
+        System.out.printf("Current card: %s\n", cardName);
+        card.showCard();
+    }
+
+    /**
+     * Print a flightboard passed as parameter.
+     */
+    public void printFlightBoard(FlightBoard flightBoard) {
+        Player player;
+        String nickname;
+        int diff, temp1, temp2;
+
+        System.out.println("FlightBoard:\n");
+
+        for (int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--) {
+
+            //String used to print the nickName
+            player = flightBoard.getPlayerOrderList().get(i);
+            nickname = player.getNickName();
+
+            // Temp1 holds the current player tile, temp2 holds the subsequent player tile
+            temp1 = flightBoard.getPlayerTile(player);
+            temp2 = 0;
+
+            //If the current player is not the first, diff is used to print the number of tiles between the two players
+            if (i != 0) {
+                temp2 = flightBoard.getPlayerTile(flightBoard.getPlayerOrderList().get(i - 1));
+            }
+            diff = temp2 - temp1;
+
+            if (i == 0) {
+                System.out.printf("%s:%d is 1st\n\n", nickname, temp1);
+            } else {
+                System.out.printf("%s:%d ---%d---> ", nickname, temp1, diff);
+            }
+        }
+    }
+
+    public void printComponent(DataContainer dataContainer) {
+        if (dataContainer.getComponent() == null)
+            throw new IllegalArgumentException("The DC does not contain a component");
+        printComponent(dataContainer.getComponent());
     }
 
     /**
@@ -232,59 +334,15 @@ public abstract class GeneralView {
             return 4;
     }
 
-    /**
-     * Prints the shipboard and its components.
-     */
     public void printShipboard(DataContainer dataContainer) {
-        // row and column to print indexes in
-        int indexRow = 3;
-        int indexColumn = 2;
-
-        ShipBoard shipBoard = dataContainer.getShipBoard();
-        if (shipBoard == null) {
-            throw new IllegalArgumentException("The given container does not contain a shipboard");
-        }
-
-        Component[][] shipStructure = shipBoard.getStructureMatrix();
-        boolean[][] validPositions = shipBoard.getMatr();
-
-        int rows = shipBoard.getMatrixRows();
-        int cols = shipBoard.getMatrixCols();
-        List<String> cellLines;
-
-        for (int i = indexRow; i < rows - 3; i++) {
-            //Printing every line singularly, this way we can obtain a table form
-            for (int line = 0; line < COMPONENT_LINES; line++) {
-
-                for (int j = indexColumn; j < cols - 2; j++) {
-                    // print index row
-                    if (i == 3 && j != 2) {
-                        cellLines = getIndexCell(j + 1);
-                    }
-                    // print index column
-                    else if (j == 2 && i != 3) {
-                        cellLines = getIndexCell(i + 1);
-                    }
-                    // print invalid cells
-                    else if (!validPositions[i][j]) {
-                        cellLines = getInvalidCell();
-                    }
-                    // print empty cells
-                    else if (shipStructure[i][j] == null) {
-                        cellLines = getEmptyCell();
-                    }
-                    // print components
-                    else {
-                        cellLines = getComponentLines(shipStructure[i][j]);
-                    }
-                    System.out.print(cellLines.get(line) + " ");
-                }
-                System.out.println();
-            }
-        }
-
+        if (dataContainer.getShipBoard() == null)
+            throw new IllegalArgumentException("The DC does not contain a shipboard");
+        printShipboard(dataContainer.getShipBoard());
     }
 
+    /**
+     * Get string of and index cell.
+     */
     private List<String> getIndexCell(int index) {
         return List.of(
                 "         ",
@@ -295,6 +353,9 @@ public abstract class GeneralView {
         );
     }
 
+    /**
+     * Get string of an invalid cell.
+     */
     private List<String> getInvalidCell() {
         return List.of(
                 "         ",
@@ -305,6 +366,9 @@ public abstract class GeneralView {
         );
     }
 
+    /**
+     * Get string of an empty (valid) cell.
+     */
     private List<String> getEmptyCell() {
         return List.of(
                 "+---.---+",
@@ -316,6 +380,7 @@ public abstract class GeneralView {
     }
 
     /**
+     * Helper method of printShipboard.
      * Return String list of the 5 component lines, excluding the \n at the end of the lines.
      */
     private List<String> getComponentLines(Component component) {
@@ -330,58 +395,15 @@ public abstract class GeneralView {
     }
 
     public void printCard(DataContainer dataContainer) {
-
-        Card card = dataContainer.getCard();
-
-        if (card == null) {
-            throw new IllegalArgumentException("The given container does not contain a card");
-        }
-
-        printCard(card);
-
-    }
-
-    public void printCard(Card card) {
-
-        String cardName = card.getCardName();
-
-        System.out.printf("Current card: %s\n", cardName);
-
-        card.showCard();
-
+        if (dataContainer.getCard() == null)
+            throw new IllegalArgumentException("The DC does not contain a card");
+        printCard(dataContainer.getCard());
     }
 
     public void printFlightBoard(DataContainer dataContainer) {
-
-        FlightBoard flightBoard = dataContainer.getFlightBoard();
-        Player player;
-        String nickname;
-        int diff, temp1, temp2;
-
-        System.out.println("FlightBoard:\n");
-
-        for (int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--) {
-
-            //String used to print the nickName
-            player = flightBoard.getPlayerOrderList().get(i);
-            nickname = player.getNickName();
-
-            // Temp1 holds the current player tile, temp2 holds the subsequent player tile
-            temp1 = flightBoard.getPlayerTile(player);
-            temp2 = 0;
-
-            //If the current player is not the first, diff is used to print the number of tiles between the two players
-            if (i != 0) {
-                temp2 = flightBoard.getPlayerTile(flightBoard.getPlayerOrderList().get(i - 1));
-            }
-            diff = temp2 - temp1;
-
-            if (i == 0) {
-                System.out.printf("%s:%d is 1st\n\n", nickname, temp1);
-            } else {
-                System.out.printf("%s:%d ---%d---> ", nickname, temp1, diff);
-            }
-        }
+        if (dataContainer.getFlightBoard() == null)
+            throw new IllegalArgumentException("The DC does not contain a flightboard");
+        printFlightBoard(dataContainer.getFlightBoard());
     }
 
 
