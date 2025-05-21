@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Class used to communicate with players during the game.
@@ -20,6 +22,8 @@ public class GameMessenger {
 
     private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Player, Object> playerLocks = new ConcurrentHashMap<>();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     public List<Player> getPlayersSocket() {
 
@@ -263,8 +267,9 @@ public class GameMessenger {
      * Command is set to "printMessage".ú
      */
     public void sendMessageToAll(String message) {
+
         for (Player player : dataExchangerMap.keySet()) {
-            sendPlayerMessage(player, message);
+            executor.submit(() -> sendPlayerMessage(player, message));
         }
 
     }
@@ -274,12 +279,14 @@ public class GameMessenger {
      * Command is set to "printMessage".
      */
     public void sendPlayerMessage(Player player, String message) {
+        Object lock = playerLocks.computeIfAbsent(player, p -> new Object());
 
-        DataContainer dataContainer = getPlayerContainer(player);
-        dataContainer.setCommand("printMessage");
-        dataContainer.setMessage(message);
-        sendPlayerData(player);
-
+        synchronized (lock) {
+            DataContainer dataContainer = getPlayerContainer(player);
+            dataContainer.setCommand("printMessage");
+            dataContainer.setMessage(message);
+            sendPlayerData(player);
+        }
     }
 
     public Boolean isPlayerConnected(Player player, GameInformation gameInformation) {

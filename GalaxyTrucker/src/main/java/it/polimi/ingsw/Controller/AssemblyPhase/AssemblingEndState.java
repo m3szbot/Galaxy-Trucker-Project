@@ -33,6 +33,7 @@ public class AssemblingEndState implements GameState {
 
     @Override
     public void handleInput(String input, AssemblyThread assemblyPhase) {
+
        switch (input.toLowerCase()) {
            case "yes":
                if(assemblyProtocol.getHourGlass().isFinished() == true) {
@@ -45,7 +46,7 @@ public class AssemblingEndState implements GameState {
                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
                        }
                    }else{
-                       if (assemblyProtocol.getHourGlass().getState() == 2){
+                       if (assemblyProtocol.getHourGlass().getState() == 1){
                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
                            assemblyPhase.latch.countDown();

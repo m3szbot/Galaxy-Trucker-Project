@@ -47,10 +47,14 @@ public class GameMessageReceiver implements Runnable {
 
 
             } catch (IOException e) {
-
+                System.err.println("IOException in receiver: " + e.getMessage());
+                e.printStackTrace();
                 running.set(false);
-                System.out.println("You have been disconnected");
-
+                System.out.println("You have been disconnected from the server");
+                break;
+            } catch (Exception e) {
+                System.err.println("Unexpected error in receiver: " + e.getMessage());
+                e.printStackTrace();
             }
 
         }

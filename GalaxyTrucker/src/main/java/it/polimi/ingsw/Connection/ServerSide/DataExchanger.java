@@ -128,10 +128,11 @@ public class DataExchanger {
     public void sendDataContainer(DataContainer dataContainer) throws IOException {
 
         if (connectionType == ConnectionType.SOCKET) {
-
-            outputStream.writeObject(dataContainer);
-            outputStream.flush();
-            outputStream.reset();
+            synchronized (outputStream) {
+                outputStream.writeObject(dataContainer);
+                outputStream.flush();
+                outputStream.reset();
+            }
 
         } else {
 
