@@ -85,6 +85,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
             dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
     }
 }

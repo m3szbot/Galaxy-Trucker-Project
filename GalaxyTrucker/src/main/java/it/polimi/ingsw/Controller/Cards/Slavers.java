@@ -104,6 +104,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
             dataContainer.setFlightBoard(gameInformation.getFlightBoard());
             dataContainer.setCommand("printFlightBoard");
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
+            dataContainer.clearContainer();
         }
 
     }
