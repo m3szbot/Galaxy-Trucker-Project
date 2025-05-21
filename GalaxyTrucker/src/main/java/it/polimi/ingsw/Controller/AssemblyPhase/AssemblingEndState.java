@@ -21,7 +21,6 @@ public class AssemblingEndState implements GameState {
         if(!assemblyPhase.running.get()){
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
             assemblyPhase.end.set(true);
-            assemblyPhase.latch.countDown();
             return;
         }
         String message = "Do you want to turn the hourglass? (yes or wait)";
@@ -41,7 +40,6 @@ public class AssemblingEndState implements GameState {
                        if (assemblyProtocol.getHourGlass().getState() == 2) {
                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
-                           assemblyPhase.latch.countDown();
                        } else {
                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
                        }
@@ -49,7 +47,6 @@ public class AssemblingEndState implements GameState {
                        if (assemblyProtocol.getHourGlass().getState() == 1){
                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Waiting for other players position choice");
                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
-                           assemblyPhase.latch.countDown();
                        }else{
                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
                        }
