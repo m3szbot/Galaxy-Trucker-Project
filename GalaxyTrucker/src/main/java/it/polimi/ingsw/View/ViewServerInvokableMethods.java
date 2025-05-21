@@ -6,7 +6,7 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 /**
- * Interface defining the methods of the Client Views that must be invokable by the Server.
+ * Interface of methods that must be invokable on the Client Views by the Server.
  */
 public interface ViewServerInvokableMethods {
     public void printMessage(String message);
