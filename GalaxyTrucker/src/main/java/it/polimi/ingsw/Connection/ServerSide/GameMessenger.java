@@ -6,8 +6,12 @@ import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.rmi.server.RemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,16 +19,25 @@ import java.util.concurrent.Executors;
 /**
  * Class used to communicate with players during the game.
  *
- * @author carlo
+ * @author Carlo, Boti
  */
 
 public class GameMessenger {
-
-    private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
+    // TODO remove? sync?
     private final ConcurrentHashMap<Player, Object> playerLocks = new ConcurrentHashMap<>();
     private final ExecutorService executor = Executors.newCachedThreadPool();
+    
+    // socket
+    private Map<Player, OutputStream> playerStreamMap = new HashMap<>();
+    private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
+    // RMI
+    private Map<Player, RemoteObject> playerRemoteObjectMap = new HashMap<>();
 
+    // TODO remove?
+    private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
+
+
+    // TODO update methods
     public List<Player> getPlayersSocket() {
 
         List<Player> players = new ArrayList<>();
