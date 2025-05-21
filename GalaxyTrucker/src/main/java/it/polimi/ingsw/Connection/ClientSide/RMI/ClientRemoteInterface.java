@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide.RMI;
+package it.polimi.ingsw.Connection.ClientSide.RMI;
 
 import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
 import it.polimi.ingsw.View.ViewServerInvokableMethods;
