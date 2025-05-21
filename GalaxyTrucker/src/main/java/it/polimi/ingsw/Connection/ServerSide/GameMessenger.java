@@ -9,8 +9,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Class used to communicate with players during the game.
@@ -19,10 +17,6 @@ import java.util.concurrent.Executors;
  */
 
 public class GameMessenger implements ClientServerInvokableMethods {
-    // TODO remove? sync?
-    private final ConcurrentHashMap<Player, Object> playerLocks = new ConcurrentHashMap<>();
-    private final ExecutorService executor = Executors.newCachedThreadPool();
-
     private ConcurrentHashMap<Player, SocketDataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
 
@@ -32,7 +26,7 @@ public class GameMessenger implements ClientServerInvokableMethods {
         dataExchangerMap.put(player, dataExchanger);
     }
 
-    public Collection<SocketDataExchanger> getAllSocketExchangers(){
+    public Collection<SocketDataExchanger> getAllSocketExchangers() {
 
         return dataExchangerMap.values();
 
@@ -267,11 +261,9 @@ public class GameMessenger implements ClientServerInvokableMethods {
      * Command is set to "printMessage".ú
      */
     public void sendMessageToAll(String message) {
-
         for (Player player : dataExchangerMap.keySet()) {
-            executor.submit(() -> sendPlayerMessage(player, message));
+            sendPlayerMessage(player, message);
         }
-
     }
 
     /**
@@ -279,14 +271,10 @@ public class GameMessenger implements ClientServerInvokableMethods {
      * Command is set to "printMessage".
      */
     public void sendPlayerMessage(Player player, String message) {
-        Object lock = playerLocks.computeIfAbsent(player, p -> new Object());
-
-        synchronized (lock) {
-            DataContainer dataContainer = getPlayerContainer(player);
-            dataContainer.setCommand("printMessage");
-            dataContainer.setMessage(message);
-            sendPlayerData(player);
-        }
+        DataContainer dataContainer = getPlayerContainer(player);
+        dataContainer.setCommand("printMessage");
+        dataContainer.setMessage(message);
+        sendPlayerData(player);
     }
 
     public Boolean isPlayerConnected(Player player, GameInformation gameInformation) {
