@@ -13,13 +13,14 @@ import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AssemblyProtocolTest {
+    GameInformation gameInformation;
     AssemblyProtocol assemblyProtocol;
     Player playerA, playerB, playerC, playerD;
 
     @BeforeEach
     void setUp() {
         // set up gameInformation
-        GameInformation gameInformation = new GameInformation();
+        gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         // set up players
         playerA = new Player("A", Color.BLUE, gameInformation);
@@ -35,6 +36,17 @@ class AssemblyProtocolTest {
 
         // set up assemblyProtocol
         assemblyProtocol = new AssemblyProtocol(gameInformation);
+    }
+
+    // decks remove cards from a copy of cardsList, but not cardsList itself
+    // because it cancels flightBoard cards
+    @Test
+    void deckCardsNotRemovedFromGameInformation() {
+        gameInformation = new GameInformation();
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
+        int cardCount = gameInformation.getCardsList().size();
+        assemblyProtocol = new AssemblyProtocol(gameInformation);
+        assertEquals(cardCount, gameInformation.getCardsList().size());
     }
 
     @Test

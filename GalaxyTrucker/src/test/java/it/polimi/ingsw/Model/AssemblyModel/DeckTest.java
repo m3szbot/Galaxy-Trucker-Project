@@ -33,7 +33,7 @@ class DeckTest {
     }
 
     @Test
-    void deckCardsRemovedFromGameInformation() {
+    void deckCardsRemovedFromCardList() {
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 

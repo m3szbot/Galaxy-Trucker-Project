@@ -48,11 +48,14 @@ public class AssemblyProtocol {
      */
     public AssemblyProtocol(GameInformation gameInformation) {
         hourGlass = new HourGlass();
-        blockedDeck = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+
+        // copy cardList! - do not remove cards from original
+        List<Card> tmpCardList = new ArrayList<>(gameInformation.getCardsList());
+        blockedDeck = new Deck(tmpCardList, gameInformation.getGameType());
         decksList = new Deck[3];
         for (int i = 0; i < 3; i++) {
             // used cards must be removed from cardsList
-            decksList[i] = new Deck(gameInformation.getCardsList(), gameInformation.getGameType());
+            decksList[i] = new Deck(tmpCardList, gameInformation.getGameType());
         }
         // concurrently accessed lists
         coveredList = Collections.synchronizedList(new ArrayList<>());
