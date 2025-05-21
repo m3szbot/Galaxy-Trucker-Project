@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
@@ -22,7 +23,7 @@ import java.util.concurrent.Executors;
  * @author Carlo, Boti
  */
 
-public class GameMessenger {
+public class GameMessenger implements ClientServerInvokableMethods {
     // TODO remove? sync?
     private final ConcurrentHashMap<Player, Object> playerLocks = new ConcurrentHashMap<>();
     private final ExecutorService executor = Executors.newCachedThreadPool();
@@ -187,19 +188,20 @@ public class GameMessenger {
 
     /**
      * Sends to the player his dataContainer, then clears the container.
-     *
-     * @param player
      */
-
     public void sendPlayerData(Player player) {
-
         try {
-
             dataExchangerMap.get(player).sendDataContainer(getPlayerContainer(player));
-
         } catch (IOException e) {
             System.err.println("Error while sending dataContainer to " + player.getNickName());
+        } finally {
+            getPlayerContainer(player).clearContainer();
         }
+
+    }
+
+    @Override
+    public void setGamePhase(GamePhase gamePhase) {
 
     }
 
@@ -214,9 +216,6 @@ public class GameMessenger {
             dataContainer.setCommand("endGame");
             sendPlayerData(player);
         }
-        clearAllResources();
-
-
     }
 
     /**
@@ -309,5 +308,6 @@ public class GameMessenger {
             return true;
         }
     }
+
 
 }
