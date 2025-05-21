@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author carlo
  */
 
-public class GameMessageReceiver implements Runnable {
+public class GameMessageReceiver implements Runnable, ClientServerInvokableMethods {
 
     private GeneralView[] views;
     private ObjectInputStream in;
@@ -61,24 +61,31 @@ public class GameMessageReceiver implements Runnable {
 
     }
 
+
     private void executeCommand(String command, DataContainer dataContainer) {
-
         if (command.equals("setGamePhase")) {
-
             setGamePhase(dataContainer.getGamePhase());
-
         } else if (command.equals("endGame")) {
-
-            running.set(false);
-            System.out.println("The game has ended");
-
-        }else{
-
+            endGame();
+        } else {
             callView(dataContainer);
+        }
+    }
 
+    public void setGamePhase(GamePhase gamePhase) {
+
+        switch (gamePhase) {
+            case Assembly -> viewIndex = 0;
+            case Correction -> viewIndex = 1;
+            case Flight -> viewIndex = 2;
+            case Evaluation -> viewIndex = 3;
         }
 
+    }
 
+    public void endGame() {
+        running.set(false);
+        System.out.println("The game has ended");
     }
 
     private void callView(DataContainer container) {
@@ -101,27 +108,15 @@ public class GameMessageReceiver implements Runnable {
             running.set(false);
             System.err.println("Critical error while accessing view method: method not found ");
             System.out.println("You have been disconnected");
-        } catch (IllegalAccessException e2){
+        } catch (IllegalAccessException e2) {
             running.set(false);
             System.err.println("Critical error while accessing view method: method does not have access to the definition of the specified class");
             System.out.println("You have been disconnected");
-         }
-        catch (InvocationTargetException e3){
+        } catch (InvocationTargetException e3) {
             running.set(false);
             System.err.println("Critical error while accessing view method: the method invoked did not behave correctly");
             System.out.println("You have been disconnected");
         }
-    }
-
-    private void setGamePhase(GamePhase gamePhase){
-
-        switch (gamePhase){
-            case Assembly -> viewIndex = 0;
-            case Correction -> viewIndex = 1;
-            case Flight -> viewIndex = 2;
-            case Evaluation -> viewIndex = 3;
-        }
-
     }
 
 }
