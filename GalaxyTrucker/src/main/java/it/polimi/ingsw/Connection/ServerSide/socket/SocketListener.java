@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Connection.ServerSide.socket;
 
-import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.JoinerThread;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 
 import java.io.IOException;
@@ -42,8 +40,9 @@ public class SocketListener implements Runnable {
 
                 clientSocket = serverSocket.accept();
                 System.out.println(clientSocket.getInetAddress() + " is connected through socket protocol");
+                clientSocket.setSoTimeout(60000);
 
-                new JoinerThread(clientSocket, ConnectionType.SOCKET, centralServer).start();
+                new ClientSocketHandler(clientSocket, centralServer).start();
             }
 
         } catch (IOException e) {

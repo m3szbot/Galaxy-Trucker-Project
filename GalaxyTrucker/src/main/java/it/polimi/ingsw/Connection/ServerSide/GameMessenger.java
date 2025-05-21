@@ -1,18 +1,13 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
-import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.rmi.server.RemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +15,7 @@ import java.util.concurrent.Executors;
 /**
  * Class used to communicate with players during the game.
  *
- * @author Carlo, Boti
+ * @author carlo
  */
 
 public class GameMessenger implements ClientServerInvokableMethods {
@@ -28,36 +23,20 @@ public class GameMessenger implements ClientServerInvokableMethods {
     private final ConcurrentHashMap<Player, Object> playerLocks = new ConcurrentHashMap<>();
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
-    // socket
-    private Map<Player, OutputStream> playerSocketExchangerMap = new HashMap<>();
-    private Map<Player, DataContainer> playerDataContainerMap = new HashMap<>();
-    // RMI
-    private Map<Player, RemoteObject> playerRemoteObjectMap = new HashMap<>();
-
-    // TODO remove?
-    private ConcurrentHashMap<Player, DataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Player, SocketDataExchanger> dataExchangerMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Player, DataContainer> playerDataContainerMap = new ConcurrentHashMap<>();
 
 
-    // TODO update methods
-    public List<Player> getPlayersSocket() {
-
-        List<Player> players = new ArrayList<>();
-
-        for (Player player : dataExchangerMap.keySet()) {
-            if (dataExchangerMap.get(player).getConnectionType() == ConnectionType.SOCKET) {
-                players.add(player);
-            }
-        }
-
-        return players;
-
-    }
-
-    public void addPlayer(Player player, DataExchanger dataExchanger) {
+    public void addPlayer(Player player, SocketDataExchanger dataExchanger) {
         playerDataContainerMap.put(player, new DataContainer());
         dataExchangerMap.put(player, dataExchanger);
     }
 
+    public Collection<SocketDataExchanger> getAllSocketExchangers(){
+
+        return dataExchangerMap.values();
+
+    }
 
     private void sendErrorMessage(String message, Player player) {
 
@@ -83,7 +62,7 @@ public class GameMessenger implements ClientServerInvokableMethods {
 
         try {
 
-            return dataExchangerMap.get(player).receiveMessage(true);
+            return dataExchangerMap.get(player).getString();
         } catch (IOException e) {
 
             System.err.println("Error while obtaining data from client");
@@ -188,10 +167,16 @@ public class GameMessenger implements ClientServerInvokableMethods {
 
     /**
      * Sends to the player his dataContainer, then clears the container.
+     *
+     * @param player
      */
+
     public void sendPlayerData(Player player) {
+
         try {
-            dataExchangerMap.get(player).sendDataContainer(getPlayerContainer(player));
+
+            dataExchangerMap.get(player).sendContainer(getPlayerContainer(player));
+
         } catch (IOException e) {
             System.err.println("Error while sending dataContainer to " + player.getNickName());
         } finally {
@@ -216,6 +201,9 @@ public class GameMessenger implements ClientServerInvokableMethods {
             dataContainer.setCommand("endGame");
             sendPlayerData(player);
         }
+        clearAllResources();
+
+
     }
 
     /**
@@ -227,7 +215,7 @@ public class GameMessenger implements ClientServerInvokableMethods {
 
         try {
 
-            for (DataExchanger dataExchanger : dataExchangerMap.values()) {
+            for (SocketDataExchanger dataExchanger : dataExchangerMap.values()) {
                 dataExchanger.closeResources();
             }
 

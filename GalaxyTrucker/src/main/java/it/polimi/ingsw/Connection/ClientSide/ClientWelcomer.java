@@ -30,9 +30,9 @@ public class ClientWelcomer {
 
         input = scanner.nextLine();
 
-        while (input.contains("~")) {
+        while (input.contains(" ")) {
 
-            System.out.println("The character '~' cannot be part of you're nickname!");
+            System.out.println("You're nickname cannot contain spaces!");
             System.out.print("Enter a valid nickname: ");
             input = scanner.nextLine();
         }

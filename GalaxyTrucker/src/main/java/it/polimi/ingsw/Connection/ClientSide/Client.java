@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import it.polimi.ingsw.Connection.ConnectionType;
-
 import java.io.IOException;
 
 /**
@@ -30,23 +28,21 @@ public class Client {
         inputDaemon.setDaemon(true);
         inputDaemon.start();
 
-        if (joiner.start(clientInfo) == 0) {
-            gamehandler.start(clientInfo);
-        }
+            if(joiner.start(clientInfo)){
+
+                gamehandler.start(clientInfo);
+
+            }
+
+
 
         try {
 
-            //closing resources
+            clientInfo.getDataExchanger().closeResources();
+            System.out.println("Resources closed succesfully");
 
-            if (clientInfo.getConnectionType() == ConnectionType.SOCKET) {
-
-                clientInfo.getDataExchanger().closeResources();
-                clientInfo.getServerSocket().close();
-
-            }
-            System.out.println("Resources closed successfully");
-
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println("Critical error while closing server socket and streams");
         }
 
