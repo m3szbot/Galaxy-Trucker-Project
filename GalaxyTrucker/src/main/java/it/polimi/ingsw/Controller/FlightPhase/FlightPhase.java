@@ -43,6 +43,12 @@ public class FlightPhase extends Phase {
         // resolve cards
         while (flightBoard.getCardsNumber() > 0) {
 
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                System.out.println("Error while sleeping");
+            }
+
             card = flightBoard.getNewCard();
 
             for (Player player : flightBoard.getPlayerOrderList()) {
@@ -54,7 +60,14 @@ public class FlightPhase extends Phase {
                 dataContainer.clearContainer();
 
             }
+
             card.resolve(gameInformation);
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                System.out.println("Error while sleeping");
+            }
 
             for (Player player : flightBoard.getPlayerOrderList()) {
                 gameMessenger.sendPlayerMessage(player, "Your shipboard:\n");
