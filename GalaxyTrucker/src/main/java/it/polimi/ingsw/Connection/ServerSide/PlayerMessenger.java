@@ -33,27 +33,25 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     // RMI
     // TODO
 
-    public PlayerMessenger(Player player, ConnectionType connectionType, SocketDataExchanger socketDataExchanger) {
+    /**
+     * Add socket player.
+     */
+    public PlayerMessenger(Player player, SocketDataExchanger socketDataExchanger) {
         this.player = player;
-        this.connectionType = connectionType;
-        if (connectionType.equals(ConnectionType.SOCKET)) {
-            this.dataContainer = new DataContainer();
-            this.socketDataExchanger = socketDataExchanger;
-        }
-        // RMI
-        else {
-        }
+        this.connectionType = ConnectionType.SOCKET;
+        this.dataContainer = new DataContainer();
+        this.socketDataExchanger = socketDataExchanger;
     }
 
-    public PlayerMessenger(Player player, ConnectionType connectionType, VirtualClient virtualClient){
+    /**
+     * Add RMI player.
+     */
+    public PlayerMessenger(Player player, VirtualClient virtualClient) {
         this.player = player;
-        this.connectionType = connectionType;
+        this.connectionType = ConnectionType.RMI;
         this.virtualClient = virtualClient;
     }
 
-    public SocketDataExchanger getSocketDataExchanger() {
-        return socketDataExchanger;
-    }
 
     @Override
     public void setGamePhase(GamePhase gamePhase) {
@@ -63,31 +61,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             dataContainer.setGamePhase(gamePhase);
             sendDataContainer();
         } else {
-        }
-    }
-
-    /**
-     * WARNING!! TO USE ONLY IN JOINING PHASE (FOR NOW)
-     * @param message
-     */
-
-    public void sendShortCutMessage(String message){
-        if(connectionType.equals(ConnectionType.SOCKET)){
-            try {
-                socketDataExchanger.sendString(message);
-            } catch (IOException e) {
-                System.err.println("Error while sending string shortcut to the player");
-            }
-        }
-        else{
-
-            try {
-
-                virtualClient.printShortCutMessage(message);
-            } catch (RemoteException e) {
-                System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
-            }
-
         }
     }
 
@@ -132,6 +105,71 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             socketDataExchanger.closeResources();
         } catch (IOException e) {
             System.err.println("Error while closing all players resources");
+        }
+    }
+
+    /**
+     * WARNING!! TO USE ONLY IN JOINING PHASE (FOR NOW)
+     *
+     * @param message
+     */
+
+    public void sendShortCutMessage(String message) {
+        if (connectionType.equals(ConnectionType.SOCKET)) {
+            try {
+                socketDataExchanger.sendString(message);
+            } catch (IOException e) {
+                System.err.println("Error while sending string shortcut to the player");
+            }
+        } else {
+
+            try {
+
+                virtualClient.printShortCutMessage(message);
+            } catch (RemoteException e) {
+                System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
+            }
+
+        }
+    }
+
+    /**
+     * @return the string that the player sent to the server
+     * @author carlo
+     */
+    public String getPlayerString() throws PlayerDisconnectedException {
+        return getPlayerInput();
+    }
+
+    /**
+     * @return the string that the player sent to the server
+     * @author carlo
+     */
+    private String getPlayerInput() throws PlayerDisconnectedException {
+        try {
+            return socketDataExchanger.getString();
+        } catch (IOException e) {
+            System.err.println("Error while obtaining data from client");
+            throw new PlayerDisconnectedException(player);
+        }
+    }
+
+    /**
+     * @return integer that the player sent to the server
+     * @author carlo
+     */
+    public int getPlayerInt() throws PlayerDisconnectedException {
+
+        while (true) {
+            String input = getPlayerInput();
+            try {
+
+                return Integer.parseInt(input);
+
+            } catch (NumberFormatException e) {
+                printMessage("You didn't enter an integer! Please reenter it: ");
+            }
+
         }
     }
 
@@ -201,52 +239,12 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     /**
-     * @return the string that the player sent to the server
-     * @author carlo
-     */
-    public String getPlayerString() throws PlayerDisconnectedException {
-        return getPlayerInput();
-    }
-
-    /**
-     * @return the string that the player sent to the server
-     * @author carlo
-     */
-    private String getPlayerInput() throws PlayerDisconnectedException {
-        try {
-            return socketDataExchanger.getString();
-        } catch (IOException e) {
-            System.err.println("Error while obtaining data from client");
-            throw new PlayerDisconnectedException(player);
-        }
-    }
-
-    /**
-     * @return integer that the player sent to the server
-     * @author carlo
-     */
-    public int getPlayerInt() throws PlayerDisconnectedException {
-
-        while(true) {
-            String input = getPlayerInput();
-            try {
-
-                return Integer.parseInt(input);
-
-            } catch (NumberFormatException e) {
-                printMessage("You didn't enter an integer! Please reenter it: ");
-            }
-
-        }
-    }
-
-    /**
      * @return array of coordinates that the player sent to the server
      * @author carlo
      */
     public int[] getPlayerCoordinates() throws PlayerDisconnectedException {
         int[] coordinates = new int[2];
-        while(true) {
+        while (true) {
             String input = getPlayerInput();
             try {
                 String[] parts = input.split(" ");
@@ -264,7 +262,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * @author carlo
      */
     public boolean getPlayerBoolean() throws PlayerDisconnectedException {
-        while(true) {
+        while (true) {
             String input = getPlayerInput();
 
             if (input.equalsIgnoreCase("yes")) {

@@ -22,15 +22,18 @@ public class GameMessenger {
     private Map<Player, PlayerMessenger> playerMessengerMap = new HashMap<>();
 
     /**
-     * Add player to the playerMessengerMap with its associated PlayerMessenger.
+     * Add socket player to GameMessenger and create its associated PlayerMessenger.
      */
     public void addPlayer(Player player, ConnectionType connectionType, SocketDataExchanger dataExchanger) {
-        PlayerMessenger playerMessenger = new PlayerMessenger(player, connectionType, dataExchanger);
+        PlayerMessenger playerMessenger = new PlayerMessenger(player, dataExchanger);
         playerMessengerMap.put(player, playerMessenger);
     }
 
-    public void addPlayer(Player player, ConnectionType connectionType, VirtualClient virtualClient){
-        PlayerMessenger playerMessenger = new PlayerMessenger(player, connectionType, virtualClient);
+    /**
+     * Add RMI player to GameMessenger and create its associated PlayerMessenger.
+     */
+    public void addPlayer(Player player, ConnectionType connectionType, VirtualClient virtualClient) {
+        PlayerMessenger playerMessenger = new PlayerMessenger(player, virtualClient);
         playerMessengerMap.put(player, playerMessenger);
     }
 
@@ -102,13 +105,13 @@ public class GameMessenger {
 
     /**
      * Sends directly the message in a shortCut manner.
-     * @param message
      *
+     * @param message
      * @author carlo
      */
 
-    public void sendShortCutMessageToAll(String message){
-        for(PlayerMessenger playerMessenger: playerMessengerMap.values()){
+    public void sendShortCutMessageToAll(String message) {
+        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
             playerMessenger.sendShortCutMessage(message);
         }
     }
