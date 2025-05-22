@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide.socket;
 
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
@@ -23,7 +24,7 @@ public class ClientSocketHandler extends Thread {
     private String nickName;
     private Integer trials = 0;
 
-    public ClientSocketHandler(Socket clientSocket, Server centralServer) throws IOException{
+    public ClientSocketHandler(Socket clientSocket, Server centralServer) throws IOException {
 
         this.clientSocket = clientSocket;
         ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
@@ -37,11 +38,11 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void changePlayerUsername() throws IOException{
+    private void changePlayerUsername() throws IOException {
 
         String message;
 
-        while(centralServer.checkNickname(nickName)){
+        while (centralServer.checkNickname(nickName)) {
 
             message = "nickname '" + nickName + "' has already been chosen, please enter a new one: ";
             dataExchanger.sendString(message);
@@ -55,7 +56,7 @@ public class ClientSocketHandler extends Thread {
 
         try {
 
-            if(centralServer.checkNickname(nickName)){
+            if (centralServer.checkNickname(nickName)) {
 
                 changePlayerUsername();
 
@@ -97,11 +98,9 @@ public class ClientSocketHandler extends Thread {
                 System.out.println("Client " + clientSocket.getInetAddress() + " (" + nickName + ")" +
                         " was kicked out because of too many input failures. The client probably had" +
                         " malicious intent");
-            }
-            else if(e instanceof SocketTimeoutException){
+            } else if (e instanceof SocketTimeoutException) {
                 System.out.println("Player was kicked out because of inactivity");
-            }
-            else {
+            } else {
                 System.out.println("Client " + clientSocket.getInetAddress() + " has disconnected while joining a game");
             }
 
@@ -164,6 +163,7 @@ public class ClientSocketHandler extends Thread {
         }
 
     }
+
     //TODO
     private void startRejoining(int gameCode) {
 
@@ -273,8 +273,8 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void checkTrials() throws IOException{
-        if(trials == MAXTRIALS){
+    private void checkTrials() throws IOException {
+        if (trials == MAXTRIALS) {
             throw new IOException();
         }
     }
@@ -294,7 +294,7 @@ public class ClientSocketHandler extends Thread {
 
         message = nickName + " joined the game!";
         notifyAllPlayers(message);
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, dataExchanger);
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, ConnectionType.SOCKET, dataExchanger);
 
         if (isFirstPlayer) {
             message = "You have successfully created the game (game code " + centralServer.getCurrentGameCode() + ")";
@@ -309,21 +309,14 @@ public class ClientSocketHandler extends Thread {
         if (centralServer.getCurrentStartingGame().isFull()) {
             notifyAllPlayers("start");
             centralServer.startCurrentGame();
-        }
-        else {
+        } else {
             dataExchanger.sendString("Waiting for other players to join...");
         }
 
     }
 
-    private void notifyAllPlayers(String message) throws IOException{
-
-        for(SocketDataExchanger dataExchanger: ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).getAllSocketExchangers()){
-
-            dataExchanger.sendString(message);
-
-        }
+    private void notifyAllPlayers(String message) throws IOException {
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendMessageToAll(message);
     }
-
 
 }
