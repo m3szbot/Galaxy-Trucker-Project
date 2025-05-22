@@ -65,7 +65,6 @@ public class ShipBoardTest {
         assertFalse(shipBoard.isErroneous());
     }
 
-    // TODO
     @Test
     void checkSmoothCompatibleJunctions() throws NotPermittedPlacementException {
         // 2/1 3
