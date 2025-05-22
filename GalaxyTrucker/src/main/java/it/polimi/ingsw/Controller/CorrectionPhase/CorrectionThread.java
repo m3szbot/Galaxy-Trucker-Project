@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
@@ -12,13 +12,13 @@ public class CorrectionThread implements Runnable {
     final GameInformation gameInformation;
     final Player player;
     final GameMessenger gameMessenger;
-    final DataContainer dataContainer;
+    final PlayerMessenger playerMessenger;
 
     public CorrectionThread(GameInformation gameInformation, Player player) {
         this.gameInformation = gameInformation;
         this.player = player;
         this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
-        this.dataContainer = gameMessenger.getPlayerContainer(player);
+        this.playerMessenger = gameMessenger.getPlayerMessenger(player);
     }
 
     /**
@@ -44,10 +44,10 @@ public class CorrectionThread implements Runnable {
                 }
             }
             message.append("Enter column and row (col row):");
-            gameMessenger.sendPlayerMessage(player, message.toString());
+            playerMessenger.printMessage(message.toString());
 
             try {
-                coordinates = gameMessenger.getPlayerCoordinates(player);
+                coordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 // handle disconnected player
                 gameMessenger.disconnectPlayer(gameInformation, player);
@@ -60,7 +60,7 @@ public class CorrectionThread implements Runnable {
             errors = shipBoard.isErroneous();
         }
         // errors corrected
-        gameMessenger.sendPlayerMessage(player, "Your ship is valid, please wait for other players.");
+        playerMessenger.printMessage("Your ship is valid, please wait for other players.");
         // end of thread
     }
 }
