@@ -11,8 +11,8 @@ import java.util.List;
  * Shipboard used to create and store the player's ship and it's attributes.
  * <p>
  * Indexes:
- * Player uses visible indexes [1...max] (center: 7-7)
- * Shipboard uses real indexes shifted by -1 [0...max-1] (center: 6-6)
+ * Player uses visible indexes [1...12] (center: 7-7)
+ * Shipboard uses real indexes shifted by -1 [0...11] (center: 6-6)
  * <p>
  * RealIndex = VisibleIndex - 1
  * <p>
@@ -67,17 +67,22 @@ public class ShipBoard implements Serializable {
                 componentMatrix[i][j] = null;
             }
         }
-        // Initialize error matrix as false (no errors)
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
+        // Initialize error matrix as error free
+        for (int i = 0; i < SHIPBOARD_COLS; i++) {
+            for (int j = 0; j < SHIPBOARD_ROWS; j++) {
                 errorsMatrix[i][j] = false;
             }
         }
 
+        // Set forbidden zones for component placement
+        // TestGame TODO
         if (gameType.equals(GameType.TESTGAME)) {
-        } else {
+        }
+        // NormalGame
+        else {
             // Set forbidden zones in the structure
-            for (int i = 0; i < 12; i++) {
+            // columns
+            for (int i = 0; i < SHIPBOARD_COLS; i++) {
                 validityMatrix[i][0] = false;
                 validityMatrix[i][1] = false;
                 validityMatrix[i][2] = false;
@@ -85,7 +90,8 @@ public class ShipBoard implements Serializable {
                 validityMatrix[i][11] = false;
 
             }
-            for (int i = 0; i < 12; i++) {
+            // rows
+            for (int i = 0; i < SHIPBOARD_ROWS; i++) {
                 validityMatrix[0][i] = false;
                 validityMatrix[1][i] = false;
                 validityMatrix[2][i] = false;
@@ -94,38 +100,42 @@ public class ShipBoard implements Serializable {
                 validityMatrix[10][i] = false;
                 validityMatrix[11][i] = false;
             }
-
-            validityMatrix[4][3] = false;
+            // inside cells
+            validityMatrix[3][4] = false;
+            validityMatrix[3][5] = false;
             validityMatrix[4][4] = false;
-            validityMatrix[5][3] = false;
-            validityMatrix[4][6] = false;
-            validityMatrix[8][6] = false;
-            validityMatrix[4][8] = false;
-            validityMatrix[4][9] = false;
-            validityMatrix[5][9] = false;
+            validityMatrix[6][4] = false;
+            validityMatrix[6][8] = false;
+            validityMatrix[8][4] = false;
+            validityMatrix[9][4] = false;
+            validityMatrix[9][5] = false;
         }
 
+        // add center cabin
         try {
-            addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 7);
+            // TODO: colored starter cabin, to get from the componentList in gameInformation
+            addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}),
+                    SHIPBOARD_CENTER_COL, SHIPBOARD_CENTER_ROW);
         } catch (NotPermittedPlacementException e) {
-            throw new RuntimeException(e);
+            System.out.println("Adjust Shipboard constructor, cannot insert center cabin");
         }
     }
 
     /**
      * Adds a component to the specified position in the structure matrix.
      *
-     * @param component The component to add.
-     * @param col       The x-coordinate of the component.
-     * @param row       The y-coordinate of the component.
+     * @param component  The component to add.
+     * @param visibleCol Visible column.
+     * @param visibleRow Visible row.
      * @author Giacomo
      */
-    public void addComponent(Component component, int col, int row) throws NotPermittedPlacementException {
-        col = col - 1;
-        row = row - 1;
+    public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException {
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (validityMatrix[row][col]) {
-            componentMatrix[row][col] = component;
+
+        if (validityMatrix[col][row]) {
+            componentMatrix[col][row] = component;
             List<Object> list = component.accept(visitor);
             if ((Integer) list.get(0) == 1) {
                 shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
@@ -172,7 +182,7 @@ public class ShipBoard implements Serializable {
     }
 
     public Component getComponent(int col, int row) {
-        return componentMatrix[row][col];
+        return componentMatrix[col][row];
     }
 
     public int getMatrixRows() {
@@ -355,8 +365,8 @@ public class ShipBoard implements Serializable {
         col = col - 1;
         row = row - 1;
 
-        if (validityMatrix[row][col] == true && componentMatrix[row][col] != null) {
-            Component component = componentMatrix[row][col];
+        if (validityMatrix[col][row] == true && componentMatrix[col][row] != null) {
+            Component component = componentMatrix[col][row];
             Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
             List<Object> list = component.accept(visitor);
             shipBoardAttributes.updateDestroyedComponents(1);
@@ -386,7 +396,7 @@ public class ShipBoard implements Serializable {
                 update[3] = -update[3];
                 shipBoardAttributes.updateGoods(update);
             }
-            componentMatrix[row][col] = null;
+            componentMatrix[col][row] = null;
             if (checkTrigger) {
                 while (checkNotReachable(this.shipBoardAttributes)) ;
             }
@@ -516,13 +526,13 @@ public class ShipBoard implements Serializable {
         col = col - 1;
         row = row - 1;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (componentMatrix[row][col] != null && componentMatrix[row][col].getComponentName().equals("Cabin")) {
+        if (componentMatrix[col][row] != null && componentMatrix[col][row].getComponentName().equals("Cabin")) {
             if (crewType.equals(CrewType.Brown)) {
                 if ((componentMatrix[row - 1][col] != null && (Boolean) componentMatrix[row - 1][col].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row - 1][col]).isPurple()) ||
                         (componentMatrix[row + 1][col] != null && (Boolean) componentMatrix[row + 1][col].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row + 1][col]).isPurple()) ||
                         (componentMatrix[row][col - 1] != null && (Boolean) componentMatrix[row][col - 1].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row][col - 1]).isPurple()) ||
                         (componentMatrix[row][col + 1] != null && (Boolean) componentMatrix[row][col + 1].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row][col + 1]).isPurple())) {
-                    ((Cabin) componentMatrix[row][col]).setCrewType(crewType);
+                    ((Cabin) componentMatrix[col][row]).setCrewType(crewType);
                     shipBoardAttributes.updateAlien(CrewType.Brown, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
@@ -533,7 +543,7 @@ public class ShipBoard implements Serializable {
                         (componentMatrix[row + 1][col] != null && (Boolean) componentMatrix[row + 1][col].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row + 1][col]).isPurple()) ||
                         (componentMatrix[row][col - 1] != null && (Boolean) componentMatrix[row][col - 1].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row][col - 1]).isPurple()) ||
                         (componentMatrix[row][col + 1] != null && (Boolean) componentMatrix[row][col + 1].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row][col + 1]).isPurple())) {
-                    ((Cabin) componentMatrix[row][col]).setCrewType(crewType);
+                    ((Cabin) componentMatrix[col][row]).setCrewType(crewType);
                     shipBoardAttributes.updateAlien(CrewType.Purple, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
