@@ -14,7 +14,7 @@ import java.util.Map;
  * Contains the specific PLayerMessengers.
  * Used for all-player communications.
  *
- * @author carlo
+ * @author carlo, boti
  */
 
 public class GameMessenger {

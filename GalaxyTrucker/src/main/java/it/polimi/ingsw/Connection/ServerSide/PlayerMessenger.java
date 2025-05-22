@@ -21,6 +21,7 @@ import java.io.IOException;
  * @author Boti
  */
 public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
+
     Player player;
     ConnectionType connectionType;
     // socket
