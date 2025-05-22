@@ -25,6 +25,7 @@ public class GameMessenger {
      */
     public void addPlayer(Player player, ConnectionType connectionType, SocketDataExchanger dataExchanger) {
         PlayerMessenger playerMessenger = new PlayerMessenger(player, connectionType, dataExchanger);
+        playerMessengerMap.put(player, playerMessenger);
     }
 
     /**
