@@ -51,6 +51,10 @@ public class GeneralView implements ViewServerInvokableMethods {
         // row and column to print indexes in
         int indexRow = 3;
         int indexColumn = 2;
+        // Print shipboard in:
+        // col: 4-10
+        // row: 5-9
+        
         //  shipboard number of rows and cols
         int rows = shipBoard.getMatrixRows();
         int cols = shipBoard.getMatrixCols();
@@ -59,30 +63,32 @@ public class GeneralView implements ViewServerInvokableMethods {
         boolean[][] validPositions = shipBoard.getValidityMatrix();
         List<String> cellLines;
 
-        for (int i = indexRow; i < rows - 3; i++) {
+        // cycle rows
+        for (int i = indexRow; i < rows - indexRow; i++) {
             //Printing every line singularly, this way we can obtain a table form
             for (int line = 0; line < COMPONENT_LINES; line++) {
 
-                for (int j = indexColumn; j < cols - 2; j++) {
+                // cycle columns
+                for (int j = indexColumn; j < cols - indexColumn; j++) {
                     // print index row
-                    if (i == 3 && j != 2) {
+                    if (i == indexRow && j != indexColumn) {
                         cellLines = getIndexCell(j + 1);
                     }
                     // print index column
-                    else if (j == 2 && i != 3) {
+                    else if (j == indexColumn && i != indexRow) {
                         cellLines = getIndexCell(i + 1);
                     }
                     // print invalid cells
-                    else if (!validPositions[i][j]) {
+                    else if (!validPositions[j][i]) {
                         cellLines = getInvalidCell();
                     }
                     // print empty cells
-                    else if (shipStructure[i][j] == null) {
+                    else if (shipStructure[j][i] == null) {
                         cellLines = getEmptyCell();
                     }
                     // print components
                     else {
-                        cellLines = getComponentLines(shipStructure[i][j]);
+                        cellLines = getComponentLines(shipStructure[j][i]);
                     }
                     System.out.print(cellLines.get(line) + " ");
                 }
