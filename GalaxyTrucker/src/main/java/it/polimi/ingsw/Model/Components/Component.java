@@ -119,6 +119,7 @@ public class Component implements Visitable, Serializable {
         indexes.add(getCoveredSides()); //4
         indexes.add(getAvailableRedSlots()); //5
         indexes.add(getAvailableBlueSlots()); //6
+        // TODO remove if unused:
         indexes.add(amIASupport()); //7
         indexes.add(amIAStorage()); //8
         return indexes;
