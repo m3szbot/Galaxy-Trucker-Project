@@ -98,6 +98,18 @@ public class Component implements Visitable, Serializable {
         return "Connector";
     }
 
+    /**
+     * Return all possible component indexes/attributes:
+     * 0: drivingPower
+     * 1: firePower
+     * 2: crewMembers
+     * 3: batteryPower
+     * 4: coveredSides
+     * 5: availableRedSlots
+     * 6: availableBlueSlots
+     * 7: isSupport
+     * 8: isStorage
+     */
     public List<Object> getAllIndexes() {
         ArrayList<Object> indexes = new ArrayList<>();
         indexes.add(getDrivingPower()); //0
@@ -112,7 +124,6 @@ public class Component implements Visitable, Serializable {
         return indexes;
     }
 
-    //Da qui in poi codice aggiunto da Giacomo per provare ad implementare il visitor pattern
     public int getDrivingPower() {
         return 0;
     }
