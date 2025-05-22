@@ -7,16 +7,34 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Shipboard used to create and store the player's ship and it's attributes.
+ * <p>
+ * Indexes:
+ * Player uses visible indexes [1...max] (center: 7-7)
+ * Shipboard uses real indexes shifted by -1 [0...max-1] (center: 6-6)
+ * <p>
+ * RealIndex = VisibleIndex - 1
+ * <p>
+ * Matrix structure:
+ * Shipboard[cols][rows]
+ *
+ * @author Giacomo, Boti
+ */
 public class ShipBoard implements Serializable {
-    // x: column
-    // y: row
+    public static final int SHIPBOARD_COLS = 12;
+    public static final int SHIPBOARD_ROWS = 12;
+    public static final int SHIPBOARD_CENTER_COL = 7;
+    public static final int SHIPBOARD_CENTER_ROW = 7;
+
     private ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private Component[][] componentMatrix;
     // Boolean matrix indicating valid positions for components
     private boolean[][] validityMatrix;
-    // Boolean matrix indicating components with errors
+    // Boolean matrix indicating components with errors (true if error)
     private boolean[][] errorsMatrix;
+    // Matrix: [cols][rows]
 
     /**
      * Constructs a ShipStructure instance.
@@ -32,21 +50,24 @@ public class ShipBoard implements Serializable {
      * @author Giacomo
      */
     public ShipBoard(GameType gameType) {
-        this.componentMatrix = new Component[12][12];
-        this.validityMatrix = new boolean[12][12];
-        this.errorsMatrix = new boolean[12][12];
         this.shipBoardAttributes = new ShipBoardAttributes();
+        this.componentMatrix = new Component[SHIPBOARD_COLS][SHIPBOARD_ROWS];
+        this.validityMatrix = new boolean[SHIPBOARD_COLS][SHIPBOARD_ROWS];
+        this.errorsMatrix = new boolean[SHIPBOARD_COLS][SHIPBOARD_ROWS];
+
         // Initialize all positions as valid
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
+        for (int i = 0; i < SHIPBOARD_COLS; i++) {
+            for (int j = 0; j < SHIPBOARD_ROWS; j++) {
                 validityMatrix[i][j] = true;
             }
         }
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
+        // Initialize component matrix as empty
+        for (int i = 0; i < SHIPBOARD_COLS; i++) {
+            for (int j = 0; j < SHIPBOARD_ROWS; j++) {
                 componentMatrix[i][j] = null;
             }
         }
+        // Initialize error matrix as false (no errors)
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
                 errorsMatrix[i][j] = false;
@@ -132,6 +153,10 @@ public class ShipBoard implements Serializable {
             throw new NotPermittedPlacementException();
         }
         //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
+    }
+
+    private int getRealIndex(int visibleIndex) {
+        return visibleIndex - 1;
     }
 
     public Component[][] getComponentMatrix() {
