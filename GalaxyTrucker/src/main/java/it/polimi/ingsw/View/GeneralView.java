@@ -49,12 +49,13 @@ public class GeneralView implements ViewServerInvokableMethods {
      */
     public void printShipboard(ShipBoard shipBoard) {
         // row and column to print indexes in
+        // TODO adjust
         int indexRow = 3;
         int indexColumn = 2;
         // Print shipboard in:
         // col: 4-10
         // row: 5-9
-        
+
         //  shipboard number of rows and cols
         int rows = shipBoard.getMatrixRows();
         int cols = shipBoard.getMatrixCols();
@@ -141,10 +142,112 @@ public class GeneralView implements ViewServerInvokableMethods {
         }
     }
 
-    public void printComponent(DataContainer dataContainer) {
-        if (dataContainer.getComponent() == null)
-            throw new IllegalArgumentException("The DC does not contain a component");
-        printComponent(dataContainer.getComponent());
+    /**
+     * Prints the whole shipboard for debugging.
+     */
+    public void printFullShipboard(ShipBoard shipBoard) {
+        // row and column to print indexes in
+        int indexRow = 0;
+        int indexColumn = 0;
+        // Print shipboard in:
+        // col: 4-10
+        // row: 5-9
+
+        //  shipboard number of rows and cols
+        int rows = shipBoard.getMatrixRows();
+        int cols = shipBoard.getMatrixCols();
+
+        Component[][] shipStructure = shipBoard.getComponentMatrix();
+        boolean[][] validPositions = shipBoard.getValidityMatrix();
+        List<String> cellLines;
+
+        // cycle rows
+        for (int i = indexRow; i < rows - indexRow; i++) {
+            //Printing every line singularly, this way we can obtain a table form
+            for (int line = 0; line < COMPONENT_LINES; line++) {
+
+                // cycle columns
+                for (int j = indexColumn; j < cols - indexColumn; j++) {
+                    // print index row
+                    if (i == indexRow && j != indexColumn) {
+                        cellLines = getIndexCell(j + 1);
+                    }
+                    // print index column
+                    else if (j == indexColumn && i != indexRow) {
+                        cellLines = getIndexCell(i + 1);
+                    }
+                    // print invalid cells
+                    else if (!validPositions[j][i]) {
+                        cellLines = getInvalidCell();
+                    }
+                    // print empty cells
+                    else if (shipStructure[j][i] == null) {
+                        cellLines = getEmptyCell();
+                    }
+                    // print components
+                    else {
+                        cellLines = getComponentLines(shipStructure[j][i]);
+                    }
+                    System.out.print(cellLines.get(line) + " ");
+                }
+                System.out.println();
+            }
+        }
+
+    }
+
+    /**
+     * Get string of and index cell.
+     */
+    private List<String> getIndexCell(int index) {
+        return List.of(
+                "         ",
+                "         ",
+                String.format("    %d    ", index),
+                "         ",
+                "         "
+        );
+    }
+
+    /**
+     * Get string of an invalid cell.
+     */
+    private List<String> getInvalidCell() {
+        return List.of(
+                "         ",
+                "         ",
+                "         ",
+                "         ",
+                "         "
+        );
+    }
+
+    /**
+     * Get string of an empty (valid) cell.
+     */
+    private List<String> getEmptyCell() {
+        return List.of(
+                "+---.---+",
+                "|       |",
+                ".  ...  .",
+                "|       |",
+                "+---.---+"
+        );
+    }
+
+    /**
+     * Helper method of printShipboard.
+     * Return String list of the 5 component lines, excluding the \n at the end of the lines.
+     */
+    private List<String> getComponentLines(Component component) {
+        String componentString = getCorrectComponentString(component);
+        List<String> returnList = new ArrayList<>();
+        // construct return string array
+        for (int i = 0; i < COMPONENT_LINES; i++) {
+            // -1: exclude newline at end of line
+            returnList.add(componentString.substring(i * COMPONENT_CHARACTERS_PER_LINE, (i + 1) * COMPONENT_CHARACTERS_PER_LINE - 1));
+        }
+        return returnList;
     }
 
     /**
@@ -340,64 +443,16 @@ public class GeneralView implements ViewServerInvokableMethods {
             return 4;
     }
 
+    public void printComponent(DataContainer dataContainer) {
+        if (dataContainer.getComponent() == null)
+            throw new IllegalArgumentException("The DC does not contain a component");
+        printComponent(dataContainer.getComponent());
+    }
+
     public void printShipboard(DataContainer dataContainer) {
         if (dataContainer.getShipBoard() == null)
             throw new IllegalArgumentException("The DC does not contain a shipboard");
         printShipboard(dataContainer.getShipBoard());
-    }
-
-    /**
-     * Get string of and index cell.
-     */
-    private List<String> getIndexCell(int index) {
-        return List.of(
-                "         ",
-                "         ",
-                String.format("    %d    ", index),
-                "         ",
-                "         "
-        );
-    }
-
-    /**
-     * Get string of an invalid cell.
-     */
-    private List<String> getInvalidCell() {
-        return List.of(
-                "         ",
-                "         ",
-                "         ",
-                "         ",
-                "         "
-        );
-    }
-
-    /**
-     * Get string of an empty (valid) cell.
-     */
-    private List<String> getEmptyCell() {
-        return List.of(
-                "+---.---+",
-                "|       |",
-                ".  ...  .",
-                "|       |",
-                "+---.---+"
-        );
-    }
-
-    /**
-     * Helper method of printShipboard.
-     * Return String list of the 5 component lines, excluding the \n at the end of the lines.
-     */
-    private List<String> getComponentLines(Component component) {
-        String componentString = getCorrectComponentString(component);
-        List<String> returnList = new ArrayList<>();
-        // construct return string array
-        for (int i = 0; i < COMPONENT_LINES; i++) {
-            // -1: exclude newline at end of line
-            returnList.add(componentString.substring(i * COMPONENT_CHARACTERS_PER_LINE, (i + 1) * COMPONENT_CHARACTERS_PER_LINE - 1));
-        }
-        return returnList;
     }
 
     public void printCard(DataContainer dataContainer) {

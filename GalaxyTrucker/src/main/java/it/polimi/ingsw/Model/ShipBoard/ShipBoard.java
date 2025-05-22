@@ -82,22 +82,22 @@ public class ShipBoard implements Serializable {
         // NormalGame
         else {
             // Set forbidden zones in the structure
-            // columns
+            // forbidden rows
             for (int i = 0; i < SB_COLS; i++) {
                 validityMatrix[i][0] = false;
                 validityMatrix[i][1] = false;
                 validityMatrix[i][2] = false;
+                validityMatrix[i][3] = false;
+                validityMatrix[i][9] = false;
                 validityMatrix[i][10] = false;
                 validityMatrix[i][11] = false;
 
             }
-            // rows
+            // forbidden columns
             for (int i = 0; i < SB_ROWS; i++) {
                 validityMatrix[0][i] = false;
                 validityMatrix[1][i] = false;
                 validityMatrix[2][i] = false;
-                validityMatrix[3][i] = false;
-                validityMatrix[9][i] = false;
                 validityMatrix[10][i] = false;
                 validityMatrix[11][i] = false;
             }
