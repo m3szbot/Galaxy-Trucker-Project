@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
  * Used for player specific controller communications.
  * Implements both socket and RMI method calls.
  *
- * @author Boti
+ * @author Boti, carlo
  */
 public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
 
@@ -226,15 +226,18 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * @author carlo
      */
     public int getPlayerInt() throws PlayerDisconnectedException {
-        String input = getPlayerInput();
-        int value;
-        try {
-            value = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            printMessage("You didn't enter an integer! Please reenter it: ");
-            return getPlayerInt();
+
+        while(true) {
+            String input = getPlayerInput();
+            try {
+
+                return Integer.parseInt(input);
+
+            } catch (NumberFormatException e) {
+                printMessage("You didn't enter an integer! Please reenter it: ");
+            }
+
         }
-        return value;
     }
 
     /**
@@ -242,17 +245,18 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * @author carlo
      */
     public int[] getPlayerCoordinates() throws PlayerDisconnectedException {
-        String input = getPlayerInput();
         int[] coordinates = new int[2];
-        try {
-            String[] parts = input.split(" ");
-            coordinates[0] = Integer.parseInt(parts[0]);
-            coordinates[1] = Integer.parseInt(parts[1]);
-        } catch (NumberFormatException e) {
-            printMessage("You didn't enter the coordinates in the correct syntax (X Y), please reenter them: ");
-            return getPlayerCoordinates();
+        while(true) {
+            String input = getPlayerInput();
+            try {
+                String[] parts = input.split(" ");
+                coordinates[0] = Integer.parseInt(parts[0]);
+                coordinates[1] = Integer.parseInt(parts[1]);
+                return coordinates;
+            } catch (NumberFormatException e) {
+                printMessage("You didn't enter the coordinates in the correct syntax (X Y), please reenter them: ");
+            }
         }
-        return coordinates;
     }
 
     /**
@@ -260,14 +264,16 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * @author carlo
      */
     public boolean getPlayerBoolean() throws PlayerDisconnectedException {
-        String input = getPlayerInput();
-        if (input.equalsIgnoreCase("yes")) {
-            return true;
-        } else if (input.equalsIgnoreCase("no")) {
-            return false;
-        } else {
-            printMessage("You didn't enter the correct response, please reenter it (yes/no): ");
-            return getPlayerBoolean();
+        while(true) {
+            String input = getPlayerInput();
+
+            if (input.equalsIgnoreCase("yes")) {
+                return true;
+            } else if (input.equalsIgnoreCase("no")) {
+                return false;
+            } else {
+                printMessage("You didn't enter the correct response, please reenter it (yes/no): ");
+            }
         }
     }
 }
