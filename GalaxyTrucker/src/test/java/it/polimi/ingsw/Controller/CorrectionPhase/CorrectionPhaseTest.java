@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CorrectionPhaseTest {
     private final InputStream originalInput = System.in;
@@ -68,21 +68,18 @@ class CorrectionPhaseTest {
      */
     @Test
     void RemoveOneComponent() {
-        int errors;
         try {
             playerA.getShipBoard().addComponent(singleComponent, 7, 8);
             playerA.getShipBoard().addComponent(doubleComponent, 6, 8);
             playerA.getShipBoard().addComponent(doubleComponent, 8, 8);
         } catch (NotPermittedPlacementException e) {
         }
-        errors = playerA.getShipBoard().checkErrors();
-        assertEquals(3, errors);
+        assertTrue(playerA.getShipBoard().isErroneous());
 
         // correct playerA's shipboard
         inputSimulator("7\n8\n");
         correctionPhase.start();
-        errors = playerA.getShipBoard().checkErrors();
-        assertEquals(0, errors);
+        assertFalse(playerA.getShipBoard().isErroneous());
         assertEquals(4, gameInformation.getPlayerList().size());
     }
 
@@ -103,14 +100,12 @@ class CorrectionPhaseTest {
      */
     @Test
     void kickPlayerErroneousShipboard() {
-        int errors;
         try {
             playerA.getShipBoard().addComponent(singleComponent, 7, 8);
             playerA.getShipBoard().addComponent(doubleComponent, 6, 8);
         } catch (NotPermittedPlacementException e) {
         }
-        errors = playerA.getShipBoard().checkErrors();
-        assertEquals(2, errors);
+        assertTrue(playerA.getShipBoard().isErroneous());
 
         correctionPhase.start();
         assertEquals(3, gameInformation.getPlayerList().size());

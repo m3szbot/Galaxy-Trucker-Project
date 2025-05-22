@@ -128,13 +128,8 @@ public class ShipBoard implements Serializable {
         }
 
         // add center cabin
-        try {
-            // TODO: colored starter cabin, to get from the componentList in gameInformation
-            addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}),
-                    SB_CENTER_COL, SB_CENTER_ROW);
-        } catch (NotPermittedPlacementException e) {
-            System.out.println("Adjust Shipboard constructor, cannot insert center cabin");
-        }
+        // TODO: colored starter cabin, to get from the componentList in gameInformation
+        componentMatrix[SB_CENTER_COL - 1][SB_CENTER_ROW - 1] = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal});
     }
 
     /**
@@ -144,6 +139,7 @@ public class ShipBoard implements Serializable {
      * @param visibleCol Visible column.
      * @param visibleRow Visible row.
      * @author Giacomo
+     * TODO
      */
     public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException {
         int col = getRealIndex(visibleCol);
@@ -194,12 +190,9 @@ public class ShipBoard implements Serializable {
      * @return true if placement is valid, false if invalid.
      */
     private boolean checkValidPlacement(int realCol, int realRow) {
-        // invalid cell
-        if (!validityMatrix[realCol][realRow])
-            return false;
-        if (!checkAdjacency(realCol, realRow))
-            return false;
-        return true;
+        return (validityMatrix[realCol][realRow] &&
+                componentMatrix[realCol][realRow] == null &&
+                checkAdjacency(realCol, realRow));
     }
 
     /**
@@ -241,19 +234,28 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Checks if there are errors in the shipboard
+     * Checks if there are erroneous components in the shipboard.
      *
      * @return true if there are errors, false if correct
      * @author Boti
      */
     public boolean isErroneous() {
-        return this.checkErrors() > 0;
+        checkErrors();
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            // iterate rows
+            for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                if (errorsMatrix[i][j])
+                    return true;
+            }
+        }
+        // no errors found
+        return false;
     }
 
-    // TODO
 
     /**
      * Scans the ship structure to identify errors.
+     * Updates errorMatrix with erroneous components.
      * Errors are detected and counted but not automatically corrected.
      * <p>
      * The function iterates through the structure matrix and:
@@ -261,32 +263,40 @@ public class ShipBoard implements Serializable {
      * 2. Checks if the "Engine" component is incorrectly placed.
      * 3. Ensures "Cannon" components follow specific placement rules.
      *
-     * @return The total number of erroneous components.
-     * @author Giacomo
+     * @author Giacomo, Boti
      */
-    public int checkErrors() {
-        int errors = 0;
+    // TODO finish
+    public void checkErrors() {
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
         // max-real included!
         // iterate columns
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             // iterate rows
             for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                // default
+                errorsMatrix[i][j] = false;
+
+                // override if erroneous
                 if (componentMatrix[i][j] != null) {
-                    if (!checkCorrectJunctions(i, j)) {
-                        //System.out.println("Component " + (j + 1) + " " + (i + 1) + " is not well connected");
+                    // check if adjacent
+                    if (!checkAdjacency(i, j)) {
                         errorsMatrix[i][j] = true;
-                        errors++;
+                        break;
                     }
+
+                    // check junctions
+                    if (!checkCorrectJunctions(i, j)) {
+                        errorsMatrix[i][j] = true;
+                        break;
+                    }
+                    // TODO
                     if ((Integer) componentMatrix[i][j].accept(visitor).get(0) > 0) {
                         if (!componentMatrix[i][j].getBack().equals(SideType.Special)) {
                             errorsMatrix[i][j] = true;
-                            errors++;
                         } else {
                             boolean check = false;
                             if (componentMatrix[i + 1][j] != null) {
                                 check = true;
-                                errors++;
                             }
                             /*
                             for (int k = i + 1; k < 12; k++) {
@@ -309,7 +319,6 @@ public class ShipBoard implements Serializable {
                             if (componentMatrix[i][j - 1] != null) {
                                 check = true;
                                 errorsMatrix[i][j] = true;
-                                errors++;
                             }
 
                             if (check) {
@@ -320,7 +329,6 @@ public class ShipBoard implements Serializable {
                             if (componentMatrix[i][j + 1] != null) {
                                 check = true;
                                 errorsMatrix[i][j] = true;
-                                errors++;
                             }
 
                             if (check) {
@@ -330,7 +338,6 @@ public class ShipBoard implements Serializable {
                             if (componentMatrix[i - 1][j] != null) {
                                 check = true;
                                 errorsMatrix[i][j] = true;
-                                errors++;
                             }
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
@@ -339,7 +346,6 @@ public class ShipBoard implements Serializable {
                             if (componentMatrix[i + 1][j] != null) {
                                 check = true;
                                 errorsMatrix[i][j] = true;
-                                errors++;
                             }
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
@@ -349,53 +355,63 @@ public class ShipBoard implements Serializable {
                 }
             }
         }
-        return errors;
     }
 
     /**
      * Checks if a component has correct junctions with its neighboring components.
      *
-     * @param x The x-coordinate of the component.
-     * @param y The y-coordinate of the component.
      * @return True if the junctions are correct, false otherwise.
-     * @author Giacomo
+     * @author Giacomo, Boti
      */
-    private boolean checkCorrectJunctions(int x, int y) {
-        if (componentMatrix[x][y] != null) {
+    private boolean checkCorrectJunctions(int realCol, int realRow) {
+        Component currentComponent = componentMatrix[realCol][realRow];
+        // empty cell is always correct
+        if (currentComponent == null)
+            return true;
 
-
-            if ((componentMatrix[x][y].getLeft().equals(SideType.Single) && componentMatrix[x][y - 1] != null &&
-                    (!componentMatrix[x][y - 1].getRight().equals(SideType.Single) && !componentMatrix[x][y - 1].getRight().equals(SideType.Universal))) ||
-
-                    (componentMatrix[x][y].getLeft().equals(SideType.Double) && componentMatrix[x][y - 1] != null &&
-                            (!componentMatrix[x][y - 1].getRight().equals(SideType.Double) && !componentMatrix[x][y - 1].getRight().equals(SideType.Universal))) ||
-
-
-                    (componentMatrix[x][y].getFront().equals(SideType.Double) && componentMatrix[x - 1][y] != null &&
-                            (!componentMatrix[x - 1][y].getBack().equals(SideType.Double) && !componentMatrix[x - 1][y].getBack().equals(SideType.Universal))) ||
-
-                    (componentMatrix[x][y].getFront().equals(SideType.Single) && componentMatrix[x - 1][y] != null &&
-                            (!componentMatrix[x - 1][y].getBack().equals(SideType.Single) && !componentMatrix[x - 1][y].getBack().equals(SideType.Universal))) ||
-
-
-                    (componentMatrix[x][y].getRight().equals(SideType.Single) && componentMatrix[x][y + 1] != null &&
-                            (!componentMatrix[x][y + 1].getLeft().equals(SideType.Single) && !componentMatrix[x][y + 1].getLeft().equals(SideType.Universal))) ||
-
-                    (componentMatrix[x][y].getRight().equals(SideType.Double) && componentMatrix[x][y + 1] != null &&
-                            (!componentMatrix[x][y + 1].getLeft().equals(SideType.Double) && !componentMatrix[x][y + 1].getLeft().equals(SideType.Universal))) ||
-
-
-                    (componentMatrix[x][y].getBack().equals(SideType.Single) && componentMatrix[x + 1][y] != null &&
-                            (!componentMatrix[x + 1][y].getFront().equals(SideType.Single) && !componentMatrix[x + 1][y].getFront().equals(SideType.Universal))) ||
-
-                    (componentMatrix[x][y].getBack().equals(SideType.Double) && componentMatrix[x + 1][y] != null &&
-                            (!componentMatrix[x + 1][y].getFront().equals(SideType.Double) && !componentMatrix[x + 1][y].getFront().equals(SideType.Universal)))
-            ) {
+            // component present
+        else {
+            // return false if incompatible junction
+            // left neighbour
+            if ((componentMatrix[realCol - 1][realRow] != null) &&
+                    !checkCompatibleJunction(currentComponent.getLeft(), componentMatrix[realCol - 1][realRow].getRight()))
                 return false;
-            }
+            // right neighbour
+            if ((componentMatrix[realCol + 1][realRow] != null) &&
+                    !checkCompatibleJunction(currentComponent.getRight(), componentMatrix[realCol + 1][realRow].getLeft()))
+                return false;
+            // front neighbour
+            if ((componentMatrix[realCol][realRow - 1] != null) &&
+                    (!checkCompatibleJunction(currentComponent.getFront(), componentMatrix[realCol][realRow - 1].getBack())))
+                return false;
+            // back neighbour
+            if ((componentMatrix[realCol][realRow + 1] != null) &&
+                    (!checkCompatibleJunction(currentComponent.getBack(), componentMatrix[realCol][realRow + 1].getFront())))
+                return false;
+            // no incorrect junctions
+            return true;
         }
-        return true;
     }
+
+    /**
+     * Check if the 2 provided junctions are compatible.
+     *
+     * @return true if junctions are compatible, false if incompatible.
+     * @author Boti
+     */
+    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
+        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
+            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
+        } else if (sideA.equals(SideType.Single)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Double)) {
+            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Universal)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        }
+        return false;
+    }
+
 
     /**
      * Removes a component from the specified position.
