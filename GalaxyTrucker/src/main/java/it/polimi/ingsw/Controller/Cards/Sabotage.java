@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -35,7 +36,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
         Player smallestCrewPlayer = calculateSmallestCrew(gameInformation.getFlightBoard());
         String message;
-        DataContainer dataContainer;
+        PlayerMessenger playerMessenger;
 
         if (destroyRandomComponent(smallestCrewPlayer, gameInformation.getFlightBoard())) {
 
@@ -52,11 +53,8 @@ public class Sabotage extends Card implements SmallestCrew {
 
         gameInformation.getFlightBoard().updateFlightBoard();
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
-            dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-            dataContainer.clearContainer();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 
     }
