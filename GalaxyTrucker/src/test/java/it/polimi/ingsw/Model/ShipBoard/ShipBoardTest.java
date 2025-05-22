@@ -27,7 +27,7 @@ public class ShipBoardTest {
         }
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
-                System.out.print(shipBoard.getStructureMatrix()[i][j] + "");
+                System.out.print(shipBoard.getComponentMatrix()[i][j] + "");
             }
             System.out.println();
         }
@@ -183,7 +183,7 @@ public class ShipBoardTest {
                     System.out.print("|XXXXXXX");
                     continue;
                 }
-                Component comp = shipBoard.getStructureMatrix()[r][c];
+                Component comp = shipBoard.getComponentMatrix()[r][c];
                 String front = comp != null ? num(side(comp.getFront())) : " ";
                 System.out.print("|   " + front + "   ");
             }
@@ -196,7 +196,7 @@ public class ShipBoardTest {
                     System.out.print("|XXXXXXX");
                     continue;
                 }
-                Component comp = shipBoard.getStructureMatrix()[r][c];
+                Component comp = shipBoard.getComponentMatrix()[r][c];
                 if (comp == null) {
                     System.out.print("|       ");
                 } else {
@@ -215,7 +215,7 @@ public class ShipBoardTest {
                     System.out.print("|XXXXXXX");
                     continue;
                 }
-                Component comp = shipBoard.getStructureMatrix()[r][c];
+                Component comp = shipBoard.getComponentMatrix()[r][c];
                 String back = comp != null ? num(side(comp.getBack())) : " ";
                 System.out.print("|   " + back + "   ");
             }
