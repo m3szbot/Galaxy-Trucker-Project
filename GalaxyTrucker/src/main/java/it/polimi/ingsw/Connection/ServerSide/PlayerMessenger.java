@@ -34,7 +34,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         this.player = player;
         this.connectionType = connectionType;
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer = new DataContainer();
+            this.dataContainer = new DataContainer();
             this.socketDataExchanger = socketDataExchanger;
         }
         // RMI
@@ -62,7 +62,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         try {
             socketDataExchanger.sendContainer(dataContainer);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error while sending dataContainer.");
         } finally {
             dataContainer.clearContainer();
         }
