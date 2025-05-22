@@ -6,7 +6,6 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
 import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
@@ -15,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class FlightViewTUITest {
 
@@ -36,12 +35,12 @@ public class FlightViewTUITest {
 
             for (int i = 0; i < 12; i++) {
                 for (int j = 0; j < 12; j++) {
-                    System.out.print(player.getShipBoard().getMatr()[i][j] + "");
+                    System.out.print(player.getShipBoard().getValidityMatrix()[i][j] + "");
                 }
             }
             for (int i = 0; i < 12; i++) {
                 for (int j = 0; j < 12; j++) {
-                    System.out.print(player.getShipBoard().getStructureMatrix()[i][j] + "");
+                    System.out.print(player.getShipBoard().getComponentMatrix()[i][j] + "");
                 }
             }
         }

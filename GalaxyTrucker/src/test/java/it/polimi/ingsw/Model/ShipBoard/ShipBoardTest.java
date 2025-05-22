@@ -3,34 +3,104 @@ package it.polimi.ingsw.Model.ShipBoard;
 import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.View.GeneralView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 //already tested: addComponent, removeComponent, goDownChecking, isCompatible, countExternalJunctions, setCrewType, checkNotReachable
-//remaining methods: checkErrors, addGoods, checkSlots
+//remaining methods: checkErrors, addGoods, checkSlotsú
+
+// use Shipboard graphic to construct test shipboards!
 
 public class ShipBoardTest {
     ShipBoard shipBoard;
 
+    // view to print shipboard to debug
+    GeneralView generalViewTUI = new GeneralView();
+
+    // components
+    SideType[] smoothSidesUniversalRight = new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth};
+    SideType[] singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
+    SideType[] doubleSides = new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double};
+    SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
+    SideType[] specialSidesUniversalRight = new SideType[]{SideType.Special, SideType.Universal, SideType.Special, SideType.Special};
+    Component smoothRightUniversal = new Component(smoothSidesUniversalRight);
+    Component singleConnector = new Component(singleSides);
+    Component doubleConnector = new Component(doubleSides);
+    Component universalConnector = new Component(universalSides);
+    Component specialRightUniversal = new Component(specialSidesUniversalRight);
+
+
     @BeforeEach
     void setUp() {
         shipBoard = new ShipBoard(GameType.NORMALGAME);
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                System.out.print(shipBoard.getMatr()[i][j] + "");
-            }
-            System.out.println();
-        }
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                System.out.print(shipBoard.getStructureMatrix()[i][j] + "");
-            }
-            System.out.println();
-        }
+    }
+
+    @Test
+    void TestSetup() {
+        assertFalse(shipBoard.isErroneous());
+    }
+
+    @Test
+    void disconnectedPlacementException() {
+        assertThrows(NotPermittedPlacementException.class, () -> {
+            shipBoard.addComponent(singleConnector, 9, 9);
+        });
+    }
+
+    // check connectors (Single, Double, Universal)
+    @Test
+    void checkConnectorCompatibleJunctions() throws NotPermittedPlacementException {
+        // 3 1 1
+        // 3 2 2
+        shipBoard.addComponent(universalConnector, 7, 8);
+        shipBoard.addComponent(singleConnector, 8, 7);
+        shipBoard.addComponent(singleConnector, 9, 7);
+        shipBoard.addComponent(doubleConnector, 8, 8);
+        shipBoard.addComponent(doubleConnector, 9, 8);
+        generalViewTUI.printShipboard(shipBoard);
+        assertFalse(shipBoard.isErroneous());
+    }
+
+    @Test
+    void checkSmoothCompatibleJunctions() throws NotPermittedPlacementException {
+        // 2/1 3
+        // 0 3
+        shipBoard.addComponent(smoothRightUniversal, 6, 7);
+        assertFalse(shipBoard.isErroneous());
+        shipBoard.addComponent(universalConnector, 7, 6);
+        shipBoard.addComponent(singleConnector, 6, 6);
+        generalViewTUI.printShipboard(shipBoard);
+        assertTrue(shipBoard.isErroneous());
+
+        shipBoard.removeComponent(6, 6, false);
+        assertFalse(shipBoard.isErroneous());
+
+        shipBoard.addComponent(doubleConnector, 6, 6);
+        generalViewTUI.printShipboard(shipBoard);
+        assertTrue(shipBoard.isErroneous());
+    }
+
+    @Test
+    void checkSpecialCompatibleJunctions() throws NotPermittedPlacementException {
+        // 2/1 3
+        // S 3
+        shipBoard.addComponent(specialRightUniversal, 6, 7);
+        assertFalse(shipBoard.isErroneous());
+        shipBoard.addComponent(universalConnector, 7, 6);
+        shipBoard.addComponent(singleConnector, 6, 6);
+        generalViewTUI.printShipboard(shipBoard);
+        assertTrue(shipBoard.isErroneous());
+
+        shipBoard.removeComponent(6, 6, false);
+        assertFalse(shipBoard.isErroneous());
+
+        shipBoard.addComponent(doubleConnector, 6, 6);
+        generalViewTUI.printShipboard(shipBoard);
+        assertTrue(shipBoard.isErroneous());
     }
 
     @Test
@@ -126,20 +196,18 @@ public class ShipBoardTest {
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 7, 8);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
-        errors = shipBoard.checkErrors();
-        assertEquals(errors, 3);
+        assertTrue(shipBoard.isErroneous());
 
-        assertTrue(shipBoard.getMatrErrors()[7][5]);
-        assertTrue(shipBoard.getMatrErrors()[7][6]);
-        assertTrue(shipBoard.getMatrErrors()[7][6]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][5]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 4), 8, 7);
         printAsciiBoard(shipBoard);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 4);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(), 0);
         shipBoard.removeComponent(8, 7, false);
         shipBoard.removeComponent(8, 8, false);
-        errors = shipBoard.checkErrors();
-        assertEquals(errors, 2);
+        assertTrue(shipBoard.isErroneous());
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 0);
         assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 2);
     }
@@ -179,11 +247,11 @@ public class ShipBoardTest {
             // ***** riga “front” ***********************************************
             System.out.printf("%2d  ", r + 1);
             for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getMatr()[r][c]) {                    // forbidden 
+                if (!shipBoard.getValidityMatrix()[r][c]) {                    // forbidden 
                     System.out.print("|XXXXXXX");
                     continue;
                 }
-                Component comp = shipBoard.getStructureMatrix()[r][c];
+                Component comp = shipBoard.getComponentMatrix()[r][c];
                 String front = comp != null ? num(side(comp.getFront())) : " ";
                 System.out.print("|   " + front + "   ");
             }
@@ -192,11 +260,11 @@ public class ShipBoardTest {
             // ***** riga centrale (left, name, right) ***************************
             System.out.print("    ");                 // niente indice riga ora
             for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getMatr()[r][c]) {
+                if (!shipBoard.getValidityMatrix()[r][c]) {
                     System.out.print("|XXXXXXX");
                     continue;
                 }
-                Component comp = shipBoard.getStructureMatrix()[r][c];
+                Component comp = shipBoard.getComponentMatrix()[r][c];
                 if (comp == null) {
                     System.out.print("|       ");
                 } else {
@@ -211,11 +279,11 @@ public class ShipBoardTest {
             // ***** riga “back” *************************************************
             System.out.print("    ");
             for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getMatr()[r][c]) {
+                if (!shipBoard.getValidityMatrix()[r][c]) {
                     System.out.print("|XXXXXXX");
                     continue;
                 }
-                Component comp = shipBoard.getStructureMatrix()[r][c];
+                Component comp = shipBoard.getComponentMatrix()[r][c];
                 String back = comp != null ? num(side(comp.getBack())) : " ";
                 System.out.print("|   " + back + "   ");
             }

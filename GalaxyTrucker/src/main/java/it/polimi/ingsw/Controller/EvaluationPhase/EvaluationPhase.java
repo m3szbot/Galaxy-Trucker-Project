@@ -28,7 +28,7 @@ public class EvaluationPhase extends Phase {
      * Start evaluationPhase. Calculates player scores and prints scoreboard for all players.
      */
     public void start() {
-        setGamePhaseToAll(GamePhase.Evaluation);
+        setGamePhaseToClientServer(GamePhase.Evaluation);
         String message;
         // assign player credits to shipBoard
         assignPlayerCredits(gameInformation);
@@ -45,7 +45,7 @@ public class EvaluationPhase extends Phase {
         }
         // end of evaluationPhase
         // end of game
-        gameMessenger.endGame();
+        gameMessenger.endGameToAll();
         System.out.println("Evaluation phase ended");
     }
 

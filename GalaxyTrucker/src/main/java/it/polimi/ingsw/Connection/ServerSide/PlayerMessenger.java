@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
+import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Controller.Cards.Card;
@@ -12,34 +13,45 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.ViewServerInvokableMethods;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 /**
  * Messenger service associated to the player.
  * Used for player specific controller communications.
  * Implements both socket and RMI method calls.
  *
- * @author Boti
+ * @author Boti, carlo
  */
 public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
-    Player player;
-    ConnectionType connectionType;
+
+    private Player player;
+    private ConnectionType connectionType;
     // socket
-    DataContainer dataContainer;
-    SocketDataExchanger socketDataExchanger;
+    private DataContainer dataContainer;
+    private SocketDataExchanger socketDataExchanger;
+    private VirtualClient virtualClient;
     // RMI
     // TODO
 
-    public PlayerMessenger(Player player, ConnectionType connectionType, SocketDataExchanger socketDataExchanger) {
+    /**
+     * Add socket player.
+     */
+    public PlayerMessenger(Player player, SocketDataExchanger socketDataExchanger) {
         this.player = player;
-        this.connectionType = connectionType;
-        if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer = new DataContainer();
-            this.socketDataExchanger = socketDataExchanger;
-        }
-        // RMI
-        else {
-        }
+        this.connectionType = ConnectionType.SOCKET;
+        this.dataContainer = new DataContainer();
+        this.socketDataExchanger = socketDataExchanger;
     }
+
+    /**
+     * Add RMI player.
+     */
+    public PlayerMessenger(Player player, VirtualClient virtualClient) {
+        this.player = player;
+        this.connectionType = ConnectionType.RMI;
+        this.virtualClient = virtualClient;
+    }
+
 
     @Override
     public void setGamePhase(GamePhase gamePhase) {
@@ -61,7 +73,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         try {
             socketDataExchanger.sendContainer(dataContainer);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error while sending dataContainer.");
         } finally {
             dataContainer.clearContainer();
         }
@@ -93,6 +105,71 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             socketDataExchanger.closeResources();
         } catch (IOException e) {
             System.err.println("Error while closing all players resources");
+        }
+    }
+
+    /**
+     * WARNING!! TO USE ONLY IN JOINING PHASE (FOR NOW)
+     *
+     * @param message
+     */
+
+    public void sendShortCutMessage(String message) {
+        if (connectionType.equals(ConnectionType.SOCKET)) {
+            try {
+                socketDataExchanger.sendString(message);
+            } catch (IOException e) {
+                System.err.println("Error while sending string shortcut to the player");
+            }
+        } else {
+
+            try {
+
+                virtualClient.printShortCutMessage(message);
+            } catch (RemoteException e) {
+                System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
+            }
+
+        }
+    }
+
+    /**
+     * @return the string that the player sent to the server
+     * @author carlo
+     */
+    public String getPlayerString() throws PlayerDisconnectedException {
+        return getPlayerInput();
+    }
+
+    /**
+     * @return the string that the player sent to the server
+     * @author carlo
+     */
+    private String getPlayerInput() throws PlayerDisconnectedException {
+        try {
+            return socketDataExchanger.getString();
+        } catch (IOException e) {
+            System.err.println("Error while obtaining data from client");
+            throw new PlayerDisconnectedException(player);
+        }
+    }
+
+    /**
+     * @return integer that the player sent to the server
+     * @author carlo
+     */
+    public int getPlayerInt() throws PlayerDisconnectedException {
+
+        while (true) {
+            String input = getPlayerInput();
+            try {
+
+                return Integer.parseInt(input);
+
+            } catch (NumberFormatException e) {
+                printMessage("You didn't enter an integer! Please reenter it: ");
+            }
+
         }
     }
 
@@ -162,58 +239,22 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     /**
-     * @return the string that the player sent to the server
-     * @author carlo
-     */
-    public String getPlayerString() throws PlayerDisconnectedException {
-        return getPlayerInput();
-    }
-
-    /**
-     * @return the string that the player sent to the server
-     * @author carlo
-     */
-    private String getPlayerInput() throws PlayerDisconnectedException {
-        try {
-            return socketDataExchanger.getString();
-        } catch (IOException e) {
-            System.err.println("Error while obtaining data from client");
-            throw new PlayerDisconnectedException(player);
-        }
-    }
-
-    /**
-     * @return integer that the player sent to the server
-     * @author carlo
-     */
-    public int getPlayerInt() throws PlayerDisconnectedException {
-        String input = getPlayerInput();
-        int value;
-        try {
-            value = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            printMessage("You didn't enter an integer! Please reenter it: ");
-            return getPlayerInt();
-        }
-        return value;
-    }
-
-    /**
      * @return array of coordinates that the player sent to the server
      * @author carlo
      */
     public int[] getPlayerCoordinates() throws PlayerDisconnectedException {
-        String input = getPlayerInput();
         int[] coordinates = new int[2];
-        try {
-            String[] parts = input.split(" ");
-            coordinates[0] = Integer.parseInt(parts[0]);
-            coordinates[1] = Integer.parseInt(parts[1]);
-        } catch (NumberFormatException e) {
-            printMessage("You didn't enter the coordinates in the correct syntax (X Y), please reenter them: ");
-            return getPlayerCoordinates();
+        while (true) {
+            String input = getPlayerInput();
+            try {
+                String[] parts = input.split(" ");
+                coordinates[0] = Integer.parseInt(parts[0]);
+                coordinates[1] = Integer.parseInt(parts[1]);
+                return coordinates;
+            } catch (NumberFormatException e) {
+                printMessage("You didn't enter the coordinates in the correct syntax (X Y), please reenter them: ");
+            }
         }
-        return coordinates;
     }
 
     /**
@@ -221,14 +262,16 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * @author carlo
      */
     public boolean getPlayerBoolean() throws PlayerDisconnectedException {
-        String input = getPlayerInput();
-        if (input.equalsIgnoreCase("yes")) {
-            return true;
-        } else if (input.equalsIgnoreCase("no")) {
-            return false;
-        } else {
-            printMessage("You didn't enter the correct response, please reenter it (yes/no): ");
-            return getPlayerBoolean();
+        while (true) {
+            String input = getPlayerInput();
+
+            if (input.equalsIgnoreCase("yes")) {
+                return true;
+            } else if (input.equalsIgnoreCase("no")) {
+                return false;
+            } else {
+                printMessage("You didn't enter the correct response, please reenter it (yes/no): ");
+            }
         }
     }
 }

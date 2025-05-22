@@ -2,7 +2,6 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
@@ -13,7 +12,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * AssemblyGame is the main game controller that manages the game loop,
@@ -64,7 +62,7 @@ public class AssemblyPhase extends Phase {
      */
     public void start() {
 
-        setGamePhaseToAll(GamePhase.Assembly);
+        setGamePhaseToClientServer(GamePhase.Assembly);
 
 
 

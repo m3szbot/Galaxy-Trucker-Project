@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -47,7 +48,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
     public void resolve(GameInformation gameInformation) {
 
-        DataContainer dataContainer;
+        PlayerMessenger playerMessenger;
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
 
@@ -56,10 +57,11 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
             if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= lossNumber) {
 
                 message = "Do you want to solve the card ? ";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
 
                 try {
-                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
+                    if (playerMessenger.getPlayerBoolean()) {
                         //player decide to solve the card
 
                         inflictLoss(player, lossType, lossNumber, gameInformation);
@@ -80,12 +82,10 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         message = "Nobody solved the card!";
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
         gameInformation.getFlightBoard().updateFlightBoard();
+
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
-            dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-            dataContainer.clearContainer();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
     }
 }

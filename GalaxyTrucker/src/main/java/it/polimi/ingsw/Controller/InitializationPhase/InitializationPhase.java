@@ -20,7 +20,7 @@ public class InitializationPhase extends Phase {
      */
     @Override
     public void start() {
-        setGamePhaseToAll(GamePhase.Initialization);
+        setGamePhaseToClientServer(GamePhase.Initialization);
         gameInformation.setUpGameInformation(gameInformation.getGameType(), gameInformation.getMaxNumberOfPlayers());
         System.out.println("Initialization phase ended");
     }

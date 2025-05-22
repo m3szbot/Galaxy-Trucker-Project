@@ -54,7 +54,6 @@ public class Epidemic extends Card {
     private void removeAdjacentAstronauts(Player player, GameInformation gameInformation) {
 
         String message;
-        DataContainer dataContainer;
         int rows = player.getShipBoard().getMatrixRows();
         int cols = player.getShipBoard().getMatrixCols();
         int i, j, numberOfRemovedInhabitants = 0;

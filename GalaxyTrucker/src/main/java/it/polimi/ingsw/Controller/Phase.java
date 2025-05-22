@@ -33,7 +33,7 @@ public abstract class Phase {
     /**
      * Sets the given gamePhase for both server (gameInformation) and all clients.
      */
-    public void setGamePhaseToAll(GamePhase gamePhase) {
+    public void setGamePhaseToClientServer(GamePhase gamePhase) {
         GameMessenger gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
         // server
         gameInformation.setGamePhase(gamePhase);

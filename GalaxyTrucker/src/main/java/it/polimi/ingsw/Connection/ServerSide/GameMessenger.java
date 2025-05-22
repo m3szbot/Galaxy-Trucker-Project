@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -14,17 +15,26 @@ import java.util.Map;
  * Contains the specific PLayerMessengers.
  * Used for all-player communications.
  *
- * @author carlo
+ * @author carlo, boti
  */
 
 public class GameMessenger {
     private Map<Player, PlayerMessenger> playerMessengerMap = new HashMap<>();
 
     /**
-     * Add player to the playerMessengerMap with its associated PlayerMessenger.
+     * Add socket player to GameMessenger and create its associated PlayerMessenger.
      */
     public void addPlayer(Player player, ConnectionType connectionType, SocketDataExchanger dataExchanger) {
-        PlayerMessenger playerMessenger = new PlayerMessenger(player, connectionType, dataExchanger);
+        PlayerMessenger playerMessenger = new PlayerMessenger(player, dataExchanger);
+        playerMessengerMap.put(player, playerMessenger);
+    }
+
+    /**
+     * Add RMI player to GameMessenger and create its associated PlayerMessenger.
+     */
+    public void addPlayer(Player player, ConnectionType connectionType, VirtualClient virtualClient) {
+        PlayerMessenger playerMessenger = new PlayerMessenger(player, virtualClient);
+        playerMessengerMap.put(player, playerMessenger);
     }
 
     /**
@@ -46,7 +56,7 @@ public class GameMessenger {
     /**
      * End game for all players.
      */
-    public void endGameToALL() {
+    public void endGameToAll() {
         for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
             playerMessenger.endGame();
         }
@@ -90,6 +100,19 @@ public class GameMessenger {
     public void sendMessageToAll(String message) {
         for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
             playerMessenger.printMessage(message);
+        }
+    }
+
+    /**
+     * Sends directly the message in a shortCut manner.
+     *
+     * @param message
+     * @author carlo
+     */
+
+    public void sendShortCutMessageToAll(String message) {
+        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
+            playerMessenger.sendShortCutMessage(message);
         }
     }
 

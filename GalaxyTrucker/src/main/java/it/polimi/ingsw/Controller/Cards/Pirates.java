@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -52,7 +53,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
         int numberOfPlayers = gameInformation.getFlightBoard().getPlayerOrderList().size(), i;
         String message;
-        DataContainer dataContainer;
+        PlayerMessenger playerMessenger;
         AttackStates[] results;
 
         results = setAttackStates(requirementNumber, gameInformation);
@@ -68,10 +69,11 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
             if (results[i] == AttackStates.EnemyDefeated) {
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
 
                 try {
-                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
+                    if (playerMessenger.getPlayerBoolean()) {
                         //player decides to collect the reward
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
@@ -105,11 +107,8 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
         gameInformation.getFlightBoard().updateFlightBoard();
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setFlightBoard(gameInformation.getFlightBoard());
-            dataContainer.setCommand("printFlightBoard");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-            dataContainer.clearContainer();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 
     }

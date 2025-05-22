@@ -7,16 +7,39 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Shipboard used to create and store the player's ship and it's attributes.
+ * <p>
+ * Indexes:
+ * Player uses visible indexes [1...12] (center: 7-7)
+ * Shipboard uses real indexes shifted by -1 [0...11] (center: 6-6)
+ * <p>
+ * RealIndex = VisibleIndex - 1
+ * <p>
+ * Matrix structure:
+ * Shipboard[cols][rows]
+ *
+ * @author Giacomo, Boti
+ */
 public class ShipBoard implements Serializable {
-    // x: column
-    // y: row
+    // visible values
+    public static final int SB_COLS = 12;
+    public static final int SB_ROWS = 12;
+    public static final int SB_CENTER_COL = 7;
+    public static final int SB_CENTER_ROW = 7;
+    // the first column and row that can contain components
+    // (components in [FIRST_REAL...MAX - FIRST_REAL (included!)])
+    public static final int SB_FIRST_REAL_COL = 3;
+    public static final int SB_FIRST_REAL_ROW = 4;
 
     private ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
-    private Component[][] structureMatrix;
+    private Component[][] componentMatrix;
     // Boolean matrix indicating valid positions for components
-    private boolean[][] matr;
-    private boolean[][] matrErrors;
+    private boolean[][] validityMatrix;
+    // Boolean matrix indicating components with errors (true if error)
+    private boolean[][] errorsMatrix;
+    // Matrix: [cols][rows]
 
     /**
      * Constructs a ShipStructure instance.
@@ -32,79 +55,104 @@ public class ShipBoard implements Serializable {
      * @author Giacomo
      */
     public ShipBoard(GameType gameType) {
-        this.structureMatrix = new Component[12][12];
-        this.matr = new boolean[12][12];
-        this.matrErrors = new boolean[12][12];
         this.shipBoardAttributes = new ShipBoardAttributes();
+        this.componentMatrix = new Component[SB_COLS][SB_ROWS];
+        this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
+        this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
+
+        // Initialize component matrix as empty
+        for (int i = 0; i < SB_COLS; i++) {
+            for (int j = 0; j < SB_ROWS; j++) {
+                componentMatrix[i][j] = null;
+            }
+        }
         // Initialize all positions as valid
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                matr[i][j] = true;
+        for (int i = 0; i < SB_COLS; i++) {
+            for (int j = 0; j < SB_ROWS; j++) {
+                validityMatrix[i][j] = true;
             }
         }
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                structureMatrix[i][j] = null;
-            }
-        }
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 12; j++) {
-                matrErrors[i][j] = false;
+        // Initialize error matrix as error free
+        for (int i = 0; i < SB_COLS; i++) {
+            for (int j = 0; j < SB_ROWS; j++) {
+                errorsMatrix[i][j] = false;
             }
         }
 
-        if (gameType.equals(GameType.TESTGAME)) {
-        } else {
-            // Set forbidden zones in the structure
-            for (int i = 0; i < 12; i++) {
-                matr[i][0] = false;
-                matr[i][1] = false;
-                matr[i][2] = false;
-                matr[i][10] = false;
-                matr[i][11] = false;
+        // Set forbidden zones for component placement
+        // Set forbidden zones in the structure
+        // forbidden rows
+        for (int i = 0; i < SB_COLS; i++) {
+            validityMatrix[i][0] = false;
+            validityMatrix[i][1] = false;
+            validityMatrix[i][2] = false;
+            validityMatrix[i][3] = false;
+            validityMatrix[i][9] = false;
+            validityMatrix[i][10] = false;
+            validityMatrix[i][11] = false;
 
+        }
+        // forbidden columns
+        for (int i = 0; i < SB_ROWS; i++) {
+            validityMatrix[0][i] = false;
+            validityMatrix[1][i] = false;
+            validityMatrix[2][i] = false;
+            validityMatrix[10][i] = false;
+            validityMatrix[11][i] = false;
+        }
+        // inside cells
+        // NormalGame
+        if (gameType.equals(GameType.NORMALGAME)) {
+            validityMatrix[3][4] = false;
+            validityMatrix[3][5] = false;
+            validityMatrix[4][4] = false;
+            validityMatrix[6][4] = false;
+            validityMatrix[6][8] = false;
+            validityMatrix[8][4] = false;
+            validityMatrix[9][4] = false;
+            validityMatrix[9][5] = false;
+        }
+        // TestGame
+        else {
+            for (int i = 0; i < SB_ROWS; i++) {
+                validityMatrix[3][i] = false;
+                validityMatrix[9][i] = false;
             }
-            for (int i = 0; i < 12; i++) {
-                matr[0][i] = false;
-                matr[1][i] = false;
-                matr[2][i] = false;
-                matr[3][i] = false;
-                matr[9][i] = false;
-                matr[10][i] = false;
-                matr[11][i] = false;
-            }
-
-            matr[4][3] = false;
-            matr[4][4] = false;
-            matr[5][3] = false;
-            matr[4][6] = false;
-            matr[8][6] = false;
-            matr[4][8] = false;
-            matr[4][9] = false;
-            matr[5][9] = false;
+            validityMatrix[4][4] = false;
+            validityMatrix[4][5] = false;
+            validityMatrix[5][4] = false;
+            validityMatrix[6][8] = false;
+            validityMatrix[7][4] = false;
+            validityMatrix[8][4] = false;
+            validityMatrix[8][5] = false;
         }
 
-        try {
-            addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 7);
-        } catch (NotPermittedPlacementException e) {
-            throw new RuntimeException(e);
-        }
+        // add center cabin
+        // TODO: colored starter cabin, to get from the componentList in gameInformation
+        componentMatrix[SB_CENTER_COL - 1][SB_CENTER_ROW - 1] = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal});
     }
 
     /**
      * Adds a component to the specified position in the structure matrix.
      *
-     * @param component The component to add.
-     * @param col       The x-coordinate of the component.
-     * @param row       The y-coordinate of the component.
+     * @param component  The component to add.
+     * @param visibleCol Visible column.
+     * @param visibleRow Visible row.
      * @author Giacomo
+     * TODO
      */
-    public void addComponent(Component component, int col, int row) throws NotPermittedPlacementException {
-        col = col - 1;
-        row = row - 1;
+    public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException {
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (matr[row][col]) {
-            structureMatrix[row][col] = component;
+
+        if (!checkValidPlacement(col, row)) {
+            throw new NotPermittedPlacementException();
+        } else {
+            // add component
+            componentMatrix[col][row] = component;
+            // update ShipBoard Attributes
+            // TODO decide ShipBoard Attributes
             List<Object> list = component.accept(visitor);
             if ((Integer) list.get(0) == 1) {
                 shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
@@ -128,34 +176,57 @@ public class ShipBoard implements Serializable {
             }
             shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
             shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
-        } else {
-            throw new NotPermittedPlacementException();
         }
-        //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
+        // TODO qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
     }
 
-    public Component[][] getStructureMatrix() {
-        return structureMatrix;
+    private int getRealIndex(int visibleIndex) {
+        return visibleIndex - 1;
     }
 
-    public boolean[][] getMatr() {
-        return matr;
+    /**
+     * Check if the requested cell is valid to place a component in.
+     *
+     * @return true if placement is valid, false if invalid.
+     */
+    private boolean checkValidPlacement(int realCol, int realRow) {
+        return (validityMatrix[realCol][realRow] &&
+                componentMatrix[realCol][realRow] == null &&
+                checkAdjacency(realCol, realRow));
     }
 
-    public boolean[][] getMatrErrors() {
-        return matrErrors;
+    /**
+     * Check if adjacent cells contain components.
+     *
+     * @return true if there is at least one adjacent component, false if all adjacent cells are empty.
+     */
+    private boolean checkAdjacency(int realCol, int realRow) {
+        return (componentMatrix[realCol - 1][realRow] != null || componentMatrix[realCol + 1][realRow] != null ||
+                componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
     }
 
-    public Component getComponent(int col, int row) {
-        return structureMatrix[row][col];
+    public Component[][] getComponentMatrix() {
+        return componentMatrix;
+    }
+
+    public boolean[][] getValidityMatrix() {
+        return validityMatrix;
+    }
+
+    public boolean[][] getErrorsMatrix() {
+        return errorsMatrix;
+    }
+
+    public Component getComponent(int realCol, int realRow) {
+        return componentMatrix[realCol][realRow];
     }
 
     public int getMatrixRows() {
-        return structureMatrix.length;
+        return componentMatrix.length;
     }
 
     public int getMatrixCols() {
-        return structureMatrix[0].length;
+        return componentMatrix[0].length;
     }
 
     public ShipBoardAttributes getShipBoardAttributes() {
@@ -163,19 +234,28 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Checks if there are errors in the shipboard
+     * Checks if there are erroneous components in the shipboard.
      *
      * @return true if there are errors, false if correct
      * @author Boti
      */
     public boolean isErroneous() {
-        if (this.checkErrors() > 0)
-            return true;
+        checkErrors();
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            // iterate rows
+            for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                if (errorsMatrix[i][j])
+                    return true;
+            }
+        }
+        // no errors found
         return false;
     }
 
+
     /**
-     * Scans the ship structure to identify errors related to incorrect junctions.
+     * Scans the ship structure to identify errors.
+     * Updates errorMatrix with erroneous components.
      * Errors are detected and counted but not automatically corrected.
      * <p>
      * The function iterates through the structure matrix and:
@@ -183,34 +263,44 @@ public class ShipBoard implements Serializable {
      * 2. Checks if the "Engine" component is incorrectly placed.
      * 3. Ensures "Cannon" components follow specific placement rules.
      *
-     * @return The total number of detected errors.
-     * @author Giacomo
+     * @author Giacomo, Boti
      */
-    public int checkErrors() {
-        boolean flag = true;
-        int errors = 0;
+    // TODO finish
+    public void checkErrors() {
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        for (int i = 1; i < 12; i++) {
-            for (int j = 1; j < 12; j++) {
-                if (structureMatrix[i][j] != null) {
-                    if (!checkCorrectJunctions(i, j)) {
-                        //System.out.println("Component " + (j + 1) + " " + (i + 1) + " is not well connected");
-                        matrErrors[i][j] = true;
-                        errors++;
+        // max-real included!
+        // iterate columns
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            // iterate rows
+            for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                // default
+                errorsMatrix[i][j] = false;
+
+                // override if erroneous
+                if (componentMatrix[i][j] != null) {
+                    // check if adjacent
+                    if (!checkAdjacency(i, j)) {
+                        errorsMatrix[i][j] = true;
+                        break;
                     }
-                    if ((Integer) structureMatrix[i][j].accept(visitor).get(0) > 0) {
-                        if (!structureMatrix[i][j].getBack().equals(SideType.Special)) {
-                            matrErrors[i][j] = true;
-                            errors++;
+
+                    // check junctions
+                    if (!checkCorrectJunctions(i, j)) {
+                        errorsMatrix[i][j] = true;
+                        break;
+                    }
+                    // TODO
+                    if ((Integer) componentMatrix[i][j].accept(visitor).get(0) > 0) {
+                        if (!componentMatrix[i][j].getBack().equals(SideType.Special)) {
+                            errorsMatrix[i][j] = true;
                         } else {
                             boolean check = false;
-                            if (structureMatrix[i + 1][j] != null) {
+                            if (componentMatrix[i + 1][j] != null) {
                                 check = true;
-                                errors++;
                             }
                             /*
                             for (int k = i + 1; k < 12; k++) {
-                                if (structureMatrix[k][j] != null) {
+                                if (componentMatrix[k][j] != null) {
                                     check = true;
                                     errors++;
                                 }
@@ -218,48 +308,44 @@ public class ShipBoard implements Serializable {
                             */
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
-                                matrErrors[i][j] = true;
+                                errorsMatrix[i][j] = true;
                             }
                         }
                     }
-                    if ((Float) structureMatrix[i][j].accept(visitor).get(1) > 0) {
+                    if ((Float) componentMatrix[i][j].accept(visitor).get(1) > 0) {
                         boolean check = false;
-                        if (structureMatrix[i][j].getLeft().equals(SideType.Special)) {
+                        if (componentMatrix[i][j].getLeft().equals(SideType.Special)) {
 
-                            if (structureMatrix[i][j - 1] != null) {
+                            if (componentMatrix[i][j - 1] != null) {
                                 check = true;
-                                matrErrors[i][j] = true;
-                                errors++;
-                            }
-
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
-                            }
-                        } else if (structureMatrix[i][j].getRight().equals(SideType.Special)) {
-
-                            if (structureMatrix[i][j + 1] != null) {
-                                check = true;
-                                matrErrors[i][j] = true;
-                                errors++;
+                                errorsMatrix[i][j] = true;
                             }
 
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
                             }
-                        } else if (structureMatrix[i][j].getFront().equals(SideType.Special)) {
-                            if (structureMatrix[i - 1][j] != null) {
+                        } else if (componentMatrix[i][j].getRight().equals(SideType.Special)) {
+
+                            if (componentMatrix[i][j + 1] != null) {
                                 check = true;
-                                matrErrors[i][j] = true;
-                                errors++;
+                                errorsMatrix[i][j] = true;
+                            }
+
+                            if (check) {
+                                System.out.println("Error, in component" + i + ' ' + j);
+                            }
+                        } else if (componentMatrix[i][j].getFront().equals(SideType.Special)) {
+                            if (componentMatrix[i - 1][j] != null) {
+                                check = true;
+                                errorsMatrix[i][j] = true;
                             }
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
                             }
-                        } else if (structureMatrix[i][j].getBack().equals(SideType.Special)) {
-                            if (structureMatrix[i + 1][j] != null) {
+                        } else if (componentMatrix[i][j].getBack().equals(SideType.Special)) {
+                            if (componentMatrix[i + 1][j] != null) {
                                 check = true;
-                                matrErrors[i][j] = true;
-                                errors++;
+                                errorsMatrix[i][j] = true;
                             }
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
@@ -269,53 +355,63 @@ public class ShipBoard implements Serializable {
                 }
             }
         }
-        return errors;
     }
 
     /**
      * Checks if a component has correct junctions with its neighboring components.
      *
-     * @param x The x-coordinate of the component.
-     * @param y The y-coordinate of the component.
      * @return True if the junctions are correct, false otherwise.
-     * @author Giacomo
+     * @author Giacomo, Boti
      */
-    private boolean checkCorrectJunctions(int x, int y) {
-        if (structureMatrix[x][y] != null) {
+    private boolean checkCorrectJunctions(int realCol, int realRow) {
+        Component currentComponent = componentMatrix[realCol][realRow];
+        // empty cell is always correct
+        if (currentComponent == null)
+            return true;
 
-
-            if ((structureMatrix[x][y].getLeft().equals(SideType.Single) && structureMatrix[x][y - 1] != null &&
-                    (!structureMatrix[x][y - 1].getRight().equals(SideType.Single) && !structureMatrix[x][y - 1].getRight().equals(SideType.Universal))) ||
-
-                    (structureMatrix[x][y].getLeft().equals(SideType.Double) && structureMatrix[x][y - 1] != null &&
-                            (!structureMatrix[x][y - 1].getRight().equals(SideType.Double) && !structureMatrix[x][y - 1].getRight().equals(SideType.Universal))) ||
-
-
-                    (structureMatrix[x][y].getFront().equals(SideType.Double) && structureMatrix[x - 1][y] != null &&
-                            (!structureMatrix[x - 1][y].getBack().equals(SideType.Double) && !structureMatrix[x - 1][y].getBack().equals(SideType.Universal))) ||
-
-                    (structureMatrix[x][y].getFront().equals(SideType.Single) && structureMatrix[x - 1][y] != null &&
-                            (!structureMatrix[x - 1][y].getBack().equals(SideType.Single) && !structureMatrix[x - 1][y].getBack().equals(SideType.Universal))) ||
-
-
-                    (structureMatrix[x][y].getRight().equals(SideType.Single) && structureMatrix[x][y + 1] != null &&
-                            (!structureMatrix[x][y + 1].getLeft().equals(SideType.Single) && !structureMatrix[x][y + 1].getLeft().equals(SideType.Universal))) ||
-
-                    (structureMatrix[x][y].getRight().equals(SideType.Double) && structureMatrix[x][y + 1] != null &&
-                            (!structureMatrix[x][y + 1].getLeft().equals(SideType.Double) && !structureMatrix[x][y + 1].getLeft().equals(SideType.Universal))) ||
-
-
-                    (structureMatrix[x][y].getBack().equals(SideType.Single) && structureMatrix[x + 1][y] != null &&
-                            (!structureMatrix[x + 1][y].getFront().equals(SideType.Single) && !structureMatrix[x + 1][y].getFront().equals(SideType.Universal))) ||
-
-                    (structureMatrix[x][y].getBack().equals(SideType.Double) && structureMatrix[x + 1][y] != null &&
-                            (!structureMatrix[x + 1][y].getFront().equals(SideType.Double) && !structureMatrix[x + 1][y].getFront().equals(SideType.Universal)))
-            ) {
+            // component present
+        else {
+            // return false if incompatible junction
+            // left neighbour
+            if ((componentMatrix[realCol - 1][realRow] != null) &&
+                    !checkCompatibleJunction(currentComponent.getLeft(), componentMatrix[realCol - 1][realRow].getRight()))
                 return false;
-            }
+            // right neighbour
+            if ((componentMatrix[realCol + 1][realRow] != null) &&
+                    !checkCompatibleJunction(currentComponent.getRight(), componentMatrix[realCol + 1][realRow].getLeft()))
+                return false;
+            // front neighbour
+            if ((componentMatrix[realCol][realRow - 1] != null) &&
+                    (!checkCompatibleJunction(currentComponent.getFront(), componentMatrix[realCol][realRow - 1].getBack())))
+                return false;
+            // back neighbour
+            if ((componentMatrix[realCol][realRow + 1] != null) &&
+                    (!checkCompatibleJunction(currentComponent.getBack(), componentMatrix[realCol][realRow + 1].getFront())))
+                return false;
+            // no incorrect junctions
+            return true;
         }
-        return true;
     }
+
+    /**
+     * Check if the 2 provided junctions are compatible.
+     *
+     * @return true if junctions are compatible, false if incompatible.
+     * @author Boti
+     */
+    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
+        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
+            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
+        } else if (sideA.equals(SideType.Single)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Double)) {
+            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Universal)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        }
+        return false;
+    }
+
 
     /**
      * Removes a component from the specified position.
@@ -330,8 +426,8 @@ public class ShipBoard implements Serializable {
         col = col - 1;
         row = row - 1;
 
-        if (matr[row][col] == true && structureMatrix[row][col] != null) {
-            Component component = structureMatrix[row][col];
+        if (validityMatrix[col][row] == true && componentMatrix[col][row] != null) {
+            Component component = componentMatrix[col][row];
             Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
             List<Object> list = component.accept(visitor);
             shipBoardAttributes.updateDestroyedComponents(1);
@@ -361,7 +457,7 @@ public class ShipBoard implements Serializable {
                 update[3] = -update[3];
                 shipBoardAttributes.updateGoods(update);
             }
-            structureMatrix[row][col] = null;
+            componentMatrix[col][row] = null;
             if (checkTrigger) {
                 while (checkNotReachable(this.shipBoardAttributes)) ;
             }
@@ -380,18 +476,18 @@ public class ShipBoard implements Serializable {
         int externalJunctions = 0;
         for (int i = 1; i < 11; i++) {
             for (int j = 1; j < 11; j++) {
-                if (structureMatrix[i][j] != null) {
+                if (componentMatrix[i][j] != null) {
                     //va sistemato il fatto che qualora si volesse davvero usare un enum allora dovrebbe essere messo tipodiverso da vuoto e diverso da shield
-                    if ((!structureMatrix[i][j].getLeft().equals(SideType.Smooth) && structureMatrix[i - 1][j] == null)) {
+                    if ((!componentMatrix[i][j].getLeft().equals(SideType.Smooth) && componentMatrix[i - 1][j] == null)) {
                         externalJunctions++;
                     }
-                    if ((!structureMatrix[i][j].getRight().equals(SideType.Smooth) && structureMatrix[i + 1][j] == null)) {
+                    if ((!componentMatrix[i][j].getRight().equals(SideType.Smooth) && componentMatrix[i + 1][j] == null)) {
                         externalJunctions++;
                     }
-                    if ((!structureMatrix[i][j].getFront().equals(SideType.Smooth) && structureMatrix[i][j - 1] == null)) {
+                    if ((!componentMatrix[i][j].getFront().equals(SideType.Smooth) && componentMatrix[i][j - 1] == null)) {
                         externalJunctions++;
                     }
-                    if ((!structureMatrix[i][j].getBack().equals(SideType.Smooth) && structureMatrix[i][j + 1] == null)) {
+                    if ((!componentMatrix[i][j].getBack().equals(SideType.Smooth) && componentMatrix[i][j + 1] == null)) {
                         externalJunctions++;
                     }
                 }
@@ -423,7 +519,7 @@ public class ShipBoard implements Serializable {
             goDownChecking(6, 6, mat);
             for (int i = 0; i < 12; i++) {
                 for (int j = 0; j < 12; j++) {
-                    if (structureMatrix[i][j] != null) {
+                    if (componentMatrix[i][j] != null) {
                         if (!mat[i][j]) {
                             flag = 1;
                             result = true;
@@ -446,29 +542,29 @@ public class ShipBoard implements Serializable {
      */
     private void goDownChecking(int x, int y, boolean[][] mat) {
         if (x < 0 || x >= 12 || y < 0 || y >= 12) return;
-        if (structureMatrix[x][y] == null || mat[x][y]) return;
+        if (componentMatrix[x][y] == null || mat[x][y]) return;
         mat[x][y] = true;
         // Right
-        if (y + 1 < 12 && structureMatrix[x][y + 1] != null &&
-                isCompatible(structureMatrix[x][y].getRight(), structureMatrix[x][y + 1].getLeft())) {
+        if (y + 1 < 12 && componentMatrix[x][y + 1] != null &&
+                isCompatible(componentMatrix[x][y].getRight(), componentMatrix[x][y + 1].getLeft())) {
             goDownChecking(x, y + 1, mat);
         }
 
         // Left
-        if (y - 1 >= 0 && structureMatrix[x][y - 1] != null &&
-                isCompatible(structureMatrix[x][y].getLeft(), structureMatrix[x][y - 1].getRight())) {
+        if (y - 1 >= 0 && componentMatrix[x][y - 1] != null &&
+                isCompatible(componentMatrix[x][y].getLeft(), componentMatrix[x][y - 1].getRight())) {
             goDownChecking(x, y - 1, mat);
         }
 
         // Down
-        if (x + 1 < 12 && structureMatrix[x + 1][y] != null &&
-                isCompatible(structureMatrix[x][y].getBack(), structureMatrix[x + 1][y].getFront())) {
+        if (x + 1 < 12 && componentMatrix[x + 1][y] != null &&
+                isCompatible(componentMatrix[x][y].getBack(), componentMatrix[x + 1][y].getFront())) {
             goDownChecking(x + 1, y, mat);
         }
 
         // Up
-        if (x - 1 >= 0 && structureMatrix[x - 1][y] != null &&
-                isCompatible(structureMatrix[x][y].getFront(), structureMatrix[x - 1][y].getBack())) {
+        if (x - 1 >= 0 && componentMatrix[x - 1][y] != null &&
+                isCompatible(componentMatrix[x][y].getFront(), componentMatrix[x - 1][y].getBack())) {
             goDownChecking(x - 1, y, mat);
         }
     }
@@ -491,24 +587,24 @@ public class ShipBoard implements Serializable {
         col = col - 1;
         row = row - 1;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (structureMatrix[row][col] != null && structureMatrix[row][col].getComponentName().equals("Cabin")) {
+        if (componentMatrix[col][row] != null && componentMatrix[col][row].getComponentName().equals("Cabin")) {
             if (crewType.equals(CrewType.Brown)) {
-                if ((structureMatrix[row - 1][col] != null && (Boolean) structureMatrix[row - 1][col].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row - 1][col]).isPurple()) ||
-                        (structureMatrix[row + 1][col] != null && (Boolean) structureMatrix[row + 1][col].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row + 1][col]).isPurple()) ||
-                        (structureMatrix[row][col - 1] != null && (Boolean) structureMatrix[row][col - 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row][col - 1]).isPurple()) ||
-                        (structureMatrix[row][col + 1] != null && (Boolean) structureMatrix[row][col + 1].accept(visitor).get(7) && !((AlienSupport) structureMatrix[row][col + 1]).isPurple())) {
-                    ((Cabin) structureMatrix[row][col]).setCrewType(crewType);
+                if ((componentMatrix[row - 1][col] != null && (Boolean) componentMatrix[row - 1][col].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row - 1][col]).isPurple()) ||
+                        (componentMatrix[row + 1][col] != null && (Boolean) componentMatrix[row + 1][col].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row + 1][col]).isPurple()) ||
+                        (componentMatrix[row][col - 1] != null && (Boolean) componentMatrix[row][col - 1].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row][col - 1]).isPurple()) ||
+                        (componentMatrix[row][col + 1] != null && (Boolean) componentMatrix[row][col + 1].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row][col + 1]).isPurple())) {
+                    ((Cabin) componentMatrix[col][row]).setCrewType(crewType);
                     shipBoardAttributes.updateAlien(CrewType.Brown, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
                     System.out.println("CrewType not permitted");
                 }
             } else {
-                if ((structureMatrix[row - 1][col] != null && (Boolean) structureMatrix[row - 1][col].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row - 1][col]).isPurple()) ||
-                        (structureMatrix[row + 1][col] != null && (Boolean) structureMatrix[row + 1][col].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row + 1][col]).isPurple()) ||
-                        (structureMatrix[row][col - 1] != null && (Boolean) structureMatrix[row][col - 1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row][col - 1]).isPurple()) ||
-                        (structureMatrix[row][col + 1] != null && (Boolean) structureMatrix[row][col + 1].accept(visitor).get(7) && ((AlienSupport) structureMatrix[row][col + 1]).isPurple())) {
-                    ((Cabin) structureMatrix[row][col]).setCrewType(crewType);
+                if ((componentMatrix[row - 1][col] != null && (Boolean) componentMatrix[row - 1][col].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row - 1][col]).isPurple()) ||
+                        (componentMatrix[row + 1][col] != null && (Boolean) componentMatrix[row + 1][col].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row + 1][col]).isPurple()) ||
+                        (componentMatrix[row][col - 1] != null && (Boolean) componentMatrix[row][col - 1].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row][col - 1]).isPurple()) ||
+                        (componentMatrix[row][col + 1] != null && (Boolean) componentMatrix[row][col + 1].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row][col + 1]).isPurple())) {
+                    ((Cabin) componentMatrix[col][row]).setCrewType(crewType);
                     shipBoardAttributes.updateAlien(CrewType.Purple, false);
                     shipBoardAttributes.updateCrewMembers(-1);
                 } else {
@@ -530,15 +626,15 @@ public class ShipBoard implements Serializable {
      * @author Giacomo
      */
     private boolean checkSlots(int[] goods, int x, int y) {
-        if (structureMatrix[x][y] != null) {
-            if (((Storage) structureMatrix[x][y]).isRed()) {
-                if (goods[0] <= ((Storage) structureMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) structureMatrix[x][y]).getGoods()[0]) {
+        if (componentMatrix[x][y] != null) {
+            if (((Storage) componentMatrix[x][y]).isRed()) {
+                if (goods[0] <= ((Storage) componentMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) componentMatrix[x][y]).getGoods()[0]) {
                     return true;
                 } else {
                     return false;
                 }
             } else {
-                if (goods[0] <= ((Storage) structureMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) structureMatrix[x][y]).getGoods()[0] - ((Storage) structureMatrix[x][y]).getGoods()[3] - ((Storage) structureMatrix[x][y]).getGoods()[2]) {
+                if (goods[0] <= ((Storage) componentMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) componentMatrix[x][y]).getGoods()[0] - ((Storage) componentMatrix[x][y]).getGoods()[3] - ((Storage) componentMatrix[x][y]).getGoods()[2]) {
                     return true;
                 } else {
                     return false;
@@ -583,6 +679,6 @@ public class ShipBoard implements Serializable {
 
     //this function might change completly since i'm still not sure where the error checking will be
     private void solveError(int x, int y) {
-        matrErrors[y][x] = false;
+        errorsMatrix[y][x] = false;
     }
 }

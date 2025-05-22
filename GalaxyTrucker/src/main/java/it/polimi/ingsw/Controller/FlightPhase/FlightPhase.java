@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -17,7 +17,9 @@ public class FlightPhase extends Phase {
 
     public void start() {
         Card card;
-        setGamePhaseToAll(GamePhase.Flight);
+        PlayerMessenger playerMessenger;
+
+        setGamePhaseToClientServer(GamePhase.Flight);
         System.out.println("Flight phase has started");
 
         DataContainer dataContainer;
@@ -25,19 +27,14 @@ public class FlightPhase extends Phase {
 
         // send initial flightBoard to players
         for (Player player : flightBoard.getPlayerOrderList()) {
-            dataContainer = gameMessenger.getPlayerContainer(player);
-            dataContainer.setFlightBoard(flightBoard);
-            dataContainer.setCommand("printFlightBoard");
-            gameMessenger.sendPlayerData(player);
-            dataContainer.clearContainer();
 
-            gameMessenger.sendPlayerMessage(player, "Your shipboard:\n");
+            playerMessenger = gameMessenger.getPlayerMessenger(player);
+            playerMessenger.printFlightBoard(flightBoard);
 
-            dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-            dataContainer.setShipBoard(player.getShipBoard());
-            dataContainer.setCommand("printShipboard");
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-            dataContainer.clearContainer();
+            playerMessenger.printMessage("Your shipboard:\n");
+
+            playerMessenger.printShipboard(player.getShipBoard());
+
         }
 
         // resolve cards
@@ -53,34 +50,31 @@ public class FlightPhase extends Phase {
 
             for (Player player : flightBoard.getPlayerOrderList()) {
 
-                dataContainer = gameMessenger.getPlayerContainer(player);
-                dataContainer.setCard(card);
-                dataContainer.setCommand("printCard");
-                gameMessenger.sendPlayerData(player);
-                dataContainer.clearContainer();
+                playerMessenger = gameMessenger.getPlayerMessenger(player);
+                playerMessenger.printCard(card);
 
             }
 
             card.resolve(gameInformation);
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 System.out.println("Error while sleeping");
             }
 
             for (Player player : flightBoard.getPlayerOrderList()) {
-                gameMessenger.sendPlayerMessage(player, "Your shipboard:\n");
 
-                dataContainer = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerContainer(player);
-                dataContainer.setShipBoard(player.getShipBoard());
-                dataContainer.setCommand("printShipboard");
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerData(player);
-                dataContainer.clearContainer();
+                playerMessenger = gameMessenger.getPlayerMessenger(player);
+
+                playerMessenger.printMessage("Your shipboard:\n");
+
+                playerMessenger.printShipboard(player.getShipBoard());
+
             }
         }
 
-        System.out.println("Flight phase ended");
+        gameMessenger.sendMessageToAll("Flight phase has ended.\n");
 
     }
 

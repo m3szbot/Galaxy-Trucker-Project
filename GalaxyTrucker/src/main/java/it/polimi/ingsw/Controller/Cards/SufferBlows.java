@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
@@ -264,7 +265,7 @@ public interface SufferBlows {
     private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) {
 
         String message;
-        DataContainer dataContainer;
+        PlayerMessenger playerMessenger;
 
         if (player.getShipBoard().getShipBoardAttributes().checkSide(direction) &&
                 player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
@@ -273,10 +274,11 @@ public interface SufferBlows {
             message = "A small cannon blow is directed on position ["
                     + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                     directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
 
             try {
-                if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) {
+                if (playerMessenger.getPlayerBoolean()) {
                     //player decide to defend itself with shields
 
                     return useBattery(player, gameInformation);
@@ -302,7 +304,7 @@ public interface SufferBlows {
     private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) {
 
         String message;
-        DataContainer dataContainer;
+        PlayerMessenger playerMessenger;
 
         int[] cannonCoords = hasCannon(direction, xCoord, yCoord, player);
 
@@ -316,10 +318,11 @@ public interface SufferBlows {
                             + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                             direction + "!\nDo you want to defend yourself with the " +
                             "double cannon pointing towards its direction ?";
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                    playerMessenger.printMessage(message);
 
                     try {
-                        if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) { //player decides to defend themselves
+                        if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
 
                             return useBattery(player, gameInformation);
 
@@ -354,7 +357,7 @@ public interface SufferBlows {
     private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) {
 
         String message;
-        DataContainer dataContainer;
+        PlayerMessenger playerMessenger;
         //condition is true if the side of the component hit is not smooth
         if (!((direction == 0
                 && player.getShipBoard().getComponent(xCoord, yCoord).getFront() == SideType.Smooth)
@@ -372,10 +375,11 @@ public interface SufferBlows {
                 message = "A small asteroid is directed on position ["
                         + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                         direction + "!\nDo you want to defend yourself with shields ?";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
 
                 try {
-                    if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerBoolean(player)) { //player decides to defend themselves
+                    if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
 
                         return useBattery(player, gameInformation);
 
@@ -448,16 +452,17 @@ public interface SufferBlows {
     private boolean useBattery(Player player, GameInformation gameInformation) {
 
         String message;
-        DataContainer dataContainer;
+        PlayerMessenger playerMessenger;
         int[] coordinates = new int[2];
 
         message = "Enter the coordinates of the battery want to use: ";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        playerMessenger.printMessage(message);
 
         while (true) {
 
             try {
-                coordinates = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerCoordinates(player);
+                coordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 ;
@@ -475,7 +480,8 @@ public interface SufferBlows {
             }
 
             message = "Invalid coordinates, reenter coordinates: ";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendPlayerMessage(player, message);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
 
         }
 

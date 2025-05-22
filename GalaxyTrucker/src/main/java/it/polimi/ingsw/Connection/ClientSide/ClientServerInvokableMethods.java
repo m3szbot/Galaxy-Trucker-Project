@@ -9,4 +9,5 @@ public interface ClientServerInvokableMethods {
     public void setGamePhase(GamePhase gamePhase);
 
     public void endGame();
+
 }
