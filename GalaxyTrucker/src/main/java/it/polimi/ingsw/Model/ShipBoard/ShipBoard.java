@@ -27,6 +27,10 @@ public class ShipBoard implements Serializable {
     public static final int SB_ROWS = 12;
     public static final int SB_CENTER_COL = 7;
     public static final int SB_CENTER_ROW = 7;
+    // the first column and row that can contain components
+    // (components in [FIRST_REAL...MAX - FIRST_REAL (included!)])
+    public static final int SB_FIRST_REAL_COL = 3;
+    public static final int SB_FIRST_REAL_ROW = 4;
 
     private ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
@@ -56,16 +60,16 @@ public class ShipBoard implements Serializable {
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
 
-        // Initialize all positions as valid
-        for (int i = 0; i < SB_COLS; i++) {
-            for (int j = 0; j < SB_ROWS; j++) {
-                validityMatrix[i][j] = true;
-            }
-        }
         // Initialize component matrix as empty
         for (int i = 0; i < SB_COLS; i++) {
             for (int j = 0; j < SB_ROWS; j++) {
                 componentMatrix[i][j] = null;
+            }
+        }
+        // Initialize all positions as valid
+        for (int i = 0; i < SB_COLS; i++) {
+            for (int j = 0; j < SB_ROWS; j++) {
+                validityMatrix[i][j] = true;
             }
         }
         // Initialize error matrix as error free
@@ -146,8 +150,13 @@ public class ShipBoard implements Serializable {
         int row = getRealIndex(visibleRow);
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
 
-        if (validityMatrix[col][row]) {
+        if (!checkValidPlacement(col, row)) {
+            throw new NotPermittedPlacementException();
+        } else {
+            // add component
             componentMatrix[col][row] = component;
+            // update ShipBoard Attributes
+            // TODO decide ShipBoard Attributes
             List<Object> list = component.accept(visitor);
             if ((Integer) list.get(0) == 1) {
                 shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
@@ -171,14 +180,36 @@ public class ShipBoard implements Serializable {
             }
             shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
             shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
-        } else {
-            throw new NotPermittedPlacementException();
         }
-        //qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
+        // TODO qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
     }
 
     private int getRealIndex(int visibleIndex) {
         return visibleIndex - 1;
+    }
+
+    /**
+     * Check if the requested cell is valid to place a component in.
+     *
+     * @return true if placement is valid, false if invalid.
+     */
+    private boolean checkValidPlacement(int realCol, int realRow) {
+        // invalid cell
+        if (!validityMatrix[realCol][realRow])
+            return false;
+        if (!checkAdjacency(realCol, realRow))
+            return false;
+        return true;
+    }
+
+    /**
+     * Check if adjacent cells contain components.
+     *
+     * @return true if there is at least one adjacent component, false if all adjacent cells are empty.
+     */
+    private boolean checkAdjacency(int realCol, int realRow) {
+        return (componentMatrix[realCol - 1][realRow] != null || componentMatrix[realCol + 1][realRow] != null ||
+                componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
     }
 
     public Component[][] getComponentMatrix() {
@@ -193,8 +224,8 @@ public class ShipBoard implements Serializable {
         return errorsMatrix;
     }
 
-    public Component getComponent(int col, int row) {
-        return componentMatrix[col][row];
+    public Component getComponent(int realCol, int realRow) {
+        return componentMatrix[realCol][realRow];
     }
 
     public int getMatrixRows() {
@@ -216,13 +247,13 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public boolean isErroneous() {
-        if (this.checkErrors() > 0)
-            return true;
-        return false;
+        return this.checkErrors() > 0;
     }
 
+    // TODO
+
     /**
-     * Scans the ship structure to identify errors related to incorrect junctions.
+     * Scans the ship structure to identify errors.
      * Errors are detected and counted but not automatically corrected.
      * <p>
      * The function iterates through the structure matrix and:
@@ -230,15 +261,17 @@ public class ShipBoard implements Serializable {
      * 2. Checks if the "Engine" component is incorrectly placed.
      * 3. Ensures "Cannon" components follow specific placement rules.
      *
-     * @return The total number of detected errors.
+     * @return The total number of erroneous components.
      * @author Giacomo
      */
     public int checkErrors() {
-        boolean flag = true;
         int errors = 0;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        for (int i = 1; i < 12; i++) {
-            for (int j = 1; j < 12; j++) {
+        // max-real included!
+        // iterate columns
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            // iterate rows
+            for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 if (componentMatrix[i][j] != null) {
                     if (!checkCorrectJunctions(i, j)) {
                         //System.out.println("Component " + (j + 1) + " " + (i + 1) + " is not well connected");
