@@ -76,32 +76,29 @@ public class ShipBoard implements Serializable {
         }
 
         // Set forbidden zones for component placement
-        // TestGame TODO
-        if (gameType.equals(GameType.TESTGAME)) {
-        }
-        // NormalGame
-        else {
-            // Set forbidden zones in the structure
-            // forbidden rows
-            for (int i = 0; i < SB_COLS; i++) {
-                validityMatrix[i][0] = false;
-                validityMatrix[i][1] = false;
-                validityMatrix[i][2] = false;
-                validityMatrix[i][3] = false;
-                validityMatrix[i][9] = false;
-                validityMatrix[i][10] = false;
-                validityMatrix[i][11] = false;
+        // Set forbidden zones in the structure
+        // forbidden rows
+        for (int i = 0; i < SB_COLS; i++) {
+            validityMatrix[i][0] = false;
+            validityMatrix[i][1] = false;
+            validityMatrix[i][2] = false;
+            validityMatrix[i][3] = false;
+            validityMatrix[i][9] = false;
+            validityMatrix[i][10] = false;
+            validityMatrix[i][11] = false;
 
-            }
-            // forbidden columns
-            for (int i = 0; i < SB_ROWS; i++) {
-                validityMatrix[0][i] = false;
-                validityMatrix[1][i] = false;
-                validityMatrix[2][i] = false;
-                validityMatrix[10][i] = false;
-                validityMatrix[11][i] = false;
-            }
-            // inside cells
+        }
+        // forbidden columns
+        for (int i = 0; i < SB_ROWS; i++) {
+            validityMatrix[0][i] = false;
+            validityMatrix[1][i] = false;
+            validityMatrix[2][i] = false;
+            validityMatrix[10][i] = false;
+            validityMatrix[11][i] = false;
+        }
+        // inside cells
+        // NormalGame
+        if (gameType.equals(GameType.NORMALGAME)) {
             validityMatrix[3][4] = false;
             validityMatrix[3][5] = false;
             validityMatrix[4][4] = false;
@@ -110,6 +107,20 @@ public class ShipBoard implements Serializable {
             validityMatrix[8][4] = false;
             validityMatrix[9][4] = false;
             validityMatrix[9][5] = false;
+        }
+        // TestGame
+        else {
+            for (int i = 0; i < SB_ROWS; i++) {
+                validityMatrix[3][i] = false;
+                validityMatrix[9][i] = false;
+            }
+            validityMatrix[4][4] = false;
+            validityMatrix[4][5] = false;
+            validityMatrix[5][4] = false;
+            validityMatrix[6][8] = false;
+            validityMatrix[7][4] = false;
+            validityMatrix[8][4] = false;
+            validityMatrix[8][5] = false;
         }
 
         // add center cabin

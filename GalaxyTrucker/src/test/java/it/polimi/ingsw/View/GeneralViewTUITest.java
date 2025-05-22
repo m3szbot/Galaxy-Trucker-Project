@@ -59,6 +59,19 @@ class GeneralViewTUITest {
     }
 
     @Test
+    public void printFullTestGameShipboard() {
+        ShipBoard shipBoard = new ShipBoard(GameType.TESTGAME);
+        generalViewTUI.printFullShipboard(shipBoard);
+    }
+
+    @Test
+    public void printEmptyTestShipboard() {
+        ShipBoard shipBoard = new ShipBoard(GameType.TESTGAME);
+        dataContainer.setShipBoard(shipBoard);
+        generalViewTUI.printShipboard(dataContainer);
+    }
+
+    @Test
     public void printEmptyShipboard() {
         ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
         dataContainer.setShipBoard(shipBoard);
