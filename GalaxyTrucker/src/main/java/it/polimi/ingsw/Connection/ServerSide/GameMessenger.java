@@ -1,13 +1,12 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,14 +29,9 @@ public class GameMessenger {
         playerMessengerMap.put(player, playerMessenger);
     }
 
-    public Collection<SocketDataExchanger> getPlayersExchangers(){
-        Collection<SocketDataExchanger> socketDataExchangerCollection = new ArrayList<>();
-
-        for(PlayerMessenger playerMessenger: playerMessengerMap.values()){
-            socketDataExchangerCollection.add(playerMessenger.getSocketDataExchanger());
-        }
-
-        return socketDataExchangerCollection;
+    public void addPlayer(Player player, ConnectionType connectionType, VirtualClient virtualClient){
+        PlayerMessenger playerMessenger = new PlayerMessenger(player, connectionType, virtualClient);
+        playerMessengerMap.put(player, playerMessenger);
     }
 
     /**
@@ -103,6 +97,19 @@ public class GameMessenger {
     public void sendMessageToAll(String message) {
         for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
             playerMessenger.printMessage(message);
+        }
+    }
+
+    /**
+     * Sends directly the message in a shortCut manner.
+     * @param message
+     *
+     * @author carlo
+     */
+
+    public void sendShortCutMessageToAll(String message){
+        for(PlayerMessenger playerMessenger: playerMessengerMap.values()){
+            playerMessenger.sendShortCutMessage(message);
         }
     }
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
+import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Controller.Cards.Card;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.ViewServerInvokableMethods;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 /**
  * Messenger service associated to the player.
@@ -27,6 +29,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     // socket
     private DataContainer dataContainer;
     private SocketDataExchanger socketDataExchanger;
+    private VirtualClient virtualClient;
     // RMI
     // TODO
 
@@ -42,6 +45,12 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         }
     }
 
+    public PlayerMessenger(Player player, ConnectionType connectionType, VirtualClient virtualClient){
+        this.player = player;
+        this.connectionType = connectionType;
+        this.virtualClient = virtualClient;
+    }
+
     public SocketDataExchanger getSocketDataExchanger() {
         return socketDataExchanger;
     }
@@ -54,6 +63,31 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             dataContainer.setGamePhase(gamePhase);
             sendDataContainer();
         } else {
+        }
+    }
+
+    /**
+     * WARNING!! TO USE ONLY IN JOINING PHASE (FOR NOW)
+     * @param message
+     */
+
+    public void sendShortCutMessage(String message){
+        if(connectionType.equals(ConnectionType.SOCKET)){
+            try {
+                socketDataExchanger.sendString(message);
+            } catch (IOException e) {
+                System.err.println("Error while sending string shortcut to the player");
+            }
+        }
+        else{
+
+            try {
+
+                virtualClient.printShortCutMessage(message);
+            } catch (RemoteException e) {
+                System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
+            }
+
         }
     }
 

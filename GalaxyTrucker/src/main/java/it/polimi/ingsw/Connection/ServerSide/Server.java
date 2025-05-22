@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ServerSide.RMI.RMIListener;
+import it.polimi.ingsw.Connection.ServerSide.RMI.VirtualServer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketListener;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Controller.Game.GameState;
@@ -9,6 +11,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,9 +33,7 @@ public class Server {
     private int gameCode;
     private Game currentStartingGame;
     private SocketListener socketListener;
-    /*
     private RMIListener rmiListener;
-     */
     private ReentrantLock lock = new ReentrantLock();
     private Color currentColor;
     private int portNumber;
@@ -42,10 +43,15 @@ public class Server {
         this.gameCode = 0;
         this.currentStartingGame = new Game(gameCode);
         ClientMessenger.addGame(gameCode);
-        /*
-        this.rmiListener = new RMIListener(serverInterface);
+        VirtualServer virtualServer;
+        try {
 
-         */
+            virtualServer = new VirtualServer(this);
+            this.rmiListener = new RMIListener(virtualServer);
+
+        } catch (RemoteException e) {
+            System.err.println("Error while setting up virtual server: rmi protocol unusable");
+        }
         this.socketListener = new SocketListener(this);
         this.currentColor = Color.RED;
         this.portNumber = 5200;
@@ -68,6 +74,7 @@ public class Server {
         }
 
         new Thread(socketListener).start();
+        new Thread(rmiListener).start();
 
     }
 
