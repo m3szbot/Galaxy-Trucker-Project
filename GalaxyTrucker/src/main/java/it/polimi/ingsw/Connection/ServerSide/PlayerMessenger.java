@@ -22,11 +22,11 @@ import java.io.IOException;
  */
 public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
 
-    Player player;
-    ConnectionType connectionType;
+    private Player player;
+    private ConnectionType connectionType;
     // socket
-    DataContainer dataContainer;
-    SocketDataExchanger socketDataExchanger;
+    private DataContainer dataContainer;
+    private SocketDataExchanger socketDataExchanger;
     // RMI
     // TODO
 
@@ -40,6 +40,10 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         // RMI
         else {
         }
+    }
+
+    public SocketDataExchanger getSocketDataExchanger() {
+        return socketDataExchanger;
     }
 
     @Override

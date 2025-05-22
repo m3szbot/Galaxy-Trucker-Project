@@ -316,7 +316,9 @@ public class ClientSocketHandler extends Thread {
     }
 
     private void notifyAllPlayers(String message) throws IOException {
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendMessageToAll(message);
+        for(SocketDataExchanger socketDataExchanger: ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).getPlayersExchangers()){
+            socketDataExchanger.sendString(message);
+        }
     }
 
 }

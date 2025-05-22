@@ -6,6 +6,8 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +28,16 @@ public class GameMessenger {
     public void addPlayer(Player player, ConnectionType connectionType, SocketDataExchanger dataExchanger) {
         PlayerMessenger playerMessenger = new PlayerMessenger(player, connectionType, dataExchanger);
         playerMessengerMap.put(player, playerMessenger);
+    }
+
+    public Collection<SocketDataExchanger> getPlayersExchangers(){
+        Collection<SocketDataExchanger> socketDataExchangerCollection = new ArrayList<>();
+
+        for(PlayerMessenger playerMessenger: playerMessengerMap.values()){
+            socketDataExchangerCollection.add(playerMessenger.getSocketDataExchanger());
+        }
+
+        return socketDataExchangerCollection;
     }
 
     /**
