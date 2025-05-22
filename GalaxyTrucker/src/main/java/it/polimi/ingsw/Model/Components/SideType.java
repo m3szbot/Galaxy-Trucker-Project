@@ -13,10 +13,15 @@ import java.io.Serializable;
 
 
 public enum SideType implements Serializable {
+    // no connectors
     Smooth("Smooth"),
+    // 1 connector
     Single("Single"),
+    // 2 connectors
     Double("Double"),
+    // 1 + 2 connectors
     Universal("Universal"),
+    // cannon, engine, shield etc
     Special("Special");
 
     //String linked to the "name" of the enum
@@ -24,11 +29,6 @@ public enum SideType implements Serializable {
 
     SideType(String jsonValue) {
         this.jsonValue = jsonValue;
-    }
-
-    @JsonValue
-    public String getJsonValue() {
-        return jsonValue;
     }
 
     @JsonCreator
@@ -39,6 +39,11 @@ public enum SideType implements Serializable {
             }
         }
         throw new IllegalArgumentException("Unknown SideType: " + value);
+    }
+
+    @JsonValue
+    public String getJsonValue() {
+        return jsonValue;
     }
 }
 
