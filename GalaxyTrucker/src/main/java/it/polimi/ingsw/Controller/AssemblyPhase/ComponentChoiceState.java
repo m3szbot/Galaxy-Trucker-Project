@@ -48,17 +48,11 @@ public class ComponentChoiceState implements GameState {
         int i = 0;
         for(Component component : components) {
             message = i + ": " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack()  + " Left: " + component.getLeft();
-            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             i++;
         }
         message = "Enter the number of the component you would like:";
-        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-        dataContainer.setMessage(message);
-        dataContainer.setCommand("printMessage");
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
     }
 
     /**
@@ -95,17 +89,11 @@ public class ComponentChoiceState implements GameState {
                         message = "Component has been already taken";
                     }
                 }
-                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 break;
             case 2:
                 message = "Error in component choice";
-                dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 break;
 
 

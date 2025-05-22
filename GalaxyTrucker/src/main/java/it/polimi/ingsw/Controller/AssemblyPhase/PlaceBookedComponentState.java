@@ -38,10 +38,7 @@ public class PlaceBookedComponentState implements GameState {
         for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
             Component component = assemblyProtocol.getBookedMap().get(player).get(i);
             String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
-            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
         }
     }
 
@@ -66,10 +63,7 @@ public class PlaceBookedComponentState implements GameState {
                 assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player));
             } else {
                 String message = "The Booked Component chose doesn't exist";
-                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
         }

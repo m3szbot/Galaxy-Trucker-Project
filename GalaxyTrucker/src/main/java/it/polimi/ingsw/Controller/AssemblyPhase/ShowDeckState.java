@@ -36,9 +36,7 @@ public class ShowDeckState implements GameState {
     @Override
     public void enter(AssemblyThread assemblyPhase) {
         String message = "Choose a deck from 1 to 3 writing the number:";
-        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-        dataContainer.setMessage(message);
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);    }
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);}
 
     /**
      * Handles the user's input to select a deck, validates the index,
@@ -54,18 +52,13 @@ public class ShowDeckState implements GameState {
             synchronized (assemblyProtocol.lockDecksList) {
                 Deck deck = assemblyPhase.getAssemblyProtocol().showDeck(index);
                 for( Card card : deck.getCards()) {
-                    DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                    dataContainer.setCard(card);
-                    dataContainer.setCommand("printCard");
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printCard(card);
                 }
             }
         } else {
             String message = "Invalid deck number";
-            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);        }
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+        }
         assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
     }
 }

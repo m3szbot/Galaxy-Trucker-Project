@@ -124,10 +124,7 @@ public class AssemblyPhase extends Phase {
 
         message = "Assembly phase has ended";
         for (Player player : gameInformation.getPlayerList()) {
-            DataContainer dataContainer = ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
         }
 
     }

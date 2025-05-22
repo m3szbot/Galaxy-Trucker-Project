@@ -34,19 +34,13 @@ public class AssemblyState implements GameState {
 
         startTime = System.currentTimeMillis();
         actionTaken = false;
-        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-        dataContainer.setShipBoard(player.getShipBoard());
-        dataContainer.setCommand("printShipboard");
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printShipboard(player.getShipBoard());
         if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player)!= null) {
-            dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-            dataContainer.setComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
-            dataContainer.setCommand("printComponent");
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
         }
         String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)";
         //view.sendMessageToPlayer(message, player);
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
     }
 
     /**
@@ -78,13 +72,10 @@ public class AssemblyState implements GameState {
                 if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
                     assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).rotate();
                     message = "Component successfully rotated:";
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 } else {
                     message = "Your hand is empty";
-                    dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));
                 break;
@@ -92,18 +83,20 @@ public class AssemblyState implements GameState {
                 actionTaken = true;
                 if(assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)){
                     if(assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 2){
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'");
+                        message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                     }else{
                         message = "Turn the hourglass";
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                         assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
                     }
                 } else{
                     if(assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 1){
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'");
+                        message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                     }else{
                         message = "Turn the hourglass";
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, message);
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                         assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
                     }
                 }
@@ -119,10 +112,7 @@ public class AssemblyState implements GameState {
                     assemblyPhase.getAssemblyProtocol().bookComponent(player);
                 } else {
                     message = "Your hand is empty";
-                    dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                    dataContainer.setMessage(message);
-                    dataContainer.setCommand("printMessage");
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));
                 break;
@@ -136,10 +126,7 @@ public class AssemblyState implements GameState {
                 break;
             default:
                 message = "Invalid command";
-                dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 assemblyPhase.setState(new AssemblyState(protocol, player));
         }
 
@@ -154,10 +141,7 @@ public class AssemblyState implements GameState {
             long now = System.currentTimeMillis();
             if (now - startTime >= 50000) {
                 String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)"; // 50 seconds timeout
-                DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-                dataContainer.setMessage(message);
-                dataContainer.setCommand("printMessage");
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
 
                 actionTaken = true;
                 assemblyPhase.setState(new AssemblyState(protocol, player));

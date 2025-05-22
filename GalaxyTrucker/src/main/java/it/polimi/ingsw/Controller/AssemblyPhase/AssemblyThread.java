@@ -73,16 +73,14 @@ public class AssemblyThread implements Runnable {
             while (!end.get()) {
                 if (!disconnected.get()) {
                     try {
-                        String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerString(associatedPlayer);
+                        String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
                         inputQueue.offer(input);
                     } catch (PlayerDisconnectedException e) {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
                         String message = e.getMessage();
                         disconnected.set(true);
                         for (Player player : gameInformation.getPlayerList()) {
-                            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).getPlayerContainer(player);
-                            dataContainer.setMessage(message);
-                            ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendPlayerMessage(player, message);
+                            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(associatedPlayer).printMessage(message);
                         }
                     }
                 } else {
@@ -93,8 +91,9 @@ public class AssemblyThread implements Runnable {
 
                     if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
                         disconnected.set(false);
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode())
-                                .sendPlayerMessage(associatedPlayer, "Welcome back! You have been reconnected.");
+                        String message = "Welcome back! You have been reconnected.";
+                        ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(associatedPlayer).printMessage(message);
+
                     }
                 }
             }

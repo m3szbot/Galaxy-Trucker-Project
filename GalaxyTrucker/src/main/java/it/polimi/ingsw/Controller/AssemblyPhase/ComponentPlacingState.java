@@ -36,10 +36,7 @@ public class ComponentPlacingState implements GameState {
     @Override
     public void enter(AssemblyThread assemblyPhase) {
         String message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
-        DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-        dataContainer.setMessage(message);
-        dataContainer.setCommand("printMessage");
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
     }
 
     /**
@@ -55,7 +52,8 @@ public class ComponentPlacingState implements GameState {
         input.replaceAll("[^\\d]", " ");
         String[] parts = input.trim().split("[ ,]+"); //trim eliminates white spaces at the beginning and at the end
         if (parts.length != 2) {
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Not valid format!");
+            String message = "Not valid format!";
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             return;
         }
 
@@ -73,19 +71,18 @@ public class ComponentPlacingState implements GameState {
                         assemblyPhase.getAssemblyProtocol().newComponent(player);
                     }
                 } catch (NotPermittedPlacementException e) {
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "Your are not allowed to place your component here");
+                    String message = "Your are not allowed to place your component here";
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             } else{
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerMessage(player, "You can't place your component here, it would float in the air");
+                String message = "You can't place your component here, it would float in the air";
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             }
         }else{
             String message = "Your hand is empty";
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
-            DataContainer dataContainer = ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerContainer(player);
-            dataContainer.setMessage(message);
-            dataContainer.setCommand("printMessage");
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).sendPlayerData(player);
         }
     }
 }
