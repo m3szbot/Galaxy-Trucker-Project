@@ -22,10 +22,11 @@ import java.util.List;
  * @author Giacomo, Boti
  */
 public class ShipBoard implements Serializable {
-    public static final int SHIPBOARD_COLS = 12;
-    public static final int SHIPBOARD_ROWS = 12;
-    public static final int SHIPBOARD_CENTER_COL = 7;
-    public static final int SHIPBOARD_CENTER_ROW = 7;
+    // visible values
+    public static final int SB_COLS = 12;
+    public static final int SB_ROWS = 12;
+    public static final int SB_CENTER_COL = 7;
+    public static final int SB_CENTER_ROW = 7;
 
     private ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
@@ -51,25 +52,25 @@ public class ShipBoard implements Serializable {
      */
     public ShipBoard(GameType gameType) {
         this.shipBoardAttributes = new ShipBoardAttributes();
-        this.componentMatrix = new Component[SHIPBOARD_COLS][SHIPBOARD_ROWS];
-        this.validityMatrix = new boolean[SHIPBOARD_COLS][SHIPBOARD_ROWS];
-        this.errorsMatrix = new boolean[SHIPBOARD_COLS][SHIPBOARD_ROWS];
+        this.componentMatrix = new Component[SB_COLS][SB_ROWS];
+        this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
+        this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
 
         // Initialize all positions as valid
-        for (int i = 0; i < SHIPBOARD_COLS; i++) {
-            for (int j = 0; j < SHIPBOARD_ROWS; j++) {
+        for (int i = 0; i < SB_COLS; i++) {
+            for (int j = 0; j < SB_ROWS; j++) {
                 validityMatrix[i][j] = true;
             }
         }
         // Initialize component matrix as empty
-        for (int i = 0; i < SHIPBOARD_COLS; i++) {
-            for (int j = 0; j < SHIPBOARD_ROWS; j++) {
+        for (int i = 0; i < SB_COLS; i++) {
+            for (int j = 0; j < SB_ROWS; j++) {
                 componentMatrix[i][j] = null;
             }
         }
         // Initialize error matrix as error free
-        for (int i = 0; i < SHIPBOARD_COLS; i++) {
-            for (int j = 0; j < SHIPBOARD_ROWS; j++) {
+        for (int i = 0; i < SB_COLS; i++) {
+            for (int j = 0; j < SB_ROWS; j++) {
                 errorsMatrix[i][j] = false;
             }
         }
@@ -82,7 +83,7 @@ public class ShipBoard implements Serializable {
         else {
             // Set forbidden zones in the structure
             // columns
-            for (int i = 0; i < SHIPBOARD_COLS; i++) {
+            for (int i = 0; i < SB_COLS; i++) {
                 validityMatrix[i][0] = false;
                 validityMatrix[i][1] = false;
                 validityMatrix[i][2] = false;
@@ -91,7 +92,7 @@ public class ShipBoard implements Serializable {
 
             }
             // rows
-            for (int i = 0; i < SHIPBOARD_ROWS; i++) {
+            for (int i = 0; i < SB_ROWS; i++) {
                 validityMatrix[0][i] = false;
                 validityMatrix[1][i] = false;
                 validityMatrix[2][i] = false;
@@ -115,7 +116,7 @@ public class ShipBoard implements Serializable {
         try {
             // TODO: colored starter cabin, to get from the componentList in gameInformation
             addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}),
-                    SHIPBOARD_CENTER_COL, SHIPBOARD_CENTER_ROW);
+                    SB_CENTER_COL, SB_CENTER_ROW);
         } catch (NotPermittedPlacementException e) {
             System.out.println("Adjust Shipboard constructor, cannot insert center cabin");
         }
