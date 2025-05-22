@@ -46,7 +46,7 @@ public class GameMessenger {
     /**
      * End game for all players.
      */
-    public void endGameToALL() {
+    public void endGameToAll() {
         for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
             playerMessenger.endGame();
         }

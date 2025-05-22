@@ -29,7 +29,7 @@ public class CorrectionPhase extends Phase {
      * or times out (player shipboard incorrect, player gets removed).
      */
     public void start() {
-        setGamePhaseToAll(GamePhase.Correction);
+        setGamePhaseToClientServer(GamePhase.Correction);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads
         for (Player player : gameInformation.getPlayerList()) {

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
 import it.polimi.ingsw.Controller.Cards.Card;
@@ -20,7 +19,7 @@ public class FlightPhase extends Phase {
         Card card;
         PlayerMessenger playerMessenger;
 
-        setGamePhaseToAll(GamePhase.Flight);
+        setGamePhaseToClientServer(GamePhase.Flight);
         System.out.println("Flight phase has started");
 
         DataContainer dataContainer;
