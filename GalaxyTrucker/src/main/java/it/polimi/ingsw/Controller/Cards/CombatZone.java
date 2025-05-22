@@ -53,7 +53,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         float[] firePowers = new float[numberOfPlayers];
         Player lowestInhabitantNumberPlayer, weakestEnginePowerPlayer, weakestFirePowerPlayer;
         String message;
-        DataContainer dataContainer;
 
         //calculating player with the lowest inhabitant number
 
