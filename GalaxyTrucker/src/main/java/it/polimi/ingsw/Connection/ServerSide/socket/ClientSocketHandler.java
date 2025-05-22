@@ -141,7 +141,6 @@ public class ClientSocketHandler extends Thread {
 
                     centralServer.getLock().unlock();
 
-
                     break;
 
                 } else {
@@ -155,7 +154,6 @@ public class ClientSocketHandler extends Thread {
 
                 message = "The string you entered is invalid!";
                 dataExchanger.sendString(message);
-                dataExchanger.sendString("increment trials");
                 trials++;
                 checkTrials();
 
@@ -293,8 +291,8 @@ public class ClientSocketHandler extends Thread {
         }
 
         message = nickName + " joined the game!";
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, ConnectionType.SOCKET, dataExchanger);
         notifyAllPlayers(message);
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, ConnectionType.SOCKET, dataExchanger);
 
         if (isFirstPlayer) {
             message = "You have successfully created the game (game code " + centralServer.getCurrentGameCode() + ")";
@@ -316,9 +314,9 @@ public class ClientSocketHandler extends Thread {
     }
 
     private void notifyAllPlayers(String message) throws IOException {
-        for (SocketDataExchanger socketDataExchanger : ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).getPlayersExchangers()) {
-            socketDataExchanger.sendString(message);
-        }
+
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendShortCutMessageToAll(message);
+
     }
 
 }
