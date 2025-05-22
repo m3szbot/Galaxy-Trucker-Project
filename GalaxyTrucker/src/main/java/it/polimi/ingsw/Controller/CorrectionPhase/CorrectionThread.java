@@ -38,7 +38,7 @@ public class CorrectionThread implements Runnable {
             message.append("There are errors in your ship, please correct them:\n");
             for (int i = 0; i < shipBoard.getMatrixCols(); i++) {
                 for (int j = 0; j < shipBoard.getMatrixRows(); j++) {
-                    if (shipBoard.getMatrErrors()[i][j]) {
+                    if (shipBoard.getErrorsMatrix()[i][j]) {
                         message.append("Error in: %d %d\n", i + 1, j + 1);
                     }
                 }

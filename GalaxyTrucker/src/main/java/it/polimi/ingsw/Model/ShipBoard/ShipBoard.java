@@ -10,13 +10,13 @@ import java.util.List;
 public class ShipBoard implements Serializable {
     // x: column
     // y: row
-
     private ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private Component[][] componentMatrix;
     // Boolean matrix indicating valid positions for components
-    private boolean[][] matr;
-    private boolean[][] matrErrors;
+    private boolean[][] validityMatrix;
+    // Boolean matrix indicating components with errors
+    private boolean[][] errorsMatrix;
 
     /**
      * Constructs a ShipStructure instance.
@@ -33,13 +33,13 @@ public class ShipBoard implements Serializable {
      */
     public ShipBoard(GameType gameType) {
         this.componentMatrix = new Component[12][12];
-        this.matr = new boolean[12][12];
-        this.matrErrors = new boolean[12][12];
+        this.validityMatrix = new boolean[12][12];
+        this.errorsMatrix = new boolean[12][12];
         this.shipBoardAttributes = new ShipBoardAttributes();
         // Initialize all positions as valid
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
-                matr[i][j] = true;
+                validityMatrix[i][j] = true;
             }
         }
         for (int i = 0; i < 12; i++) {
@@ -49,7 +49,7 @@ public class ShipBoard implements Serializable {
         }
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
-                matrErrors[i][j] = false;
+                errorsMatrix[i][j] = false;
             }
         }
 
@@ -57,31 +57,31 @@ public class ShipBoard implements Serializable {
         } else {
             // Set forbidden zones in the structure
             for (int i = 0; i < 12; i++) {
-                matr[i][0] = false;
-                matr[i][1] = false;
-                matr[i][2] = false;
-                matr[i][10] = false;
-                matr[i][11] = false;
+                validityMatrix[i][0] = false;
+                validityMatrix[i][1] = false;
+                validityMatrix[i][2] = false;
+                validityMatrix[i][10] = false;
+                validityMatrix[i][11] = false;
 
             }
             for (int i = 0; i < 12; i++) {
-                matr[0][i] = false;
-                matr[1][i] = false;
-                matr[2][i] = false;
-                matr[3][i] = false;
-                matr[9][i] = false;
-                matr[10][i] = false;
-                matr[11][i] = false;
+                validityMatrix[0][i] = false;
+                validityMatrix[1][i] = false;
+                validityMatrix[2][i] = false;
+                validityMatrix[3][i] = false;
+                validityMatrix[9][i] = false;
+                validityMatrix[10][i] = false;
+                validityMatrix[11][i] = false;
             }
 
-            matr[4][3] = false;
-            matr[4][4] = false;
-            matr[5][3] = false;
-            matr[4][6] = false;
-            matr[8][6] = false;
-            matr[4][8] = false;
-            matr[4][9] = false;
-            matr[5][9] = false;
+            validityMatrix[4][3] = false;
+            validityMatrix[4][4] = false;
+            validityMatrix[5][3] = false;
+            validityMatrix[4][6] = false;
+            validityMatrix[8][6] = false;
+            validityMatrix[4][8] = false;
+            validityMatrix[4][9] = false;
+            validityMatrix[5][9] = false;
         }
 
         try {
@@ -103,7 +103,7 @@ public class ShipBoard implements Serializable {
         col = col - 1;
         row = row - 1;
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (matr[row][col]) {
+        if (validityMatrix[row][col]) {
             componentMatrix[row][col] = component;
             List<Object> list = component.accept(visitor);
             if ((Integer) list.get(0) == 1) {
@@ -138,12 +138,12 @@ public class ShipBoard implements Serializable {
         return componentMatrix;
     }
 
-    public boolean[][] getMatr() {
-        return matr;
+    public boolean[][] getValidityMatrix() {
+        return validityMatrix;
     }
 
-    public boolean[][] getMatrErrors() {
-        return matrErrors;
+    public boolean[][] getErrorsMatrix() {
+        return errorsMatrix;
     }
 
     public Component getComponent(int col, int row) {
@@ -195,12 +195,12 @@ public class ShipBoard implements Serializable {
                 if (componentMatrix[i][j] != null) {
                     if (!checkCorrectJunctions(i, j)) {
                         //System.out.println("Component " + (j + 1) + " " + (i + 1) + " is not well connected");
-                        matrErrors[i][j] = true;
+                        errorsMatrix[i][j] = true;
                         errors++;
                     }
                     if ((Integer) componentMatrix[i][j].accept(visitor).get(0) > 0) {
                         if (!componentMatrix[i][j].getBack().equals(SideType.Special)) {
-                            matrErrors[i][j] = true;
+                            errorsMatrix[i][j] = true;
                             errors++;
                         } else {
                             boolean check = false;
@@ -218,7 +218,7 @@ public class ShipBoard implements Serializable {
                             */
                             if (check) {
                                 System.out.println("Error, in component" + i + ' ' + j);
-                                matrErrors[i][j] = true;
+                                errorsMatrix[i][j] = true;
                             }
                         }
                     }
@@ -228,7 +228,7 @@ public class ShipBoard implements Serializable {
 
                             if (componentMatrix[i][j - 1] != null) {
                                 check = true;
-                                matrErrors[i][j] = true;
+                                errorsMatrix[i][j] = true;
                                 errors++;
                             }
 
@@ -239,7 +239,7 @@ public class ShipBoard implements Serializable {
 
                             if (componentMatrix[i][j + 1] != null) {
                                 check = true;
-                                matrErrors[i][j] = true;
+                                errorsMatrix[i][j] = true;
                                 errors++;
                             }
 
@@ -249,7 +249,7 @@ public class ShipBoard implements Serializable {
                         } else if (componentMatrix[i][j].getFront().equals(SideType.Special)) {
                             if (componentMatrix[i - 1][j] != null) {
                                 check = true;
-                                matrErrors[i][j] = true;
+                                errorsMatrix[i][j] = true;
                                 errors++;
                             }
                             if (check) {
@@ -258,7 +258,7 @@ public class ShipBoard implements Serializable {
                         } else if (componentMatrix[i][j].getBack().equals(SideType.Special)) {
                             if (componentMatrix[i + 1][j] != null) {
                                 check = true;
-                                matrErrors[i][j] = true;
+                                errorsMatrix[i][j] = true;
                                 errors++;
                             }
                             if (check) {
@@ -330,7 +330,7 @@ public class ShipBoard implements Serializable {
         col = col - 1;
         row = row - 1;
 
-        if (matr[row][col] == true && componentMatrix[row][col] != null) {
+        if (validityMatrix[row][col] == true && componentMatrix[row][col] != null) {
             Component component = componentMatrix[row][col];
             Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
             List<Object> list = component.accept(visitor);
@@ -583,6 +583,6 @@ public class ShipBoard implements Serializable {
 
     //this function might change completly since i'm still not sure where the error checking will be
     private void solveError(int x, int y) {
-        matrErrors[y][x] = false;
+        errorsMatrix[y][x] = false;
     }
 }

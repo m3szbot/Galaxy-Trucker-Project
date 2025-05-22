@@ -21,7 +21,7 @@ public class ShipBoardTest {
         shipBoard = new ShipBoard(GameType.NORMALGAME);
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
-                System.out.print(shipBoard.getMatr()[i][j] + "");
+                System.out.print(shipBoard.getValidityMatrix()[i][j] + "");
             }
             System.out.println();
         }
@@ -129,9 +129,9 @@ public class ShipBoardTest {
         errors = shipBoard.checkErrors();
         assertEquals(errors, 3);
 
-        assertTrue(shipBoard.getMatrErrors()[7][5]);
-        assertTrue(shipBoard.getMatrErrors()[7][6]);
-        assertTrue(shipBoard.getMatrErrors()[7][6]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][5]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 4), 8, 7);
         printAsciiBoard(shipBoard);
         assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 4);
@@ -179,7 +179,7 @@ public class ShipBoardTest {
             // ***** riga “front” ***********************************************
             System.out.printf("%2d  ", r + 1);
             for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getMatr()[r][c]) {                    // forbidden 
+                if (!shipBoard.getValidityMatrix()[r][c]) {                    // forbidden 
                     System.out.print("|XXXXXXX");
                     continue;
                 }
@@ -192,7 +192,7 @@ public class ShipBoardTest {
             // ***** riga centrale (left, name, right) ***************************
             System.out.print("    ");                 // niente indice riga ora
             for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getMatr()[r][c]) {
+                if (!shipBoard.getValidityMatrix()[r][c]) {
                     System.out.print("|XXXXXXX");
                     continue;
                 }
@@ -211,7 +211,7 @@ public class ShipBoardTest {
             // ***** riga “back” *************************************************
             System.out.print("    ");
             for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getMatr()[r][c]) {
+                if (!shipBoard.getValidityMatrix()[r][c]) {
                     System.out.print("|XXXXXXX");
                     continue;
                 }

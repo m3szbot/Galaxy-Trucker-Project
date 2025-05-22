@@ -56,7 +56,7 @@ public class GeneralView implements ViewServerInvokableMethods {
         int cols = shipBoard.getMatrixCols();
 
         Component[][] shipStructure = shipBoard.getComponentMatrix();
-        boolean[][] validPositions = shipBoard.getMatr();
+        boolean[][] validPositions = shipBoard.getValidityMatrix();
         List<String> cellLines;
 
         for (int i = indexRow; i < rows - 3; i++) {
