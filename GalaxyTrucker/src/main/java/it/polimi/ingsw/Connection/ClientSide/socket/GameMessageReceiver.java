@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide.socket;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientServerInvokableMethods;
-import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.View.GeneralView;

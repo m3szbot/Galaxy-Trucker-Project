@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.AssemblyModel;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.ArrayList;

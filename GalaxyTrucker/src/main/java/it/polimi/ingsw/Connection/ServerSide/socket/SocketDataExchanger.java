@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Connection.ServerSide.socket;
 
-import it.polimi.ingsw.Connection.ServerSide.DataContainer;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

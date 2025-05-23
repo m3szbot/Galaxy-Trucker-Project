@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.DataContainer;
-import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;

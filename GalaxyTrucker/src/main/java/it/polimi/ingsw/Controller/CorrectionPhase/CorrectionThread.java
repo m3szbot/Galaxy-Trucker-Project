@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;

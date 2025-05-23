@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.GameMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 

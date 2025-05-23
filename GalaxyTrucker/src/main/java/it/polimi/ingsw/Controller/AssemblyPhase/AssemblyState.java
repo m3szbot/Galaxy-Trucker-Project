@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;

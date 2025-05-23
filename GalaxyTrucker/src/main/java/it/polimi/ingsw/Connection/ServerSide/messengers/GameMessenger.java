@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide;
+package it.polimi.ingsw.Connection.ServerSide.messengers;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;

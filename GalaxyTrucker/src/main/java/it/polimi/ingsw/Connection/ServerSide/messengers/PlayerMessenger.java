@@ -1,8 +1,10 @@
-package it.polimi.ingsw.Connection.ServerSide;
+package it.polimi.ingsw.Connection.ServerSide.messengers;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientServerInvokableMethods;
 import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
@@ -114,7 +116,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * Clears all players resources.
      *
      */
-    void clearPlayerResources() {
+    public void clearPlayerResources() {
         if(connectionType == ConnectionType.SOCKET)
         try {
             socketDataExchanger.closeResources();
