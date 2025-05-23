@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
+import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientServerInvokableMethods;
-import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Controller.Cards.Card;
@@ -29,7 +29,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     // socket
     private DataContainer dataContainer;
     private SocketDataExchanger socketDataExchanger;
-    private VirtualClient virtualClient;
+    private ClientRemoteInterface virtualClient;
     // RMI
     // TODO
 
@@ -46,7 +46,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     /**
      * Add RMI player.
      */
-    public PlayerMessenger(Player player, VirtualClient virtualClient) {
+    public PlayerMessenger(Player player, ClientRemoteInterface virtualClient) {
         this.player = player;
         this.connectionType = ConnectionType.RMI;
         this.virtualClient = virtualClient;

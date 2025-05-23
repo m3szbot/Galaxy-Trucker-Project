@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Connection.ClientSide.RMI;
 
-import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -11,8 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface ClientRemoteInterface extends Remote{
-
-    public void makeClientJoin(Server centralserver) throws RemoteException;
 
     public void printMessage(String message) throws RemoteException;
 
@@ -30,5 +27,8 @@ public interface ClientRemoteInterface extends Remote{
 
     public void endGame() throws RemoteException;
 
+    public void setInputTimeOut(boolean value) throws RemoteException;
+
+    public boolean isInGame() throws RemoteException;
 
 }

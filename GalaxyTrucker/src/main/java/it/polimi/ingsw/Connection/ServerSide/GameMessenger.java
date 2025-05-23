@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
-import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
+import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
@@ -31,7 +31,7 @@ public class GameMessenger {
     /**
      * Add RMI player to GameMessenger and create its associated PlayerMessenger.
      */
-    public void addPlayer(Player player, VirtualClient virtualClient) {
+    public void addPlayer(Player player, ClientRemoteInterface virtualClient) {
         PlayerMessenger playerMessenger = new PlayerMessenger(player, virtualClient);
         playerMessengerMap.put(player, playerMessenger);
     }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide.RMI;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 
 import java.rmi.RemoteException;
@@ -17,10 +18,26 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
     }
 
     @Override
-    public void registerClient(String ipAddress, ClientRemoteInterface virtualClient) throws RemoteException {
+    public void registerClient(String ipAddress) throws RemoteException {
 
         System.out.println(ipAddress + " is connected through rmi protocol");
-        virtualClient.makeClientJoin(centralServer);
+
+    }
+
+    @Override
+    public void makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException {
+
+        Joiner joiner = new Joiner(clientInfo, centralServer, virtualClient);
+
+        try {
+
+            joiner.start();
+
+        } catch (RemoteException e) {
+
+            System.out.println(e.getMessage());
+            throw e;
+        }
 
     }
 }

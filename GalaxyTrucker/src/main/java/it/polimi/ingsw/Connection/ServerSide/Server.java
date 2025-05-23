@@ -9,7 +9,6 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -24,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author carlo
  */
 
-public class Server implements Serializable {
+public class Server {
 
     List<Game> games = new ArrayList<>();
 
@@ -33,11 +32,11 @@ public class Server implements Serializable {
 
     private int gameCode;
     private Game currentStartingGame;
-    private transient SocketListener socketListener;
-    private transient RMIListener rmiListener;
+    private SocketListener socketListener;
+    private RMIListener rmiListener;
     private ReentrantLock lock = new ReentrantLock();
     private Color currentColor;
-    private transient int portNumber;
+    private int portNumber;
     private List<String> nicknameList;
 
     public Server() {

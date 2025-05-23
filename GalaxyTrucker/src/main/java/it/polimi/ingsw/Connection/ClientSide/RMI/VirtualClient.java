@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide.RMI;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
-import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
@@ -20,15 +19,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class VirtualClient extends UnicastRemoteObject implements ClientRemoteInterface{
 
-    private ClientInfo clientInfo;
     private AtomicReference<String> userInput;
     private GeneralView views[] = new GeneralView[4];
     private GeneralView currentView;
     private int TIMEOUT;
-    private boolean inGame = false;
+    private boolean inGame = true;
 
     public VirtualClient(ClientInfo clientInfo) throws RemoteException {
-        this.clientInfo = clientInfo;
+
         this.userInput = clientInfo.getUserInput();
 
         if (clientInfo.getViewType() == ViewType.TUI) {
@@ -49,8 +47,9 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         }
     }
 
-    public void inGame(){
-        inGame = true;
+    @Override
+    public boolean isInGame() throws RemoteException{
+        return inGame;
     }
 
     /**
@@ -109,26 +108,6 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
     @Override
     public void printMessage(String message) throws RemoteException {
         System.out.println(message);
-    }
-
-    @Override
-    public void makeClientJoin(Server centralserver) throws RemoteException {
-
-        Joiner joiner = new Joiner(clientInfo, centralserver, this);
-
-        try {
-
-            joiner.start();
-
-            while(inGame);
-
-        } catch (RemoteException e) {
-            //something went wrong during the communication, notifying the client and the server too.
-
-            System.out.println("You were disconnected");
-            throw e;
-
-        }
     }
 
     public void printComponent(Component component) throws RemoteException {

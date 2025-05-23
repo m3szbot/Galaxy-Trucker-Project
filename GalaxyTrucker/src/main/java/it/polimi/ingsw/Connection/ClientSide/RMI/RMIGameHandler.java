@@ -45,6 +45,7 @@ public class RMIGameHandler {
         }
 
         try{
+
             virtualClient = new VirtualClient(clientInfo);
 
         } catch (RemoteException e) {
@@ -56,7 +57,10 @@ public class RMIGameHandler {
 
         try{
 
-            virtualServer.registerClient(InetAddress.getLocalHost().getHostAddress(), virtualClient);
+            virtualServer.registerClient(InetAddress.getLocalHost().getHostAddress());
+            virtualServer.makePlayerJoin(virtualClient, clientInfo);
+
+            while(virtualClient.isInGame());
 
         } catch (UnknownHostException e) {
 
