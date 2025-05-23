@@ -115,6 +115,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      *
      */
     void clearPlayerResources() {
+        if(connectionType == ConnectionType.SOCKET)
         try {
             socketDataExchanger.closeResources();
         } catch (IOException e) {
