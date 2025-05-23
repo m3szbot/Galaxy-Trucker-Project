@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide;
+package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;

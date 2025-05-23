@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide;
 
-import it.polimi.ingsw.Connection.ClientSide.ClientServerInvokableMethods;
+import it.polimi.ingsw.Connection.ClientSide.RMI.ClientServerInvokableMethods;
 import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
@@ -22,7 +22,7 @@ import java.rmi.RemoteException;
  *
  * @author Boti, carlo
  */
-public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
+public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods{
 
     private Player player;
     private ConnectionType connectionType;
@@ -61,13 +61,19 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             dataContainer.setGamePhase(gamePhase);
             sendDataContainer();
         } else {
+            try{
+                virtualClient.setGamePhase(gamePhase);
+            } catch (RemoteException e) {
+
+                System.err.println("An error occurred while setting the gamePhase of " + player.getNickName() +
+                        " through rmi protocol");
+            }
         }
     }
 
     /**
      * Helper method to send and then clear the player dataContainer.
      *
-     * @author Boti
      */
     private void sendDataContainer() {
         try {
@@ -91,6 +97,15 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             clearPlayerResources();
         } else {
 
+            try {
+
+                virtualClient.endGame();
+            } catch (RemoteException e) {
+
+                System.err.println("RMI error while terminating " + player.getNickName() + " game");
+
+            }
+
         }
 
     }
@@ -98,7 +113,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     /**
      * Clears all players resources.
      *
-     * @author carlo
      */
     void clearPlayerResources() {
         try {
@@ -125,7 +139,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
             try {
 
-                virtualClient.printShortCutMessage(message);
+                virtualClient.printMessage(message);
             } catch (RemoteException e) {
                 System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
             }
@@ -146,11 +160,27 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * @author carlo
      */
     private String getPlayerInput() throws PlayerDisconnectedException {
-        try {
-            return socketDataExchanger.getString();
-        } catch (IOException e) {
-            System.err.println("Error while obtaining data from client");
-            throw new PlayerDisconnectedException(player);
+
+        if(connectionType == ConnectionType.SOCKET) {
+
+            try {
+                return socketDataExchanger.getString();
+            } catch (IOException e) {
+                System.err.println("Error while obtaining data from client");
+                throw new PlayerDisconnectedException(player);
+            }
+        }
+        else{
+
+            try{
+                return virtualClient.getString();
+            } catch (RemoteException e) {
+
+                System.err.println("An error was encountered while obtaining the input of " + player.getNickName());
+                throw new PlayerDisconnectedException(player);
+
+            }
+
         }
     }
 
@@ -182,6 +212,15 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             sendDataContainer();
         } else {
 
+            try {
+
+                virtualClient.printMessage(message);
+
+            } catch (RemoteException e) {
+                System.err.println("An error occurred while sending a message to " + player.getNickName() +
+                        " through rmi protocol");
+            }
+
         }
 
     }
@@ -194,6 +233,14 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             dataContainer.setComponent(component);
             sendDataContainer();
         } else {
+
+            try{
+                virtualClient.printComponent(component);
+            } catch (RemoteException e) {
+
+                System.err.println("An error occurred while sending a component to " + player.getNickName() +
+                        " through rmi protocol");
+            }
 
         }
 
@@ -208,6 +255,14 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             sendDataContainer();
         } else {
 
+            try{
+                virtualClient.printShipboard(shipBoard);
+            } catch (RemoteException e) {
+
+                System.err.println("An error occurred while sending a shipboard to " + player.getNickName() +
+                        " through rmi protocol");
+            }
+
         }
 
     }
@@ -221,6 +276,14 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             sendDataContainer();
         } else {
 
+            try{
+                virtualClient.printCard(card);
+            } catch (RemoteException e) {
+
+                System.err.println("An error occurred while sending a card to " + player.getNickName() +
+                        " through rmi protocol");
+            }
+
         }
 
     }
@@ -233,6 +296,14 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             dataContainer.setFlightBoard(flightBoard);
             sendDataContainer();
         } else {
+
+            try{
+                virtualClient.printFlightBoard(flightBoard);
+            } catch (RemoteException e) {
+
+                System.err.println("An error occurred while sending a flightboard to " + player.getNickName() +
+                        " through rmi protocol");
+            }
 
         }
 

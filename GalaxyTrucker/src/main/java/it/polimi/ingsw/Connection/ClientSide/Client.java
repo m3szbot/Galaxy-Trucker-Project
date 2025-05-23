@@ -1,6 +1,11 @@
 package it.polimi.ingsw.Connection.ClientSide;
 
-import java.io.IOException;
+import it.polimi.ingsw.Connection.ClientSide.RMI.RMIGameHandler;
+import it.polimi.ingsw.Connection.ClientSide.socket.SocketGameHandler;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientWelcomer;
+import it.polimi.ingsw.Connection.ClientSide.utils.InputDaemon;
+import it.polimi.ingsw.Connection.ConnectionType;
 
 /**
  * Client class. The client lifecycle is composed of
@@ -18,33 +23,28 @@ public class Client {
     public static void main(String[] args) {
 
         ClientWelcomer welcomer = new ClientWelcomer();
-        ClientJoiner joiner = new ClientJoiner();
-        ClientGameHandler gamehandler = new ClientGameHandler();
         ClientInfo clientInfo = new ClientInfo();
         InputDaemon inputDaemon = new InputDaemon(clientInfo.getUserInput());
+        SocketGameHandler socketHandler = new SocketGameHandler(clientInfo);
+        RMIGameHandler rmiHandler = new RMIGameHandler(clientInfo);
 
         welcomer.start(clientInfo);
 
         inputDaemon.setDaemon(true);
         inputDaemon.start();
 
-            if(joiner.start(clientInfo)){
+        if(clientInfo.getConnectionType() == ConnectionType.SOCKET){
 
-                gamehandler.start(clientInfo);
-
-            }
-
-
-
-        try {
-
-            clientInfo.getDataExchanger().closeResources();
-            System.out.println("Resources closed succesfully");
+            socketHandler.start();
 
         }
-        catch (IOException e) {
-            System.err.println("Critical error while closing server socket and streams");
+        else{
+
+            rmiHandler.start();
+
         }
+
+
 
     }
 

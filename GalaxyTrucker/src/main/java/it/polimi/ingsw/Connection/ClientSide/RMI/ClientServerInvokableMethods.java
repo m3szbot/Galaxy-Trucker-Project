@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide;
+package it.polimi.ingsw.Connection.ClientSide.RMI;
 
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 

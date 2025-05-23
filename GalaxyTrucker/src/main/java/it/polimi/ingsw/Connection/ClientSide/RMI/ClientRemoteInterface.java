@@ -14,7 +14,7 @@ public interface ClientRemoteInterface extends Remote{
 
     public void makeClientJoin(Server centralserver) throws RemoteException;
 
-    public void printShortCutMessage(String message) throws RemoteException;
+    public void printMessage(String message) throws RemoteException;
 
     public String getString() throws RemoteException;
 
