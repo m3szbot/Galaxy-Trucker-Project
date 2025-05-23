@@ -39,10 +39,10 @@ public interface EnginePowerChoice {
 
 
         if (player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
-            //player have the possibility to increase his engine power with batteries
+            //player has the possibility to increase his engine power with batteries
 
             message = "Your engine power is " + defaultEnginePower +
-                    ", but you still have " + player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() + " double engine." +
+                    ", but you still have " + player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() + " double engine.\n" +
                     " Would you like to use double engines to increase you're engine power ?";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
@@ -90,7 +90,7 @@ public interface EnginePowerChoice {
 
                             if (component != null) {
                                 if (component.getComponentName().equals("Battery")) {
-                                    if (((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
+                                    if (player.getShipBoard().getComponent(coordinates[0], coordinates[1]).getBatteryPower() > 0) {
                                         break;
                                     }
                                 }

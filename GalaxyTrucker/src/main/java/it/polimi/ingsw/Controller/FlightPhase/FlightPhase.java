@@ -57,12 +57,6 @@ public class FlightPhase extends Phase {
 
             card.resolve(gameInformation);
 
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                System.out.println("Error while sleeping");
-            }
-
             for (Player player : flightBoard.getPlayerOrderList()) {
 
                 playerMessenger = gameMessenger.getPlayerMessenger(player);
