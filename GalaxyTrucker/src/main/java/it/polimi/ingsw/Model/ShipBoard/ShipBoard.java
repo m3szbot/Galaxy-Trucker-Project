@@ -292,6 +292,7 @@ public class ShipBoard implements Serializable {
                         errorsMatrix[i][j] = true;
                         break;
                     }
+
                     if (componentMatrix[i][j].getDrivingPower(visitor) > 0) {
                         if (!componentMatrix[i][j].getBack().equals(SideType.Special)) {
                             errorsMatrix[i][j] = true;
