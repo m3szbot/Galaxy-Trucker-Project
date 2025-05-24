@@ -531,17 +531,28 @@ public class ShipBoard implements Serializable {
         Component component = componentMatrix[col][row];
         // cabin with crew
         if (component.getCrewMembers() > 0) {
-            // purple alien (1 per shipboard)
-            if (crewType.equals(CrewType.Purple) && !shipBoardAttributes.getPurpleAlien() &&
+            if (crewType.equals(CrewType.Human))
+                return;
+                // purple alien (1 per shipboard)
+            else if (crewType.equals(CrewType.Purple) && !shipBoardAttributes.getPurpleAlien() &&
                     checkForAlienSupport(col, row, crewType)) {
                 ((Cabin) component).setCrewType(crewType);
+                shipBoardAttributes.updateCrewMembers();
+                shipBoardAttributes.updateAliens();
             }
             // brown alien (1 per shipboard)
             else if (crewType.equals(CrewType.Brown) && !shipBoardAttributes.getBrownAlien() &&
                     checkForAlienSupport(col, row, crewType)) {
                 ((Cabin) component).setCrewType(crewType);
+                shipBoardAttributes.updateCrewMembers();
+                shipBoardAttributes.updateAliens();
+            } else {
+                throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
             }
+        } else {
+            throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
         }
+
     }
 
     /**
