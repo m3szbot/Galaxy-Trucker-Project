@@ -20,11 +20,12 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GameInformation {
+public class GameInformation implements Serializable {
     private GameType gameType;
     private List<Card> cardsList;
     private List<Component> componentList;

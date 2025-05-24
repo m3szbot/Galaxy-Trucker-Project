@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide.socket;
 
-import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -292,7 +291,7 @@ public class ClientSocketHandler extends Thread {
 
         message = nickName + " joined the game!";
         notifyAllPlayers(message);
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, ConnectionType.SOCKET, dataExchanger);
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, dataExchanger);
 
         if (isFirstPlayer) {
             message = "You have successfully created the game (game code " + centralServer.getCurrentGameCode() + ")";

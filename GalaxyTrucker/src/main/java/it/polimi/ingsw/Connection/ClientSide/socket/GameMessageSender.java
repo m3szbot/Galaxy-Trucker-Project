@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide;
+package it.polimi.ingsw.Connection.ClientSide.socket;
 
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 

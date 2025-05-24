@@ -1,6 +1,6 @@
-package it.polimi.ingsw.Connection.ClientSide;
+package it.polimi.ingsw.Connection.ClientSide.socket;
 
-import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 
@@ -40,6 +40,9 @@ public class ClientJoiner {
             return startTUI(clientInfo);
 
 
+        }
+        else{
+            //TODO (GUI)
         }
 
         return false;
@@ -151,31 +154,20 @@ public class ClientJoiner {
 
     private SocketDataExchanger setUpConnection(ClientInfo clientInfo) throws IOException{
 
+        SocketDataExchanger dataExchanger;
 
-        if(clientInfo.getConnectionType() == ConnectionType.SOCKET){
-
-            SocketDataExchanger dataExchanger;
-
-            Socket clientSocket;
-            ObjectInputStream inputStream;
-            ObjectOutputStream outputStream;
+        Socket clientSocket;
+        ObjectInputStream inputStream;
+        ObjectOutputStream outputStream;
 
 
-            clientSocket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
-            outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            outputStream.flush();
-            inputStream = new ObjectInputStream(clientSocket.getInputStream());
+        clientSocket = new Socket(clientInfo.getServerIp(), clientInfo.getServerPort());
+        outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+        outputStream.flush();
+        inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-           dataExchanger = new SocketDataExchanger(clientSocket, inputStream, outputStream);
-           return dataExchanger;
-
-        }
-        else{
-
-            //RMI
-            return null;
-
-        }
+       dataExchanger = new SocketDataExchanger(clientSocket, inputStream, outputStream);
+       return dataExchanger;
 
     }
 

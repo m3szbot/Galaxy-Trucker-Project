@@ -9,7 +9,9 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-public class Game implements Runnable {
+import java.io.Serializable;
+
+public class Game implements Runnable, Serializable {
 
     private final int gameCode;
     private GameState gameState;

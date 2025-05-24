@@ -2,6 +2,7 @@ package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMIListener;
 import it.polimi.ingsw.Connection.ServerSide.RMI.VirtualServer;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketListener;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Controller.Game.GameState;
@@ -42,8 +43,9 @@ public class Server {
     public Server() {
         this.gameCode = 0;
         this.currentStartingGame = new Game(gameCode);
-        ClientMessenger.addGame(gameCode);
         VirtualServer virtualServer;
+        ClientMessenger.addGame(gameCode);
+
         try {
 
             virtualServer = new VirtualServer(this);
@@ -186,6 +188,7 @@ public class Server {
         addGame(currentStartingGame);
         //new game
         currentStartingGame = new Game(gameCode);
+
         ClientMessenger.addGame(gameCode);
     }
 

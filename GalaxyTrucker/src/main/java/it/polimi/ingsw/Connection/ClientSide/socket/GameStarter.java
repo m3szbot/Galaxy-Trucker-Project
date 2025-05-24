@@ -1,5 +1,6 @@
-package it.polimi.ingsw.Connection.ClientSide;
+package it.polimi.ingsw.Connection.ClientSide.socket;
 
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.View.AssemblyView.AssemblyViewTUI;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author carlo
  */
 
-public class ClientGameHandler {
+public class GameStarter {
 
     GeneralView[] views = new GeneralView[4];
     ClientInfo clientInfo;

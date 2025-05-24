@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide;
+package it.polimi.ingsw.Connection.ServerSide.messengers;
 
 import java.util.HashMap;
 import java.util.Map;

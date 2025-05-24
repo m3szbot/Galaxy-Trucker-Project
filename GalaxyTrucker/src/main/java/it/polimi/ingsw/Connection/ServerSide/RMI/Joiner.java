@@ -1,33 +1,29 @@
-package it.polimi.ingsw.Connection.ClientSide.RMI;
+package it.polimi.ingsw.Connection.ServerSide.RMI;
 
-import it.polimi.ingsw.Connection.ClientSide.ClientInfo;
-import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.ClientMessenger;
+import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class JoinerUtil {
+public class Joiner {
 
     private ClientInfo clientInfo;
     private int trials;
     private final int MAXTRIALS = 5;
     private Server centralServer;
-    private AtomicReference<String> userInput;
-    private VirtualClient virtualClient;
+    private ClientRemoteInterface virtualClient;
 
-    public JoinerUtil(ClientInfo clientInfo, Server centralServer, VirtualClient virtualClient){
+    public Joiner(ClientInfo clientInfo, Server centralServer, ClientRemoteInterface virtualClient) throws RemoteException{
         this.clientInfo = clientInfo;
         this.centralServer = centralServer;
+        virtualClient.setInputTimeOut(false);
         this.virtualClient = virtualClient;
         this.trials = 0;
-        this.userInput = clientInfo.getUserInput();
     }
 
     public void start() throws RemoteException {
@@ -41,23 +37,15 @@ public class JoinerUtil {
 
     }
 
-
-    public String getString(){
-
-        while(userInput.get() == null);
-        return userInput.getAndSet(null);
-
-    }
-
-    public void checkUsername(){
+    public void checkUsername() throws RemoteException{
 
         String message;
 
         while(centralServer.checkNickname(clientInfo.getNickname())){
 
             message = "nickname '" + clientInfo.getNickname() + "' has already been chosen, please enter a new one: ";
-            System.out.println(message);
-            clientInfo.setNickname(getString());
+            virtualClient.printMessage(message);
+            clientInfo.setNickname(virtualClient.getString());
 
         }
 
@@ -75,33 +63,42 @@ public class JoinerUtil {
 
             message = "Press 'Enter' key to enter in a game: ";
 
-            System.out.println(message);
+            virtualClient.printMessage(message);
 
             if(checkEnterKey()){
 
-                if(joinGame(centralServer)){
+                try {
 
-                    if(isEmpty(centralServer)){
-                        makeFirstPlayerJoin();
+                    if (joinGame(centralServer)) {
+
+                        if (isEmpty(centralServer)) {
+                            makeFirstPlayerJoin();
+                        } else {
+                            makeNonFirstPlayerJoin();
+                        }
+
+                        centralServer.getLock().unlock();
+                        break;
+
                     }
                     else{
-                        makeNonFirstPlayerJoin();
+
+                        message = "Somebody is already joining a new game, please wait.";
+                        virtualClient.printMessage(message);
                     }
 
+                }catch (RemoteException e){
+                    //need to release the lock
                     centralServer.getLock().unlock();
-                    break;
 
+                    throw e;
                 }
-                else{
 
-                    message = "Somebody is already joining a new game, please wait.";
-                    System.out.println(message);
-                }
             }
             else{
 
                 message = "The string you entered is invalid!";
-                System.out.println(message);
+                virtualClient.printMessage(message);
                 trials++;
                 checkTrials();
             }
@@ -110,9 +107,9 @@ public class JoinerUtil {
 
     }
 
-    private boolean checkEnterKey(){
+    private boolean checkEnterKey() throws RemoteException{
 
-        if(getString().isEmpty()){
+        if(virtualClient.getString().isEmpty()){
             return true;
         }
         return false;
@@ -145,20 +142,20 @@ public class JoinerUtil {
 
         message = "You are the first player joining the game!";
 
-        System.out.println(message);
+        virtualClient.printMessage(message);
 
         message = "Enter the game type (TESTGAME/NORMALGAME): ";
 
-        System.out.println(message);
+        virtualClient.printMessage(message);
 
         while (true) {
 
-            input = getString();
+            input = virtualClient.getString();
 
             if (!input.equalsIgnoreCase("TESTGAME") && !input.equalsIgnoreCase("NORMALGAME")) {
 
                 message = "The game type you entered is incorrect, please reenter it (TESTGAME/NORMALGAME): ";
-                System.out.println(message);
+                virtualClient.printMessage(message);
                 trials++;
                 checkTrials();
 
@@ -167,7 +164,7 @@ public class JoinerUtil {
                 gameType = GameType.valueOf(input.toUpperCase());
                 centralServer.getCurrentStartingGame().getGameInformation().setGameType(gameType);
                 message = "Game type was set up correctly";
-                System.out.println(message);
+                virtualClient.printMessage(message);
 
                 break;
             }
@@ -176,18 +173,18 @@ public class JoinerUtil {
 
         message = "Enter the number of players of the game (2-4): ";
 
-        System.out.println(message);
+        virtualClient.printMessage(message);
 
         while (true) {
 
             try {
 
-                numberOfPlayers = Integer.parseInt(getString());
+                numberOfPlayers = Integer.parseInt(virtualClient.getString());
 
             } catch (NumberFormatException e) {
 
                 message = "You didn't enter a number! Please enter one: ";
-                System.out.println(message);
+                virtualClient.printMessage(message);
                 trials++;
                 checkTrials();
                 continue;
@@ -197,13 +194,13 @@ public class JoinerUtil {
             if (numberOfPlayers < 2 || numberOfPlayers > 4) {
 
                 message = "The number of players you entered is invalid, please enter a valid value (2-4): ";
-                System.out.println(message);
+                virtualClient.printMessage(message);
                 trials++;
                 checkTrials();
             } else {
 
                 message = "Number of players was set up correctly";
-                System.out.println(message);
+                virtualClient.printMessage(message);
                 break;
             }
 
@@ -215,7 +212,7 @@ public class JoinerUtil {
 
     }
 
-    private void addPlayerToGame(boolean isFirstPlayer, int numberOfPlayers, GameType gameType){
+    private void addPlayerToGame(boolean isFirstPlayer, int numberOfPlayers, GameType gameType) throws RemoteException{
 
         String message;
         Player playerToAdd;
@@ -223,6 +220,7 @@ public class JoinerUtil {
         playerToAdd = new Player(clientInfo.getNickname(), centralServer.getCurrentColor(), centralServer.getCurrentStartingGame().getGameInformation());
 
         if (isFirstPlayer) {
+
             centralServer.addPlayerToCurrentStartingGame(playerToAdd, gameType, numberOfPlayers);
 
         } else {
@@ -231,7 +229,7 @@ public class JoinerUtil {
 
         message = clientInfo.getNickname() + " joined the game!";
         notifyAllPlayers(message);
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, ConnectionType.RMI, virtualClient);
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, virtualClient);
 
         if (isFirstPlayer) {
             message = "You have successfully created the game (game code " + centralServer.getCurrentGameCode() + ")";
@@ -239,12 +237,13 @@ public class JoinerUtil {
         } else {
             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
         }
-        System.out.println(message);
+        virtualClient.printMessage(message);
+        virtualClient.setInputTimeOut(true);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
             centralServer.startCurrentGame();
         } else {
-            System.out.println("Waiting for other players to join...");
+            virtualClient.printMessage("Waiting for other players to join...");
         }
     }
 
@@ -257,13 +256,10 @@ public class JoinerUtil {
     private void checkTrials() throws RemoteException{
 
         if(trials == MAXTRIALS){
-            try {
-                throw new RemoteException("Client " + InetAddress.getLocalHost().getHostAddress() + " (" + clientInfo.getNickname() + ")" +
-                        " was kicked out because of too many input failures. The client probably had" +
-                        " malicious intent");
-            } catch (UnknownHostException e) {
-                System.err.println("Unknown host: critical error");
-            }
+            throw new RemoteException("Player " + clientInfo.getNickname() + " (" + clientInfo.getNickname() + ")" +
+                    " was kicked out because of too many input failures. The client probably had" +
+                    " malicious intent");
+
         }
 
     }
