@@ -36,7 +36,6 @@ public interface EnginePowerChoice {
             defaultEnginePower += 2;
         }
 
-
         if (player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
             //player has the possibility to increase his engine power with batteries
 
