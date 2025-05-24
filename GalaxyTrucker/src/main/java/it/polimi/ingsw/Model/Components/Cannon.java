@@ -24,19 +24,6 @@ public class Cannon extends Component {
 
     }
 
-    /**
-     * @return true if cannon is single.
-     */
-
-    public boolean isSingle() {
-        return single;
-    }
-
-    @JsonProperty("single")
-    public void setSingle(boolean single) {
-        this.single = single;
-    }
-
     @Override
     public String getComponentName() {
         return "Cannon";
@@ -51,5 +38,19 @@ public class Cannon extends Component {
             return firePower;
         }
         return firePower * 0.5f;
+    }
+
+    /**
+     * @return true if cannon is single.
+     */
+
+    @Override
+    public boolean isSingle() {
+        return single;
+    }
+
+    @JsonProperty("single")
+    public void setSingle(boolean single) {
+        this.single = single;
     }
 }
