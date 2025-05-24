@@ -56,8 +56,8 @@ public class PlaceBookedComponentState implements GameState {
         if (index == 0 || index == 1) {
             if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
                 synchronized (assemblyProtocol.lockUncoveredList) {
-                    assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);}
-                System.out.println("SONO ARRIVATO QUI 3");
+                    assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+                }
                 assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player));
             } else {
                 String message = "The Booked Component chose doesn't exist";
