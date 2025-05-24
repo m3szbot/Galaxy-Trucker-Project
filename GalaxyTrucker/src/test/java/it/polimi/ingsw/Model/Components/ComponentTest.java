@@ -1,12 +1,12 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.Model.ShipBoard.VisitorAttributesUpdater;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ComponentTest {
-
     // Test constants
     private static final SideType[] TEST_SIDES = {
             SideType.Smooth,
@@ -14,6 +14,23 @@ class ComponentTest {
             SideType.Single,
             SideType.Universal
     };
+
+    VisitorAttributesUpdater visitor = new VisitorAttributesUpdater();
+
+    Component singleEngine = new Engine(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, true);
+    Component doubleEngine = new Engine(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, false);
+
+    @Test
+    void testSingleEnginePower() {
+        assertEquals(1, singleEngine.getDrivingPower());
+        assertEquals(1, singleEngine.getDrivingPower(visitor));
+    }
+
+    @Test
+    void testDoubleEnginePower() {
+        assertEquals(2, doubleEngine.getDrivingPower());
+        assertEquals(2, doubleEngine.getDrivingPower(visitor));
+    }
 
     @Test
     void constructor_shouldInitializeFieldsCorrectly() {
