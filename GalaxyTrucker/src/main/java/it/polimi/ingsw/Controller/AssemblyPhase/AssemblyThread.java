@@ -77,7 +77,7 @@ public class AssemblyThread implements Runnable {
                         String message = e.getMessage();
                         disconnected.set(true);
                         for (Player player : gameInformation.getPlayerList()) {
-                            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(associatedPlayer).printMessage(message);
+                            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                         }
                     }
                 } else {
