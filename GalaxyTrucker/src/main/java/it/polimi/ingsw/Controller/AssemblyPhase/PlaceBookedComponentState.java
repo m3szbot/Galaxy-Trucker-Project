@@ -52,20 +52,22 @@ public class PlaceBookedComponentState implements GameState {
     @Override
     public void handleInput(String input, AssemblyThread assemblyPhase) {
         int index = Integer.parseInt(input);
-        index = index - 1;
+        index = index;
         if (index == 0 || index == 1) {
-            synchronized (assemblyProtocol.lockUncoveredList) {
-                assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
-            }
-            if (index == 0 || index == 1) {
-                assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+            if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
+                synchronized (assemblyProtocol.lockUncoveredList) {
+                    assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);}
+                System.out.println("SONO ARRIVATO QUI 3");
                 assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player));
             } else {
                 String message = "The Booked Component chose doesn't exist";
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
+        }else{
+            String message = "Wrong input";
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+            assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
         }
-
     }
 }

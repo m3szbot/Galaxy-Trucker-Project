@@ -45,9 +45,8 @@ public class HourGlass {
                 @Override
                 public void run() {
                     if (elapsedTime < life) {
-                        if(elapsedTime % 5 == 0) {
+                        if(elapsedTime % 15 == 0) {
                             String message = ("Elapsed Time: " + elapsedTime + "s");
-
                             ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendMessageToAll(message);
 
                         }

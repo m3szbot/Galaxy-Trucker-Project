@@ -266,8 +266,11 @@ public class ShipBoard implements Serializable {
      * @author Giacomo, Boti
      */
     // TODO finish
+    // TODO finish visitor
     public void checkErrors() {
-        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
+        //Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
+
+        VisitorAttributesUpdater visitor = new VisitorAttributesUpdater();
         // max-real included!
         // iterate columns
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
@@ -289,8 +292,8 @@ public class ShipBoard implements Serializable {
                         errorsMatrix[i][j] = true;
                         break;
                     }
-                    // TODO
-                    if ((Integer) componentMatrix[i][j].accept(visitor).get(0) > 0) {
+
+                    if (componentMatrix[i][j].getDrivingPower(visitor) > 0) {
                         if (!componentMatrix[i][j].getBack().equals(SideType.Special)) {
                             errorsMatrix[i][j] = true;
                         } else {
@@ -645,7 +648,9 @@ public class ShipBoard implements Serializable {
     }
 
 
-    private int getDrivingPower(VisitorAttributesUpdater visitor, Component component) {
+    // TODO move these to component?
+    /*
+    public int getDrivingPower(VisitorAttributesUpdater visitor, Component component) {
         return (Integer) component.accept(visitor).get(0);
     }
 
@@ -676,6 +681,7 @@ public class ShipBoard implements Serializable {
     private boolean getAmIASupport(VisitorAttributesUpdater visitor, Component component) {
         return (Boolean) component.accept(visitor).get(7);
     }
+     */
 
     //this function might change completly since i'm still not sure where the error checking will be
     private void solveError(int x, int y) {
