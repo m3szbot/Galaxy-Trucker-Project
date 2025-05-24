@@ -138,12 +138,14 @@ public class ShipBoard implements Serializable {
      * @param component  The component to add.
      * @param visibleCol Visible column.
      * @param visibleRow Visible row.
-     * @author Giacomo
+     * @author Giacomo, Boti
      * TODO
      */
-    public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException {
+    public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException, IllegalArgumentException {
+        checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
+
         Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
 
         if (!checkValidPlacement(col, row)) {
@@ -180,12 +182,25 @@ public class ShipBoard implements Serializable {
         // TODO qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
     }
 
+    /**
+     * Throws IllegalArgumentException if entered coordinates are out of bounds of the shipBoard.
+     * To call at the start of every method that takes coordinates as input.
+     *
+     * @throws IllegalArgumentException
+     * @author Boti
+     */
+    private void checkIndexInBounds(int visibleCol, int visibleRow) throws IllegalArgumentException {
+        if (visibleCol < 0 || visibleCol > SB_COLS || visibleRow < 0 || visibleRow > SB_ROWS)
+            throw new IllegalArgumentException("The entered coordinates are out of bounds");
+    }
+
     private int getRealIndex(int visibleIndex) {
         return visibleIndex - 1;
     }
 
     /**
      * Check if the requested cell is valid to place a component in.
+     * Call checkIndexInBounds before.
      *
      * @return true if placement is valid, false if invalid.
      */
@@ -255,32 +270,29 @@ public class ShipBoard implements Serializable {
 
     /**
      * Scans the ship structure to identify errors.
-     * Updates errorMatrix with erroneous components.
-     * Errors are detected and counted but not automatically corrected.
+     * Updates errorMatrix with erroneous components
+     * (true for error, false for correct).
      * <p>
-     * The function iterates through the structure matrix and:
-     * 1. Verifies if components are correctly connected.
-     * 2. Checks if the "Engine" component is incorrectly placed.
-     * 3. Ensures "Cannon" components follow specific placement rules.
+     * Verify connection to ship, correct junctions, engine and cannon rules.
      *
      * @author Giacomo, Boti
      */
-    // TODO finish
-    // TODO finish visitor
     public void checkErrors() {
-        //Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
+        Component component;
 
-        VisitorAttributesUpdater visitor = new VisitorAttributesUpdater();
         // max-real included!
         // iterate columns
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             // iterate rows
             for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                // default
+                // default: no error in cell
+                // override if cell erroneous
                 errorsMatrix[i][j] = false;
+                component = componentMatrix[i][j];
 
-                // override if erroneous
-                if (componentMatrix[i][j] != null) {
+                // if component is present, check for errors
+                if (component != null) {
+
                     // check if adjacent
                     if (!checkAdjacency(i, j)) {
                         errorsMatrix[i][j] = true;
@@ -293,66 +305,18 @@ public class ShipBoard implements Serializable {
                         break;
                     }
 
-                    if (componentMatrix[i][j].getDrivingPower(visitor) > 0) {
-                        if (!componentMatrix[i][j].getBack().equals(SideType.Special)) {
+                    // check if Engine
+                    if (component instanceof Engine) {
+                        if (checkEngineErrors(i, j)) {
                             errorsMatrix[i][j] = true;
-                        } else {
-                            boolean check = false;
-                            if (componentMatrix[i + 1][j] != null) {
-                                check = true;
-                            }
-                            /*
-                            for (int k = i + 1; k < 12; k++) {
-                                if (componentMatrix[k][j] != null) {
-                                    check = true;
-                                    errors++;
-                                }
-                            }
-                            */
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
-                                errorsMatrix[i][j] = true;
-                            }
+                            break;
                         }
                     }
-                    if ((Float) componentMatrix[i][j].accept(visitor).get(1) > 0) {
-                        boolean check = false;
-                        if (componentMatrix[i][j].getLeft().equals(SideType.Special)) {
-
-                            if (componentMatrix[i][j - 1] != null) {
-                                check = true;
-                                errorsMatrix[i][j] = true;
-                            }
-
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
-                            }
-                        } else if (componentMatrix[i][j].getRight().equals(SideType.Special)) {
-
-                            if (componentMatrix[i][j + 1] != null) {
-                                check = true;
-                                errorsMatrix[i][j] = true;
-                            }
-
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
-                            }
-                        } else if (componentMatrix[i][j].getFront().equals(SideType.Special)) {
-                            if (componentMatrix[i - 1][j] != null) {
-                                check = true;
-                                errorsMatrix[i][j] = true;
-                            }
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
-                            }
-                        } else if (componentMatrix[i][j].getBack().equals(SideType.Special)) {
-                            if (componentMatrix[i + 1][j] != null) {
-                                check = true;
-                                errorsMatrix[i][j] = true;
-                            }
-                            if (check) {
-                                System.out.println("Error, in component" + i + ' ' + j);
-                            }
+                    // check if Cannon
+                    else if (component instanceof Cannon) {
+                        if (checkCannonErrors(i, j)) {
+                            errorsMatrix[i][j] = true;
+                            break;
                         }
                     }
                 }
@@ -397,6 +361,55 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * Check for engine errors.
+     *
+     * @return true if there are errors, false if correct.
+     */
+    private boolean checkEngineErrors(int i, int j) {
+        Engine component = (Engine) componentMatrix[i][j];
+        // engine not facing backwards
+        if (!component.getBack().equals(SideType.Special))
+            return true;
+            // engine obstructed
+        else if (componentMatrix[i][j + 1] != null)
+            return true;
+        // no errors found
+        return false;
+    }
+
+    /**
+     * Check for cannon errors.
+     *
+     * @return true if there are errors, false if correct.
+     */
+    private boolean checkCannonErrors(int i, int j) {
+        Cannon component = (Cannon) componentMatrix[i][j];
+        // cannon obstructed
+        // front cannon
+        if (component.getFront().equals(SideType.Special)) {
+            if (componentMatrix[i][j - 1] != null)
+                return true;
+        }
+        // right cannon
+        else if (component.getRight().equals(SideType.Special)) {
+            if (componentMatrix[i + 1][j] != null)
+                return true;
+        }
+        // left cannon
+        else if (component.getLeft().equals(SideType.Special)) {
+            if (componentMatrix[i - 1][j] != null)
+                return true;
+        }
+        // back cannon
+        else {
+            if (componentMatrix[i][j + 1] != null)
+                return true;
+        }
+        // no errors found
+        return false;
+    }
+
+    /**
      * Check if the 2 provided junctions are compatible.
      *
      * @return true if junctions are compatible, false if incompatible.
@@ -415,22 +428,20 @@ public class ShipBoard implements Serializable {
         return false;
     }
 
-
     /**
      * Removes a component from the specified position.
      * Updates the shipBoard to reflect the destroyed components.
      *
-     * @param col The x-coordinate of the component.
-     * @param row The y-coordinate of the component.
      * @author Giacomo
      */
-    public void removeComponent(int col, int row, boolean checkTrigger) {
+    public void removeComponent(int visibleCol, int visibleRow, boolean checkTrigger) {
+        checkIndexInBounds(visibleCol, visibleRow);
         boolean flag = true;
-        col = col - 1;
-        row = row - 1;
+        int realCol = getRealIndex(visibleCol);
+        int realRow = getRealIndex(visibleRow);
 
-        if (validityMatrix[col][row] == true && componentMatrix[col][row] != null) {
-            Component component = componentMatrix[col][row];
+        if (validityMatrix[realCol][realRow] == true && componentMatrix[realCol][realRow] != null) {
+            Component component = componentMatrix[realCol][realRow];
             Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
             List<Object> list = component.accept(visitor);
             shipBoardAttributes.updateDestroyedComponents(1);
@@ -460,7 +471,7 @@ public class ShipBoard implements Serializable {
                 update[3] = -update[3];
                 shipBoardAttributes.updateGoods(update);
             }
-            componentMatrix[col][row] = null;
+            componentMatrix[realCol][realRow] = null;
             if (checkTrigger) {
                 while (checkNotReachable(this.shipBoardAttributes)) ;
             }
@@ -647,41 +658,6 @@ public class ShipBoard implements Serializable {
         return false;
     }
 
-
-    // TODO move these to component?
-    /*
-    public int getDrivingPower(VisitorAttributesUpdater visitor, Component component) {
-        return (Integer) component.accept(visitor).get(0);
-    }
-
-    private float getFirePower(VisitorAttributesUpdater visitor, Component component) {
-        return (Float) component.accept(visitor).get(1);
-    }
-
-    private int getCrewMembers(VisitorAttributesUpdater visitor, Component component) {
-        return (Integer) component.accept(visitor).get(2);
-    }
-
-    private int getBatteryPower(VisitorAttributesUpdater visitor, Component component) {
-        return (Integer) component.accept(visitor).get(3);
-    }
-
-    private boolean[] getCoveredSides(VisitorAttributesUpdater visitor, Component component) {
-        return (boolean[]) component.accept(visitor).get(4);
-    }
-
-    private int getAvailableRedSlots(VisitorAttributesUpdater visitor, Component component) {
-        return (Integer) component.accept(visitor).get(5);
-    }
-
-    private int getAvailableBlueSlots(VisitorAttributesUpdater visitor, Component component) {
-        return (Integer) component.accept(visitor).get(6);
-    }
-
-    private boolean getAmIASupport(VisitorAttributesUpdater visitor, Component component) {
-        return (Boolean) component.accept(visitor).get(7);
-    }
-     */
 
     //this function might change completly since i'm still not sure where the error checking will be
     private void solveError(int x, int y) {
