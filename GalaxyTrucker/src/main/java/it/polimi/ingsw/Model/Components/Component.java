@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.Model.ShipBoard.Visitor;
+import it.polimi.ingsw.Model.ShipBoard.VisitorAttributesUpdater;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -125,6 +126,9 @@ public class Component implements Visitable, Serializable {
         return indexes;
     }
 
+    // attributes getter for non visitor
+    // must use explicit type casting
+    // (ComponentType) component.get()
     public int getDrivingPower() {
         return 0;
     }
@@ -161,8 +165,61 @@ public class Component implements Visitable, Serializable {
         return false;
     }
 
+    /**
+     * Return drivingPower of component using visitor pattern.
+     */
+    public int getDrivingPower(VisitorAttributesUpdater visitor) {
+        return (Integer) this.accept(visitor).get(0);
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
+
+    /**
+     * Return firePower of component using visitor pattern.
+     */
+    public float getFirePower(VisitorAttributesUpdater visitor) {
+        return (Float) this.accept(visitor).get(1);
+    }
+
+    /**
+     * Return crewMembers of component using visitor pattern.
+     */
+    public int getCrewMembers(VisitorAttributesUpdater visitor) {
+        return (Integer) this.accept(visitor).get(2);
+    }
+
+    /**
+     * Return batteryPower of component using visitor pattern.
+     */
+    public int getBatteryPower(VisitorAttributesUpdater visitor) {
+        return (Integer) this.accept(visitor).get(3);
+    }
+
+
+    /**
+     * Return coveredSides of component using visitor pattern.
+     */
+    public boolean[] getCoveredSides(VisitorAttributesUpdater visitor) {
+        return (boolean[]) this.accept(visitor).get(4);
+    }
+
+    /**
+     * Return availableRedSlots of component using visitor pattern.
+     */
+    public int getAvailableRedSlots(VisitorAttributesUpdater visitor) {
+        return (Integer) this.accept(visitor).get(5);
+    }
+
+    /**
+     * Return availableBlueSlots of component using visitor pattern.
+     */
+    public int getAvailableBlueSlots(VisitorAttributesUpdater visitor) {
+        return (Integer) this.accept(visitor).get(6);
+    }
+
+    // TODO amIsupport? amIstorage?
+
 }
