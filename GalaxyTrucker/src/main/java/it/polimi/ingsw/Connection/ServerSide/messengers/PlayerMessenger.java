@@ -25,13 +25,13 @@ import java.rmi.RemoteException;
  * @author Boti, carlo
  */
 public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods{
-
     private Player player;
     private ConnectionType connectionType;
     // socket
     private DataContainer dataContainer;
     private SocketDataExchanger socketDataExchanger;
     private ClientRemoteInterface virtualClient;
+
     // RMI
     // TODO
 
@@ -131,7 +131,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * @param message
      */
 
-    public void sendShortCutMessage(String message) {
+    public synchronized void sendShortCutMessage(String message) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
             try {
                 socketDataExchanger.sendString(message);
@@ -207,12 +207,12 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public void printMessage(String message) {
+    public synchronized void printMessage(String message) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer.clearContainer();
-            dataContainer.setCommand("printMessage");
-            dataContainer.setMessage(message);
-            sendDataContainer();
+                dataContainer.clearContainer();
+                dataContainer.setCommand("printMessage");
+                dataContainer.setMessage(message);
+                sendDataContainer();
         } else {
 
             try {
@@ -229,7 +229,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public void printComponent(Component component) {
+    public synchronized void printComponent(Component component) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
             dataContainer.clearContainer();
             dataContainer.setCommand("printComponent");
@@ -250,7 +250,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public void printShipboard(ShipBoard shipBoard) {
+    public synchronized void printShipboard(ShipBoard shipBoard) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
             dataContainer.clearContainer();
             dataContainer.setCommand("printShipboard");
@@ -271,7 +271,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public void printCard(Card card) {
+    public synchronized void printCard(Card card) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
             dataContainer.clearContainer();
             dataContainer.setCommand("printCard");
@@ -292,7 +292,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public void printFlightBoard(FlightBoard flightBoard) {
+    public synchronized void printFlightBoard(FlightBoard flightBoard) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
             dataContainer.clearContainer();
             dataContainer.setCommand("printFlightBoard");
