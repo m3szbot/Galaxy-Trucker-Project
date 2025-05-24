@@ -108,8 +108,7 @@ public class Component implements Visitable, Serializable {
      * 4: coveredSides
      * 5: availableRedSlots
      * 6: availableBlueSlots
-     * 7: isSupport
-     * 8: isStorage
+     * 7: isSingle
      */
     public List<Object> getAllIndexes() {
         ArrayList<Object> indexes = new ArrayList<>();
@@ -120,9 +119,7 @@ public class Component implements Visitable, Serializable {
         indexes.add(getCoveredSides()); //4
         indexes.add(getAvailableRedSlots()); //5
         indexes.add(getAvailableBlueSlots()); //6
-        // TODO remove if unused:
-        indexes.add(amIASupport()); //7
-        indexes.add(amIAStorage()); //8
+        indexes.add(isSingle()); // 7
         return indexes;
     }
 
@@ -157,13 +154,10 @@ public class Component implements Visitable, Serializable {
         return 0;
     }
 
-    public boolean amIASupport() {
-        return false;
+    public boolean isSingle() {
+        return true;
     }
 
-    public boolean amIAStorage() {
-        return false;
-    }
 
     /**
      * Return drivingPower of component using visitor pattern.
@@ -220,6 +214,12 @@ public class Component implements Visitable, Serializable {
         return (Integer) this.accept(visitor).get(6);
     }
 
-    // TODO amIsupport? amIstorage?
+    /**
+     * Return true if the component is single, false if double.
+     */
+    public boolean isSingle(VisitorAttributesUpdater visitor) {
+        return (boolean) this.accept(visitor).get(7);
+    }
+
 
 }

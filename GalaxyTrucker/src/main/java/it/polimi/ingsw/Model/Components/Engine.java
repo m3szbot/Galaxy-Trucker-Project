@@ -25,19 +25,6 @@ public class Engine extends Component {
         }
     }
 
-    /**
-     * @return true if the engine is single
-     */
-
-    public boolean isSingle() {
-        return single;
-    }
-
-    @JsonProperty("single")
-    public void setSingle(boolean single) {
-        this.single = single;
-    }
-
     @Override
     public String getComponentName() {
         return "Engine";
@@ -48,6 +35,20 @@ public class Engine extends Component {
         if (!single)
             return 2;
         return 1;
+    }
+
+    /**
+     * @return true if the engine is single
+     */
+
+    @Override
+    public boolean isSingle() {
+        return single;
+    }
+
+    @JsonProperty("single")
+    public void setSingle(boolean single) {
+        this.single = single;
     }
 }
 
