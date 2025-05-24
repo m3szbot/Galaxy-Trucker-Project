@@ -27,7 +27,7 @@ public class DeckInUseState implements GameState {
     public void handleInput(String input, AssemblyThread assemblyPhase) {
         if(input.toLowerCase().equals("yes")){
             synchronized (assemblyProtocol.lockDecksList) {
-                assemblyProtocol.getDeck(index).setInUse(false);
+                assemblyProtocol.getDeck(index-1).setInUse(false);
             }
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
         }
