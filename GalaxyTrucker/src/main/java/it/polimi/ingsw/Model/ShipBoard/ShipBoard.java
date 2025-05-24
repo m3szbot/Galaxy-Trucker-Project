@@ -479,6 +479,46 @@ public class ShipBoard implements Serializable {
         return (sideType.equals(SideType.Single) || sideType.equals(SideType.Double) || sideType.equals(SideType.Universal));
     }
 
+
+    /**
+     * Remove a battery from the battery storage at the given coordinates.
+     * Updates shipBoardAttributes.
+     *
+     * @author Boti
+     */
+    public void removeBattery(int visibleCol, int visibleRow) {
+        checkIndexInBounds(visibleCol, visibleRow);
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        if (componentMatrix[col][row].getBatteryPower() - 1 >= 0) {
+            ((Battery) componentMatrix[col][row]).removeBattery();
+            shipBoardAttributes.updateRemainingBatteries();
+        } else {
+            throw new IllegalArgumentException("Not enough batteries at the selected component.");
+        }
+    }
+
+    /**
+     * Remove a crew member from the cabin at the given coordinates.
+     * Accounts for humans and aliens.
+     * Updates shipBoardAttributes.
+     *
+     * @author Boti
+     */
+    public void removeCrewMember(int visibleCol, int visibleRow) {
+        checkIndexInBounds(visibleCol, visibleRow);
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        if (componentMatrix[col][row].getCrewMembers() - 1 >= 0) {
+            ((Cabin) componentMatrix[col][row]).removeInhabitant();
+            shipBoardAttributes.updateCrewMembers();
+            shipBoardAttributes.updateAliens();
+        } else {
+            throw new IllegalArgumentException("Not enough crew members at the selected component.");
+        }
+    }
+
+
     /**
      * Checks if any components are not connected to the main structure.
      * If a component is unreachable, it is removed.
