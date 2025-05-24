@@ -23,7 +23,7 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
     private GeneralView views[] = new GeneralView[4];
     private GeneralView currentView;
     private int TIMEOUT;
-    private boolean inGame = true;
+    private boolean inGame;
 
     public VirtualClient(ClientInfo clientInfo) throws RemoteException {
 
@@ -83,7 +83,8 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         while(true){
 
             if(time == TIMEOUT){
-                throw new RemoteException("Input time out exceeded!");
+                System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
+                throw new RemoteException("Player was kicked out because of inactivity");
             }
 
             input = userInput.getAndSet(null);
@@ -151,5 +152,8 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         inGame = false;
     }
 
+    public void setInGame(boolean inGame){
+        this.inGame = inGame;
+    }
 
 }

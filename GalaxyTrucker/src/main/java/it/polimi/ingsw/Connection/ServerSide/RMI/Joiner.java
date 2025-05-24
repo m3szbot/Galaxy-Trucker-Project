@@ -239,6 +239,7 @@ public class Joiner {
         }
         virtualClient.printMessage(message);
         virtualClient.setInputTimeOut(true);
+        virtualClient.setInGame(true);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
             centralServer.startCurrentGame();
@@ -256,11 +257,12 @@ public class Joiner {
     private void checkTrials() throws RemoteException{
 
         if(trials == MAXTRIALS){
+            virtualClient.printMessage("You are trying to keep the server busy! Disconnection will happen soon.");
             throw new RemoteException("Player " + clientInfo.getNickname() + " (" + clientInfo.getNickname() + ")" +
                     " was kicked out because of too many input failures. The client probably had" +
                     " malicious intent");
-
         }
+
 
     }
 

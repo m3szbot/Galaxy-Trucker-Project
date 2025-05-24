@@ -87,6 +87,19 @@ public class ClientJoiner {
                         dataExchanger.sendString(String.valueOf(clientInfo.getGameCode()));
 
                     }
+                    else if(message.equals("disconnect")){
+                        System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
+                        terminatedFlag.set(true);
+                        errorFlag.set(true);
+                        break;
+                    }
+                    else if(message.equals("trialsEx")){
+
+                        System.out.println("You are trying to keep the server busy! Disconnection will happen soon.");
+                        terminatedFlag.set(true);
+                        errorFlag.set(true);
+                        break;
+                    }
                     else if (message.equals("start")) {
                         break;
                     } else {
