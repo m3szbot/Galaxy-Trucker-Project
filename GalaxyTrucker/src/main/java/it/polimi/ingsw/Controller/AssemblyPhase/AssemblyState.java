@@ -38,8 +38,7 @@ public class AssemblyState implements GameState {
         if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player)!= null) {
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
         }
-        String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)";
-        //view.sendMessageToPlayer(message, player);
+        String message = "👾AssemblyPhase (Place (current component) / Draw (a new component) / Choose (a component) / Show (a deck) / Rotate (current component) / Turn (the hourglass) / Book (current component and have a new one) / Place booked (component) / End (finish your assembling phase)";
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
     }
 
@@ -81,24 +80,30 @@ public class AssemblyState implements GameState {
                 break;
             case "turn":
                 actionTaken = true;
-                if(assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)){
-                    if(assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 2){
-                        message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                    }else{
-                        message = "Turn the hourglass";
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
+                if(assemblyPhase.assemblyProtocol.getHourGlass().isFinished() == true) {
+                    if (assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
+                        if (assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 2) {
+                            message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
+                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                        } else {
+                            message = "Turn the hourglass";
+                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
+                        }
+                    } else {
+                        if (assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 1) {
+                            message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
+                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                        } else {
+                            message = "Turn the hourglass";
+                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
+                        }
                     }
-                } else{
-                    if(assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 1){
-                        message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                    }else{
-                        message = "Turn the hourglass";
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                        assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
-                    }
+                }
+                else{
+                    message = "HourGlass is already running";
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));
                 break;

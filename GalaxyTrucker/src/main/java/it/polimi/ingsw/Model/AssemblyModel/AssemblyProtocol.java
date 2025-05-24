@@ -226,4 +226,8 @@ public class AssemblyProtocol {
     public int getGameCode() {
         return gameCode;
     }
+
+    public Deck getDeck(int index) {
+        return decksList[index];
+    }
 }
