@@ -48,8 +48,8 @@ public class ShowDeckState implements GameState {
     public void handleInput(String input, AssemblyThread assemblyPhase) {
         int index = Integer.parseInt(input);
 
-        if (index >= 0 && index < 4) {
-            if(assemblyProtocol.getDeck(index).getInUse() == false) {
+        if (index > 0 && index <= 3) {
+            if(assemblyProtocol.getDeck(index-1).getInUse() == false) {
                 synchronized (assemblyProtocol.lockDecksList) {
                     Deck deck = assemblyPhase.getAssemblyProtocol().showDeck(index);
                     for (Card card : deck.getCards()) {
