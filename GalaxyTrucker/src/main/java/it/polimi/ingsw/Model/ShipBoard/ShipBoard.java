@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +42,12 @@ public class ShipBoard implements Serializable {
     private boolean[][] errorsMatrix;
     // Matrix: [cols][rows]
 
+    // keeps track of the lists of connected components
+    // if shipboard is fractured, different connected parts are inserted as separate lists into the list
+    private List<List<Component>> connectedComponentsList;
+    // TODO
+    // 1 element is okay, 0 crew is removed
+
     /**
      * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement
@@ -59,6 +66,7 @@ public class ShipBoard implements Serializable {
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
+        this.connectedComponentsList = new ArrayList<>();
 
         // Initialize component matrix as empty
         for (int i = 0; i < SB_COLS; i++) {
@@ -133,7 +141,8 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Adds a component to the specified position in the structure matrix.
+     * Adds a component to the specified position in the structure matrix,
+     * and updates Shipboard Attributes. TODO
      *
      * @param component  The component to add.
      * @param visibleCol Visible column.
@@ -146,40 +155,15 @@ public class ShipBoard implements Serializable {
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
 
-        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-
         if (!checkValidPlacement(col, row)) {
             throw new NotPermittedPlacementException();
         } else {
-            // add component
+            // add component to shipBoard
             componentMatrix[col][row] = component;
-            // update ShipBoard Attributes
-            // TODO decide ShipBoard Attributes
-            List<Object> list = component.accept(visitor);
-            if ((Integer) list.get(0) == 1) {
-                shipBoardAttributes.updateDrivingPower((Integer) list.get(0));
-            } else if ((Integer) list.get(0) == 2) {
-                shipBoardAttributes.updateNumberDoubleEngines(1);
-            }
-            if ((Float) list.get(1) == 1) {
-                shipBoardAttributes.updateFirePower((Float) list.get(1));
-            } else if ((Float) list.get(1) == 2) {
-                if (component.getFront().equals(SideType.Special)) {
-                    shipBoardAttributes.updateNumberForwardDoubleCannons(1);
-                } else {
-                    shipBoardAttributes.updateNumberNotForwardDoubleCannons(1);
-                }
-            }
-            shipBoardAttributes.updateCrewMembers((Integer) list.get(2));
-            shipBoardAttributes.updateBatteryPower((Integer) list.get(3));
-            boolean[] sides = (boolean[]) list.get(4);
-            for (int i = 0; i < 4; i++) {
-                shipBoardAttributes.updateCoveredSides(i, sides[i], true);
-            }
-            shipBoardAttributes.updateAvailableSlots(1, (Integer) list.get(5));
-            shipBoardAttributes.updateAvailableSlots(2, (Integer) list.get(6));
+            // TODO update ShipBoard Attributes with visitor pattern
+            // define visitor updateShipBoard operation
+            shipBoardAttributes.updateShipBoardAttributes();
         }
-        // TODO qua devo fare l'aggiunta degli indici con un metodo add che aggiorni tutti gli indici
     }
 
     /**
@@ -428,54 +412,32 @@ public class ShipBoard implements Serializable {
         return false;
     }
 
+
     /**
      * Removes a component from the specified position.
-     * Updates the shipBoard to reflect the destroyed components.
+     * Updates the shipBoard and shipBoardAttributes
+     * TODO fracture
      *
-     * @author Giacomo
+     * @author Giacomo, Boti
      */
-    public void removeComponent(int visibleCol, int visibleRow, boolean checkTrigger) {
+    public void removeComponent(int visibleCol, int visibleRow, boolean checkDisconnectionTrigger) throws IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
-        boolean flag = true;
         int realCol = getRealIndex(visibleCol);
         int realRow = getRealIndex(visibleRow);
 
-        if (validityMatrix[realCol][realRow] == true && componentMatrix[realCol][realRow] != null) {
-            Component component = componentMatrix[realCol][realRow];
-            Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-            List<Object> list = component.accept(visitor);
-            shipBoardAttributes.updateDestroyedComponents(1);
-            shipBoardAttributes.updateDrivingPower(-(Integer) list.get(0));
-            if ((Float) list.get(1) == 1) {
-                shipBoardAttributes.updateFirePower(-(Float) list.get(1));
-            } else if ((Float) list.get(1) == 2) {
-                if (component.getFront().equals(SideType.Special)) {
-                    shipBoardAttributes.updateNumberForwardDoubleCannons(-1);
-                } else {
-                    shipBoardAttributes.updateNumberNotForwardDoubleCannons(-1);
-                }
-            }
-            shipBoardAttributes.updateCrewMembers(-(Integer) list.get(2));
-            shipBoardAttributes.updateBatteryPower(-(Integer) list.get(3));
-            boolean[] sides = (boolean[]) list.get(4);
-            for (int i = 0; i < 4; i++) {
-                shipBoardAttributes.updateCoveredSides(i, sides[i], false);
-            }
-            shipBoardAttributes.updateAvailableSlots(1, -(Integer) list.get(5));
-            shipBoardAttributes.updateAvailableSlots(2, -(Integer) list.get(6));
-            if ((Boolean) list.get(8) == true) {
-                int[] update = ((Storage) component).getGoods();
-                update[0] = -update[0];
-                update[1] = -update[1];
-                update[2] = -update[2];
-                update[3] = -update[3];
-                shipBoardAttributes.updateGoods(update);
-            }
-            componentMatrix[realCol][realRow] = null;
-            if (checkTrigger) {
-                while (checkNotReachable(this.shipBoardAttributes)) ;
-            }
+        // if a present element is to be removed
+        if (componentMatrix[realCol][realRow] != null) {
+            checkFracturedShipBoard();
+            shipBoardAttributes.destroyComponents(1);
+
         }
+        // TODO updateShipboard attributes
+        shipBoardAttributes.updateShipBoardAttributes();
+
+    }
+
+    private void checkFracturedShipBoard() throws FracturedShipBoardException {
+
     }
 
     /**
@@ -483,31 +445,38 @@ public class ShipBoard implements Serializable {
      * External junctions occur when a component has a connection point
      * facing an empty space.
      *
-     * @return The number of external junctions.
-     * @author Giacomo
+     * @return The total number of external junctions.
+     * @author Giacomo, Boti
      */
     public int countExternalJunctions() {
         int externalJunctions = 0;
-        for (int i = 1; i < 11; i++) {
-            for (int j = 1; j < 11; j++) {
-                if (componentMatrix[i][j] != null) {
-                    //va sistemato il fatto che qualora si volesse davvero usare un enum allora dovrebbe essere messo tipodiverso da vuoto e diverso da shield
-                    if ((!componentMatrix[i][j].getLeft().equals(SideType.Smooth) && componentMatrix[i - 1][j] == null)) {
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                Component component = componentMatrix[i][j];
+                if (component != null) {
+                    // check front
+                    if (isConnector(component.getFront()) && componentMatrix[i][j - 1] == null)
                         externalJunctions++;
-                    }
-                    if ((!componentMatrix[i][j].getRight().equals(SideType.Smooth) && componentMatrix[i + 1][j] == null)) {
+                    // check back
+                    if (isConnector(component.getBack()) && componentMatrix[i][j + 1] == null)
                         externalJunctions++;
-                    }
-                    if ((!componentMatrix[i][j].getFront().equals(SideType.Smooth) && componentMatrix[i][j - 1] == null)) {
+                    // check left
+                    if (isConnector(component.getLeft()) && componentMatrix[i - 1][j] == null)
                         externalJunctions++;
-                    }
-                    if ((!componentMatrix[i][j].getBack().equals(SideType.Smooth) && componentMatrix[i][j + 1] == null)) {
+                    // check right
+                    if (isConnector(component.getRight()) && componentMatrix[i + 1][j] == null)
                         externalJunctions++;
-                    }
                 }
             }
         }
         return externalJunctions;
+    }
+
+    /**
+     * @return True if given sideType is a connector, false if not a connector.
+     */
+    private boolean isConnector(SideType sideType) {
+        return (sideType.equals(SideType.Single) || sideType.equals(SideType.Double) || sideType.equals(SideType.Universal));
     }
 
     /**
@@ -518,6 +487,7 @@ public class ShipBoard implements Serializable {
      * @return True if any unreachable components were found, false otherwise.
      * @author Giacomo
      */
+    /*
     public boolean checkNotReachable(ShipBoardAttributes shipBoardAttributes) {
         boolean result = false;
         int flag = 1;
@@ -545,6 +515,7 @@ public class ShipBoard implements Serializable {
         }
         return result;
     }
+    */
 
     /**
      * Recursively marks reachable components.
@@ -554,6 +525,7 @@ public class ShipBoard implements Serializable {
      * @param mat The boolean matrix tracking visited positions.
      * @author Giacomo
      */
+    /*
     private void goDownChecking(int x, int y, boolean[][] mat) {
         if (x < 0 || x >= 12 || y < 0 || y >= 12) return;
         if (componentMatrix[x][y] == null || mat[x][y]) return;
@@ -582,12 +554,7 @@ public class ShipBoard implements Serializable {
             goDownChecking(x - 1, y, mat);
         }
     }
-
-    private boolean isCompatible(SideType a, SideType b) {
-        return (a == SideType.Single && (b == SideType.Single || b == SideType.Universal)) ||
-                (a == SideType.Double && (b == SideType.Double || b == SideType.Universal)) ||
-                (a == SideType.Universal && (b == SideType.Double || b == SideType.Universal || b == SideType.Single));
-    }
+    */
 
     /**
      * Sets the crew type in a cabin component, ensuring compatibility with alien support components.
@@ -597,6 +564,7 @@ public class ShipBoard implements Serializable {
      * @param row      The y-coordinate of the cabin.
      * @author Giacomo
      */
+    /*
     public void setCrewType(CrewType crewType, int col, int row) {
         col = col - 1;
         row = row - 1;
@@ -630,37 +598,6 @@ public class ShipBoard implements Serializable {
         }
     }
 
-    /**
-     * Checks if the storage component at a given position has enough space for the goods.
-     *
-     * @param goods The array representing the goods to be checked.
-     * @param x     The x-coordinate of the storage component.
-     * @param y     The y-coordinate of the storage component.
-     * @return True if the goods fit, false otherwise.
-     * @author Giacomo
      */
-    private boolean checkSlots(int[] goods, int x, int y) {
-        if (componentMatrix[x][y] != null) {
-            if (((Storage) componentMatrix[x][y]).isRed()) {
-                if (goods[0] <= ((Storage) componentMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) componentMatrix[x][y]).getGoods()[0]) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                if (goods[0] <= ((Storage) componentMatrix[x][y]).getNumberOfMaximumElements() - ((Storage) componentMatrix[x][y]).getGoods()[0] - ((Storage) componentMatrix[x][y]).getGoods()[3] - ((Storage) componentMatrix[x][y]).getGoods()[2]) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
 
-
-    //this function might change completly since i'm still not sure where the error checking will be
-    private void solveError(int x, int y) {
-        errorsMatrix[y][x] = false;
-    }
 }

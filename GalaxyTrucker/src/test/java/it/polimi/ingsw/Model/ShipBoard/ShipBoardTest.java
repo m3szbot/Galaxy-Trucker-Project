@@ -117,9 +117,9 @@ public class ShipBoardTest {
     @Test
     void addComponent2() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().getFirePower(), 1);
+        assertEquals(shipBoard.getShipBoardAttributes().getSingleCannonPower(), 1);
         shipBoard.removeComponent(7, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().getFirePower(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getSingleCannonPower(), 0);
     }
 
     @Test
@@ -147,25 +147,25 @@ public class ShipBoardTest {
     @Test
     void addComponent5() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, 2), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().getBatteryPower(), 2);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBatteryPower(), 2);
         shipBoard.removeComponent(7, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().getBatteryPower(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBatteryPower(), 0);
     }
 
     @Test
     void addComponent6() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 20), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 20);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingRedSlots(), 20);
         shipBoard.removeComponent(7, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingRedSlots(), 0);
     }
 
     @Test
     void addComponent7() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, false, 20), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(), 20);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 20);
         shipBoard.removeComponent(7, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 0);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class ShipBoardTest {
         assertEquals(shipBoard.getShipBoardAttributes().getAlienType(), 2);
         shipBoard.removeComponent(7, 8, true);
         shipBoard.removeComponent(8, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 0);
     }
 
     @Test
@@ -203,12 +203,12 @@ public class ShipBoardTest {
         assertTrue(shipBoard.getErrorsMatrix()[7][6]);
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 4), 8, 7);
         printAsciiBoard(shipBoard);
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 4);
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableBlueSlots(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingRedSlots(), 4);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 0);
         shipBoard.removeComponent(8, 7, false);
         shipBoard.removeComponent(8, 8, false);
         assertTrue(shipBoard.isErroneous());
-        assertEquals(shipBoard.getShipBoardAttributes().getAvailableRedSlots(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingRedSlots(), 0);
         assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 2);
     }
 
