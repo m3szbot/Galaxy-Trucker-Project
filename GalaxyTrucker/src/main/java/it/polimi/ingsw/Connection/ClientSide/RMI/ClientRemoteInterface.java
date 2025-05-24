@@ -31,4 +31,6 @@ public interface ClientRemoteInterface extends Remote{
 
     public boolean isInGame() throws RemoteException;
 
+    public void setInGame(boolean inGame) throws RemoteException;
+
 }

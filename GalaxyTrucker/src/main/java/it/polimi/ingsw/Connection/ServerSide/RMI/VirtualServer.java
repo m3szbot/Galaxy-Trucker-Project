@@ -32,11 +32,13 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
         try {
 
             joiner.start();
+            virtualClient.setInGame(true);
 
         } catch (RemoteException e) {
 
+            virtualClient.setInGame(false);
+            centralServer.removeNickName(clientInfo.getNickname());
             System.out.println(e.getMessage());
-            throw e;
         }
 
     }

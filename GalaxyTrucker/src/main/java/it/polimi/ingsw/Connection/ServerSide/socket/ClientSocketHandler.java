@@ -97,8 +97,20 @@ public class ClientSocketHandler extends Thread {
                 System.out.println("Client " + clientSocket.getInetAddress() + " (" + nickName + ")" +
                         " was kicked out because of too many input failures. The client probably had" +
                         " malicious intent");
+                try {
+                    dataExchanger.sendString("trialsEx");
+                } catch (IOException ex) {
+                    System.err.println("Error while sending trialsEx message");
+                }
+
             } else if (e instanceof SocketTimeoutException) {
                 System.out.println("Player was kicked out because of inactivity");
+
+                try{
+                    dataExchanger.sendString("disconnect");
+                } catch (IOException ex) {
+                    System.err.println("Error while sending disconnection message");
+                }
             } else {
                 System.out.println("Client " + clientSocket.getInetAddress() + " has disconnected while joining a game");
             }
