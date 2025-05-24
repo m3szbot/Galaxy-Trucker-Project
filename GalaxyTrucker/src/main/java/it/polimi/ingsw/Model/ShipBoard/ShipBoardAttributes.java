@@ -101,11 +101,11 @@ public class ShipBoardAttributes implements Serializable {
         return crewMembers;
     }
 
-    public boolean isPurpleAlien() {
+    public boolean getPurpleAlien() {
         return purpleAlien;
     }
 
-    public boolean isBrownAlien() {
+    public boolean getBrownAlien() {
         return brownAlien;
     }
 

@@ -481,7 +481,7 @@ public class ShipBoard implements Serializable {
 
 
     /**
-     * Remove a battery from the battery storage at the given coordinates.
+     * Remove a battery from the battery storage at the given coordinates, if possible.
      * Updates shipBoardAttributes.
      *
      * @author Boti
@@ -499,7 +499,7 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Remove a crew member from the cabin at the given coordinates.
+     * Remove a crew member from the cabin at the given coordinates, if possible.
      * Accounts for humans and aliens.
      * Updates shipBoardAttributes.
      *
@@ -516,6 +516,85 @@ public class ShipBoard implements Serializable {
         } else {
             throw new IllegalArgumentException("Not enough crew members at the selected component.");
         }
+    }
+
+    /**
+     * Sets the crewType of the cabin at the selected coordinates, if possible.
+     * Checks for alien supports.
+     *
+     * @author Boti
+     */
+    public void selectCrewType(int visibleCol, int visibleRow, CrewType crewType) {
+        checkIndexInBounds(visibleCol, visibleRow);
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        Component component = componentMatrix[col][row];
+        // cabin with crew
+        if (component.getCrewMembers() > 0) {
+            // purple alien (1 per shipboard)
+            if (crewType.equals(CrewType.Purple) && !shipBoardAttributes.getPurpleAlien() &&
+                    checkForAlienSupport(col, row, crewType)) {
+                ((Cabin) component).setCrewType(crewType);
+            }
+            // brown alien (1 per shipboard)
+            else if (crewType.equals(CrewType.Brown) && !shipBoardAttributes.getBrownAlien() &&
+                    checkForAlienSupport(col, row, crewType)) {
+                ((Cabin) component).setCrewType(crewType);
+            }
+        }
+    }
+
+    /**
+     * Check if component at given coordinates is connected to an alien support of given type.
+     *
+     * @return true if connected to given alien support, false if not connected.
+     * @author Boti
+     */
+    private boolean checkForAlienSupport(int realCol, int realRow, CrewType crewType) {
+        Component component = componentMatrix[realCol][realRow];
+        Component temp;
+        // check front
+        temp = componentMatrix[realCol][realRow - 1];
+        if (temp != null && checkCompatibleJunction(component.getFront(), temp.getBack()) && temp instanceof AlienSupport) {
+            // check for purple
+            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+                return true;
+                // check for brown
+            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+                return true;
+        }
+        // check back
+        temp = componentMatrix[realCol][realRow + 1];
+        if (temp != null && checkCompatibleJunction(component.getBack(), temp.getFront()) && temp instanceof AlienSupport) {
+            // check for purple
+            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+                return true;
+                // check for brown
+            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+                return true;
+        }
+        // check left
+        temp = componentMatrix[realCol - 1][realRow];
+        if (temp != null && checkCompatibleJunction(component.getLeft(), temp.getRight()) && temp instanceof AlienSupport) {
+            // check for purple
+            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+                return true;
+                // check for brown
+            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+                return true;
+        }
+        // check right
+        temp = componentMatrix[realCol + 1][realRow];
+        if (temp != null && checkCompatibleJunction(component.getRight(), temp.getLeft()) && temp instanceof AlienSupport) {
+            // check for purple
+            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+                return true;
+                // check for brown
+            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+                return true;
+        }
+        // no matching support found
+        return false;
     }
 
 
