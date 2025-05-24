@@ -40,11 +40,11 @@ public class SocketDataExchanger {
     }
 
     public void sendContainer(DataContainer container) throws IOException{
-
-        outputStream.writeObject(container);
-        outputStream.flush();
-        outputStream.reset();
-
+        synchronized (outputStream){
+            outputStream.writeObject(container);
+            outputStream.flush();
+            outputStream.reset();
+        }
     }
 
     public DataContainer getContainer() throws IOException{

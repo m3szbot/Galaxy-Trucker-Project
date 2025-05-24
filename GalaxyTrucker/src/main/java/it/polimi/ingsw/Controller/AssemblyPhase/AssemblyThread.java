@@ -60,9 +60,8 @@ public class AssemblyThread implements Runnable {
     @Override
     public void run() {
         try {
-        // For now, the initial state is set using only the first player.
-        // Later, threads should be launched for all players.
         setState(new AssemblyState(assemblyProtocol, associatedPlayer));
+        assemblyProtocol.getHourGlass().twist(assemblyProtocol, gameInformation.getPlayerList());
 
         // Separate thread for reading user input from the console
         new Thread(() -> {
@@ -77,7 +76,7 @@ public class AssemblyThread implements Runnable {
                         String message = e.getMessage();
                         disconnected.set(true);
                         for (Player player : gameInformation.getPlayerList()) {
-                            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                            if (!player.equals(associatedPlayer)) {ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);}
                         }
                     }
                 } else {

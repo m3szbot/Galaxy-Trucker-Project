@@ -47,17 +47,26 @@ public class ShowDeckState implements GameState {
     @Override
     public void handleInput(String input, AssemblyThread assemblyPhase) {
         int index = Integer.parseInt(input);
+
         if (index >= 0 && index < 4) {
-            synchronized (assemblyProtocol.lockDecksList) {
-                Deck deck = assemblyPhase.getAssemblyProtocol().showDeck(index);
-                for( Card card : deck.getCards()) {
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printCard(card);
+            if(assemblyProtocol.getDeck(index).getInUse() == false) {
+                synchronized (assemblyProtocol.lockDecksList) {
+                    Deck deck = assemblyPhase.getAssemblyProtocol().showDeck(index);
+                    for (Card card : deck.getCards()) {
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printCard(card);
+                    }
                 }
+                assemblyPhase.setState(new DeckInUseState(assemblyProtocol, player, index));
+            }
+            else{
+                String message = "Deck already in use!";
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
         } else {
             String message = "Invalid deck number";
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+            assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
         }
-        assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
     }
 }

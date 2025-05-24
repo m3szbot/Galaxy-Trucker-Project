@@ -44,6 +44,7 @@ public class Client {
 
         }
 
+        System.out.println("Disconnected");
 
 
     }
