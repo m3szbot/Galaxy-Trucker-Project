@@ -24,7 +24,12 @@ import java.rmi.RemoteException;
  *
  * @author Boti, carlo
  */
-public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods{
+public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
+    // lock - multiple threads can send messages at the same time
+    // dataContainer must be coherent
+    // (synchronized is reentrant - the thread holding it can acquire it again)
+    private final Object dataContainerLock = new Object();
+
     private Player player;
     private ConnectionType connectionType;
     // socket
@@ -58,12 +63,14 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     @Override
     public void setGamePhase(GamePhase gamePhase) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer.clearContainer();
-            dataContainer.setCommand("setGamePhase");
-            dataContainer.setGamePhase(gamePhase);
-            sendDataContainer();
+            synchronized (dataContainerLock) {
+                dataContainer.clearContainer();
+                dataContainer.setCommand("setGamePhase");
+                dataContainer.setGamePhase(gamePhase);
+                sendDataContainer();
+            }
         } else {
-            try{
+            try {
                 virtualClient.setGamePhase(gamePhase);
             } catch (RemoteException e) {
 
@@ -75,15 +82,16 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     /**
      * Helper method to send and then clear the player dataContainer.
-     *
      */
     private void sendDataContainer() {
-        try {
-            socketDataExchanger.sendContainer(dataContainer);
-        } catch (IOException e) {
-            System.out.println("Error while sending dataContainer.");
-        } finally {
-            dataContainer.clearContainer();
+        synchronized (dataContainerLock) {
+            try {
+                socketDataExchanger.sendContainer(dataContainer);
+            } catch (IOException e) {
+                System.out.println("Error while sending dataContainer.");
+            } finally {
+                dataContainer.clearContainer();
+            }
         }
     }
 
@@ -93,10 +101,12 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     @Override
     public void endGame() {
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer.clearContainer();
-            dataContainer.setCommand("endGame");
-            sendDataContainer();
-            clearPlayerResources();
+            synchronized (dataContainerLock) {
+                dataContainer.clearContainer();
+                dataContainer.setCommand("endGame");
+                sendDataContainer();
+                clearPlayerResources();
+            }
         } else {
 
             try {
@@ -114,24 +124,22 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     /**
      * Clears all players resources.
-     *
      */
     public void clearPlayerResources() {
-        if(connectionType == ConnectionType.SOCKET)
-        try {
-            socketDataExchanger.closeResources();
-        } catch (IOException e) {
-            System.err.println("Error while closing all players resources");
-        }
+        if (connectionType == ConnectionType.SOCKET)
+            try {
+                socketDataExchanger.closeResources();
+            } catch (IOException e) {
+                System.err.println("Error while closing all players resources");
+            }
     }
 
     /**
      * WARNING!! TO USE ONLY IN JOINING PHASE (FOR NOW)
-     *
-     * @param message
+     * (Used by Carlo)
      */
 
-    public synchronized void sendShortCutMessage(String message) {
+    public void sendShortCutMessage(String message) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
             try {
                 socketDataExchanger.sendString(message);
@@ -164,7 +172,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     private String getPlayerInput() throws PlayerDisconnectedException {
 
-        if(connectionType == ConnectionType.SOCKET) {
+        if (connectionType == ConnectionType.SOCKET) {
 
             try {
                 return socketDataExchanger.getString();
@@ -172,10 +180,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 System.err.println("Error while obtaining data from client");
                 throw new PlayerDisconnectedException(player);
             }
-        }
-        else{
+        } else {
 
-            try{
+            try {
                 return virtualClient.getString();
             } catch (RemoteException e) {
 
@@ -207,12 +214,14 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public synchronized void printMessage(String message) {
+    public void printMessage(String message) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
+            synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
                 dataContainer.setCommand("printMessage");
                 dataContainer.setMessage(message);
                 sendDataContainer();
+            }
         } else {
 
             try {
@@ -229,15 +238,17 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public synchronized void printComponent(Component component) {
+    public void printComponent(Component component) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer.clearContainer();
-            dataContainer.setCommand("printComponent");
-            dataContainer.setComponent(component);
-            sendDataContainer();
+            synchronized (dataContainerLock) {
+                dataContainer.clearContainer();
+                dataContainer.setCommand("printComponent");
+                dataContainer.setComponent(component);
+                sendDataContainer();
+            }
         } else {
 
-            try{
+            try {
                 virtualClient.printComponent(component);
             } catch (RemoteException e) {
 
@@ -252,13 +263,15 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     @Override
     public synchronized void printShipboard(ShipBoard shipBoard) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer.clearContainer();
-            dataContainer.setCommand("printShipboard");
-            dataContainer.setShipBoard(shipBoard);
-            sendDataContainer();
+            synchronized (dataContainerLock) {
+                dataContainer.clearContainer();
+                dataContainer.setCommand("printShipboard");
+                dataContainer.setShipBoard(shipBoard);
+                sendDataContainer();
+            }
         } else {
 
-            try{
+            try {
                 virtualClient.printShipboard(shipBoard);
             } catch (RemoteException e) {
 
@@ -271,15 +284,17 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public synchronized void printCard(Card card) {
+    public void printCard(Card card) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer.clearContainer();
-            dataContainer.setCommand("printCard");
-            dataContainer.setCard(card);
-            sendDataContainer();
+            synchronized (dataContainerLock) {
+                dataContainer.clearContainer();
+                dataContainer.setCommand("printCard");
+                dataContainer.setCard(card);
+                sendDataContainer();
+            }
         } else {
 
-            try{
+            try {
                 virtualClient.printCard(card);
             } catch (RemoteException e) {
 
@@ -292,15 +307,17 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     @Override
-    public synchronized void printFlightBoard(FlightBoard flightBoard) {
+    public void printFlightBoard(FlightBoard flightBoard) {
         if (connectionType.equals(ConnectionType.SOCKET)) {
-            dataContainer.clearContainer();
-            dataContainer.setCommand("printFlightBoard");
-            dataContainer.setFlightBoard(flightBoard);
-            sendDataContainer();
+            synchronized (dataContainerLock) {
+                dataContainer.clearContainer();
+                dataContainer.setCommand("printFlightBoard");
+                dataContainer.setFlightBoard(flightBoard);
+                sendDataContainer();
+            }
         } else {
 
-            try{
+            try {
                 virtualClient.printFlightBoard(flightBoard);
             } catch (RemoteException e) {
 
