@@ -36,8 +36,4 @@ public class AlienSupport extends Component {
         return "AlienSupport";
     }
 
-    @Override
-    public boolean amIASupport() {
-        return true;
-    }
 }

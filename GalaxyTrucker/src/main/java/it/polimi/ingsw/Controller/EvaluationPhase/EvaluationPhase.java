@@ -59,10 +59,10 @@ public class EvaluationPhase extends Phase {
         scoreCounter.calculatePlayerScores(gameInformation.getFlightBoard());
         // assign player credits to their shipboards
         for (Player player : gameInformation.getPlayerList()) {
-            player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
+            player.getShipBoard().getShipBoardAttributes().addCredits(scoreCounter.getPlayerScore(player));
         }
         for (Player player : gameInformation.getDisconnectedPlayerList()) {
-            player.getShipBoard().getShipBoardAttributes().updateCredits(scoreCounter.getPlayerScore(player));
+            player.getShipBoard().getShipBoardAttributes().addCredits(scoreCounter.getPlayerScore(player));
         }
     }
 

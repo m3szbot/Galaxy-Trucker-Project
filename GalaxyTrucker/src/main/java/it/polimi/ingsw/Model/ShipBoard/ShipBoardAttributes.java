@@ -308,6 +308,16 @@ public class ShipBoardAttributes implements Serializable {
         destroyedComponents++;
     }
 
+    public void addCredits(int credits) {
+        this.credits += credits;
+    }
+
+    public void removeCredits(int credits) {
+        if (this.credits - credits < 0)
+            throw new IllegalArgumentException("Negative credits.");
+        this.credits -= credits;
+    }
+
 
 }
 
