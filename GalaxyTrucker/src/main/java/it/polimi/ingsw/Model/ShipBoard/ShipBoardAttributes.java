@@ -309,6 +309,8 @@ public class ShipBoardAttributes implements Serializable {
     }
 
     public void addCredits(int credits) {
+        if (this.credits + credits < 0)
+            throw new IllegalArgumentException("Negative credits.");
         this.credits += credits;
     }
 

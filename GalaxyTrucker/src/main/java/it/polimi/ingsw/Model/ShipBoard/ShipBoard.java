@@ -552,7 +552,6 @@ public class ShipBoard implements Serializable {
         } else {
             throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
         }
-
     }
 
     /**
@@ -606,6 +605,12 @@ public class ShipBoard implements Serializable {
         }
         // no matching support found
         return false;
+    }
+    
+    public void addGoods() {
+    }
+
+    public void removeGoods() {
     }
 
 
