@@ -49,6 +49,8 @@ public class ShipBoard implements Serializable {
     // TODO
     // 1 element is okay, 0 crew is removed
 
+    private final SBAttributesUpdaterVisitor sbAttributesUpdaterVisitor;
+
     /**
      * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement
@@ -68,6 +70,7 @@ public class ShipBoard implements Serializable {
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
         this.connectedComponentsList = new ArrayList<>();
+        this.sbAttributesUpdaterVisitor = new SBAttributesUpdaterVisitor(shipBoardAttributes);
 
         // Initialize component matrix as empty
         for (int i = 0; i < SB_COLS; i++) {
@@ -142,6 +145,8 @@ public class ShipBoard implements Serializable {
         componentMatrix[SB_CENTER_COL - 1][SB_CENTER_ROW - 1] = starterCabin;
         connectedComponentsList.add(new ArrayList<>());
         connectedComponentsList.getFirst().add(starterCabin);
+        sbAttributesUpdaterVisitor.visit(starterCabin);
+
     }
 
     /**
@@ -164,9 +169,10 @@ public class ShipBoard implements Serializable {
         } else {
             // add component to shipBoard
             componentMatrix[col][row] = component;
-            // TODO update ShipBoard Attributes with visitor pattern
-            // define visitor updateShipBoard operation
-            shipBoardAttributes.updateShipBoardAttributes();
+            // update shipboard attributes
+            sbAttributesUpdaterVisitor.visit(component);
+            // add component to connected components list
+            connectedComponentsList.getFirst().add(component);
         }
     }
 
@@ -429,15 +435,16 @@ public class ShipBoard implements Serializable {
         checkIndexInBounds(visibleCol, visibleRow);
         int realCol = getRealIndex(visibleCol);
         int realRow = getRealIndex(visibleRow);
+        Component component = componentMatrix[realCol][realRow];
 
         // if a present element is to be removed
-        if (componentMatrix[realCol][realRow] != null) {
+        if (component != null) {
             checkFracturedShipBoard();
             shipBoardAttributes.destroyComponents(1);
+            // update shipboard attributes
+            sbAttributesUpdaterVisitor.visit(component);
 
         }
-        // TODO updateShipboard attributes
-        shipBoardAttributes.updateShipBoardAttributes();
 
     }
 
@@ -503,7 +510,8 @@ public class ShipBoard implements Serializable {
 
         if (component.getBatteryPower() - 1 >= 0) {
             ((Battery) component).removeBattery();
-            shipBoardAttributes.updateRemainingBatteries();
+            // update shipboard attributes
+            sbAttributesUpdaterVisitor.visit(component);
         } else
             throw new IllegalArgumentException("Not enough batteries at the selected component.");
     }
@@ -527,8 +535,8 @@ public class ShipBoard implements Serializable {
 
         if (component.getCrewMembers() - 1 >= 0) {
             ((Cabin) component).removeInhabitant();
-            shipBoardAttributes.updateCrewMembers();
-            shipBoardAttributes.updateAliens();
+            // update shipboard attributes
+            sbAttributesUpdaterVisitor.visit(component);
         } else {
             throw new IllegalArgumentException("Not enough crew members at the selected component.");
         }
@@ -559,15 +567,15 @@ public class ShipBoard implements Serializable {
             else if (crewType.equals(CrewType.Purple) && !shipBoardAttributes.getPurpleAlien() &&
                     checkForAlienSupport(col, row, crewType)) {
                 ((Cabin) component).setCrewType(crewType);
-                shipBoardAttributes.updateCrewMembers();
-                shipBoardAttributes.updateAliens();
+                // update shipboard attributes
+                sbAttributesUpdaterVisitor.visit(component);
             }
             // brown alien (1 per shipboard)
             else if (crewType.equals(CrewType.Brown) && !shipBoardAttributes.getBrownAlien() &&
                     checkForAlienSupport(col, row, crewType)) {
                 ((Cabin) component).setCrewType(crewType);
-                shipBoardAttributes.updateCrewMembers();
-                shipBoardAttributes.updateAliens();
+                // update shipboard attributes
+                sbAttributesUpdaterVisitor.visit(component);
             } else
                 throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
 
@@ -661,7 +669,8 @@ public class ShipBoard implements Serializable {
 
         // no problems, add goods to component
         ((Storage) component).addGoods(goods);
-        shipBoardAttributes.updateGoods();
+        // update shipboard attributes
+        sbAttributesUpdaterVisitor.visit(component);
     }
 
     /**
@@ -693,7 +702,8 @@ public class ShipBoard implements Serializable {
 
         // no problems, remove goods from component
         ((Storage) component).removeGoods(goods);
-        shipBoardAttributes.updateGoods();
+        // update shipboard attributes
+        sbAttributesUpdaterVisitor.visit(component);
     }
 
 

@@ -3,14 +3,14 @@ package it.polimi.ingsw.Model.ShipBoard;
 import it.polimi.ingsw.Model.Components.*;
 
 /**
- * Visits a component and calls the appropriate ShipBoardAttribute updater method.
+ * Visits a component and calls the appropriate ShipBoardAttribute update method(s).
  *
  * @author Boti
  */
-public class ShipBoarAttributesUpdaterVisitor implements ComponentVisitor {
+public class SBAttributesUpdaterVisitor implements ComponentVisitor {
     ShipBoardAttributes shipBoardAttributes;
 
-    public ShipBoarAttributesUpdaterVisitor(ShipBoardAttributes shipBoardAttributes) {
+    public SBAttributesUpdaterVisitor(ShipBoardAttributes shipBoardAttributes) {
         this.shipBoardAttributes = shipBoardAttributes;
     }
 
@@ -34,6 +34,7 @@ public class ShipBoarAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Object visit(Cannon cannon) {
+        shipBoardAttributes.updateCannonPower();
         return null;
     }
 
@@ -44,16 +45,19 @@ public class ShipBoarAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Object visit(Engine engine) {
+        shipBoardAttributes.updateEnginePower();
         return null;
     }
 
     @Override
     public Object visit(Shield shield) {
+        shipBoardAttributes.updateCoveredSides();
         return null;
     }
 
     @Override
     public Object visit(Storage storage) {
+        shipBoardAttributes.updateGoods();
         return null;
     }
 }
