@@ -29,7 +29,6 @@ class AlienSupportTest {
         });
         assertTrue(support.isPurple());
         assertEquals("AlienSupport", support.getComponentName());
-        assertTrue(support.amIASupport());
     }
 
     @Test

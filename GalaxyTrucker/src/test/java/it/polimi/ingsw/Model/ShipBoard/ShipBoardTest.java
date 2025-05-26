@@ -106,9 +106,9 @@ public class ShipBoardTest {
     @Test
     void addComponent() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().getDrivingPower(), 1);
+        assertEquals(shipBoard.getShipBoardAttributes().getSingleEnginePower(), 1);
         shipBoard.removeComponent(7, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().getDrivingPower(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getSingleEnginePower(), 0);
         assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 1);
 
     }
@@ -125,15 +125,15 @@ public class ShipBoardTest {
     @Test
     void addComponent3() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(0), false);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(1), true);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(2), true);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(3), false);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(0), false);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(1), true);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(2), true);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(3), false);
         shipBoard.removeComponent(7, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(0), false);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(1), false);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(2), false);
-        assertEquals(shipBoard.getShipBoardAttributes().checkSide(3), false);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(0), false);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(1), false);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(2), false);
+        assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(3), false);
     }
 
     @Test
@@ -147,9 +147,9 @@ public class ShipBoardTest {
     @Test
     void addComponent5() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, 2), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBatteryPower(), 2);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBatteries(), 2);
         shipBoard.removeComponent(7, 8, true);
-        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBatteryPower(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getRemainingBatteries(), 0);
     }
 
     @Test
@@ -173,9 +173,8 @@ public class ShipBoardTest {
         shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(), 4);
         shipBoard.addComponent(new AlienSupport(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true), 8, 8);
-        shipBoard.setCrewType(CrewType.Purple, 7, 8);
+        shipBoard.setCrewType(7, 8, CrewType.Purple);
         assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(), 3);
-        assertEquals(shipBoard.getShipBoardAttributes().getAlienType(), 2);
         shipBoard.removeComponent(7, 8, true);
         shipBoard.removeComponent(8, 8, true);
         assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 0);
@@ -202,7 +201,6 @@ public class ShipBoardTest {
         assertTrue(shipBoard.getErrorsMatrix()[7][6]);
         assertTrue(shipBoard.getErrorsMatrix()[7][6]);
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 4), 8, 7);
-        printAsciiBoard(shipBoard);
         assertEquals(shipBoard.getShipBoardAttributes().getRemainingRedSlots(), 4);
         assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 0);
         shipBoard.removeComponent(8, 7, false);
@@ -212,129 +210,5 @@ public class ShipBoardTest {
         assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 2);
     }
 
-
-    /**
-     * Stampa la griglia 12×12 con bordi, nome del componente (3 car.)
-     * al centro e valori numerici dei lati.
-     * <p>
-     * Layout di ogni cella (7×5):
-     * +-------+
-     * |   F   |
-     * |L NNN R|
-     * |   B   |
-     * +-------+
-     * <p>
-     * Forbidden  = "XXXXXXX"
-     * Empty cell = spazi vuoti
-     */
-    public void printAsciiBoard(ShipBoard shipBoard) {
-
-        final int SIZE = 12;
-        final String HEDGE = "+-------";    // bordo orizzontale di una cella
-        final String HRULE = HEDGE.repeat(SIZE) + "+";
-        System.out.print("    ");            // spazio per intestazione righe / colonne
-        for (int c = 1; c <= SIZE; c++) {
-            System.out.printf("   %2d   ", c);
-        }
-        System.out.println();
-
-        for (int r = 0; r < SIZE; r++) {
-
-            // ---------- bordo superiore della riga ----------------------------
-            System.out.print("    ");
-            System.out.println(HRULE);
-
-            // ***** riga “front” ***********************************************
-            System.out.printf("%2d  ", r + 1);
-            for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getValidityMatrix()[r][c]) {                    // forbidden 
-                    System.out.print("|XXXXXXX");
-                    continue;
-                }
-                Component comp = shipBoard.getComponentMatrix()[r][c];
-                String front = comp != null ? num(side(comp.getFront())) : " ";
-                System.out.print("|   " + front + "   ");
-            }
-            System.out.println("|");
-
-            // ***** riga centrale (left, name, right) ***************************
-            System.out.print("    ");                 // niente indice riga ora
-            for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getValidityMatrix()[r][c]) {
-                    System.out.print("|XXXXXXX");
-                    continue;
-                }
-                Component comp = shipBoard.getComponentMatrix()[r][c];
-                if (comp == null) {
-                    System.out.print("|       ");
-                } else {
-                    String name = pad(comp.getComponentName(), 3);
-                    String left = num(side(comp.getLeft()));
-                    String right = num(side(comp.getRight()));
-                    System.out.print("|" + left + " " + name + " " + right);
-                }
-            }
-            System.out.println("|");
-
-            // ***** riga “back” *************************************************
-            System.out.print("    ");
-            for (int c = 0; c < SIZE; c++) {
-                if (!shipBoard.getValidityMatrix()[r][c]) {
-                    System.out.print("|XXXXXXX");
-                    continue;
-                }
-                Component comp = shipBoard.getComponentMatrix()[r][c];
-                String back = comp != null ? num(side(comp.getBack())) : " ";
-                System.out.print("|   " + back + "   ");
-            }
-            System.out.println("|");
-        }
-
-        // ---------- bordo inferiore finale ------------------------------------
-        System.out.print("    ");
-        System.out.println(HRULE);
-    }
-
-    /* -------------------------------------------------------------------------
-     * Helpers
-     * ---------------------------------------------------------------------- */
-
-    /**
-     * Converte il numero in stringa a 1 char, spazio se 0 o -1.
-     */
-    private String num(int n) {
-        return (n <= 0) ? " " : Integer.toString(n);
-    }
-
-    /**
-     * Mappa SideType in numero intero: Single=1, Double=2, Universal=3,
-     * Special=9, Smooth=0, null=- 
-     */
-    private int side(SideType s) {
-        if (s == null) return -1;
-        switch (s) {
-            case Single:
-                return 1;
-            case Double:
-                return 2;
-            case Universal:
-                return 3;
-            case Special:
-                return 9;
-            case Smooth:
-                return 0;
-            default:
-                return -1;
-        }
-    }
-
-    /**
-     * Rende una stringa lunga esattamente len, tagliando o padding con spazi.
-     */
-    private String pad(String s, int len) {
-        if (s == null) s = "";
-        return s.length() >= len ? s.substring(0, len)
-                : String.format("%-" + len + "s", s);
-    }
 
 }

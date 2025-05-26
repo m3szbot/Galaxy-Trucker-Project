@@ -118,7 +118,6 @@ class ComponentTest {
         assertArrayEquals(new boolean[]{false, false, false, false}, component.getCoveredSides());
         assertEquals(0, component.getAvailableRedSlots());
         assertEquals(0, component.getAvailableBlueSlots());
-        assertFalse(component.amIASupport());
     }
 
     @Test
