@@ -33,18 +33,19 @@ public class ShipBoard implements Serializable {
     public static final int SB_FIRST_REAL_COL = 3;
     public static final int SB_FIRST_REAL_ROW = 4;
 
-    private ShipBoardAttributes shipBoardAttributes;
+    // final Object: reference cannot be changed (but state/elements can change)
+    private final ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
-    private Component[][] componentMatrix;
+    private final Component[][] componentMatrix;
     // Boolean matrix indicating valid positions for components
-    private boolean[][] validityMatrix;
+    private final boolean[][] validityMatrix;
     // Boolean matrix indicating components with errors (true if error)
-    private boolean[][] errorsMatrix;
+    private final boolean[][] errorsMatrix;
     // Matrix: [cols][rows]
 
     // keeps track of the lists of connected components
     // if shipboard is fractured, different connected parts are inserted as separate lists into the list
-    private List<List<Component>> connectedComponentsList;
+    private final List<List<Component>> connectedComponentsList;
     // TODO
     // 1 element is okay, 0 crew is removed
 
@@ -137,7 +138,10 @@ public class ShipBoard implements Serializable {
 
         // add center cabin
         // TODO: colored starter cabin, to get from the componentList in gameInformation
-        componentMatrix[SB_CENTER_COL - 1][SB_CENTER_ROW - 1] = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal});
+        Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal});
+        componentMatrix[SB_CENTER_COL - 1][SB_CENTER_ROW - 1] = starterCabin;
+        connectedComponentsList.add(new ArrayList<>());
+        connectedComponentsList.getFirst().add(starterCabin);
     }
 
     /**
@@ -170,7 +174,7 @@ public class ShipBoard implements Serializable {
      * Throws IllegalArgumentException if entered coordinates are out of bounds of the shipBoard.
      * To call at the start of every method that takes coordinates as input.
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if coordinates out of bounds.
      * @author Boti
      */
     private void checkIndexInBounds(int visibleCol, int visibleRow) throws IllegalArgumentException {
@@ -484,6 +488,7 @@ public class ShipBoard implements Serializable {
      * Remove a battery from the battery storage at the given coordinates, if possible.
      * Updates shipBoardAttributes.
      *
+     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
     public void removeBattery(int visibleCol, int visibleRow) {
@@ -503,6 +508,7 @@ public class ShipBoard implements Serializable {
      * Accounts for humans and aliens.
      * Updates shipBoardAttributes.
      *
+     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
     public void removeCrewMember(int visibleCol, int visibleRow) {
@@ -521,7 +527,9 @@ public class ShipBoard implements Serializable {
     /**
      * Sets the crewType of the cabin at the selected coordinates, if possible.
      * Checks for alien supports.
+     * Updates shipBoardAttributes.
      *
+     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
     public void selectCrewType(int visibleCol, int visibleRow, CrewType crewType) {
@@ -546,12 +554,11 @@ public class ShipBoard implements Serializable {
                 ((Cabin) component).setCrewType(crewType);
                 shipBoardAttributes.updateCrewMembers();
                 shipBoardAttributes.updateAliens();
-            } else {
+            } else
                 throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
-            }
-        } else {
+
+        } else
             throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
-        }
     }
 
     /**
@@ -606,8 +613,37 @@ public class ShipBoard implements Serializable {
         // no matching support found
         return false;
     }
-    
-    public void addGoods() {
+
+    /**
+     * Add goods to the storage at the given coordinates, if possible.
+     * Updates shipBoardAttributes.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void addGoods(int visibleCol, int visibleRow, int[] goods) {
+        checkIndexInBounds(visibleCol, visibleRow);
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+
+        // negative goods - malicious intent
+        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
+            throw new IllegalArgumentException("Cannot add negative number of goods");
+
+        // check red goods slots
+        if (goods[0] > componentMatrix[col][row].getAvailableRedSlots())
+            throw new IllegalArgumentException("Not enough red goods storage available");
+
+        // check red + normal goods slots
+        int totalGoods = 0;
+        for (int good : goods)
+            totalGoods += good;
+        if (totalGoods > (componentMatrix[col][row].getAvailableRedSlots() + componentMatrix[col][row].getAvailableBlueSlots()))
+            throw new IllegalArgumentException("Not enough goods storage available");
+
+        // no problems, add goods to component
+        ((Storage) componentMatrix[col][row]).addGoods(goods);
+        shipBoardAttributes.updateGoods();
     }
 
     public void removeGoods() {
@@ -690,49 +726,5 @@ public class ShipBoard implements Serializable {
         }
     }
     */
-
-    /**
-     * Sets the crew type in a cabin component, ensuring compatibility with alien support components.
-     *
-     * @param crewType The type of crew to assign.
-     * @param col      The x-coordinate of the cabin.
-     * @param row      The y-coordinate of the cabin.
-     * @author Giacomo
-     */
-    /*
-    public void setCrewType(CrewType crewType, int col, int row) {
-        col = col - 1;
-        row = row - 1;
-        Visitor<List<Object>> visitor = new VisitorAttributesUpdater();
-        if (componentMatrix[col][row] != null && componentMatrix[col][row].getComponentName().equals("Cabin")) {
-            if (crewType.equals(CrewType.Brown)) {
-                if ((componentMatrix[row - 1][col] != null && (Boolean) componentMatrix[row - 1][col].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row - 1][col]).isPurple()) ||
-                        (componentMatrix[row + 1][col] != null && (Boolean) componentMatrix[row + 1][col].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row + 1][col]).isPurple()) ||
-                        (componentMatrix[row][col - 1] != null && (Boolean) componentMatrix[row][col - 1].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row][col - 1]).isPurple()) ||
-                        (componentMatrix[row][col + 1] != null && (Boolean) componentMatrix[row][col + 1].accept(visitor).get(7) && !((AlienSupport) componentMatrix[row][col + 1]).isPurple())) {
-                    ((Cabin) componentMatrix[col][row]).setCrewType(crewType);
-                    shipBoardAttributes.updateAlien(CrewType.Brown, false);
-                    shipBoardAttributes.updateCrewMembers(-1);
-                } else {
-                    System.out.println("CrewType not permitted");
-                }
-            } else {
-                if ((componentMatrix[row - 1][col] != null && (Boolean) componentMatrix[row - 1][col].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row - 1][col]).isPurple()) ||
-                        (componentMatrix[row + 1][col] != null && (Boolean) componentMatrix[row + 1][col].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row + 1][col]).isPurple()) ||
-                        (componentMatrix[row][col - 1] != null && (Boolean) componentMatrix[row][col - 1].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row][col - 1]).isPurple()) ||
-                        (componentMatrix[row][col + 1] != null && (Boolean) componentMatrix[row][col + 1].accept(visitor).get(7) && ((AlienSupport) componentMatrix[row][col + 1]).isPurple())) {
-                    ((Cabin) componentMatrix[col][row]).setCrewType(crewType);
-                    shipBoardAttributes.updateAlien(CrewType.Purple, false);
-                    shipBoardAttributes.updateCrewMembers(-1);
-                } else {
-                    System.out.println("CrewType not permitted");
-                }
-            }
-        } else {
-            System.out.println("ERROR, this component is not a cabin");
-        }
-    }
-
-     */
 
 }
