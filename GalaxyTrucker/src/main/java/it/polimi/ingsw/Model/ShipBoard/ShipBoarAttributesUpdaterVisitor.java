@@ -7,21 +7,7 @@ import it.polimi.ingsw.Model.Components.*;
  *
  * @author Boti
  */
-public class ShipboarAttributesUpdaterVisitor implements ComponentVisitor {
-    @Override
-    public Object visit(Cannon cannon) {
-        return null;
-    }
-
-    @Override
-    public Object visit(Shield shield) {
-        return null;
-    }
-
-    @Override
-    public Object visit(Component component) {
-        return null;
-    }
+public class ShipBoarAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Object visit(AlienSupport alienSupport) {
@@ -39,7 +25,22 @@ public class ShipboarAttributesUpdaterVisitor implements ComponentVisitor {
     }
 
     @Override
+    public Object visit(Cannon cannon) {
+        return null;
+    }
+
+    @Override
+    public Object visit(Component component) {
+        return null;
+    }
+
+    @Override
     public Object visit(Engine engine) {
+        return null;
+    }
+
+    @Override
+    public Object visit(Shield shield) {
         return null;
     }
 
