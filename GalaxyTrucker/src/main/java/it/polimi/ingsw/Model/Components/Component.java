@@ -161,14 +161,18 @@ public class Component implements Visitable, Serializable {
 
     /**
      * Return drivingPower of component using visitor pattern.
+     * (ComponentAttributesVisitor, ShipBoardAttributesUpdaterVisitor etc...)
      */
     public int getDrivingPower(ComponentAttributesVisitor visitor) {
         return (Integer) this.accept(visitor).get(0);
     }
 
+    /**
+     * Accept any kind of visitor implementing the ComponentVisitor interface.
+     */
     @Override
-    public <T> T accept(ComponentVisitor<T> visitor) {
-        return visitor.visit(this);
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        return componentVisitor.visit(this);
     }
 
     /**

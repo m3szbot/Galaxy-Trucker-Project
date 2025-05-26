@@ -8,6 +8,11 @@ import it.polimi.ingsw.Model.Components.*;
  * @author Boti
  */
 public class ShipBoarAttributesUpdaterVisitor implements ComponentVisitor {
+    ShipBoardAttributes shipBoardAttributes;
+
+    public ShipBoarAttributesUpdaterVisitor(ShipBoardAttributes shipBoardAttributes) {
+        this.shipBoardAttributes = shipBoardAttributes;
+    }
 
     @Override
     public Object visit(AlienSupport alienSupport) {
@@ -16,11 +21,14 @@ public class ShipBoarAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Object visit(Battery battery) {
+        shipBoardAttributes.updateRemainingBatteries();
         return null;
     }
 
     @Override
     public Object visit(Cabin cabin) {
+        shipBoardAttributes.updateCrewMembers();
+        shipBoardAttributes.updateAliens();
         return null;
     }
 
