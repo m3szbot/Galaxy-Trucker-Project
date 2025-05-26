@@ -12,17 +12,15 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public interface CreditsGain {
 
     /**
-     *
-     * @param player indicates the player to which you want give credits
+     * @param player       indicates the player to which you want give credits
      * @param creditNumber number of credits to give
-     *
      * @author Carlo
      */
 
 
     default void giveCredits(Player player, int creditNumber) {
 
-        player.getShipBoard().getShipBoardAttributes().updateCredits(creditNumber);
+        player.getShipBoard().getShipBoardAttributes().addCredits(creditNumber);
 
     }
 
