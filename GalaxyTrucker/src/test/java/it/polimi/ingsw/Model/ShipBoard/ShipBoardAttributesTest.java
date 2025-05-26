@@ -27,6 +27,7 @@ public class ShipBoardAttributesTest {
 
     @Test
     void testSetup() {
+        assertEquals(shipBoard, shipBoardAttributes.getShipBoard());
         assertEquals(2, shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW).getCrewMembers());
         assertEquals(2, shipBoardAttributes.getCrewMembers());
         assertFalse(shipBoardAttributes.getCoveredSides()[0]);
@@ -87,6 +88,7 @@ public class ShipBoardAttributesTest {
         });
         assertTrue(shipBoardAttributes.getPurpleAlien());
         assertFalse(shipBoardAttributes.getBrownAlien());
+        assertEquals(1, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
@@ -98,6 +100,7 @@ public class ShipBoardAttributesTest {
         });
         assertFalse(shipBoardAttributes.getPurpleAlien());
         assertTrue(shipBoardAttributes.getBrownAlien());
+        assertEquals(1, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
@@ -107,6 +110,9 @@ public class ShipBoardAttributesTest {
         assertFalse(shipBoardAttributes.checkSideShieldProtected(0));
         shipBoard.addComponent(7, 8, new Battery(singleSides, 2));
         assertTrue(shipBoardAttributes.checkSideShieldProtected(0));
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoardAttributes.checkSideShieldProtected(10);
+        });
     }
 
     @Test
@@ -135,4 +141,46 @@ public class ShipBoardAttributesTest {
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, true));
         assertEquals(0.5, shipBoardAttributes.getSingleCannonPower());
     }
+
+    @Test
+    void addDoubleForwardCannon() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialFront, false));
+        assertEquals(1, shipBoardAttributes.getNumberForwardDoubleCannons());
+        assertEquals(0, shipBoardAttributes.getNumberLateralDoubleCannons());
+    }
+
+    @Test
+    void addDoubleLateralCannon() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, false));
+        assertEquals(0, shipBoardAttributes.getNumberForwardDoubleCannons());
+        assertEquals(1, shipBoardAttributes.getNumberLateralDoubleCannons());
+    }
+
+    @Test
+    void addBatteries() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Battery(singleSides, 3));
+        assertEquals(3, shipBoardAttributes.getRemainingBatteries());
+    }
+
+    @Test
+    void addHumanCrew() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Cabin(singleSides));
+        assertEquals(4, shipBoardAttributes.getCrewMembers());
+    }
+
+    @Test
+    void addBlueStorage() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Storage(singleSides, false, 1));
+        assertEquals(1, shipBoardAttributes.getRemainingBlueSlots());
+        assertEquals(0, shipBoardAttributes.getRemainingRedSlots());
+    }
+
+    @Test
+    void addRedStorage() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Storage(singleSides, true, 1));
+        assertEquals(0, shipBoardAttributes.getRemainingBlueSlots());
+        assertEquals(1, shipBoardAttributes.getRemainingRedSlots());
+    }
+
+
 }

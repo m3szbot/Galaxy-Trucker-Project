@@ -41,8 +41,10 @@ public class ShipBoardAttributes implements Serializable {
     // RED, YELLOW, GREEN, BLUE
     private int[] goods;
     // number of remaining red (RED) slots
+    // (counted separately from blue slots)
     private int remainingRedSlots;
     // number of remaining blue (YELLOW, GREEN, BLUE) slots
+    // (counted separately from red slots)
     private int remainingBlueSlots;
     // number of destroyed components
     private int destroyedComponents;
