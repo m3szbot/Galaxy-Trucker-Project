@@ -9,42 +9,43 @@ import java.util.List;
  */
 public class ComponentAttributesVisitor implements ComponentVisitor<List<Object>> {
     @Override
-    public List<Object> visit(Cannon cannon) {
-        return cannon.getAllIndexes();
-    }
-
-    @Override
-    public List<Object> visit(Shield shield) {
-        return shield.getAllIndexes();
-    }
-
-    @Override
-    public List<Object> visit(Component component) {
-        return component.getAllIndexes();
-    }
-
-    @Override
-    public List<Object> visit(AlienSupport alienSupport) {
+    public List<Object> visitAlienSupport(AlienSupport alienSupport) {
         return alienSupport.getAllIndexes();
     }
 
     @Override
-    public List<Object> visit(Battery battery) {
+    public List<Object> visitBattery(Battery battery) {
         return battery.getAllIndexes();
     }
 
     @Override
-    public List<Object> visit(Cabin cabin) {
+    public List<Object> visitCabin(Cabin cabin) {
         return cabin.getAllIndexes();
     }
 
     @Override
-    public List<Object> visit(Engine engine) {
+    public List<Object> visitCannon(Cannon cannon) {
+        return cannon.getAllIndexes();
+    }
+
+    @Override
+    public List<Object> visitComponent(Component component) {
+        return component.getAllIndexes();
+    }
+
+    @Override
+    public List<Object> visitEngine(Engine engine) {
         return engine.getAllIndexes();
     }
 
     @Override
-    public List<Object> visit(Storage storage) {
+    public List<Object> visitShield(Shield shield) {
+        return shield.getAllIndexes();
+    }
+
+
+    @Override
+    public List<Object> visitStorage(Storage storage) {
         return storage.getAllIndexes();
     }
 

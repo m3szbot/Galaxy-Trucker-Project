@@ -53,4 +53,11 @@ public class Cannon extends Component {
     public void setSingle(boolean single) {
         this.single = single;
     }
+
+    @Override
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        System.out.println("Entered cannon visitor");
+        return componentVisitor.visitCannon(this);
+    }
+
 }

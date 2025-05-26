@@ -14,49 +14,53 @@ public class SBAttributesUpdaterVisitor implements ComponentVisitor {
         this.shipBoardAttributes = shipBoardAttributes;
     }
 
+    // Void is used to signal no returned type when using Generics
+    // must return null
+
     @Override
-    public Object visit(AlienSupport alienSupport) {
+    public Void visitAlienSupport(AlienSupport alienSupport) {
         return null;
     }
 
     @Override
-    public Object visit(Battery battery) {
+    public Void visitBattery(Battery battery) {
         shipBoardAttributes.updateRemainingBatteries();
         return null;
     }
 
     @Override
-    public Object visit(Cabin cabin) {
+    public Void visitCabin(Cabin cabin) {
         shipBoardAttributes.updateCrewMembers();
         shipBoardAttributes.updateAliens();
         return null;
     }
 
     @Override
-    public Object visit(Cannon cannon) {
-        shipBoardAttributes.updateCannonPower();
+    public Void visitCannon(Cannon cannon) {
+        shipBoardAttributes.updateCannons();
         return null;
     }
 
     @Override
-    public Object visit(Component component) {
+    public Void visitComponent(Component component) {
+        System.out.println("Entered component visit");
         return null;
     }
 
     @Override
-    public Object visit(Engine engine) {
-        shipBoardAttributes.updateEnginePower();
+    public Void visitEngine(Engine engine) {
+        shipBoardAttributes.updateEngines();
         return null;
     }
 
     @Override
-    public Object visit(Shield shield) {
+    public Void visitShield(Shield shield) {
         shipBoardAttributes.updateCoveredSides();
         return null;
     }
 
     @Override
-    public Object visit(Storage storage) {
+    public Void visitStorage(Storage storage) {
         shipBoardAttributes.updateGoods();
         return null;
     }

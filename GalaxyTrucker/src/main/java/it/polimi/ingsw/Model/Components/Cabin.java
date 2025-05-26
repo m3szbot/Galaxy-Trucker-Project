@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Cabin extends Component {
 
-    private CrewType crewType;
+    private CrewType crewType = CrewType.Human;
     private int numberOfCurrentInhabitants = 2;
 
     public Cabin() {
@@ -54,5 +54,11 @@ public class Cabin extends Component {
     @Override
     public int getCrewMembers() {
         return numberOfCurrentInhabitants;
+    }
+
+    @Override
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        System.out.println("Entered cabin visitor");
+        return componentVisitor.visitCabin(this);
     }
 }

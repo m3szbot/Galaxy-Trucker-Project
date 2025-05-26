@@ -32,7 +32,8 @@ public class ShipBoardAttributesTest {
         assertEquals(0, shipBoardAttributes.getSingleCannonPower());
         assertEquals(0, shipBoardAttributes.getRemainingBatteries());
         assertEquals(0, shipBoardAttributes.getDoubleEnginePower());
-        assertEquals(0, shipBoardAttributes.getDoubleCannonPower());
+        assertEquals(0, shipBoardAttributes.getNumberForwardDoubleCannons());
+        assertEquals(0, shipBoardAttributes.getNumberLateralDoubleCannons());
         assertFalse(shipBoardAttributes.getPurpleAlien());
         assertFalse(shipBoardAttributes.getBrownAlien());
         assertEquals(0, shipBoardAttributes.getGoods()[0]);

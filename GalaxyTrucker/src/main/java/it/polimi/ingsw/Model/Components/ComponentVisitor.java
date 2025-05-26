@@ -1,21 +1,21 @@
 package it.polimi.ingsw.Model.Components;
 
 public interface ComponentVisitor<T> {
-    T visit(AlienSupport alienSupport);
+    T visitAlienSupport(AlienSupport alienSupport);
 
-    T visit(Battery battery);
+    T visitBattery(Battery battery);
 
-    T visit(Cabin cabin);
+    T visitCabin(Cabin cabin);
 
-    T visit(Cannon cannon);
+    T visitCannon(Cannon cannon);
 
-    T visit(Component component);
+    T visitComponent(Component component);
 
-    T visit(Engine engine);
-
-
-    T visit(Shield shield);
+    T visitEngine(Engine engine);
 
 
-    T visit(Storage storage);
+    T visitShield(Shield shield);
+
+
+    T visitStorage(Storage storage);
 }

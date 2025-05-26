@@ -171,7 +171,8 @@ public class Component implements Visitable, Serializable {
      */
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        return componentVisitor.visit(this);
+        System.out.println("Entered component visitor");
+        return componentVisitor.visitComponent(this);
     }
 
     /**
