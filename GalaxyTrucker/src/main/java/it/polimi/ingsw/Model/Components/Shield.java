@@ -82,7 +82,6 @@ public class Shield extends Component {
 
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        System.out.println("Entered shield visitor");
         return componentVisitor.visitShield(this);
     }
 

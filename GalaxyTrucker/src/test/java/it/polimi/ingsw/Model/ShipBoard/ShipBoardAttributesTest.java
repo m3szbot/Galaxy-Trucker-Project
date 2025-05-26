@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
+import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
+import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,9 @@ public class ShipBoardAttributesTest {
     ShipBoard shipBoard;
     ShipBoardAttributes shipBoardAttributes;
 
+    SideType[] singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
+    SideType[] singleSidesSpecialFront = new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single};
+    SideType[] singleSidesSpecialBack = new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Single};
 
     @BeforeEach
     void setUp() {
@@ -72,4 +77,62 @@ public class ShipBoardAttributesTest {
         });
     }
 
+    // Test addComponent attribute changes
+    @Test
+    void addPurpleAlien() throws NotPermittedPlacementException {
+        shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
+        shipBoard.setCrewType(7, 7, CrewType.Purple);
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.setCrewType(7, 7, CrewType.Brown);
+        });
+        assertTrue(shipBoardAttributes.getPurpleAlien());
+        assertFalse(shipBoardAttributes.getBrownAlien());
+    }
+
+    @Test
+    void addBrownAlien() throws NotPermittedPlacementException {
+        shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
+        shipBoard.setCrewType(7, 7, CrewType.Brown);
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.setCrewType(7, 7, CrewType.Purple);
+        });
+        assertFalse(shipBoardAttributes.getPurpleAlien());
+        assertTrue(shipBoardAttributes.getBrownAlien());
+    }
+
+    @Test
+    void addShields() throws NotPermittedPlacementException {
+        // side protected only if batteries are available
+        shipBoard.addComponent(8, 7, new Shield(singleSidesSpecialFront));
+        assertFalse(shipBoardAttributes.checkSideShieldProtected(0));
+        shipBoard.addComponent(7, 8, new Battery(singleSides, 2));
+        assertTrue(shipBoardAttributes.checkSideShieldProtected(0));
+    }
+
+    @Test
+    void addSingleEngine() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, true));
+        assertEquals(1, shipBoardAttributes.getSingleEnginePower());
+        assertEquals(0, shipBoardAttributes.getDoubleEnginePower());
+
+    }
+
+    @Test
+    void addDoubleEngine() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, false));
+        assertEquals(2, shipBoardAttributes.getDoubleEnginePower());
+        assertEquals(0, shipBoardAttributes.getSingleEnginePower());
+    }
+
+    @Test
+    void addSingleForwardCannon() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialFront, true));
+        assertEquals(1, shipBoardAttributes.getSingleCannonPower());
+    }
+
+    @Test
+    void addSingleLateralCannon() throws NotPermittedPlacementException {
+        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, true));
+        assertEquals(0.5, shipBoardAttributes.getSingleCannonPower());
+    }
 }

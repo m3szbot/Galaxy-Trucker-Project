@@ -38,7 +38,6 @@ public class AlienSupport extends Component {
 
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        System.out.println("Entered aliensupport visitor");
         return componentVisitor.visitAlienSupport(this);
     }
 }

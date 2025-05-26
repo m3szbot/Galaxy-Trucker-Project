@@ -53,7 +53,6 @@ public class Engine extends Component {
 
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        System.out.println("Entered engine visitor");
         return componentVisitor.visitEngine(this);
     }
 

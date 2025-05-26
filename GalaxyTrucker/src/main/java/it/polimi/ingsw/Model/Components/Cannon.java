@@ -56,7 +56,6 @@ public class Cannon extends Component {
 
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        System.out.println("Entered cannon visitor");
         return componentVisitor.visitCannon(this);
     }
 

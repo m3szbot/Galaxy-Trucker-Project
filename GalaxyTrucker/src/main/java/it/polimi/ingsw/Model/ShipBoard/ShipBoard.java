@@ -151,7 +151,6 @@ public class ShipBoard implements Serializable {
         componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = starterCabin;
         connectedComponentsList.add(new ArrayList<>());
         connectedComponentsList.getFirst().add(starterCabin);
-        // TODO FIX VISITOR
         starterCabin.accept(sbAttributesUpdaterVisitor);
     }
 
@@ -160,14 +159,20 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * Alternative parameter order to improve readability during testing.
+     */
+    public void addComponent(int visibleCol, int visibleRow, Component component) throws NotPermittedPlacementException, IllegalArgumentException {
+        addComponent(component, visibleCol, visibleRow);
+    }
+
+    /**
      * Adds a component to the specified position in the structure matrix,
-     * and updates Shipboard Attributes. TODO
+     * and updates Shipboard Attributes.
      *
      * @param component  The component to add.
      * @param visibleCol Visible column.
      * @param visibleRow Visible row.
      * @author Giacomo, Boti
-     * TODO
      */
     public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException, IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
@@ -570,7 +575,7 @@ public class ShipBoard implements Serializable {
 
         // cabin with crew
         if (component.getCrewMembers() > 0) {
-            if (crewType.equals(CrewType.Human))
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Human))
                 return;
                 // purple alien (1 per shipboard)
             else if (crewType.equals(CrewType.Purple) && !shipBoardAttributes.getPurpleAlien() &&

@@ -44,7 +44,6 @@ public class Battery extends Component {
 
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        System.out.println("Entered battery visitor");
         return componentVisitor.visitBattery(this);
     }
 

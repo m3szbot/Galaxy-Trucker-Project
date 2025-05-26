@@ -43,7 +43,6 @@ public class SBAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Void visitComponent(Component component) {
-        System.out.println("Entered component visit");
         return null;
     }
 

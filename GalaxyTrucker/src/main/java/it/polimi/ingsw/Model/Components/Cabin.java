@@ -58,7 +58,6 @@ public class Cabin extends Component {
 
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        System.out.println("Entered cabin visitor");
         return componentVisitor.visitCabin(this);
     }
 }

@@ -47,7 +47,6 @@ public class Storage extends Component {
 
     @Override
     public <T> T accept(ComponentVisitor<T> componentVisitor) {
-        System.out.println("Entered storage visitor");
         return componentVisitor.visitStorage(this);
     }
 
