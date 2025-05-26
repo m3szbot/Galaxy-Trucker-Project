@@ -378,7 +378,7 @@ public interface SufferBlows {
 
         }
 
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-1);
+        //player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-1);
         ((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).removeBattery();
         return false;
     }
