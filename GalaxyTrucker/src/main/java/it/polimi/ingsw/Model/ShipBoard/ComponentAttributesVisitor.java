@@ -4,7 +4,10 @@ import it.polimi.ingsw.Model.Components.*;
 
 import java.util.List;
 
-public class VisitorAttributesUpdater implements Visitor<List<Object>> {
+/**
+ * Visits a component and returns the list of its attributes.
+ */
+public class ComponentAttributesVisitor implements ComponentVisitor<List<Object>> {
     @Override
     public List<Object> visit(Cannon cannon) {
         return cannon.getAllIndexes();
@@ -21,13 +24,13 @@ public class VisitorAttributesUpdater implements Visitor<List<Object>> {
     }
 
     @Override
-    public List<Object> visit(Battery battery) {
-        return battery.getAllIndexes();
+    public List<Object> visit(AlienSupport alienSupport) {
+        return alienSupport.getAllIndexes();
     }
 
     @Override
-    public List<Object> visit(AlienSupport alienSupport) {
-        return alienSupport.getAllIndexes();
+    public List<Object> visit(Battery battery) {
+        return battery.getAllIndexes();
     }
 
     @Override

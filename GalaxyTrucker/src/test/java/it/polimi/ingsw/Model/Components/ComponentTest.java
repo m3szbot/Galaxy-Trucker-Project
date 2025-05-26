@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.Model.ShipBoard.VisitorAttributesUpdater;
+import it.polimi.ingsw.Model.ShipBoard.ComponentAttributesVisitor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +15,7 @@ class ComponentTest {
             SideType.Universal
     };
 
-    VisitorAttributesUpdater visitor = new VisitorAttributesUpdater();
+    ComponentAttributesVisitor visitor = new ComponentAttributesVisitor();
 
     Component singleEngine = new Engine(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, true);
     Component doubleEngine = new Engine(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, false);

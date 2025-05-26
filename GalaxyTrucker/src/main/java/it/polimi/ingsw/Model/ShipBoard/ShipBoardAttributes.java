@@ -130,7 +130,7 @@ public class ShipBoardAttributes implements Serializable {
     }
 
     /**
-     * TODO
+     * TODO visitor for each component
      * To reorganize into visitor based on component type?
      * Scan matrix, each component updates based on type.
      */

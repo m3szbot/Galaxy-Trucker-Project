@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.Components.*;
 
-public interface Visitor<T> {
+public interface ComponentVisitor<T> {
     T visit(Cannon cannon);
 
     T visit(Shield shield);
