@@ -191,7 +191,7 @@ public interface SufferBlows {
 
             if (!((Cannon) player.getShipBoard().getComponent(cannonCoords[0], cannonCoords[1])).isSingle()) { //cannon is not single
 
-                if (player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
+                if (player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() > 0) {
 
                     message = "A big asteroid is directed on position ["
                             + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
@@ -247,8 +247,7 @@ public interface SufferBlows {
                 || (direction == 3
                 && player.getShipBoard().getComponent(xCoord, yCoord).getLeft() == SideType.Smooth))) {
 
-            if (player.getShipBoard().getShipBoardAttributes().checkSide(direction)
-                    && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
+            if (player.getShipBoard().getShipBoardAttributes().checkSideShieldProtected(direction)) {
                 //player can defend themselves by using batteries
 
                 message = "A small asteroid is directed on position ["
