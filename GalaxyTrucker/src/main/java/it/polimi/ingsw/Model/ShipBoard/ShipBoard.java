@@ -65,7 +65,7 @@ public class ShipBoard implements Serializable {
      * @author Giacomo
      */
     public ShipBoard(GameType gameType) {
-        this.shipBoardAttributes = new ShipBoardAttributes();
+        this.shipBoardAttributes = new ShipBoardAttributes(this);
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];

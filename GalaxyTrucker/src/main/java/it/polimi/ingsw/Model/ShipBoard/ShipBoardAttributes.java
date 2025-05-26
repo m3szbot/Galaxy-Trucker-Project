@@ -52,7 +52,9 @@ public class ShipBoardAttributes implements Serializable {
      *
      * @author Giacomo, Boti
      */
-    public ShipBoardAttributes() {
+    public ShipBoardAttributes(ShipBoard shipBoard) {
+        this.shipBoard = shipBoard;
+
         coveredSides = new boolean[]{false, false, false, false};
         singleEnginePower = 0;
         singleCannonPower = 0;
@@ -130,9 +132,9 @@ public class ShipBoardAttributes implements Serializable {
     }
 
     /**
-     * TODO visitor for each component
-     * To reorganize into visitor based on component type?
-     * Scan matrix, each component updates based on type.
+     * Update every shipBoardAttribute attribute.
+     * To use when shipBoard is fractured.
+     * For normal updates use ComponentVisitor.
      */
     void updateShipBoardAttributes() {
         updateCoveredSides();
@@ -305,19 +307,24 @@ public class ShipBoardAttributes implements Serializable {
      * Adds the given number of destroyed components to the destroyed component counter.
      */
     void destroyComponents(int count) {
-        destroyedComponents++;
+        if (count < 0)
+            throw new IllegalArgumentException("Cannot destroy negative number of components");
+        destroyedComponents += count;
     }
 
     public void addCredits(int credits) {
-        if (this.credits + credits < 0)
-            throw new IllegalArgumentException("Negative credits.");
+        if (credits < 0)
+            throw new IllegalArgumentException("Cannot add negative credits.");
         this.credits += credits;
     }
 
     public void removeCredits(int credits) {
-        if (this.credits - credits < 0)
-            throw new IllegalArgumentException("Negative credits.");
+        if (credits < 0)
+            throw new IllegalArgumentException("Cannot remove negative credits");
         this.credits -= credits;
+        // cannot have negative credits
+        if (this.credits < 0)
+            this.credits = 0;
     }
 
 
