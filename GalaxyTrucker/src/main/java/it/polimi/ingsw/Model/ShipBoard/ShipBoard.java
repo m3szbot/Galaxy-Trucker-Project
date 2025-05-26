@@ -34,6 +34,7 @@ public class ShipBoard implements Serializable {
     public static final int SB_FIRST_REAL_ROW = 4;
 
     // final Object: reference cannot be changed (but state/elements can change)
+    private final SBAttributesUpdaterVisitor sbAttributesUpdaterVisitor;
     private final ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private final Component[][] componentMatrix;
@@ -49,7 +50,6 @@ public class ShipBoard implements Serializable {
     // TODO
     // 1 element is okay, 0 crew is removed
 
-    private final SBAttributesUpdaterVisitor sbAttributesUpdaterVisitor;
 
     /**
      * Constructs a ShipStructure instance.
@@ -66,11 +66,12 @@ public class ShipBoard implements Serializable {
      */
     public ShipBoard(GameType gameType) {
         this.shipBoardAttributes = new ShipBoardAttributes(this);
+        this.sbAttributesUpdaterVisitor = new SBAttributesUpdaterVisitor(shipBoardAttributes);
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
         this.connectedComponentsList = new ArrayList<>();
-        this.sbAttributesUpdaterVisitor = new SBAttributesUpdaterVisitor(shipBoardAttributes);
+
 
         // Initialize component matrix as empty
         for (int i = 0; i < SB_COLS; i++) {
@@ -140,13 +141,22 @@ public class ShipBoard implements Serializable {
         }
 
         // add center cabin
+        addStarterCabin();
+
+    }
+
+    private void addStarterCabin() {
         // TODO: colored starter cabin, to get from the componentList in gameInformation
         Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal});
-        componentMatrix[SB_CENTER_COL - 1][SB_CENTER_ROW - 1] = starterCabin;
+        componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = starterCabin;
         connectedComponentsList.add(new ArrayList<>());
         connectedComponentsList.getFirst().add(starterCabin);
-        sbAttributesUpdaterVisitor.visit(starterCabin);
+        // TODO FIX VISITOR
+        starterCabin.accept(sbAttributesUpdaterVisitor);
+    }
 
+    private int getRealIndex(int visibleIndex) {
+        return visibleIndex - 1;
     }
 
     /**
@@ -188,10 +198,6 @@ public class ShipBoard implements Serializable {
             throw new IllegalArgumentException("The entered coordinates are out of bounds");
     }
 
-    private int getRealIndex(int visibleIndex) {
-        return visibleIndex - 1;
-    }
-
     /**
      * Check if the requested cell is valid to place a component in.
      * Call checkIndexInBounds before.
@@ -226,8 +232,11 @@ public class ShipBoard implements Serializable {
         return errorsMatrix;
     }
 
-    public Component getComponent(int realCol, int realRow) {
-        return componentMatrix[realCol][realRow];
+    /**
+     * Return the component at the given visible coordinates.
+     */
+    public Component getComponent(int visibleCol, int visibleRow) {
+        return componentMatrix[getRealIndex(visibleCol)][getRealIndex(visibleRow)];
     }
 
     public int getMatrixRows() {

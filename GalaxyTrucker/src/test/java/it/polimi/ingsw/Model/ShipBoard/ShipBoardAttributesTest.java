@@ -8,23 +8,26 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShipBoardAttributesTest {
-    GameInformation gameInformation;
+    GameInformation gameInformation = new GameInformation();
     ShipBoard shipBoard;
     ShipBoardAttributes shipBoardAttributes;
 
+
     @BeforeEach
     void setUp() {
-        gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
-
         shipBoard = new ShipBoard(gameInformation.getGameType());
-        shipBoardAttributes = new ShipBoardAttributes(shipBoard);
+        shipBoardAttributes = shipBoard.getShipBoardAttributes();
     }
 
     @Test
     void testSetup() {
+        assertEquals(2, shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW).getCrewMembers());
         assertEquals(2, shipBoardAttributes.getCrewMembers());
-        assertEquals(new boolean[]{false, false, false, false}, shipBoardAttributes.getCoveredSides());
+        assertFalse(shipBoardAttributes.getCoveredSides()[0]);
+        assertFalse(shipBoardAttributes.getCoveredSides()[1]);
+        assertFalse(shipBoardAttributes.getCoveredSides()[2]);
+        assertFalse(shipBoardAttributes.getCoveredSides()[3]);
         assertEquals(0, shipBoardAttributes.getSingleEnginePower());
         assertEquals(0, shipBoardAttributes.getSingleCannonPower());
         assertEquals(0, shipBoardAttributes.getRemainingBatteries());
@@ -32,7 +35,10 @@ public class ShipBoardAttributesTest {
         assertEquals(0, shipBoardAttributes.getDoubleCannonPower());
         assertFalse(shipBoardAttributes.getPurpleAlien());
         assertFalse(shipBoardAttributes.getBrownAlien());
-        assertEquals(new int[]{0, 0, 0, 0}, shipBoardAttributes.getGoods());
+        assertEquals(0, shipBoardAttributes.getGoods()[0]);
+        assertEquals(0, shipBoardAttributes.getGoods()[1]);
+        assertEquals(0, shipBoardAttributes.getGoods()[2]);
+        assertEquals(0, shipBoardAttributes.getGoods()[3]);
         assertEquals(0, shipBoardAttributes.getRemainingRedSlots());
         assertEquals(0, shipBoardAttributes.getRemainingBlueSlots());
         assertEquals(0, shipBoardAttributes.getDestroyedComponents());

@@ -12,7 +12,8 @@ import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.*;
  * @author Giacomo, Boti
  */
 public class ShipBoardAttributes implements Serializable {
-    ShipBoard shipBoard;
+    private final ComponentAttributesVisitor componentAttributesVisitor;
+    private final ShipBoard shipBoard;
     // STATIC SHIP ATTRIBUTES
     // covered sides of the ship
     // [FRONT, RIGHT, BACK, LEFT]
@@ -26,8 +27,10 @@ public class ShipBoardAttributes implements Serializable {
     private int remainingBatteries; // Ship's battery power
     // driving power of double engines (only available if battery is consumed!)
     private int doubleEnginePower;
-    // firepower of double cannons (only available if battery is consumed!)
-    private float doubleCannonPower;
+    // number of forward facing double cannons
+    private int numberForwardDoubleCannons;
+    // number of lateral facing double cannons
+    private int numberLateralDoubleCannons;
     // number of crew members
     private int crewMembers;
     // presence of a purple alien (only 1 permitted)
@@ -53,6 +56,8 @@ public class ShipBoardAttributes implements Serializable {
      * @author Giacomo, Boti
      */
     public ShipBoardAttributes(ShipBoard shipBoard) {
+        // without ComponentAttributesVisitor, components return default Component values
+        this.componentAttributesVisitor = new ComponentAttributesVisitor();
         this.shipBoard = shipBoard;
 
         coveredSides = new boolean[]{false, false, false, false};
@@ -60,7 +65,8 @@ public class ShipBoardAttributes implements Serializable {
         singleCannonPower = 0;
         remainingBatteries = 0;
         doubleEnginePower = 0;
-        doubleCannonPower = 0;
+        numberForwardDoubleCannons = 0;
+        numberLateralDoubleCannons = 0;
         crewMembers = 0;
         purpleAlien = false;
         brownAlien = false;
@@ -95,9 +101,14 @@ public class ShipBoardAttributes implements Serializable {
         return doubleEnginePower;
     }
 
-    public float getDoubleCannonPower() {
-        return doubleCannonPower;
+    public int getNumberForwardDoubleCannons() {
+        return numberForwardDoubleCannons;
     }
+
+    public int getNumberLateralDoubleCannons() {
+        return numberLateralDoubleCannons;
+    }
+
 
     public int getCrewMembers() {
         return crewMembers;
@@ -138,8 +149,8 @@ public class ShipBoardAttributes implements Serializable {
      */
     void updateShipBoardAttributes() {
         updateCoveredSides();
-        updateCannonPower();
-        updateEnginePower();
+        updateCannons();
+        updateEngines();
         updateRemainingBatteries();
         updateCrewMembers();
         updateAliens();
@@ -158,29 +169,38 @@ public class ShipBoardAttributes implements Serializable {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Shield) {
-                    coveredSides = component.getCoveredSides();
+                    coveredSides = component.getCoveredSides(componentAttributesVisitor);
                 }
             }
         }
     }
 
     /**
-     * Scan the shipboard for cannons and update singleCannonPower and doubleCannonPower attributes.
+     * Scan the shipboard for cannons and update singleCannonPower, numberForwardDoubleCannons,
+     * numberLateralDoubleCannons attributes.
+     * Double cannons add cannonPower only if activated with batteries.
      * Does not account for aliens.
      *
      * @author Boti
      */
-    void updateCannonPower() {
+    void updateCannons() {
         singleCannonPower = 0;
-        doubleCannonPower = 0;
+        numberForwardDoubleCannons = 0;
+        numberLateralDoubleCannons = 0;
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Cannon) {
                     if (component.isSingle())
-                        singleCannonPower += component.getFirePower();
-                    else
-                        doubleCannonPower += component.getFirePower();
+                        singleCannonPower += component.getFirePower(componentAttributesVisitor);
+                    else {
+                        // forward double cannon
+                        if (component.getFront().equals(SideType.Special))
+                            numberForwardDoubleCannons++;
+                            // lateral double cannon
+                        else
+                            numberLateralDoubleCannons++;
+                    }
                 }
             }
         }
@@ -188,11 +208,12 @@ public class ShipBoardAttributes implements Serializable {
 
     /**
      * Scan the shipboard for engines and update singleEnginePower and doubleEnginePower attributes.
+     * Double engines add enginePower only if activated with batteries.
      * Does not account for aliens.
      *
      * @author Boti
      */
-    void updateEnginePower() {
+    void updateEngines() {
         singleEnginePower = 0;
         doubleEnginePower = 0;
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
@@ -200,9 +221,9 @@ public class ShipBoardAttributes implements Serializable {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Engine) {
                     if (component.isSingle())
-                        singleCannonPower += component.getDrivingPower();
+                        singleEnginePower += component.getDrivingPower(componentAttributesVisitor);
                     else
-                        doubleCannonPower += component.getDrivingPower();
+                        doubleEnginePower += component.getDrivingPower(componentAttributesVisitor);
                 }
             }
         }
@@ -219,7 +240,7 @@ public class ShipBoardAttributes implements Serializable {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Battery) {
-                    remainingBatteries += component.getBatteryPower();
+                    remainingBatteries += component.getBatteryPower(componentAttributesVisitor);
                 }
             }
         }
@@ -232,21 +253,22 @@ public class ShipBoardAttributes implements Serializable {
      * @author Boti
      */
     void updateCrewMembers() {
+        // reset crew members
         crewMembers = 0;
+        // recount crew members
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Cabin) {
-                    crewMembers += component.getCrewMembers();
+                    crewMembers += component.getCrewMembers(componentAttributesVisitor);
                 }
             }
         }
     }
 
     /**
-     * Scan the shipboard for purple and brown aliens and update purpleAlien, brownAlien,
-     * singleCannonPower, singleEnginePower attributes.
-     * Cannon power, engine power must be updated before calling.
+     * Scan the shipboard for purple and brown aliens and update purpleAlien, brownAlien.
+     * Does not apply alien benefits to enginePower, cannonPower (can be battery dependent).
      * <p>
      * 1 purple alien adds +2 cannon strength if cannon power is >0.
      * 1 brown alien adds +2 engine strength if engine power is >0.
@@ -262,12 +284,8 @@ public class ShipBoardAttributes implements Serializable {
                 if (component instanceof Cabin) {
                     if (((Cabin) component).getCrewType().equals(CrewType.Purple)) {
                         purpleAlien = true;
-                        if (singleCannonPower > 0)
-                            singleCannonPower += 2;
                     } else if (((Cabin) component).getCrewType().equals(CrewType.Brown)) {
                         brownAlien = true;
-                        if (singleEnginePower > 0)
-                            singleEnginePower += 2;
                     }
                 }
             }
@@ -296,8 +314,8 @@ public class ShipBoardAttributes implements Serializable {
                         this.goods[k] += toAdd[k];
 
                     // update remaining slots
-                    remainingRedSlots += component.getAvailableRedSlots();
-                    remainingBlueSlots += component.getAvailableBlueSlots();
+                    remainingRedSlots += component.getAvailableRedSlots(componentAttributesVisitor);
+                    remainingBlueSlots += component.getAvailableBlueSlots(componentAttributesVisitor);
                 }
             }
         }
@@ -325,6 +343,24 @@ public class ShipBoardAttributes implements Serializable {
         // cannot have negative credits
         if (this.credits < 0)
             this.credits = 0;
+    }
+
+
+    /**
+     * Checks if the given side is protected by a shield (considering the remaining batteries).
+     * Does not consume the necessary batteries.
+     * Sides: 0 FRONT, 1 RIGHT, 2 BACK, 3 LEFT.
+     *
+     * @return True if protected, false if unprotected.
+     */
+    public boolean checkSideShieldProtected(int side) {
+        if (side < 0 || side >= coveredSides.length)
+            throw new IllegalArgumentException("Invalid side entered (0-3 is valid)");
+        // no batteries remaining
+        if (remainingBatteries <= 0)
+            return false;
+        // check shield coverage
+        return coveredSides[side];
     }
 
 
