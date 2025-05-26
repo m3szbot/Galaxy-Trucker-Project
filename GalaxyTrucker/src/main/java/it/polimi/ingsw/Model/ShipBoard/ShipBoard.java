@@ -532,7 +532,7 @@ public class ShipBoard implements Serializable {
      * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void selectCrewType(int visibleCol, int visibleRow, CrewType crewType) {
+    public void setCrewType(int visibleCol, int visibleRow, CrewType crewType) {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
