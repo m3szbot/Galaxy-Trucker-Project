@@ -50,7 +50,7 @@ public class ShipBoardAttributesTest {
     void destroyComponent() {
         shipBoardAttributes.destroyComponents(2);
         assertEquals(2, shipBoardAttributes.getDestroyedComponents());
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             shipBoardAttributes.destroyComponents(-1);
         });
     }
@@ -64,10 +64,10 @@ public class ShipBoardAttributesTest {
         shipBoardAttributes.removeCredits(10);
         assertEquals(0, shipBoardAttributes.getCredits());
 
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             shipBoardAttributes.addCredits(-1);
         });
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             shipBoardAttributes.removeCredits(-1);
         });
     }
