@@ -45,10 +45,6 @@ public class Storage extends Component {
         return 0;
     }
 
-    @Override
-    public boolean amIAStorage() {
-        return true;
-    }
 
     public boolean isRed() {
         return isRed;
