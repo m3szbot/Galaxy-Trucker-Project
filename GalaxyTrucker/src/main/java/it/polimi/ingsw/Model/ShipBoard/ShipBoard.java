@@ -239,15 +239,15 @@ public class ShipBoard implements Serializable {
     /**
      * Checks if there are erroneous components in the shipboard.
      *
-     * @return true if there are errors, false if correct
+     * @return true if there are errors in shipboard, false if shipboard correct.
      * @author Boti
      */
     public boolean isErroneous() {
         checkErrors();
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
             // iterate rows
-            for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                if (errorsMatrix[i][j])
+            for (int realRow = SB_FIRST_REAL_ROW; realRow < SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+                if (errorsMatrix[realCol][realRow])
                     return true;
             }
         }
@@ -270,40 +270,40 @@ public class ShipBoard implements Serializable {
 
         // max-real included!
         // iterate columns
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
             // iterate rows
-            for (int j = SB_FIRST_REAL_ROW; j < SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow < SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
                 // default: no error in cell
                 // override if cell erroneous
-                errorsMatrix[i][j] = false;
-                component = componentMatrix[i][j];
+                errorsMatrix[realCol][realRow] = false;
+                component = componentMatrix[realCol][realRow];
 
                 // if component is present, check for errors
                 if (component != null) {
 
                     // check if adjacent
-                    if (!checkAdjacency(i, j)) {
-                        errorsMatrix[i][j] = true;
+                    if (!checkAdjacency(realCol, realRow)) {
+                        errorsMatrix[realCol][realRow] = true;
                         break;
                     }
 
                     // check junctions
-                    if (!checkCorrectJunctions(i, j)) {
-                        errorsMatrix[i][j] = true;
+                    if (!checkCorrectJunctions(realCol, realRow)) {
+                        errorsMatrix[realCol][realRow] = true;
                         break;
                     }
 
                     // check if Engine
                     if (component instanceof Engine) {
-                        if (checkEngineErrors(i, j)) {
-                            errorsMatrix[i][j] = true;
+                        if (checkEngineErrors(realCol, realRow)) {
+                            errorsMatrix[realCol][realRow] = true;
                             break;
                         }
                     }
                     // check if Cannon
                     else if (component instanceof Cannon) {
-                        if (checkCannonErrors(i, j)) {
-                            errorsMatrix[i][j] = true;
+                        if (checkCannonErrors(realCol, realRow)) {
+                            errorsMatrix[realCol][realRow] = true;
                             break;
                         }
                     }
@@ -320,7 +320,7 @@ public class ShipBoard implements Serializable {
      */
     private boolean checkCorrectJunctions(int realCol, int realRow) {
         Component currentComponent = componentMatrix[realCol][realRow];
-        // empty cell is always correct
+        // empty cell has correct junctions
         if (currentComponent == null)
             return true;
 
@@ -353,13 +353,14 @@ public class ShipBoard implements Serializable {
      *
      * @return true if there are errors, false if correct.
      */
-    private boolean checkEngineErrors(int i, int j) {
-        Engine component = (Engine) componentMatrix[i][j];
+    private boolean checkEngineErrors(int realCol, int realRow) {
+        Engine component = (Engine) componentMatrix[realCol][realRow];
         // engine not facing backwards
         if (!component.getBack().equals(SideType.Special))
             return true;
+
             // engine obstructed
-        else if (componentMatrix[i][j + 1] != null)
+        else if (componentMatrix[realCol][realRow + 1] != null)
             return true;
         // no errors found
         return false;
@@ -370,27 +371,27 @@ public class ShipBoard implements Serializable {
      *
      * @return true if there are errors, false if correct.
      */
-    private boolean checkCannonErrors(int i, int j) {
-        Cannon component = (Cannon) componentMatrix[i][j];
+    private boolean checkCannonErrors(int realCol, int realRow) {
+        Cannon component = (Cannon) componentMatrix[realCol][realRow];
         // cannon obstructed
-        // front cannon
+        // front cannon obstructed
         if (component.getFront().equals(SideType.Special)) {
-            if (componentMatrix[i][j - 1] != null)
+            if (componentMatrix[realCol][realRow - 1] != null)
                 return true;
         }
         // right cannon
         else if (component.getRight().equals(SideType.Special)) {
-            if (componentMatrix[i + 1][j] != null)
+            if (componentMatrix[realCol + 1][realRow] != null)
                 return true;
         }
         // left cannon
         else if (component.getLeft().equals(SideType.Special)) {
-            if (componentMatrix[i - 1][j] != null)
+            if (componentMatrix[realCol - 1][realRow] != null)
                 return true;
         }
         // back cannon
         else {
-            if (componentMatrix[i][j + 1] != null)
+            if (componentMatrix[realCol][realRow + 1] != null)
                 return true;
         }
         // no errors found
@@ -495,12 +496,16 @@ public class ShipBoard implements Serializable {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
-        if (componentMatrix[col][row].getBatteryPower() - 1 >= 0) {
-            ((Battery) componentMatrix[col][row]).removeBattery();
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Battery))
+            throw new IllegalArgumentException("The selected component is not a battery");
+
+        if (component.getBatteryPower() - 1 >= 0) {
+            ((Battery) component).removeBattery();
             shipBoardAttributes.updateRemainingBatteries();
-        } else {
+        } else
             throw new IllegalArgumentException("Not enough batteries at the selected component.");
-        }
     }
 
     /**
@@ -515,8 +520,13 @@ public class ShipBoard implements Serializable {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
-        if (componentMatrix[col][row].getCrewMembers() - 1 >= 0) {
-            ((Cabin) componentMatrix[col][row]).removeInhabitant();
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Cabin))
+            throw new IllegalArgumentException("The selected component is not a cabin");
+
+        if (component.getCrewMembers() - 1 >= 0) {
+            ((Cabin) component).removeInhabitant();
             shipBoardAttributes.updateCrewMembers();
             shipBoardAttributes.updateAliens();
         } else {
@@ -537,6 +547,10 @@ public class ShipBoard implements Serializable {
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Cabin))
+            throw new IllegalArgumentException("The selected component is not a cabin");
+
         // cabin with crew
         if (component.getCrewMembers() > 0) {
             if (crewType.equals(CrewType.Human))
@@ -625,28 +639,61 @@ public class ShipBoard implements Serializable {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Storage))
+            throw new IllegalArgumentException("The selected component is not a storage");
 
         // negative goods - malicious intent
         if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
             throw new IllegalArgumentException("Cannot add negative number of goods");
 
         // check red goods slots
-        if (goods[0] > componentMatrix[col][row].getAvailableRedSlots())
+        if (goods[0] > component.getAvailableRedSlots())
             throw new IllegalArgumentException("Not enough red goods storage available");
 
         // check red + normal goods slots
         int totalGoods = 0;
         for (int good : goods)
             totalGoods += good;
-        if (totalGoods > (componentMatrix[col][row].getAvailableRedSlots() + componentMatrix[col][row].getAvailableBlueSlots()))
+        if (totalGoods > (component.getAvailableRedSlots() + component.getAvailableBlueSlots()))
             throw new IllegalArgumentException("Not enough goods storage available");
 
         // no problems, add goods to component
-        ((Storage) componentMatrix[col][row]).addGoods(goods);
+        ((Storage) component).addGoods(goods);
         shipBoardAttributes.updateGoods();
     }
 
-    public void removeGoods() {
+    /**
+     * Remove goods from the storage at the given coordinates, if possible.
+     * Updates shipBoardAttributes.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void removeGoods(int visibleCol, int visibleRow, int[] goods) {
+        checkIndexInBounds(visibleCol, visibleRow);
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Storage))
+            throw new IllegalArgumentException("The selected component is not a storage");
+
+        // negative goods - malicious intent
+        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
+            throw new IllegalArgumentException("Cannot add negative number of goods");
+
+        // check available goods
+        int[] componentGoods = ((Storage) component).getGoods();
+        for (int i = 0; i < componentGoods.length; i++) {
+            if (componentGoods[i] < goods[i])
+                throw new IllegalArgumentException("Not enough goods storage available");
+        }
+
+        // no problems, remove goods from component
+        ((Storage) component).removeGoods(goods);
+        shipBoardAttributes.updateGoods();
     }
 
 
