@@ -1,6 +1,4 @@
-package it.polimi.ingsw.Model.ShipBoard;
-
-import it.polimi.ingsw.Model.Components.*;
+package it.polimi.ingsw.Model.Components;
 
 public interface ComponentVisitor<T> {
     T visit(AlienSupport alienSupport);
