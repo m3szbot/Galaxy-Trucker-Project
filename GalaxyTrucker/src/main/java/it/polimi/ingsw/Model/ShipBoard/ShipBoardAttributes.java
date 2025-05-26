@@ -146,7 +146,7 @@ public class ShipBoardAttributes implements Serializable {
 
     /**
      * Scan the shipboard for shields and update coveredSides.
-     * Order: FRONT RIGHT BACK LEFT
+     * Order: FRONT RIGHT BACK LEFT.
      *
      * @author Boti
      */
@@ -274,9 +274,9 @@ public class ShipBoardAttributes implements Serializable {
 
     /**
      * Scan the shipboard for goods in storages and update goods, remainingRedSlots, remainingBlueSlots.
-     * Order: RED YELLOW GREEN BLUE
-     * remainingRedSlots: only RED slots
-     * remainingBlueSlots: YELLOW, GREEN, BLUE slots
+     * Order: RED YELLOW GREEN BLUE.
+     * remainingRedSlots: only RED slots.
+     * remainingBlueSlots: YELLOW, GREEN, BLUE slots.
      *
      * @author Boti
      */
