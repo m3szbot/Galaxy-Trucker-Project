@@ -22,13 +22,6 @@ public class Sabotage extends Card implements SmallestCrew {
 
     }
 
-    public void showCard() {
-
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-
-    }
-
     @Override
 
     public void resolve(GameInformation gameInformation) {
@@ -58,6 +51,13 @@ public class Sabotage extends Card implements SmallestCrew {
 
     }
 
+    public void showCard() {
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+
+    }
+
     /**
      * @param player target
      * @return true if the player was hit, false otherwise
@@ -84,7 +84,6 @@ public class Sabotage extends Card implements SmallestCrew {
                 }
 
                 player.getShipBoard().removeComponent(x + 1, y + 1, true);
-                player.getShipBoard().getShipBoardAttributes().updateDestroyedComponents(1);
                 return true;
 
             }
