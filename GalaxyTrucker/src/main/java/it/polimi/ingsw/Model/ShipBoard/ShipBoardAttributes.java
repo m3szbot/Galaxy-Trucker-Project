@@ -12,8 +12,9 @@ import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.*;
  * @author Giacomo, Boti
  */
 public class ShipBoardAttributes implements Serializable {
-    private final ComponentAttributesVisitor componentAttributesVisitor;
+    // All attributes must be Serializable or transient
     private final ShipBoard shipBoard;
+
     // STATIC SHIP ATTRIBUTES
     // covered sides of the ship
     // [FRONT, RIGHT, BACK, LEFT]
@@ -58,8 +59,6 @@ public class ShipBoardAttributes implements Serializable {
      * @author Giacomo, Boti
      */
     public ShipBoardAttributes(ShipBoard shipBoard) {
-        // without ComponentAttributesVisitor, components return default Component values
-        this.componentAttributesVisitor = new ComponentAttributesVisitor();
         this.shipBoard = shipBoard;
 
         coveredSides = new boolean[]{false, false, false, false};
@@ -170,7 +169,7 @@ public class ShipBoardAttributes implements Serializable {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Shield) {
-                    coveredSides = component.getCoveredSides(componentAttributesVisitor);
+                    coveredSides = component.getCoveredSides();
                 }
             }
         }
@@ -193,7 +192,7 @@ public class ShipBoardAttributes implements Serializable {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Cannon) {
                     if (component.isSingle())
-                        singleCannonPower += component.getFirePower(componentAttributesVisitor);
+                        singleCannonPower += component.getFirePower();
                     else {
                         // forward double cannon
                         if (component.getFront().equals(SideType.Special))
@@ -222,9 +221,9 @@ public class ShipBoardAttributes implements Serializable {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Engine) {
                     if (component.isSingle())
-                        singleEnginePower += component.getDrivingPower(componentAttributesVisitor);
+                        singleEnginePower += component.getDrivingPower();
                     else
-                        doubleEnginePower += component.getDrivingPower(componentAttributesVisitor);
+                        doubleEnginePower += component.getDrivingPower();
                 }
             }
         }
@@ -241,7 +240,7 @@ public class ShipBoardAttributes implements Serializable {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Battery) {
-                    remainingBatteries += component.getBatteryPower(componentAttributesVisitor);
+                    remainingBatteries += component.getBatteryPower();
                 }
             }
         }
@@ -322,8 +321,8 @@ public class ShipBoardAttributes implements Serializable {
                         this.goods[k] += toAdd[k];
 
                     // update remaining slots
-                    remainingRedSlots += component.getAvailableRedSlots(componentAttributesVisitor);
-                    remainingBlueSlots += component.getAvailableBlueSlots(componentAttributesVisitor);
+                    remainingRedSlots += component.getAvailableRedSlots();
+                    remainingBlueSlots += component.getAvailableBlueSlots();
                 }
             }
         }

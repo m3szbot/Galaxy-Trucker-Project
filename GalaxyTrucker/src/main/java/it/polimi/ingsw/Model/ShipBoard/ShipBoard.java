@@ -23,6 +23,7 @@ import java.util.List;
  * @author Giacomo, Boti
  */
 public class ShipBoard implements Serializable {
+    // All attributes must be Serializable or transient
     // visible values
     public static final int SB_COLS = 12;
     public static final int SB_ROWS = 12;
@@ -35,7 +36,7 @@ public class ShipBoard implements Serializable {
 
     // final Object: reference cannot be changed (but state/elements can change)
     private final transient ComponentVisitor<Void> sbAttributesUpdaterVisitor;
-    private final transient ShipBoardAttributes shipBoardAttributes;
+    private final ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private final Component[][] componentMatrix;
     // Boolean matrix indicating valid positions for components
