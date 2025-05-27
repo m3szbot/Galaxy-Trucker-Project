@@ -50,5 +50,11 @@ public class Engine extends Component {
     public void setSingle(boolean single) {
         this.single = single;
     }
+
+    @Override
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        return componentVisitor.visitEngine(this);
+    }
+
 }
 

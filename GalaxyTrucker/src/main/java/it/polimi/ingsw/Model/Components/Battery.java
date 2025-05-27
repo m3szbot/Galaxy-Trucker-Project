@@ -42,4 +42,10 @@ public class Battery extends Component {
         return numberOfCurrentBatteries;
     }
 
+    @Override
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        return componentVisitor.visitBattery(this);
+    }
+
+
 }

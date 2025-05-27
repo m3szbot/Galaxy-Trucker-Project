@@ -151,7 +151,6 @@ public class ClientSocketHandler extends Thread {
                     }
 
                     centralServer.getLock().unlock();
-
                     break;
 
                 } else {
@@ -302,7 +301,7 @@ public class ClientSocketHandler extends Thread {
         }
 
         message = nickName + " joined the game!";
-        notifyAllPlayers(message);
+        notifyAllPlayers(message, false);
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, dataExchanger);
 
         if (isFirstPlayer) {
@@ -316,7 +315,7 @@ public class ClientSocketHandler extends Thread {
         dataExchanger.setSocketTimeOut(0);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
-            notifyAllPlayers("start");
+            notifyAllPlayers("start", true);
             centralServer.startCurrentGame();
         } else {
             dataExchanger.sendString("Waiting for other players to join...");
@@ -324,9 +323,9 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void notifyAllPlayers(String message) throws IOException {
+    private void notifyAllPlayers(String message, boolean onlySocket){
 
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendShortCutMessageToAll(message);
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendShortCutMessageToAll(message, onlySocket);
 
     }
 

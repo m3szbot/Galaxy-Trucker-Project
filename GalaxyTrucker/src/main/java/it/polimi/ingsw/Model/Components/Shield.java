@@ -80,4 +80,10 @@ public class Shield extends Component {
         return sides;
     }
 
+    @Override
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        return componentVisitor.visitShield(this);
+    }
+
+
 }

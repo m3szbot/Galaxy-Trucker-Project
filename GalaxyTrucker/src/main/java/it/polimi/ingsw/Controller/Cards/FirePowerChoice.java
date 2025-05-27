@@ -23,19 +23,19 @@ public interface FirePowerChoice {
         String message;
         PlayerMessenger playerMessenger;
         int forwardDoubleCannons = player.getShipBoard().getShipBoardAttributes().getNumberForwardDoubleCannons();
-        int notForwardDoubleCannons = player.getShipBoard().getShipBoardAttributes().getNumberNotForwardDoubleCannons();
-        float defaultFirePower = player.getShipBoard().getShipBoardAttributes().getFirePower();
+        int notForwardDoubleCannons = player.getShipBoard().getShipBoardAttributes().getNumberLateralDoubleCannons();
+        float defaultFirePower = player.getShipBoard().getShipBoardAttributes().getSingleCannonPower();
         int doubleCannonsToActivate;
         float addedFirePower = 0;
 
         //checking if purple alien is present
-        if (defaultFirePower > 0 && (player.getShipBoard().getShipBoardAttributes().getAlienType() == 1 || player.getShipBoard().getShipBoardAttributes().getAlienType() == 2)) {
+        if (defaultFirePower > 0 && player.getShipBoard().getShipBoardAttributes().getPurpleAlien()) {
 
             defaultFirePower += 2;
 
         }
 
-        if (forwardDoubleCannons + notForwardDoubleCannons > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
+        if (forwardDoubleCannons + notForwardDoubleCannons > 0 && player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() > 0) {
             //player can increase firePower.
 
             message = "Your fire power is " + defaultFirePower +
@@ -58,7 +58,7 @@ public interface FirePowerChoice {
 
                         doubleCannonsToActivate = playerMessenger.getPlayerInt();
 
-                        if (doubleCannonsToActivate > 0 && doubleCannonsToActivate <= player.getShipBoard().getShipBoardAttributes().getBatteryPower()
+                        if (doubleCannonsToActivate > 0 && doubleCannonsToActivate <= player.getShipBoard().getShipBoardAttributes().getRemainingBatteries()
                                 && doubleCannonsToActivate <= forwardDoubleCannons + notForwardDoubleCannons) {
                             break;
                         }
@@ -82,14 +82,13 @@ public interface FirePowerChoice {
 
                             coordinates = playerMessenger.getPlayerCoordinates();
 
-                            Component component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
-
-                            if (component != null) {
-                                if (component.getComponentName().equals("Battery")) {
-                                    if (((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
-                                        break;
-                                    }
-                                }
+                            try {
+                                player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
+                                break;
+                            } catch (IllegalArgumentException e) {
+                                message = e.getMessage();
+                                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                                playerMessenger.printMessage(message);
                             }
 
                             message = "Invalid coordinate, reenter coordinate: ";
@@ -107,10 +106,9 @@ public interface FirePowerChoice {
                         } else {
                             addedFirePower += 1;
                         }
-                        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-1);
-                        ((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).removeBattery();
 
                     }
+
                 }
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);

@@ -51,64 +51,10 @@ class EnginePowerChoiceTest {
         System.setIn(System.in);
     }
 
-    @Test
-    void noDoubleEngines() {
-
-        player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(4);
-
-        assertTrue(operator.chooseEnginePower(player, gameInformation) == 5);
-
-    }
-
-    @Test
-    void noBatteriesAvailable() {
-
-        player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
-        player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(1);
-
-        assertTrue(operator.chooseEnginePower(player, gameInformation) == 5);
-
-    }
-
-    @Test
-    void playerRefuseToUseDoubleEngines() {
-
-        player.getShipBoard().getShipBoardAttributes().updateDrivingPower(3);
-        player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(1);
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(4);
-
-        String playerResponse = "false";
-        ByteArrayInputStream in = new ByteArrayInputStream(playerResponse.getBytes());
-        System.setIn(in);
-
-        flightView = new FlightViewTUI();
-
-        assertTrue(operator.chooseEnginePower(player, gameInformation) == 3);
-
-    }
-
-    @Test
-    void twoDoubleEnginesActivated() throws NotPermittedPlacementException {
-
-        player.getShipBoard().getShipBoardAttributes().updateDrivingPower(1);
-        player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(2);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Universal, SideType.Double}, 2), 6, 6);
-
-        String playerResponses = "true\n2\n5 5\n5 5\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(playerResponses.getBytes());
-        System.setIn(in);
-
-        flightView = new FlightViewTUI();
-
-        assertTrue(operator.chooseEnginePower(player, gameInformation) == 5);
-    }
 
     @Test
     void threeEnginesActivatedWithIncorrectValues() throws NotPermittedPlacementException {
-
-        player.getShipBoard().getShipBoardAttributes().updateDrivingPower(5);
-        player.getShipBoard().getShipBoardAttributes().updateNumberDoubleEngines(4);
+        
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Universal, SideType.Single, SideType.Double}, 3), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
 

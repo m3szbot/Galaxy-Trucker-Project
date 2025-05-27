@@ -45,6 +45,10 @@ public class Storage extends Component {
         return 0;
     }
 
+    @Override
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        return componentVisitor.visitStorage(this);
+    }
 
     public boolean isRed() {
         return isRed;
@@ -85,4 +89,5 @@ public class Storage extends Component {
             goods[i] = goods[i] + newGoods[i];
         }
     }
+
 }

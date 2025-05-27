@@ -23,7 +23,7 @@ public class Epidemic extends Card {
 
     public void showCard() {
 
-        System.out.println("Card name: " + getCardName());
+        System.out.println("\nCard name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
 
     }
@@ -72,7 +72,7 @@ public class Epidemic extends Card {
                     //component is a cabin
                     if (centralComponent.getComponentName().equals("Cabin")) {
                         //cabin is not empty
-                        if (((Cabin) centralComponent).getCrewMembers() > 0) {
+                        if (centralComponent.getCrewMembers() > 0) {
                             //the cabin can be potentially infected if some conditions are verified
 
                             frontComponent = player.getShipBoard().getComponent(i, j + 1);
@@ -86,12 +86,11 @@ public class Epidemic extends Card {
 
                                 if (frontComponent.getComponentName().equals("Cabin")) {
 
-                                    if (((Cabin) frontComponent).getCrewMembers() > 0 || infectedCabins[i][j + 1]) {
+                                    if (frontComponent.getCrewMembers() > 0 || infectedCabins[i][j + 1]) {
 
                                         infectedCabins[i][j] = true;
                                         numberOfRemovedInhabitants++;
-                                        ((Cabin) centralComponent).removeInhabitant();
-
+                                        player.getShipBoard().removeCrewMember(i, j);
                                     }
                                 }
                             }
@@ -101,11 +100,11 @@ public class Epidemic extends Card {
 
                                 if (backComponent.getComponentName().equals("Cabin")) {
 
-                                    if (((Cabin) backComponent).getCrewMembers() > 0 || infectedCabins[i][j - 1]) {
+                                    if (backComponent.getCrewMembers() > 0 || infectedCabins[i][j - 1]) {
 
                                         infectedCabins[i][j] = true;
                                         numberOfRemovedInhabitants++;
-                                        ((Cabin) centralComponent).removeInhabitant();
+                                        player.getShipBoard().removeCrewMember(i, j);
                                     }
                                 }
                             }
@@ -115,12 +114,11 @@ public class Epidemic extends Card {
 
                                 if (rightComponent.getComponentName().equals("Cabin")) {
 
-                                    if (((Cabin) rightComponent).getCrewMembers() > 0 || infectedCabins[i + 1][j]) {
+                                    if (rightComponent.getCrewMembers() > 0 || infectedCabins[i + 1][j]) {
 
                                         infectedCabins[i][j] = true;
                                         numberOfRemovedInhabitants++;
-                                        ((Cabin) centralComponent).removeInhabitant();
-
+                                        player.getShipBoard().removeCrewMember(i, j);
                                     }
                                 }
                             }
@@ -130,11 +128,11 @@ public class Epidemic extends Card {
 
                                 if (leftComponent.getComponentName().equals("Cabin")) {
 
-                                    if (((Cabin) leftComponent).getCrewMembers() > 0 || infectedCabins[i - 1][j]) {
+                                    if (leftComponent.getCrewMembers() > 0 || infectedCabins[i - 1][j]) {
 
                                         infectedCabins[i][j] = true;
                                         numberOfRemovedInhabitants++;
-                                        ((Cabin) centralComponent).removeInhabitant();
+                                        player.getShipBoard().removeCrewMember(i, j);
                                     }
                                 }
                             }
@@ -144,7 +142,6 @@ public class Epidemic extends Card {
             }
         }
 
-        player.getShipBoard().getShipBoardAttributes().updateCrewMembers(-numberOfRemovedInhabitants);
         message = "Player " + player.getNickName() + "lost " + numberOfRemovedInhabitants +
                 " inhabitants from the epidemic!";
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);

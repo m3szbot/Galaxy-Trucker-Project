@@ -36,4 +36,8 @@ public class AlienSupport extends Component {
         return "AlienSupport";
     }
 
+    @Override
+    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+        return componentVisitor.visitAlienSupport(this);
+    }
 }

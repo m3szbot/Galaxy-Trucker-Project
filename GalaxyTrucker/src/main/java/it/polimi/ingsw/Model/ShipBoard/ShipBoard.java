@@ -34,8 +34,8 @@ public class ShipBoard implements Serializable {
     public static final int SB_FIRST_REAL_ROW = 4;
 
     // final Object: reference cannot be changed (but state/elements can change)
-    private final SBAttributesUpdaterVisitor sbAttributesUpdaterVisitor;
-    private final ShipBoardAttributes shipBoardAttributes;
+    private final transient ComponentVisitor<Void> sbAttributesUpdaterVisitor;
+    private final transient ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private final Component[][] componentMatrix;
     // Boolean matrix indicating valid positions for components
@@ -151,7 +151,6 @@ public class ShipBoard implements Serializable {
         componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = starterCabin;
         connectedComponentsList.add(new ArrayList<>());
         connectedComponentsList.getFirst().add(starterCabin);
-        // TODO FIX VISITOR
         starterCabin.accept(sbAttributesUpdaterVisitor);
     }
 
@@ -160,14 +159,20 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * Alternative parameter order to improve readability during testing.
+     */
+    public void addComponent(int visibleCol, int visibleRow, Component component) throws NotPermittedPlacementException, IllegalArgumentException {
+        addComponent(component, visibleCol, visibleRow);
+    }
+
+    /**
      * Adds a component to the specified position in the structure matrix,
-     * and updates Shipboard Attributes. TODO
+     * and updates Shipboard Attributes.
      *
      * @param component  The component to add.
      * @param visibleCol Visible column.
      * @param visibleRow Visible row.
      * @author Giacomo, Boti
-     * TODO
      */
     public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException, IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
@@ -180,7 +185,7 @@ public class ShipBoard implements Serializable {
             // add component to shipBoard
             componentMatrix[col][row] = component;
             // update shipboard attributes
-            sbAttributesUpdaterVisitor.visit(component);
+            component.accept(sbAttributesUpdaterVisitor);
             // add component to connected components list
             connectedComponentsList.getFirst().add(component);
         }
@@ -448,11 +453,13 @@ public class ShipBoard implements Serializable {
 
         // if a present element is to be removed
         if (component != null) {
-            checkFracturedShipBoard();
+            // remove the single component and update
+            componentMatrix[realCol][realRow] = null;
             shipBoardAttributes.destroyComponents(1);
-            // update shipboard attributes
-            sbAttributesUpdaterVisitor.visit(component);
+            component.accept(sbAttributesUpdaterVisitor);
 
+            // check for fracture
+            checkFracturedShipBoard();
         }
 
     }
@@ -520,7 +527,7 @@ public class ShipBoard implements Serializable {
         if (component.getBatteryPower() - 1 >= 0) {
             ((Battery) component).removeBattery();
             // update shipboard attributes
-            sbAttributesUpdaterVisitor.visit(component);
+            component.accept(sbAttributesUpdaterVisitor);
         } else
             throw new IllegalArgumentException("Not enough batteries at the selected component.");
     }
@@ -545,7 +552,7 @@ public class ShipBoard implements Serializable {
         if (component.getCrewMembers() - 1 >= 0) {
             ((Cabin) component).removeInhabitant();
             // update shipboard attributes
-            sbAttributesUpdaterVisitor.visit(component);
+            component.accept(sbAttributesUpdaterVisitor);
         } else {
             throw new IllegalArgumentException("Not enough crew members at the selected component.");
         }
@@ -570,21 +577,21 @@ public class ShipBoard implements Serializable {
 
         // cabin with crew
         if (component.getCrewMembers() > 0) {
-            if (crewType.equals(CrewType.Human))
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Human))
                 return;
                 // purple alien (1 per shipboard)
             else if (crewType.equals(CrewType.Purple) && !shipBoardAttributes.getPurpleAlien() &&
                     checkForAlienSupport(col, row, crewType)) {
                 ((Cabin) component).setCrewType(crewType);
                 // update shipboard attributes
-                sbAttributesUpdaterVisitor.visit(component);
+                component.accept(sbAttributesUpdaterVisitor);
             }
             // brown alien (1 per shipboard)
             else if (crewType.equals(CrewType.Brown) && !shipBoardAttributes.getBrownAlien() &&
                     checkForAlienSupport(col, row, crewType)) {
                 ((Cabin) component).setCrewType(crewType);
                 // update shipboard attributes
-                sbAttributesUpdaterVisitor.visit(component);
+                component.accept(sbAttributesUpdaterVisitor);
             } else
                 throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
 
@@ -598,7 +605,7 @@ public class ShipBoard implements Serializable {
      * @return true if connected to given alien support, false if not connected.
      * @author Boti
      */
-    private boolean checkForAlienSupport(int realCol, int realRow, CrewType crewType) {
+    boolean checkForAlienSupport(int realCol, int realRow, CrewType crewType) {
         Component component = componentMatrix[realCol][realRow];
         Component temp;
         // check front
@@ -646,6 +653,59 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * Moves goods from the storage at the starting coordinates to the storage at the final coordinates, if possible.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void moveGoods(int visibleColStarter, int visibleRowStarter, int visibleColFinal, int visibleRowFinal, int[] goods) {
+        // removeGoods throws IllegalArgumentException if not possible
+        removeGoods(visibleColStarter, visibleRowStarter, goods);
+
+        // try adding goods, throws IllegalArgumentException if not possible
+        try {
+            addGoods(visibleColFinal, visibleRowFinal, goods);
+        } catch (IllegalArgumentException e) {
+            // revert changes
+            addGoods(visibleColStarter, visibleRowStarter, goods);
+            throw e;
+        }
+    }
+
+    /**
+     * Remove goods from the storage at the given coordinates, if possible.
+     * Updates shipBoardAttributes.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void removeGoods(int visibleCol, int visibleRow, int[] goods) {
+        checkIndexInBounds(visibleCol, visibleRow);
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Storage))
+            throw new IllegalArgumentException("The selected component is not a storage");
+
+        // negative goods - malicious intent
+        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
+            throw new IllegalArgumentException("Cannot add negative number of goods");
+
+        // check available goods
+        int[] componentGoods = ((Storage) component).getGoods();
+        for (int i = 0; i < componentGoods.length; i++) {
+            if (componentGoods[i] < goods[i])
+                throw new IllegalArgumentException("Not enough goods storage available");
+        }
+
+        // no problems, remove goods from component
+        ((Storage) component).removeGoods(goods);
+        // update shipboard attributes
+        component.accept(sbAttributesUpdaterVisitor);
+    }
+
+    /**
      * Add goods to the storage at the given coordinates, if possible.
      * Updates shipBoardAttributes.
      *
@@ -679,40 +739,7 @@ public class ShipBoard implements Serializable {
         // no problems, add goods to component
         ((Storage) component).addGoods(goods);
         // update shipboard attributes
-        sbAttributesUpdaterVisitor.visit(component);
-    }
-
-    /**
-     * Remove goods from the storage at the given coordinates, if possible.
-     * Updates shipBoardAttributes.
-     *
-     * @throws IllegalArgumentException if operation not possible.
-     * @author Boti
-     */
-    public void removeGoods(int visibleCol, int visibleRow, int[] goods) {
-        checkIndexInBounds(visibleCol, visibleRow);
-        int col = getRealIndex(visibleCol);
-        int row = getRealIndex(visibleRow);
-        Component component = componentMatrix[col][row];
-
-        if (!(component instanceof Storage))
-            throw new IllegalArgumentException("The selected component is not a storage");
-
-        // negative goods - malicious intent
-        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
-            throw new IllegalArgumentException("Cannot add negative number of goods");
-
-        // check available goods
-        int[] componentGoods = ((Storage) component).getGoods();
-        for (int i = 0; i < componentGoods.length; i++) {
-            if (componentGoods[i] < goods[i])
-                throw new IllegalArgumentException("Not enough goods storage available");
-        }
-
-        // no problems, remove goods from component
-        ((Storage) component).removeGoods(goods);
-        // update shipboard attributes
-        sbAttributesUpdaterVisitor.visit(component);
+        component.accept(sbAttributesUpdaterVisitor);
     }
 
 

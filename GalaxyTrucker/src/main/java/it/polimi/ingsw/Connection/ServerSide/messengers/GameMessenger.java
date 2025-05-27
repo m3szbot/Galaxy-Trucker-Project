@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide.messengers;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
@@ -109,9 +110,21 @@ public class GameMessenger {
      * @author carlo
      */
 
-    public void sendShortCutMessageToAll(String message) {
-        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
-            playerMessenger.sendShortCutMessage(message);
+    public void sendShortCutMessageToAll(String message, boolean onlySocket) {
+
+        if(onlySocket){
+
+            for(PlayerMessenger playerMessenger : playerMessengerMap.values()){
+                if(playerMessenger.getConnectionType() == ConnectionType.SOCKET){
+                    playerMessenger.sendShortCutMessage(message);
+                }
+            }
+
+        }
+        else {
+            for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
+                playerMessenger.sendShortCutMessage(message);
+            }
         }
     }
 

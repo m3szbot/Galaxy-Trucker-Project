@@ -41,8 +41,10 @@ public class ShipBoardAttributes implements Serializable {
     // RED, YELLOW, GREEN, BLUE
     private int[] goods;
     // number of remaining red (RED) slots
+    // (counted separately from blue slots)
     private int remainingRedSlots;
     // number of remaining blue (YELLOW, GREEN, BLUE) slots
+    // (counted separately from red slots)
     private int remainingBlueSlots;
     // number of destroyed components
     private int destroyedComponents;
@@ -152,8 +154,7 @@ public class ShipBoardAttributes implements Serializable {
         updateCannons();
         updateEngines();
         updateRemainingBatteries();
-        updateCrewMembers();
-        updateAliens();
+        updateCabinsAlienSupports();
         updateGoods();
     }
 
@@ -247,45 +248,52 @@ public class ShipBoardAttributes implements Serializable {
     }
 
     /**
-     * Scan the shipboard for cabins and update crewMembers attributes.
+     * Scans shipboard for Cabins and AlienSupports, and updates crewMembers, purpleAlien, brownAlien.
+     * Checks for AlienSupports and removes aliens if no support is present.
      * 1 alien counts as 1 human.
      *
      * @author Boti
      */
-    void updateCrewMembers() {
-        // reset crew members
+    void updateCabinsAlienSupports() {
+        // reset crew members, aliens
         crewMembers = 0;
-        // recount crew members
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                Component component = shipBoard.getComponentMatrix()[i][j];
-                if (component instanceof Cabin) {
-                    crewMembers += component.getCrewMembers(componentAttributesVisitor);
-                }
-            }
-        }
-    }
-
-    /**
-     * Scan the shipboard for purple and brown aliens and update purpleAlien, brownAlien.
-     * Does not apply alien benefits to enginePower, cannonPower (can be battery dependent).
-     * <p>
-     * 1 purple alien adds +2 cannon strength if cannon power is >0.
-     * 1 brown alien adds +2 engine strength if engine power is >0.
-     *
-     * @author Boti
-     */
-    void updateAliens() {
         purpleAlien = false;
         brownAlien = false;
+        // recount crew members, aliens
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
-                if (component instanceof Cabin) {
-                    if (((Cabin) component).getCrewType().equals(CrewType.Purple)) {
-                        purpleAlien = true;
+
+                // if cabin with crew >0
+                if ((component instanceof Cabin) && (component.getCrewMembers() > 0)) {
+                    // check humans
+                    if (((Cabin) component).getCrewType().equals(CrewType.Human)) {
+                        crewMembers += component.getCrewMembers();
+                    }
+
+                    // check purple aliens
+                    else if (((Cabin) component).getCrewType().equals(CrewType.Purple)) {
+                        // purple alien support present
+                        if (shipBoard.checkForAlienSupport(i, j, CrewType.Purple)) {
+                            purpleAlien = true;
+                            crewMembers += component.getCrewMembers();
+                        }
+                        // remove alien from cabin if no support is present
+                        else {
+                            ((Cabin) component).setNumberOfCurrentInhabitants(0);
+                        }
+
+                        // check brown aliens
                     } else if (((Cabin) component).getCrewType().equals(CrewType.Brown)) {
-                        brownAlien = true;
+                        // browns alien support present
+                        if (shipBoard.checkForAlienSupport(i, j, CrewType.Brown)) {
+                            brownAlien = true;
+                            crewMembers += component.getCrewMembers();
+                        }
+                        // remove alien from cabin if no support is present
+                        else {
+                            ((Cabin) component).setNumberOfCurrentInhabitants(0);
+                        }
                     }
                 }
             }
