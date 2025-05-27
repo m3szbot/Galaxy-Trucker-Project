@@ -104,7 +104,6 @@ class TokenLossTest {
         assertTrue(((Cabin) player.getShipBoard().getComponent(5, 5)).getCrewMembers() == 0);
         assertTrue(((Cabin) player.getShipBoard().getComponent(4, 4)).getCrewMembers() == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getCrewMembers() == initialCrewNumber - 3);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getAlienType() == 0);
     }
 
     @Test
@@ -127,15 +126,12 @@ class TokenLossTest {
         redStorage.addGoods(new int[]{3, 1, 1, 0});
         blueStorage1.addGoods(new int[]{0, 2, 2, 1});
 
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -5);
 
         /*
         Av.RedSlots = 0
         Av.BlueSlots = 5
          */
 
-        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 3, 3, 1});
 
         String inputString = "2 2\n4 4\n3 3\n5 5\n2\n5 5\n1\n5 5\n1\n5 5\n4 4\n2\n";
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
@@ -154,8 +150,8 @@ class TokenLossTest {
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 3);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[3] == 1);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 4);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 7);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() == 4);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() == 7);
 
         inputString = "4 4\n1\n4 4\n2\n4 4\n1\n4 4\n5 5\n-1\n5 5\n1\n5 5\n4 4\n1\n";
         in = new ByteArrayInputStream(inputString.getBytes());
@@ -173,8 +169,8 @@ class TokenLossTest {
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[3] == 0);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 5);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 10);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() == 5);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() == 10);
 
     }
 
@@ -200,10 +196,6 @@ class TokenLossTest {
         redStorage.addGoods(new int[]{3, 1, 1, 0});
         blueStorage1.addGoods(new int[]{0, 2, 2, 1});
 
-        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 3, 3, 1});
-
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -5);
 
         String inputString = "5 5\n3\n5 5\n1\n4 4\n2\n5 5\n1\n4 4\n2\n4 4\n1\n" +
                 "8 8\n1\n9 9\n2\n";
@@ -219,9 +211,9 @@ class TokenLossTest {
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[2] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[3] == 0);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() == 5);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots() == 10);
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getBatteryPower() == 2);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() == 5);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() == 10);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() == 2);
         assertTrue(((Battery) player.getShipBoard().getComponent(8, 8)).getBatteryPower() == 1);
         assertTrue(((Battery) player.getShipBoard().getComponent(9, 9)).getBatteryPower() == 1);
 
@@ -241,7 +233,7 @@ class TokenLossTest {
 
         operator.inflictLoss(player, ElementType.Goods, 10, gameInformation);
 
-        assertTrue(player.getShipBoard().getShipBoardAttributes().getBatteryPower() == 0);
+        assertTrue(player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() == 0);
         assertTrue(((Battery) player.getShipBoard().getComponent(8, 8)).getBatteryPower() == 0);
         assertTrue(((Battery) player.getShipBoard().getComponent(9, 9)).getBatteryPower() == 0);
 

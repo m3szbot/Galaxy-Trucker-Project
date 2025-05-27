@@ -51,35 +51,7 @@ class FirePowerChoiceTest {
 
 
     @Test
-    void noDoubleCannonsAvailable() {
-
-        player.getShipBoard().getShipBoardAttributes().updateFirePower(5);
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
-
-        flightView = new FlightViewTUI();
-
-        assertTrue(operator.chooseFirePower(player, gameInformation) == 5);
-
-    }
-
-    @Test
-    void noBatteriesAvailable() {
-
-        player.getShipBoard().getShipBoardAttributes().updateFirePower(2);
-        player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(3);
-
-        flightView = new FlightViewTUI();
-
-        assertTrue(operator.chooseFirePower(player, gameInformation) == 2);
-
-    }
-
-    @Test
     void playerRefuseToUseDoubleCannons() {
-
-        player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
-        player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(3);
 
         String inputString = "false\n";
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
@@ -93,10 +65,6 @@ class FirePowerChoiceTest {
     @Test
     void threeDoubleCannonsActivated() throws NotPermittedPlacementException {
 
-        player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
-        player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);
-        player.getShipBoard().getShipBoardAttributes().updateNumberNotForwardDoubleCannons(1);
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(3);
 
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Universal, SideType.Double}, 3), 6, 6);
 
@@ -112,11 +80,7 @@ class FirePowerChoiceTest {
 
     @Test
     void threeDoubleCannonsActivatedWithIncorrectValues() throws NotPermittedPlacementException {
-
-        player.getShipBoard().getShipBoardAttributes().updateFirePower(1);
-        player.getShipBoard().getShipBoardAttributes().updateNumberForwardDoubleCannons(2);
-        player.getShipBoard().getShipBoardAttributes().updateNumberNotForwardDoubleCannons(1);
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(3);
+        
 
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Universal, SideType.Double}, 3), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);

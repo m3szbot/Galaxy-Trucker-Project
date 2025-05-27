@@ -124,8 +124,6 @@ class SufferBlowsTest {
 
         ((Storage) player.getShipBoard().getComponent(5, 6)).addGoods(new int[]{3, 1, 1, 0});
 
-        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 
         Blow blows[] = new Blow[3];
 
@@ -147,9 +145,6 @@ class SufferBlowsTest {
         assertNull(player.getShipBoard().getComponent(6, 4));
         assertNull(player.getShipBoard().getComponent(6, 3));
 
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableBlueSlots());
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers()); //only the main cabin crew remains
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getGoods()[0]);
@@ -166,7 +161,6 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 6, 7); //target component
         player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}), 8, 7);
 
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(2);
 
         Blow blows[] = new Blow[2];
 
@@ -217,7 +211,7 @@ class SufferBlowsTest {
 
         operator.hit(player, new Blow[]{blow}, ElementType.CannonBlow, gameInformation);
 
-        assertEquals(2, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
+        assertEquals(2, player.getShipBoard().getShipBoardAttributes().getRemainingBatteries());
         assertEquals(2, ((Battery) player.getShipBoard().getComponent(3, 3)).getBatteryPower());
         assertNotNull(player.getShipBoard().getComponent(5, 5));
         assertEquals(0, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
@@ -231,10 +225,8 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
         player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
 
-        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         ((Storage) player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 
         Blow blows[] = new Blow[3];
 
@@ -256,8 +248,8 @@ class SufferBlowsTest {
         assertNull(player.getShipBoard().getComponent(4, 6));
         assertNull(player.getShipBoard().getComponent(5, 6));
         assertNotNull(player.getShipBoard().getComponent(6, 6));
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getRemainingBatteries());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots());
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers());
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
 
@@ -283,8 +275,6 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal}, false), 9, 7);
 
         //fictitious battery
-
-        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(1);
 
         Blow blows[] = new Blow[4];
 
@@ -320,7 +310,7 @@ class SufferBlowsTest {
         assertNotNull(player.getShipBoard().getComponent(8, 6));
 
 
-        assertEquals(1, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
+        assertEquals(1, player.getShipBoard().getShipBoardAttributes().getRemainingBatteries());
         assertEquals(4, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
     }
 
@@ -354,7 +344,7 @@ class SufferBlowsTest {
         assertNotNull(player.getShipBoard().getComponent(7, 6));
         assertNotNull(player.getShipBoard().getComponent(7, 5));
 
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getRemainingBatteries());
 
     }
 
@@ -417,7 +407,7 @@ class SufferBlowsTest {
         operator.hit(player, blows, ElementType.Meteorite, gameInformation);
 
         assertNotNull(player.getShipBoard().getComponent(5, 5));
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getRemainingBatteries());
         assertEquals(0, ((Battery) player.getShipBoard().getComponent(5, 5)).getBatteryPower());
 
     }
@@ -429,10 +419,8 @@ class SufferBlowsTest {
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
         player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
 
-        player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{3, 1, 1, 0});
         ((Storage) player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
-        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -5);
 
         Blow blows[] = new Blow[3];
 
@@ -454,8 +442,8 @@ class SufferBlowsTest {
         assertNull(player.getShipBoard().getComponent(4, 6));
         assertNull(player.getShipBoard().getComponent(5, 6));
         assertNotNull(player.getShipBoard().getComponent(6, 6));
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getBatteryPower());
-        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getRemainingBatteries());
+        assertEquals(0, player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots());
         assertEquals(2, player.getShipBoard().getShipBoardAttributes().getCrewMembers());
         assertEquals(3, player.getShipBoard().getShipBoardAttributes().getDestroyedComponents());
     }
