@@ -58,19 +58,25 @@ public class GameMessenger {
      */
     public void endGameToAll() {
         for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
-            playerMessenger.endGame();
+             playerMessenger.endGame();
         }
+        for(Player player: playerMessengerMap.keySet()){
+            ClientMessenger.getCentralServer().removeNickName(player.getNickName());
+        }
+
     }
 
 
     /**
-     * TODO
      * Disconnects the player from the game.
      */
     public void disconnectPlayer(GameInformation gameInformation, Player player) {
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
         playerMessengerMap.get(player).clearPlayerResources();
+        System.out.println("Player " + player.getNickName() + " disconnected!");
+        playerMessengerMap.remove(player);
+        ClientMessenger.getCentralServer().removeNickName(player.getNickName());
     }
 
     /**

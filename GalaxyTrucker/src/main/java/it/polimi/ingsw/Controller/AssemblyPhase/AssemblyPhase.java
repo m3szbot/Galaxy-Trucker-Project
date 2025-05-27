@@ -64,8 +64,6 @@ public class AssemblyPhase extends Phase {
 
         setGamePhaseToClientServer(GamePhase.Assembly);
 
-
-
         /*
         for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
             int threadInt = i;

@@ -15,6 +15,7 @@ import it.polimi.ingsw.View.GeneralView;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class VirtualClient extends UnicastRemoteObject implements ClientRemoteInterface{
@@ -48,6 +49,11 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
     }
 
     @Override
+    public boolean isAlive() throws RemoteException {
+       return true;
+    }
+
+    @Override
     public boolean isInGame() throws RemoteException{
         return inGame;
     }
@@ -74,6 +80,39 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
      * @return string entered by the client
      * @throws RemoteException
      */
+
+    public String getString(AtomicBoolean clientConnected) throws RemoteException{
+
+        String input;
+        int time = 0;
+
+        while(clientConnected.get()){
+
+            if(time == TIMEOUT){
+                System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
+                throw new RemoteException("Player was kicked out because of inactivity");
+            }
+
+            input = userInput.getAndSet(null);
+
+            if(input != null){
+                return input;
+            }
+            try{
+                time++;
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                System.err.println("Thread in getString method of virtual client was abnormally interrupted");
+            }
+
+            if(userInput.get() != null){
+                return userInput.getAndSet(null);
+            }
+
+        }
+
+        throw new RemoteException();
+    }
 
     public String getString() throws RemoteException{
 
@@ -104,6 +143,7 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
             }
 
         }
+
     }
 
     @Override

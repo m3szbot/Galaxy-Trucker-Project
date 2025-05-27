@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.Game;
 
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyPhase;
 import it.polimi.ingsw.Controller.CorrectionPhase.CorrectionPhase;
 import it.polimi.ingsw.Controller.EvaluationPhase.EvaluationPhase;
@@ -95,14 +96,17 @@ public class Game implements Runnable, Serializable {
      * Start the different phases of the game.
      */
     public void run() {
-        System.out.println("Starting assembly phase...");
+        System.out.println("Starting assembly phase of game + " + gameCode + "...");
         assemblyPhase.start();
-        System.out.println("Starting correction phase...");
+        System.out.println("Starting correction phase of game " + gameCode + "...");
         correctionPhase.start();
-        System.out.println("Starting flight phase...");
+        System.out.println("Starting flight phase of game " + gameCode + "..." );
         flightPhase.start();
-        System.out.println("Starting evaluation phase...");
+        System.out.println("Starting evaluation phase of game " + gameCode + "...");
         evaluationPhase.start();
+        gameState = GameState.GameOver;
+        ClientMessenger.endGame(gameCode);
+        System.out.println("Game " + gameCode + " has ended");
 
     }
 

@@ -18,6 +18,11 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
     }
 
     @Override
+    public boolean isAlive() throws RemoteException {
+        return true;
+    }
+
+    @Override
     public void registerClient(String ipAddress) throws RemoteException {
 
         System.out.println(ipAddress + " is connected through rmi protocol");
@@ -36,9 +41,9 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
 
         } catch (RemoteException e) {
 
-            virtualClient.setInGame(false);
             centralServer.removeNickName(clientInfo.getNickname());
             System.out.println(e.getMessage());
+            System.out.println("Client " + clientInfo.getNickname() + " disconnected!");
         }
 
     }
