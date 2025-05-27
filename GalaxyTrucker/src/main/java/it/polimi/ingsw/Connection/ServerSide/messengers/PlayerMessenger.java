@@ -129,12 +129,15 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * Clears all players resources.
      */
     public void clearPlayerResources() {
-        if (connectionType == ConnectionType.SOCKET)
+        if (connectionType == ConnectionType.SOCKET) {
             try {
                 socketDataExchanger.closeResources();
             } catch (IOException e) {
                 System.err.println("Error while closing all players resources");
             }
+
+        }
+
     }
 
     /**
@@ -181,7 +184,8 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             try {
                 return socketDataExchanger.getString();
             } catch (IOException e) {
-                System.err.println("Error while obtaining data from client");
+                System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                        "a disconnection probably occurred");
                 throw new PlayerDisconnectedException(player);
             }
         } else {
@@ -189,8 +193,8 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             try {
                 return virtualClient.getString();
             } catch (RemoteException e) {
-
-                System.err.println("An error was encountered while obtaining the input of " + player.getNickName());
+                System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                        "a disconnection probably occurred");
                 throw new PlayerDisconnectedException(player);
 
             }

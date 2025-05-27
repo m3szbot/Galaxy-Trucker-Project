@@ -12,4 +12,6 @@ public interface ServerRemoteInterface extends Remote {
 
     public void makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException;
 
+    public boolean isAlive() throws RemoteException;
+
 }

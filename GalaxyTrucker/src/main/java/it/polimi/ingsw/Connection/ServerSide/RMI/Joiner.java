@@ -9,6 +9,7 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Joiner {
 
@@ -17,6 +18,7 @@ public class Joiner {
     private final int MAXTRIALS = 5;
     private Server centralServer;
     private ClientRemoteInterface virtualClient;
+    private AtomicBoolean clientConnected = new AtomicBoolean(true);
 
     public Joiner(ClientInfo clientInfo, Server centralServer, ClientRemoteInterface virtualClient) throws RemoteException{
         this.clientInfo = clientInfo;
@@ -27,6 +29,7 @@ public class Joiner {
     }
 
     public void start() throws RemoteException {
+
 
         if(clientInfo.getGameCode() != -1){
             //joining an existing game
@@ -41,11 +44,11 @@ public class Joiner {
 
         String message;
 
-        while(centralServer.checkNickname(clientInfo.getNickname())){
+        while(centralServer.checkNickname(clientInfo.getNickname()) && clientConnected.get()){
 
             message = "nickname '" + clientInfo.getNickname() + "' has already been chosen, please enter a new one: ";
             virtualClient.printMessage(message);
-            clientInfo.setNickname(virtualClient.getString());
+            clientInfo.setNickname(virtualClient.getString(clientConnected));
 
         }
 
@@ -55,11 +58,14 @@ public class Joiner {
 
     private void startLobby() throws RemoteException{
 
+        Thread rmiClientPinger = new Thread(new RMIClientPinger(virtualClient, clientConnected));
+        rmiClientPinger.start();
+
         String message;
 
         checkUsername();
 
-        while(true){
+        while(clientConnected.get()){
 
             message = "Press 'Enter' key to enter in a game: ";
 
@@ -105,11 +111,17 @@ public class Joiner {
 
         }
 
+        if(clientConnected.get()){
+
+            rmiClientPinger.interrupt();
+
+        }
+
     }
 
     private boolean checkEnterKey() throws RemoteException{
 
-        if(virtualClient.getString().isEmpty()){
+        if(virtualClient.getString(clientConnected).isEmpty()){
             return true;
         }
         return false;
@@ -150,7 +162,7 @@ public class Joiner {
 
         while (true) {
 
-            input = virtualClient.getString();
+            input = virtualClient.getString(clientConnected);
 
             if (!input.equalsIgnoreCase("TESTGAME") && !input.equalsIgnoreCase("NORMALGAME")) {
 
@@ -179,7 +191,7 @@ public class Joiner {
 
             try {
 
-                numberOfPlayers = Integer.parseInt(virtualClient.getString());
+                numberOfPlayers = Integer.parseInt(virtualClient.getString(clientConnected));
 
             } catch (NumberFormatException e) {
 
