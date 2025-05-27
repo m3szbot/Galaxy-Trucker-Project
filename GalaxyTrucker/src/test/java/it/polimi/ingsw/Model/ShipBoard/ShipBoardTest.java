@@ -28,6 +28,7 @@ public class ShipBoardTest {
     SideType[] singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
     SideType[] doubleSides = new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double};
     SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
+    SideType[] specialSides = new SideType[]{SideType.Special, SideType.Special, SideType.Special, SideType.Special};
     SideType[] specialSidesUniversalRight = new SideType[]{SideType.Special, SideType.Universal, SideType.Special, SideType.Special};
     SideType[] singleSidesSpecialFront = new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single};
     SideType[] singleSidesSpecialBack = new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Single};
@@ -38,6 +39,7 @@ public class ShipBoardTest {
     Component doubleConnector = new Component(doubleSides);
     Component universalConnector = new Component(universalSides);
     Component specialRightUniversal = new Component(specialSidesUniversalRight);
+    Component specialConnector = new Component(specialSides);
 
 
     @BeforeEach
@@ -121,7 +123,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void fillShipBoardWithComponents() throws NotPermittedPlacementException {
+    void fillShipBoardWithSingleConnectors() throws NotPermittedPlacementException {
         // check if shipboard borders are set correctly
 
         // col 7
@@ -151,6 +153,41 @@ public class ShipBoardTest {
         // col 4
         for (int i = 7; i <= 9; i++)
             shipBoard.addComponent(4, i, singleConnector);
+
+        generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void fillShipBoardWithSpecialConnectors() throws NotPermittedPlacementException {
+        // check if shipboard borders are set correctly
+
+        // col 7
+        shipBoard.addComponent(specialConnector, 7, 6);
+        shipBoard.addComponent(specialConnector, 7, 8);
+        // col 8
+        shipBoard.addComponent(specialConnector, 8, 8);
+        shipBoard.addComponent(specialConnector, 8, 9);
+        shipBoard.addComponent(specialConnector, 8, 7);
+        shipBoard.addComponent(specialConnector, 8, 6);
+        shipBoard.addComponent(specialConnector, 8, 5);
+        // col 9
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(9, i, specialConnector);
+        // col 10
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(10, i, specialConnector);
+        // col 6
+        shipBoard.addComponent(specialConnector, 6, 6);
+        shipBoard.addComponent(specialConnector, 6, 5);
+        shipBoard.addComponent(specialConnector, 6, 7);
+        shipBoard.addComponent(specialConnector, 6, 8);
+        shipBoard.addComponent(specialConnector, 6, 9);
+        // col 5
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(5, i, specialConnector);
+        // col 4
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(4, i, specialConnector);
 
         generalViewTUI.printShipboard(shipBoard);
     }
