@@ -45,9 +45,9 @@ public class ShipBoard implements Serializable {
     private final boolean[][] errorsMatrix;
     // Matrix: [cols][rows]
 
-    // keeps track of the lists of connected components
-    // if shipboard is fractured, different connected parts are inserted as separate lists into the list
-    private final List<List<Component>> connectedComponentsList;
+    // Keeps track of the connected components.
+    // If shipboard is fractured, different connected parts are inserted into separate lists and only one list is kept.
+    private final List<Component> connectedComponentsList;
     // TODO
     // 1 element is okay, 0 crew is removed
 
@@ -71,6 +71,7 @@ public class ShipBoard implements Serializable {
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
+        // create connectedComponentsList
         this.connectedComponentsList = new ArrayList<>();
 
 
@@ -149,14 +150,12 @@ public class ShipBoard implements Serializable {
     private void addStarterCabin() {
         // TODO: colored starter cabin, to get from the componentList in gameInformation
         Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal});
-        componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = starterCabin;
-        connectedComponentsList.add(new ArrayList<>());
-        connectedComponentsList.getFirst().add(starterCabin);
+        try {
+            addComponent(SB_CENTER_COL, SB_CENTER_ROW, starterCabin);
+        } catch (NotPermittedPlacementException e) {
+            System.out.println("Couldn't add starter cabin");
+        }
         starterCabin.accept(sbAttributesUpdaterVisitor);
-    }
-
-    private int getRealIndex(int visibleIndex) {
-        return visibleIndex - 1;
     }
 
     /**
@@ -188,7 +187,7 @@ public class ShipBoard implements Serializable {
             // update shipboard attributes
             component.accept(sbAttributesUpdaterVisitor);
             // add component to connected components list
-            connectedComponentsList.getFirst().add(component);
+            connectedComponentsList.add(component);
         }
     }
 
@@ -204,13 +203,24 @@ public class ShipBoard implements Serializable {
             throw new IllegalArgumentException("The entered coordinates are out of bounds");
     }
 
+    private int getRealIndex(int visibleIndex) {
+        return visibleIndex - 1;
+    }
+
     /**
      * Check if the requested cell is valid to place a component in.
      * Call checkIndexInBounds before.
+     * Special case for first component.
      *
      * @return true if placement is valid, false if invalid.
      */
     private boolean checkValidPlacement(int realCol, int realRow) {
+        // first component to add (to center)
+        if (connectedComponentsList.isEmpty() && (realCol == getRealIndex(SB_CENTER_COL))
+                && (realRow == getRealIndex(SB_CENTER_ROW)))
+            return true;
+
+        // not first component to add
         return (validityMatrix[realCol][realRow] &&
                 componentMatrix[realCol][realRow] == null &&
                 checkAdjacency(realCol, realRow));
@@ -259,11 +269,17 @@ public class ShipBoard implements Serializable {
 
     /**
      * Checks if there are erroneous components in the shipboard.
+     * Special case if only 1 component is present (starter cabin etc.).
      *
      * @return true if there are errors in shipboard, false if shipboard correct.
      * @author Boti
      */
     public boolean isErroneous() {
+        // 1 component only - cannot be connected
+        if (connectedComponentsList.size() == 1)
+            return false;
+
+        // more components
         checkErrors();
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
             // iterate rows

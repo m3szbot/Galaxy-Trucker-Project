@@ -47,8 +47,12 @@ public class ShipBoardTest {
         shipBoard = new ShipBoard(gameInformation.getGameType());
     }
 
+    // TESTS OF BOTI
+
     @Test
     void TestSetup() {
+        // check starter cabin
+        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
         assertFalse(shipBoard.isErroneous());
     }
 
@@ -111,6 +115,8 @@ public class ShipBoardTest {
         assertTrue(shipBoard.isErroneous());
     }
 
+    // TESTS OF GIACOMO:
+    // (testing mainly ShipboardAttributes)
     @Test
     void addComponent() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
@@ -199,15 +205,14 @@ public class ShipBoardTest {
 
     @Test
     void testError() throws NotPermittedPlacementException { //Correct junctions
-        int errors;
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 7, 8);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
         assertTrue(shipBoard.isErroneous());
 
-        assertTrue(shipBoard.getErrorsMatrix()[7][5]);
-        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
-        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
+        assertTrue(shipBoard.getErrorsMatrix()[6][7]);
+        assertTrue(shipBoard.getErrorsMatrix()[5][7]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][7]);
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 4), 8, 7);
         assertEquals(shipBoard.getShipBoardAttributes().getRemainingRedSlots(), 4);
         assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 0);
