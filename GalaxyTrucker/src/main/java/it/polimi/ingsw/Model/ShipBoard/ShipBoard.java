@@ -34,8 +34,8 @@ public class ShipBoard implements Serializable {
     public static final int SB_FIRST_REAL_ROW = 4;
 
     // final Object: reference cannot be changed (but state/elements can change)
-    private final ComponentVisitor<Void> sbAttributesUpdaterVisitor;
-    private final ShipBoardAttributes shipBoardAttributes;
+    private final transient ComponentVisitor<Void> sbAttributesUpdaterVisitor;
+    private final transient ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private final Component[][] componentMatrix;
     // Boolean matrix indicating valid positions for components
