@@ -28,19 +28,19 @@ public interface EnginePowerChoice {
 
         String message;
         PlayerMessenger playerMessenger;
-        int defaultEnginePower = player.getShipBoard().getShipBoardAttributes().getDrivingPower();
+        int defaultEnginePower = player.getShipBoard().getShipBoardAttributes().getSingleEnginePower();
         int doubleEnginesToActivate;
 
         //Checking if the brown alien is present
-        if (defaultEnginePower > 0 && (player.getShipBoard().getShipBoardAttributes().getAlienType() == 1 || player.getShipBoard().getShipBoardAttributes().getAlienType() == 3)) {
+        if (defaultEnginePower > 0 && player.getShipBoard().getShipBoardAttributes().getBrownAlien()) {
             defaultEnginePower += 2;
         }
 
-        if (player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() > 0 && player.getShipBoard().getShipBoardAttributes().getBatteryPower() > 0) {
+        if (player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower() > 0 && player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() > 0) {
             //player has the possibility to increase his engine power with batteries
 
             message = "Your engine power is " + defaultEnginePower +
-                    ", but you still have " + player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines() + " double engine.\n" +
+                    ", but you still have " + player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower() + " double engine.\n" +
                     " Would you like to use double engines to increase you're engine power ?";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
@@ -60,8 +60,8 @@ public interface EnginePowerChoice {
 
                         doubleEnginesToActivate = playerMessenger.getPlayerInt();
 
-                        if (doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getBatteryPower() && doubleEnginesToActivate > 0
-                                && doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getNumberDoubleEngines()) {
+                        if (doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() && doubleEnginesToActivate > 0
+                                && doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower()) {
                             break;
                         }
 
@@ -84,30 +84,26 @@ public interface EnginePowerChoice {
 
                             coordinates = playerMessenger.getPlayerCoordinates();
 
-                            Component component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
+                            try {
+                                player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
 
-                            if (component != null) {
-                                if (component.getComponentName().equals("Battery")) {
-                                    if (player.getShipBoard().getComponent(coordinates[0], coordinates[1]).getBatteryPower() > 0) {
-                                        break;
-                                    }
-                                }
+                                break;
+                            } catch (IllegalArgumentException e) {
+                                message = e.getMessage();
+                                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                                playerMessenger.printMessage(message);
                             }
+
 
                             message = "Invalid coordinates, reenter coordinates: ";
                             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                             playerMessenger.printMessage(message);
 
                         }
-
                         temp--;
-                        player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-1);
-                        ((Battery) player.getShipBoard().getComponent(coordinates[0], coordinates[1])).removeBattery();
-
                     }
 
                     return defaultEnginePower + doubleEnginesToActivate * 2;
-
 
                 } else {
                     return defaultEnginePower;

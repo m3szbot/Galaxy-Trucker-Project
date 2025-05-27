@@ -8,6 +8,8 @@ import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.util.Arrays;
+
 /**
  * Interface that define a method which handles a player receiving
  * a certain amount of goods
@@ -27,8 +29,8 @@ public interface GoodsGain {
 
         discardingPhase(player, gameInformation);
         rearrangementPhase(player, gameInformation);
-        redGoodsPlacementPhase(player, goods, gameInformation);
-        nonRedGoodsPlacementPhasePhase(player, goods, gameInformation);
+        GoodsPlacementPhase(player, goods, gameInformation);
+        GoodsPlacementPhase(player, goods, gameInformation);
 
     }
 
@@ -48,13 +50,12 @@ public interface GoodsGain {
             discardingPhaseFlag = playerMessenger.getPlayerBoolean();
         } catch (PlayerDisconnectedException e) {
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-            ;
             message = e.getMessage();
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
         }
 
         while (discardingPhaseFlag) {
-            //player decide to discard some goods
+            //player decides to discard some goods
 
             message = "Enter coordinates of the storage component: ";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
@@ -64,106 +65,39 @@ public interface GoodsGain {
                 coordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
-            component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
+            int[] goodsToRemove;
+            goodsToRemove = askForGoods(player, "remove", 0, 3, gameInformation);
 
-            if (component.getComponentName().equals("Storage")) {
-
-                int availableGoods[] = ((Storage) component).getGoods();
-
-                if (!((Storage) component).isEmpty()) {
-
-                    while (errorFlag) {
-
-                        int goodsToRemove[];
-
-                        goodsToRemove = askForGoods(player, "remove", 0, 3, gameInformation);
-
-                        if (checkGoodsAvailability(goodsToRemove, availableGoods, 0, 3)) {
-                            //value entered are correct
-
-                            ((Storage) component).removeGoods(goodsToRemove);
-                            gameInformation.getFlightBoard().addGoods(goodsToRemove);
-                            player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{-goodsToRemove[0], -goodsToRemove[1], -goodsToRemove[2], -goodsToRemove[3]});
-
-                            if (((Storage) component).isRed()) {
-
-                                player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, goodsToRemove[0] + goodsToRemove[1] + goodsToRemove[2] + goodsToRemove[3]);
-
-                            } else {
-
-                                player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, goodsToRemove[1] + goodsToRemove[2] + goodsToRemove[3]);
-
-                            }
-
-                            errorFlag = false;
-
-                        } else {
-
-                            message = "The goods you entered are incorrect";
-                            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                            playerMessenger.printMessage(message);
-
-                        }
-
-                        //value entered are incorrect, add notification to player
-
-                    }
-                } else {
-
-                    message = "The storage component you entered is empty, do you still want to discard some goods ?";
-                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                    playerMessenger.printMessage(message);
-
-                    try {
-                        discardingPhaseFlag = playerMessenger.getPlayerBoolean();
-                    } catch (PlayerDisconnectedException e) {
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                        ;
-                        message = e.getMessage();
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                    }
-
-                    continue;
-
-                }
-            } else {
-
-                message = "The component you entered is not a storage component! Do you still" +
-                        " want to discard some goods ? (Yes/No)";
+            try {
+                //Tries to remove the goods inserted by the player
+                player.getShipBoard().removeGoods(coordinates[0], coordinates[1], goodsToRemove);
+                message = "The goods have been successfully removed from the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
-                try {
-                    discardingPhaseFlag = playerMessenger.getPlayerBoolean();
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    ;
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                }
+            } catch (IllegalArgumentException e) {
+                //Prints the error message to the player
+                message = e.getMessage();
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
 
-                continue;
             }
 
-            message = "Are there some other goods that you want to discard ?";
-            errorFlag = true;
+            message = "Do you still want to discard some goods?";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
             try {
                 discardingPhaseFlag = playerMessenger.getPlayerBoolean();
-            } catch (PlayerDisconnectedException e) {
+            } catch (PlayerDisconnectedException error) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                ;
-                message = e.getMessage();
+                message = error.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
-
         }
 
     }
@@ -182,7 +116,6 @@ public interface GoodsGain {
             rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
         } catch (PlayerDisconnectedException e) {
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-            ;
             message = e.getMessage();
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
         }
@@ -191,7 +124,6 @@ public interface GoodsGain {
             //player decide that he wants to rearrange some goods
 
             int[] sourceCoordinates = new int[2], destCoordinates = new int[2];
-            Component sourceComponent, destComponent;
             int[] sourceGoods;
 
             message = "Enter coordinate of the source storage component: ";
@@ -202,7 +134,6 @@ public interface GoodsGain {
                 sourceCoordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
@@ -215,123 +146,120 @@ public interface GoodsGain {
                 destCoordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
-            sourceComponent = player.getShipBoard().getComponent(sourceCoordinates[0], sourceCoordinates[1]);
-            destComponent = player.getShipBoard().getComponent(destCoordinates[0], destCoordinates[1]);
+            int[] movingGoods;
+            movingGoods = askForGoods(player, "move", 0, 3, gameInformation);
 
-            if (sourceComponent.getComponentName().equals("Storage") && destComponent.getComponentName().equals("Storage")) {
+            try {
+                player.getShipBoard().moveGoods(sourceCoordinates[0], sourceCoordinates[1], destCoordinates[0], destCoordinates[1], movingGoods);
 
-                sourceGoods = ((Storage) sourceComponent).getGoods();
-
-                if (!((Storage) sourceComponent).isEmpty() && !((Storage) destComponent).isFull()) {
-
-                    while (errorFlag) {
-
-                        int[] movingGoods;
-
-                        movingGoods = askForGoods(player, "move", 0, 3, gameInformation);
-
-                        if (checkGoodsAvailability(movingGoods, sourceGoods, 0, 3)) {
-
-                           /*
-                           two possible scenarios:
-
-                           first: I'm moving red goods, therefore the destination component must be red and have enough slots.
-                           Second: I'm not moving red goods, therefore the destination component can be either red or not red, with enough slots.
-                            */
-
-                            if ((movingGoods[0] + movingGoods[1] + movingGoods[2] + movingGoods[3] <= ((Storage) destComponent).getAvailableRedSlots()) || (movingGoods[0] == 0 && movingGoods[1] + movingGoods[2] + movingGoods[3] <= ((Storage) destComponent).getAvailableBlueSlots())) {
-
-                                ((Storage) sourceComponent).removeGoods(movingGoods);
-                                ((Storage) destComponent).addGoods(movingGoods);
-
-                                if (((Storage) sourceComponent).isRed() && !((Storage) destComponent).isRed()) {
-
-                                    player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, movingGoods[0] + movingGoods[1] + movingGoods[2] + movingGoods[3]);
-                                    player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, -(movingGoods[0] + movingGoods[1] + movingGoods[2] + movingGoods[3]));
-
-                                } else if (!((Storage) sourceComponent).isRed() && ((Storage) destComponent).isRed()) {
-
-                                    player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, -(movingGoods[0] + movingGoods[1] + movingGoods[2] + movingGoods[3]));
-                                    player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, movingGoods[0] + movingGoods[1] + movingGoods[2] + movingGoods[3]);
-
-                                }
-
-                                errorFlag = false;
-
-                            } else {
-
-                                message = "The destination component doesn't have enough space for the goods to move";
-                                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                                playerMessenger.printMessage(message);
-
-                            }
-                        } else {
-
-                            message = "The moving goods you entered are too many";
-                            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                            playerMessenger.printMessage(message);
-
-                        }
-                    }
-
-                } else {
-
-                    message = "The source storage you entered is empty or the destination storage you entered is full, " +
-                            "do you still want to rearrange some goods ?";
-                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                    playerMessenger.printMessage(message);
-
-                    try {
-                        rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
-                    } catch (PlayerDisconnectedException e) {
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                        ;
-                        message = e.getMessage();
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                    }
-
-                    continue;
-                }
-            } else {
-
-                message = "The components you entered are not both storages! Do you still want to rearrange some goods ?";
+            } catch (IllegalArgumentException e) {
+                //If an error occurs (caused by the player giving wrong information), they are asked if they still want to rearrange and repeat the cycle
+                message = e.getMessage();
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
-
-                try {
-                    rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    ;
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                }
-
-                continue;
             }
 
-            message = "Are there some other goods you want to rearrange ?";
-            errorFlag = true;
+            message = "Do you still want to rearrange some goods ?";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
             try {
                 rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
+
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+            }
+        }
+    }
+
+
+    private void GoodsPlacementPhase(Player player, int[] goods, GameInformation gameInformation) {
+        String message;
+        PlayerMessenger playerMessenger;
+        boolean placementPhaseFlag = false;
+        int[] coordinates = new int[2], goodsToAdd;
+        int remainingRedSlots, remainingBlueSlots;
+
+        //Check if the player wants to add goods
+        if ((goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) && (player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0 || player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() > 0)) {
+
+            message = "Do you want to add goods to your ship ? ";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
+            try {
+                placementPhaseFlag = playerMessenger.getPlayerBoolean();
+            } catch (PlayerDisconnectedException e) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                message = e.getMessage();
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+            }
+
+            while (placementPhaseFlag) {
+
+                //Asks for coordinates
+                message = "Enter coordinates of storage component to place the goods: ";
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
+
+                try {
+                    coordinates = playerMessenger.getPlayerCoordinates();
+                } catch (PlayerDisconnectedException e) {
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    message = e.getMessage();
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                }
+
+                //Asks for which goods they want to add to the storage
+                goodsToAdd = askForGoods(player, "add", 0, 3, gameInformation);
+
+                //Tries to add the goods to the specified component
+                try {
+                    player.getShipBoard().addGoods(coordinates[0], coordinates[1], goodsToAdd);
+                } catch (IllegalArgumentException e) {
+                    message = e.getMessage();
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                    playerMessenger.printMessage(message);
+                }
+
+                remainingRedSlots = player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots();
+                remainingBlueSlots = player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots();
+
+                //Checks if the player can add more goods
+                if ((goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) && (remainingRedSlots > 0 || remainingBlueSlots > 0)) {
+
+                    //Asks if the player wants to keep adding good to their ship
+                    message = "Do you still want to add goods to your ship ?";
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                    playerMessenger.printMessage(message);
+
+                    try {
+                        placementPhaseFlag = playerMessenger.getPlayerBoolean();
+                    } catch (PlayerDisconnectedException e) {
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        message = e.getMessage();
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                    }
+
+                    //Resets the array for the next cycle
+                    for (int j = 0; j <= 3; j++) {
+                        goodsToAdd[j] = 0;
+                    }
+                } else {
+                    placementPhaseFlag = false;
+                }
             }
 
         }
     }
 
+    /*
     private void redGoodsPlacementPhase(Player player, int[] goods, GameInformation gameInformation) {
 
         String message;
@@ -340,7 +268,7 @@ public interface GoodsGain {
         int[] coordinates = new int[2];
         Component component;
 
-        if (goods[0] > 0 && player.getShipBoard().getShipBoardAttributes().getAvailableRedSlots() > 0) {
+        if (goods[0] > 0 && player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0) {
             //red goods can be added
 
             message = "Do you want to add to your ship red goods ? ";
@@ -475,6 +403,9 @@ public interface GoodsGain {
         }
     }
 
+     */
+
+    /*
     private void nonRedGoodsPlacementPhasePhase(Player player, int[] goods, GameInformation gameInformation) {
 
         String message;
@@ -632,6 +563,8 @@ public interface GoodsGain {
 
     }
 
+     */
+
     private int[] askForGoods(Player player, String messageType, int start, int end, GameInformation gameInformation) {
 
         int[] goods = {0, 0, 0, 0};
@@ -649,7 +582,6 @@ public interface GoodsGain {
                 goods[i] = playerMessenger.getPlayerInt();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                ;
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
