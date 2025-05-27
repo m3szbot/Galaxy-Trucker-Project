@@ -66,15 +66,20 @@ public class ShipBoardTest {
     // check connectors (Single, Double, Universal)
     @Test
     void checkConnectorCompatibleJunctions() throws NotPermittedPlacementException {
-        // 3 1 1
-        // 3 2 2
+        // test universal, 1-1, 2-2, 3-3
+        // 1 3 2
+        // 1 3 2
         shipBoard.addComponent(universalConnector, 7, 8);
-        shipBoard.addComponent(singleConnector, 8, 7);
-        shipBoard.addComponent(singleConnector, 9, 7);
+        shipBoard.addComponent(singleConnector, 6, 7);
+        shipBoard.addComponent(singleConnector, 6, 8);
+        shipBoard.addComponent(doubleConnector, 8, 7);
         shipBoard.addComponent(doubleConnector, 8, 8);
-        shipBoard.addComponent(doubleConnector, 9, 8);
-        generalViewTUI.printShipboard(shipBoard);
         assertFalse(shipBoard.isErroneous());
+
+        // test single - double
+        shipBoard.addComponent(doubleConnector, 5, 7);
+        assertTrue(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
     }
 
     @Test
@@ -139,6 +144,7 @@ public class ShipBoardTest {
     @Test
     void addComponent3() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
+        shipBoard.addComponent(8, 7, new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 2));
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(0), false);
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(1), true);
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(2), true);
