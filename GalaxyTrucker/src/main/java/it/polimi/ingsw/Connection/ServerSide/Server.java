@@ -183,13 +183,14 @@ public class Server {
 
         currentStartingGame.changeGameState(GameState.Playing);
         currentStartingGame.setUpPhases();
-        currentStartingGame.run();
+        new Thread(currentStartingGame).start();
         gameCode++;
         addGame(currentStartingGame);
         //new game
         currentStartingGame = new Game(gameCode);
 
         ClientMessenger.addGame(gameCode);
+        System.out.println("New game created");
     }
 
     private void addGame(Game game) {

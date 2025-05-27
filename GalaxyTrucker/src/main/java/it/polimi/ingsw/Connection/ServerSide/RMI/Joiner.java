@@ -228,7 +228,7 @@ public class Joiner {
         }
 
         message = clientInfo.getNickname() + " joined the game!";
-        notifyAllPlayers(message);
+        notifyAllPlayers(message, false);
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).addPlayer(playerToAdd, virtualClient);
 
         if (isFirstPlayer) {
@@ -242,15 +242,16 @@ public class Joiner {
         virtualClient.setInGame(true);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
+            notifyAllPlayers("start", true);
             centralServer.startCurrentGame();
         } else {
             virtualClient.printMessage("Waiting for other players to join...");
         }
     }
 
-    private void notifyAllPlayers(String message){
+    private void notifyAllPlayers(String message, boolean onlySocket){
 
-        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendShortCutMessageToAll(message);
+        ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendShortCutMessageToAll(message, onlySocket);
 
     }
 

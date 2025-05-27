@@ -59,6 +59,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         this.virtualClient = virtualClient;
     }
 
+    public ConnectionType getConnectionType() {
+        return connectionType;
+    }
 
     @Override
     public void setGamePhase(GamePhase gamePhase) {
@@ -140,6 +143,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
 
     public void sendShortCutMessage(String message) {
+
         if (connectionType.equals(ConnectionType.SOCKET)) {
             try {
                 socketDataExchanger.sendString(message);
