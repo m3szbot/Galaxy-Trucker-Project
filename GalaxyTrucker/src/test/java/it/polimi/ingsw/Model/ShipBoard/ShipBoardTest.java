@@ -47,8 +47,12 @@ public class ShipBoardTest {
         shipBoard = new ShipBoard(gameInformation.getGameType());
     }
 
+    // TESTS OF BOTI
+
     @Test
     void TestSetup() {
+        // check starter cabin
+        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
         assertFalse(shipBoard.isErroneous());
     }
 
@@ -62,15 +66,20 @@ public class ShipBoardTest {
     // check connectors (Single, Double, Universal)
     @Test
     void checkConnectorCompatibleJunctions() throws NotPermittedPlacementException {
-        // 3 1 1
-        // 3 2 2
+        // test universal, 1-1, 2-2, 3-3
+        // 1 3 2
+        // 1 3 2
         shipBoard.addComponent(universalConnector, 7, 8);
-        shipBoard.addComponent(singleConnector, 8, 7);
-        shipBoard.addComponent(singleConnector, 9, 7);
+        shipBoard.addComponent(singleConnector, 6, 7);
+        shipBoard.addComponent(singleConnector, 6, 8);
+        shipBoard.addComponent(doubleConnector, 8, 7);
         shipBoard.addComponent(doubleConnector, 8, 8);
-        shipBoard.addComponent(doubleConnector, 9, 8);
-        generalViewTUI.printShipboard(shipBoard);
         assertFalse(shipBoard.isErroneous());
+
+        // test single - double
+        shipBoard.addComponent(doubleConnector, 5, 7);
+        assertTrue(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
     }
 
     @Test
@@ -111,6 +120,8 @@ public class ShipBoardTest {
         assertTrue(shipBoard.isErroneous());
     }
 
+    // TESTS OF GIACOMO:
+    // (testing mainly ShipboardAttributes)
     @Test
     void addComponent() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
@@ -133,6 +144,7 @@ public class ShipBoardTest {
     @Test
     void addComponent3() throws NotPermittedPlacementException {
         shipBoard.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
+        shipBoard.addComponent(8, 7, new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 2));
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(0), false);
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(1), true);
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(2), true);
@@ -199,15 +211,14 @@ public class ShipBoardTest {
 
     @Test
     void testError() throws NotPermittedPlacementException { //Correct junctions
-        int errors;
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 7, 8);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 6, 8);
         shipBoard.addComponent(new Component(new SideType[]{SideType.Universal, SideType.Single, SideType.Smooth, SideType.Double}), 8, 8);
         assertTrue(shipBoard.isErroneous());
 
-        assertTrue(shipBoard.getErrorsMatrix()[7][5]);
-        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
-        assertTrue(shipBoard.getErrorsMatrix()[7][6]);
+        assertTrue(shipBoard.getErrorsMatrix()[6][7]);
+        assertTrue(shipBoard.getErrorsMatrix()[5][7]);
+        assertTrue(shipBoard.getErrorsMatrix()[7][7]);
         shipBoard.addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 4), 8, 7);
         assertEquals(shipBoard.getShipBoardAttributes().getRemainingRedSlots(), 4);
         assertEquals(shipBoard.getShipBoardAttributes().getRemainingBlueSlots(), 0);
