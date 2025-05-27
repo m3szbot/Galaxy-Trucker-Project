@@ -112,7 +112,7 @@ public class ClientSocketHandler extends Thread {
                     System.err.println("Error while sending disconnection message");
                 }
             } else {
-                System.out.println("Client " + clientSocket.getInetAddress() + " has disconnected while joining a game");
+                System.out.println("Client " + nickName + " disconnected!");
             }
 
             try {
@@ -312,7 +312,8 @@ public class ClientSocketHandler extends Thread {
         }
         dataExchanger.sendString(message);
         dataExchanger.sendString("added");
-        dataExchanger.setSocketTimeOut(0);
+        //setting a 5-minute timeout
+        dataExchanger.setSocketTimeOut(300000);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
             notifyAllPlayers("start", true);

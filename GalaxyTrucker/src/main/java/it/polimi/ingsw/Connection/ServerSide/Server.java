@@ -45,6 +45,7 @@ public class Server {
         this.currentStartingGame = new Game(gameCode);
         VirtualServer virtualServer;
         ClientMessenger.addGame(gameCode);
+        ClientMessenger.setCentralServer(this);
 
         try {
 
@@ -126,10 +127,6 @@ public class Server {
 
     public ReentrantLock getLock() {
         return lock;
-    }
-
-    private void addNickname(String nickname){
-        this.nicknameList.add(nickname);
     }
 
     public void addPlayerToCurrentStartingGame(Player player) {

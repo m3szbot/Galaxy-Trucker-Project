@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RMIGameHandler {
 
@@ -22,10 +23,13 @@ public class RMIGameHandler {
 
         ServerRemoteInterface virtualServer;
         ClientRemoteInterface virtualClient;
+        RMIServerPinger rmiServerPinger;
+        AtomicBoolean serverConnected = new AtomicBoolean(true);
 
         try {
 
         virtualServer = (ServerRemoteInterface) Naming.lookup("rmi://localhost/virtualServer");
+        rmiServerPinger = new RMIServerPinger(virtualServer, serverConnected);
 
         }catch (RemoteException e){
 
@@ -57,10 +61,12 @@ public class RMIGameHandler {
 
         try{
 
+            new Thread(rmiServerPinger).start();
+
             virtualServer.registerClient(InetAddress.getLocalHost().getHostAddress());
             virtualServer.makePlayerJoin(virtualClient, clientInfo);
 
-            while(virtualClient.isInGame());
+            while(virtualClient.isInGame() && serverConnected.get());
 
         } catch (UnknownHostException e) {
 

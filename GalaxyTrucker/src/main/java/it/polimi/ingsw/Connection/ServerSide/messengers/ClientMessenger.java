@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Connection.ServerSide.messengers;
 
+import it.polimi.ingsw.Connection.ServerSide.Server;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ import java.util.Map;
 public class ClientMessenger {
 
     private static Map<Integer, GameMessenger> gameMessengerMap = new HashMap<>();
+    private static Server centralServer;
 
     /**
      * when a new game is started, addGame must be called to add the gameMessenger for
@@ -27,6 +30,14 @@ public class ClientMessenger {
 
     }
 
+    public static Server getCentralServer() {
+        return centralServer;
+    }
+
+    public static void setCentralServer(Server centralServer) {
+        ClientMessenger.centralServer = centralServer;
+    }
+
     /**
      * @param gameCode
      * @return gameMessenger of the current game
@@ -34,6 +45,10 @@ public class ClientMessenger {
 
     public static GameMessenger getGameMessenger(int gameCode){
         return gameMessengerMap.get(gameCode);
+    }
+
+    public static void endGame(int gameCode){
+        gameMessengerMap.remove(gameCode);
     }
 
 }
