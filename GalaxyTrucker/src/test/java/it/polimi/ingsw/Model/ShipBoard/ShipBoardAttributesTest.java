@@ -80,7 +80,25 @@ public class ShipBoardAttributesTest {
 
     // Test addComponent attribute changes
     @Test
-    void addRemovePurpleAlien() throws NotPermittedPlacementException {
+    void addRemovePurpleAlienCabin() throws NotPermittedPlacementException {
+        // add
+        shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
+        shipBoard.setCrewType(7, 7, CrewType.Purple);
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.setCrewType(7, 7, CrewType.Brown);
+        });
+        assertTrue(shipBoardAttributes.getPurpleAlien());
+        assertFalse(shipBoardAttributes.getBrownAlien());
+        assertEquals(1, shipBoardAttributes.getCrewMembers());
+
+        // remove cabin
+        shipBoard.removeComponent(7, 7, false);
+        assertFalse(shipBoardAttributes.getPurpleAlien());
+        assertEquals(0, shipBoardAttributes.getCrewMembers());
+    }
+
+    @Test
+    void addRemovePurpleAlienSupport() throws NotPermittedPlacementException {
         // add
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
@@ -98,7 +116,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addBrownAlien() throws NotPermittedPlacementException {
+    void addRemoveBrownAlienCabin() throws NotPermittedPlacementException {
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
         shipBoard.setCrewType(7, 7, CrewType.Brown);
         assertThrows(IllegalArgumentException.class, () -> {
@@ -108,89 +126,163 @@ public class ShipBoardAttributesTest {
         assertTrue(shipBoardAttributes.getBrownAlien());
         assertEquals(1, shipBoardAttributes.getCrewMembers());
 
-        // remove cabin (instead of alien support)
+        // remove cabin
         shipBoard.removeComponent(7, 7, false);
-        assertFalse(shipBoardAttributes.getPurpleAlien());
+        assertFalse(shipBoardAttributes.getBrownAlien());
         assertEquals(0, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
-    void addShields() throws NotPermittedPlacementException {
-        // side protected only if batteries are available
-        shipBoard.addComponent(8, 7, new Shield(singleSidesSpecialFront));
-        assertFalse(shipBoardAttributes.checkSideShieldProtected(0));
-        shipBoard.addComponent(7, 8, new Battery(singleSides, 2));
-        assertTrue(shipBoardAttributes.checkSideShieldProtected(0));
+    void addRemoveBrownAlienSupport() throws NotPermittedPlacementException {
+        shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
+        shipBoard.setCrewType(7, 7, CrewType.Brown);
         assertThrows(IllegalArgumentException.class, () -> {
-            shipBoardAttributes.checkSideShieldProtected(10);
+            shipBoard.setCrewType(7, 7, CrewType.Purple);
         });
+        assertFalse(shipBoardAttributes.getPurpleAlien());
+        assertTrue(shipBoardAttributes.getBrownAlien());
+        assertEquals(1, shipBoardAttributes.getCrewMembers());
+
+        // remove cabin
+        shipBoard.removeComponent(7, 8, false);
+        assertFalse(shipBoardAttributes.getBrownAlien());
+        assertEquals(0, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
-    void addSingleEngine() throws NotPermittedPlacementException {
+    void addRemoveShields() throws NotPermittedPlacementException {
+        // side protected only if batteries are available
+        // add shield
+        shipBoard.addComponent(8, 7, new Shield(singleSidesSpecialFront));
+        assertFalse(shipBoardAttributes.checkSideShieldProtected(0));
+        // add batteries
+        shipBoard.addComponent(7, 8, new Battery(singleSides, 2));
+        // check protection
+        assertTrue(shipBoardAttributes.checkSideShieldProtected(0));
+        assertFalse(shipBoardAttributes.checkSideShieldProtected(1));
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoardAttributes.checkSideShieldProtected(10);
+        });
+
+        // remove shield
+        shipBoard.removeComponent(8, 7, false);
+        assertFalse(shipBoardAttributes.checkSideShieldProtected(0));
+    }
+
+    @Test
+    void addRemoveSingleEngine() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, true));
         assertEquals(1, shipBoardAttributes.getSingleEnginePower());
         assertEquals(0, shipBoardAttributes.getDoubleEnginePower());
 
-    }
-
-    @Test
-    void addDoubleEngine() throws NotPermittedPlacementException {
-        shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, false));
-        assertEquals(2, shipBoardAttributes.getDoubleEnginePower());
+        // remove
+        shipBoard.removeComponent(8, 7, false);
         assertEquals(0, shipBoardAttributes.getSingleEnginePower());
     }
 
     @Test
-    void addSingleForwardCannon() throws NotPermittedPlacementException {
+    void addRemoveDoubleEngine() throws NotPermittedPlacementException {
+        // add
+        shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, false));
+        assertEquals(2, shipBoardAttributes.getDoubleEnginePower());
+        assertEquals(0, shipBoardAttributes.getSingleEnginePower());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(0, shipBoardAttributes.getDoubleEnginePower());
+    }
+
+    @Test
+    void addRemoveSingleForwardCannon() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialFront, true));
         assertEquals(1, shipBoardAttributes.getSingleCannonPower());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(0, shipBoardAttributes.getSingleCannonPower());
     }
 
     @Test
-    void addSingleLateralCannon() throws NotPermittedPlacementException {
+    void addRemoveSingleLateralCannon() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, true));
         assertEquals(0.5, shipBoardAttributes.getSingleCannonPower());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(0, shipBoardAttributes.getSingleCannonPower());
     }
 
     @Test
-    void addDoubleForwardCannon() throws NotPermittedPlacementException {
+    void addRemoveDoubleForwardCannon() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialFront, false));
         assertEquals(1, shipBoardAttributes.getNumberForwardDoubleCannons());
+        assertEquals(0, shipBoardAttributes.getNumberLateralDoubleCannons());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(0, shipBoardAttributes.getNumberForwardDoubleCannons());
+    }
+
+    @Test
+    void addRemoveDoubleLateralCannon() throws NotPermittedPlacementException {
+        // add
+        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, false));
+        assertEquals(0, shipBoardAttributes.getNumberForwardDoubleCannons());
+        assertEquals(1, shipBoardAttributes.getNumberLateralDoubleCannons());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
         assertEquals(0, shipBoardAttributes.getNumberLateralDoubleCannons());
     }
 
     @Test
-    void addDoubleLateralCannon() throws NotPermittedPlacementException {
-        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, false));
-        assertEquals(0, shipBoardAttributes.getNumberForwardDoubleCannons());
-        assertEquals(1, shipBoardAttributes.getNumberLateralDoubleCannons());
-    }
-
-    @Test
-    void addBatteries() throws NotPermittedPlacementException {
+    void addRemoveBatteries() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Battery(singleSides, 3));
         assertEquals(3, shipBoardAttributes.getRemainingBatteries());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(0, shipBoardAttributes.getRemainingBatteries());
     }
 
     @Test
-    void addHumanCrew() throws NotPermittedPlacementException {
+    void addRemoveHumanCrew() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Cabin(singleSides));
         assertEquals(4, shipBoardAttributes.getCrewMembers());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(2, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
-    void addBlueStorage() throws NotPermittedPlacementException {
+    void addRemoveBlueStorage() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Storage(singleSides, false, 1));
         assertEquals(1, shipBoardAttributes.getRemainingBlueSlots());
         assertEquals(0, shipBoardAttributes.getRemainingRedSlots());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(0, shipBoardAttributes.getRemainingBlueSlots());
     }
 
     @Test
-    void addRedStorage() throws NotPermittedPlacementException {
+    void addRemoveRedStorage() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(8, 7, new Storage(singleSides, true, 1));
         assertEquals(0, shipBoardAttributes.getRemainingBlueSlots());
         assertEquals(1, shipBoardAttributes.getRemainingRedSlots());
+
+        // remove
+        shipBoard.removeComponent(8, 7, false);
+        assertEquals(0, shipBoardAttributes.getRemainingRedSlots());
     }
 
 
