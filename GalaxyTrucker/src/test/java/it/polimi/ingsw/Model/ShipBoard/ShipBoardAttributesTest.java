@@ -80,7 +80,8 @@ public class ShipBoardAttributesTest {
 
     // Test addComponent attribute changes
     @Test
-    void addPurpleAlien() throws NotPermittedPlacementException {
+    void addRemovePurpleAlien() throws NotPermittedPlacementException {
+        // add
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
         assertThrows(IllegalArgumentException.class, () -> {
@@ -89,6 +90,11 @@ public class ShipBoardAttributesTest {
         assertTrue(shipBoardAttributes.getPurpleAlien());
         assertFalse(shipBoardAttributes.getBrownAlien());
         assertEquals(1, shipBoardAttributes.getCrewMembers());
+
+        // remove alien support
+        shipBoard.removeComponent(7, 8, false);
+        assertFalse(shipBoardAttributes.getPurpleAlien());
+        assertEquals(0, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
@@ -101,6 +107,11 @@ public class ShipBoardAttributesTest {
         assertFalse(shipBoardAttributes.getPurpleAlien());
         assertTrue(shipBoardAttributes.getBrownAlien());
         assertEquals(1, shipBoardAttributes.getCrewMembers());
+
+        // remove cabin (instead of alien support)
+        shipBoard.removeComponent(7, 7, false);
+        assertFalse(shipBoardAttributes.getPurpleAlien());
+        assertEquals(0, shipBoardAttributes.getCrewMembers());
     }
 
     @Test

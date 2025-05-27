@@ -453,11 +453,13 @@ public class ShipBoard implements Serializable {
 
         // if a present element is to be removed
         if (component != null) {
-            checkFracturedShipBoard();
+            // remove the single component and update
+            componentMatrix[realCol][realRow] = null;
             shipBoardAttributes.destroyComponents(1);
-            // update shipboard attributes
             component.accept(sbAttributesUpdaterVisitor);
 
+            // check for fracture
+            checkFracturedShipBoard();
         }
 
     }
@@ -603,7 +605,7 @@ public class ShipBoard implements Serializable {
      * @return true if connected to given alien support, false if not connected.
      * @author Boti
      */
-    private boolean checkForAlienSupport(int realCol, int realRow, CrewType crewType) {
+    boolean checkForAlienSupport(int realCol, int realRow, CrewType crewType) {
         Component component = componentMatrix[realCol][realRow];
         Component temp;
         // check front

@@ -41,6 +41,10 @@ public class Cabin extends Component {
         }
     }
 
+    public void setNumberOfCurrentInhabitants(int count) {
+        this.numberOfCurrentInhabitants = count;
+    }
+
     public void removeInhabitant() {
         if (numberOfCurrentInhabitants > 0) {
             numberOfCurrentInhabitants--;

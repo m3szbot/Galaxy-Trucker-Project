@@ -19,6 +19,7 @@ public class SBAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Void visitAlienSupport(AlienSupport alienSupport) {
+        shipBoardAttributes.updateCabinsAlienSupports();
         return null;
     }
 
@@ -30,8 +31,7 @@ public class SBAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Void visitCabin(Cabin cabin) {
-        shipBoardAttributes.updateCrewMembers();
-        shipBoardAttributes.updateAliens();
+        shipBoardAttributes.updateCabinsAlienSupports();
         return null;
     }
 

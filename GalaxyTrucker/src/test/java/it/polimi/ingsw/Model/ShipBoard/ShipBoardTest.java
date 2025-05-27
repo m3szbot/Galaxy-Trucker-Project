@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.View.GeneralView;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,17 +17,22 @@ import static org.junit.jupiter.api.Assertions.*;
 // use Shipboard graphic to construct test shipboards!
 
 public class ShipBoardTest {
+    GameInformation gameInformation;
     ShipBoard shipBoard;
 
     // view to print shipboard to debug
     GeneralView generalViewTUI = new GeneralView();
 
-    // components
+    // components sides
     SideType[] smoothSidesUniversalRight = new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth};
     SideType[] singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
     SideType[] doubleSides = new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double};
     SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
     SideType[] specialSidesUniversalRight = new SideType[]{SideType.Special, SideType.Universal, SideType.Special, SideType.Special};
+    SideType[] singleSidesSpecialFront = new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single};
+    SideType[] singleSidesSpecialBack = new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Single};
+
+    // connector components
     Component smoothRightUniversal = new Component(smoothSidesUniversalRight);
     Component singleConnector = new Component(singleSides);
     Component doubleConnector = new Component(doubleSides);
@@ -36,7 +42,9 @@ public class ShipBoardTest {
 
     @BeforeEach
     void setUp() {
-        shipBoard = new ShipBoard(GameType.NORMALGAME);
+        gameInformation = new GameInformation();
+        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
+        shipBoard = new ShipBoard(gameInformation.getGameType());
     }
 
     @Test
