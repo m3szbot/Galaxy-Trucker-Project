@@ -241,7 +241,7 @@ public class ShipBoard implements Serializable {
      * Return the component at the given visible coordinates.
      */
     public Component getComponent(int visibleCol, int visibleRow) {
-        return componentMatrix[getRealIndex(visibleCol)][getRealIndex(visibleRow)];
+        return componentMatrix[visibleCol][visibleRow];
     }
 
     public int getMatrixRows() {
