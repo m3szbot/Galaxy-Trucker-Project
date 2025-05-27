@@ -653,6 +653,59 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * Moves goods from the storage at the starting coordinates to the storage at the final coordinates, if possible.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void moveGoods(int visibleColStarter, int visibleRowStarter, int visibleColFinal, int visibleRowFinal, int[] goods) {
+        // removeGoods throws IllegalArgumentException if not possible
+        removeGoods(visibleColStarter, visibleRowStarter, goods);
+
+        // try adding goods, throws IllegalArgumentException if not possible
+        try {
+            addGoods(visibleColFinal, visibleRowFinal, goods);
+        } catch (IllegalArgumentException e) {
+            // revert changes
+            addGoods(visibleColStarter, visibleRowStarter, goods);
+            throw e;
+        }
+    }
+
+    /**
+     * Remove goods from the storage at the given coordinates, if possible.
+     * Updates shipBoardAttributes.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void removeGoods(int visibleCol, int visibleRow, int[] goods) {
+        checkIndexInBounds(visibleCol, visibleRow);
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Storage))
+            throw new IllegalArgumentException("The selected component is not a storage");
+
+        // negative goods - malicious intent
+        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
+            throw new IllegalArgumentException("Cannot add negative number of goods");
+
+        // check available goods
+        int[] componentGoods = ((Storage) component).getGoods();
+        for (int i = 0; i < componentGoods.length; i++) {
+            if (componentGoods[i] < goods[i])
+                throw new IllegalArgumentException("Not enough goods storage available");
+        }
+
+        // no problems, remove goods from component
+        ((Storage) component).removeGoods(goods);
+        // update shipboard attributes
+        component.accept(sbAttributesUpdaterVisitor);
+    }
+
+    /**
      * Add goods to the storage at the given coordinates, if possible.
      * Updates shipBoardAttributes.
      *
@@ -685,39 +738,6 @@ public class ShipBoard implements Serializable {
 
         // no problems, add goods to component
         ((Storage) component).addGoods(goods);
-        // update shipboard attributes
-        component.accept(sbAttributesUpdaterVisitor);
-    }
-
-    /**
-     * Remove goods from the storage at the given coordinates, if possible.
-     * Updates shipBoardAttributes.
-     *
-     * @throws IllegalArgumentException if operation not possible.
-     * @author Boti
-     */
-    public void removeGoods(int visibleCol, int visibleRow, int[] goods) {
-        checkIndexInBounds(visibleCol, visibleRow);
-        int col = getRealIndex(visibleCol);
-        int row = getRealIndex(visibleRow);
-        Component component = componentMatrix[col][row];
-
-        if (!(component instanceof Storage))
-            throw new IllegalArgumentException("The selected component is not a storage");
-
-        // negative goods - malicious intent
-        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
-            throw new IllegalArgumentException("Cannot add negative number of goods");
-
-        // check available goods
-        int[] componentGoods = ((Storage) component).getGoods();
-        for (int i = 0; i < componentGoods.length; i++) {
-            if (componentGoods[i] < goods[i])
-                throw new IllegalArgumentException("Not enough goods storage available");
-        }
-
-        // no problems, remove goods from component
-        ((Storage) component).removeGoods(goods);
         // update shipboard attributes
         component.accept(sbAttributesUpdaterVisitor);
     }
