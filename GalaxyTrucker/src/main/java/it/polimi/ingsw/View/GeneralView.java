@@ -311,16 +311,17 @@ public class GeneralView implements ViewServerInvokableMethods {
     /**
      * Get string of Cabin
      */
+    // TODO last case  printed
     private String getComponentString(Cabin component) {
         String crew = "   ";
         if (component.getCrewType() != null) {
-            switch (component.getCrewType()) {
-                case CrewType.Human:
-                    crew = "Hum";
+            switch (((Cabin) component).getCrewType()) {
                 case CrewType.Brown:
                     crew = "Bro";
                 case CrewType.Purple:
                     crew = "Pur";
+                case CrewType.Human:
+                    crew = "Hum";
             }
         }
         return String.format("""

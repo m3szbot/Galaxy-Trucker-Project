@@ -120,6 +120,41 @@ public class ShipBoardTest {
         assertTrue(shipBoard.isErroneous());
     }
 
+    @Test
+    void fillShipBoardWithComponents() throws NotPermittedPlacementException {
+        // check if shipboard borders are set correctly
+
+        // col 7
+        shipBoard.addComponent(singleConnector, 7, 6);
+        shipBoard.addComponent(singleConnector, 7, 8);
+        // col 8
+        shipBoard.addComponent(singleConnector, 8, 8);
+        shipBoard.addComponent(singleConnector, 8, 9);
+        shipBoard.addComponent(singleConnector, 8, 7);
+        shipBoard.addComponent(singleConnector, 8, 6);
+        shipBoard.addComponent(singleConnector, 8, 5);
+        // col 9
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(9, i, singleConnector);
+        // col 10
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(10, i, singleConnector);
+        // col 6
+        shipBoard.addComponent(singleConnector, 6, 6);
+        shipBoard.addComponent(singleConnector, 6, 5);
+        shipBoard.addComponent(singleConnector, 6, 7);
+        shipBoard.addComponent(singleConnector, 6, 8);
+        shipBoard.addComponent(singleConnector, 6, 9);
+        // col 5
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(5, i, singleConnector);
+        // col 4
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(4, i, singleConnector);
+
+        generalViewTUI.printShipboard(shipBoard);
+    }
+
     // TESTS OF GIACOMO:
     // (testing mainly ShipboardAttributes)
     @Test
