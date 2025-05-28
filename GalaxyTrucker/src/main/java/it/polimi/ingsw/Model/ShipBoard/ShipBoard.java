@@ -678,10 +678,10 @@ public class ShipBoard implements Serializable {
         // removeGoods throws IllegalArgumentException if not possible
         removeGoods(visibleColStarter, visibleRowStarter, goods);
 
-        // try adding goods, throws IllegalArgumentException if not possible
+        // try adding goods, revert if not possible
         try {
             addGoods(visibleColFinal, visibleRowFinal, goods);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             // revert changes
             addGoods(visibleColStarter, visibleRowStarter, goods);
             throw e;
