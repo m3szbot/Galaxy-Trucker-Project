@@ -95,11 +95,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
     private boolean isCrewSatisfying(Player player, int quantity) {
 
-        if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= quantity) {
-            return true;
-        }
-
-        return false;
+        return player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= quantity;
 
     }
 }
