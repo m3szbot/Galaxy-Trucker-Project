@@ -27,8 +27,6 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         this.goods = cardBuilder.getGoods();
         this.requirementNumber = cardBuilder.getRequirementNumber();
 
-        printGoods(goods);
-
     }
 
     public void showCard() {
@@ -36,7 +34,9 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Days lost: " + daysLost);
+        System.out.println("Crew members required:" + requirementNumber);
 
+        printGoods(goods);
 
     }
 
@@ -65,6 +65,10 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                         message = player.getNickName() + "has solved the card!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         break;
+                    } else {
+                        message = player.getNickName() + "hasn't solved the card.\n";
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                        gameInformation.getFlightBoard().updateFlightBoard();
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
@@ -73,10 +77,6 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                 }
             }
         }
-
-        message = "Nobody solved the card!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-        gameInformation.getFlightBoard().updateFlightBoard();
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
