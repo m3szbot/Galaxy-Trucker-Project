@@ -240,7 +240,7 @@ public class ShipBoardTest {
 
     @Test
     void setCrewRemoveCrewMember() throws NotPermittedPlacementException {
-        // Cabin(2humans) Cabin(1 alien) AlienSupport
+        // Cabin(2 humans) Cabin(1 alien) AlienSupport
         shipBoard.addComponent(new Cabin(universalSides), 6, 7);
         shipBoard.addComponent(new AlienSupport(universalSides, true), 8, 7);
         shipBoard.setCrewType(7, 7, CrewType.Purple);
@@ -251,19 +251,27 @@ public class ShipBoardTest {
         shipBoard.removeCrewMember(7, 7);
         assertFalse(shipBoard.getShipBoardAttributes().getPurpleAlien());
         shipBoard.removeCrewMember(6, 7);
-        shipBoard.removeCrewMember(6, 7);
-        assertEquals(0, shipBoard.getShipBoardAttributes().getCrewMembers());
+        // 1 human 0 alien
+        assertEquals(1, shipBoard.getShipBoardAttributes().getCrewMembers());
 
-        // exceptions
+        // exceptions:
         // not cabin selected
         assertThrows(IllegalArgumentException.class, () -> {
             shipBoard.removeCrewMember(8, 7);
         });
-        // no crew left on cabin
+
+        // remove last human: NoHumanCrewLeft
+        assertThrows(NoHumanCrewLeftException.class, () -> {
+            shipBoard.removeCrewMember(6, 7);
+        });
+        assertEquals(0, shipBoard.getShipBoardAttributes().getCrewMembers());
+
+        // remove from empty alien cabin: IllegalArgument
         assertThrows(IllegalArgumentException.class, () -> {
             shipBoard.removeCrewMember(7, 7);
         });
-        // no crew left on cabin
+
+        // remove from empty human cabin: IllegalArgument
         assertThrows(IllegalArgumentException.class, () -> {
             shipBoard.removeCrewMember(6, 7);
         });

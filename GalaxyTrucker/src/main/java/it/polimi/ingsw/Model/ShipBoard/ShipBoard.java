@@ -563,11 +563,11 @@ public class ShipBoard implements Serializable {
      * Accounts for humans and aliens.
      * Updates shipBoardAttributes.
      *
-     * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
-     * @throws IllegalArgumentException if operation not possible.
+     * @throws NoHumanCrewLeftException if no human crew left after removal and player forced to give up.
+     * @throws IllegalArgumentException if removal operation not possible.
      * @author Boti
      */
-    public void removeCrewMember(int visibleCol, int visibleRow) throws IllegalArgumentException {
+    public void removeCrewMember(int visibleCol, int visibleRow) throws IllegalArgumentException, NoHumanCrewLeftException {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
@@ -576,11 +576,15 @@ public class ShipBoard implements Serializable {
         if (!(component instanceof Cabin))
             throw new IllegalArgumentException("The selected component is not a cabin");
 
-        if (component.getCrewMembers() - 1 >= 0) {
+        // crew >=1 on cabin
+        // throw NoHumanCrewLeftException if no crew remains on shipboard after removal
+        if (component.getCrewMembers() >= 1) {
             ((Cabin) component).removeInhabitant();
             // update shipboard attributes
             component.accept(sbAttributesUpdaterVisitor);
-        } else {
+        }
+        // 0 crew on cabin
+        else {
             throw new IllegalArgumentException("Not enough crew members at the selected component.");
         }
     }
