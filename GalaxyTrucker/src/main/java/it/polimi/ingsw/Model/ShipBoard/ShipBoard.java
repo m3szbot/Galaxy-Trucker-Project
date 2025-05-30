@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
@@ -180,7 +179,7 @@ public class ShipBoard implements Serializable {
         int row = getRealIndex(visibleRow);
 
         if (!checkValidPlacement(col, row)) {
-            throw new NotPermittedPlacementException();
+            throw new NotPermittedPlacementException("Cannot place component in the selected coordinates");
         } else {
             // add component to shipBoard
             componentMatrix[col][row] = component;
@@ -679,10 +678,10 @@ public class ShipBoard implements Serializable {
         // removeGoods throws IllegalArgumentException if not possible
         removeGoods(visibleColStarter, visibleRowStarter, goods);
 
-        // try adding goods, throws IllegalArgumentException if not possible
+        // try adding goods, revert if not possible
         try {
             addGoods(visibleColFinal, visibleRowFinal, goods);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             // revert changes
             addGoods(visibleColStarter, visibleRowStarter, goods);
             throw e;

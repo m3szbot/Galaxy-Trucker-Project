@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -191,6 +190,181 @@ public class ShipBoardTest {
 
         generalViewTUI.printShipboard(shipBoard);
     }
+
+    @Test
+    void removeBattery() throws NotPermittedPlacementException {
+        // 0Batteries Cabin 2Batteries
+        // add empty battery storage
+        shipBoard.addComponent(new Battery(universalSides, 0), 6, 7);
+        // add battery storage with 2 batteries
+        shipBoard.addComponent(new Battery(universalSides, 2), 8, 7);
+        // test
+        assertEquals(2, shipBoard.getShipBoardAttributes().getRemainingBatteries());
+        // no batteries
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeBattery(6, 7);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeBattery(7, 7);
+        });
+        // 2 batteries
+        shipBoard.removeBattery(8, 7);
+        assertEquals(1, shipBoard.getShipBoardAttributes().getRemainingBatteries());
+        shipBoard.removeBattery(8, 7);
+        assertEquals(0, shipBoard.getShipBoardAttributes().getRemainingBatteries());
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeBattery(8, 7);
+        });
+    }
+
+    @Test
+    void setCrewRemoveCrewMember() throws NotPermittedPlacementException {
+        // Cabin(2humans) Cabin(1 alien) AlienSupport
+        shipBoard.addComponent(new Cabin(universalSides), 6, 7);
+        shipBoard.addComponent(new AlienSupport(universalSides, true), 8, 7);
+        shipBoard.setCrewType(7, 7, CrewType.Purple);
+        assertEquals(3, shipBoard.getShipBoardAttributes().getCrewMembers());
+        assertTrue(shipBoard.getShipBoardAttributes().getPurpleAlien());
+
+        // removals
+        shipBoard.removeCrewMember(7, 7);
+        assertFalse(shipBoard.getShipBoardAttributes().getPurpleAlien());
+        shipBoard.removeCrewMember(6, 7);
+        shipBoard.removeCrewMember(6, 7);
+        assertEquals(0, shipBoard.getShipBoardAttributes().getCrewMembers());
+
+        // exceptions
+        // not cabin selected
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeCrewMember(8, 7);
+        });
+        // no crew left on cabin
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeCrewMember(7, 7);
+        });
+        // no crew left on cabin
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeCrewMember(6, 7);
+        });
+    }
+
+    @Test
+    void addComponentIllegalPlacements() throws NotPermittedPlacementException {
+        // out of bounds coordinates
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.addComponent(new Component(universalSides), -1, -1);
+        });
+        // on existing component
+        assertThrows(NotPermittedPlacementException.class, () -> {
+            shipBoard.addComponent(new Component(universalSides), 7, 7);
+        });
+        // on invalid but connected tile 7 9
+        shipBoard.addComponent(new Component(universalSides), 7, 8);
+        assertThrows(NotPermittedPlacementException.class, () -> {
+            shipBoard.addComponent(new Component(universalSides), 7, 9);
+        });
+        // on unconnected tile 5 7
+        assertThrows(NotPermittedPlacementException.class, () -> {
+            shipBoard.addComponent(new Component(universalSides), 5, 7);
+        });
+    }
+
+    // TODO finish
+    @Test
+    void AddRemoveGoods() throws NotPermittedPlacementException {
+        // 4 capacity each
+        // redStorage Cabin BlueStorage
+        shipBoard.addComponent(new Storage(universalSides, true, 4), 6, 7);
+        shipBoard.addComponent(new Storage(universalSides, false, 4), 8, 7);
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        // adds
+        shipBoard.addGoods(6, 7, new int[]{1, 1, 1, 1});
+        // add red to blue
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.addGoods(8, 7, new int[]{1, 0, 0, 0});
+        });
+        shipBoard.addGoods(8, 7, new int[]{0, 1, 1, 1});
+
+        // add to not storage
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.addGoods(7, 7, new int[]{1, 0, 0, 0});
+        });
+        // exceed capacity
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.addGoods(6, 7, new int[]{0, 0, 0, 1});
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.addGoods(8, 7, new int[]{0, 0, 0, 2});
+        });
+        // add negative
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.addGoods(8, 7, new int[]{0, 0, 0, -1});
+        });
+        // red full blue 1 left
+        assertEquals(0, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+        assertEquals(1, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+
+
+        // removes
+        shipBoard.removeGoods(6, 7, new int[]{1, 1, 1, 1});
+        shipBoard.removeGoods(8, 7, new int[]{0, 1, 1, 1});
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+
+        // exceed removes
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeGoods(6, 7, new int[]{0, 0, 0, 1});
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeGoods(8, 7, new int[]{1, 0, 0, 0});
+        });
+
+        // remove negative
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.removeGoods(8, 7, new int[]{0, 0, 0, -1});
+        });
+    }
+
+    @Test
+    void moveGoods() throws NotPermittedPlacementException {
+        // 4 capacity each
+        // redStorage Cabin BlueStorage
+        shipBoard.addComponent(new Storage(universalSides, true, 4), 6, 7);
+        shipBoard.addComponent(new Storage(universalSides, false, 4), 8, 7);
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        // add blues
+        shipBoard.addGoods(8, 7, new int[]{0, 1, 1, 2});
+        assertEquals(0, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        // fail move - not enough goods at start
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.moveGoods(8, 7, 6, 7, new int[]{0, 1, 1, 3});
+        });
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+        assertEquals(0, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        // move all blues to red
+        shipBoard.moveGoods(8, 7, 6, 7, new int[]{0, 1, 1, 2});
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        assertEquals(0, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+
+        // move red from red to blue
+        shipBoard.removeGoods(6, 7, new int[]{0, 1, 1, 2});
+        shipBoard.addGoods(6, 7, new int[]{1, 1, 1, 1});
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        assertEquals(0, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+        // fail move
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.moveGoods(6, 7, 8, 7, new int[]{1, 1, 1, 1});
+        });
+        assertEquals(4, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        assertEquals(0, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+        // move blues
+        shipBoard.moveGoods(6, 7, 8, 7, new int[]{0, 1, 1, 1});
+        assertEquals(1, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
+        assertEquals(3, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+    }
+
 
     // TESTS OF GIACOMO:
     // (testing mainly ShipboardAttributes)

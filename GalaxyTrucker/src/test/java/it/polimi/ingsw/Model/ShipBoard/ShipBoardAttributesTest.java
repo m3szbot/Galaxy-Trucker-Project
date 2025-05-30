@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;

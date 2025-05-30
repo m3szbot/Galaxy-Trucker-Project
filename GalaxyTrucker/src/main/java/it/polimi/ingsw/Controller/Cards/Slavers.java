@@ -55,13 +55,18 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         PlayerMessenger playerMessenger;
         AttackStates[] results;
 
+        //Resolves the attack (win or defeat) of each in-game player
         results = setAttackStates(requirementNumber, gameInformation);
 
+        //Cycles through the in-game players to give the reward or to inflict the losses
         for (i = 0; i < numberOfPlayers; i++) {
 
             Player player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
 
             if (results[i] == AttackStates.EnemyDefeated) {
+
+                //If the player defeats the enemy they lost a certain number of days to do so
+                changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
@@ -75,7 +80,6 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredit);
-                        changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), daysLost, gameInformation.getFlightBoard());
 
                     } else {
 
@@ -89,8 +93,8 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                     message = e.getMessage();
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
-
                 break;
+
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
                 inflictLoss(gameInformation.getFlightBoard().getPlayerOrderList().get(i), lossType, lossNumber, gameInformation);

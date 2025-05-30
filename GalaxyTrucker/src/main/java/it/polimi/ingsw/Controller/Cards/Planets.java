@@ -42,27 +42,27 @@ public class Planets extends Card implements GoodsGain, Movable {
 
         if (planet1 != null) {
 
-            System.out.println("Planet 1 offers: ");
+            System.out.println("\nPlanet 1 offers: ");
             printGoods(planet1);
 
         }
 
         if (planet2 != null) {
 
-            System.out.println("Planet 2 offers: ");
+            System.out.println("\nPlanet 2 offers: ");
             printGoods(planet2);
 
         }
 
         if (planet3 != null) {
 
-            System.out.println("Planet 3 offers: ");
+            System.out.println("\nPlanet 3 offers: ");
             printGoods(planet3);
         }
 
         if (planet4 != null) {
 
-            System.out.println("Planet 4 offers: ");
+            System.out.println("\nPlanet 4 offers: ");
             printGoods(planet4);
         }
 
@@ -118,18 +118,22 @@ public class Planets extends Card implements GoodsGain, Movable {
                                 if (planetChosen == 1) {
 
                                     giveGoods(player, planet1, gameInformation);
+                                    changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                                 } else if (planetChosen == 2) {
 
                                     giveGoods(player, planet2, gameInformation);
+                                    changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                                 } else if (planetChosen == 3) {
 
                                     giveGoods(player, planet3, gameInformation);
+                                    changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                                 } else {
 
                                     giveGoods(player, planet4, gameInformation);
+                                    changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                                 }
 
@@ -184,7 +188,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
         int i, numberOfPlanets;
 
-        for (i = 0, numberOfPlanets = 0; i < 5; i++) {
+        for (i = 0, numberOfPlanets = 0; i < 4; i++) {
 
             if (i == 0) {
 
@@ -204,14 +208,6 @@ public class Planets extends Card implements GoodsGain, Movable {
 
             } else if (i == 2) {
 
-                if (planet2 != null) {
-                    numberOfPlanets++;
-                } else {
-                    break;
-                }
-
-            } else if (i == 3) {
-
                 if (planet3 != null) {
                     numberOfPlanets++;
                 } else {
@@ -225,6 +221,7 @@ public class Planets extends Card implements GoodsGain, Movable {
                 } else {
                     break;
                 }
+
             }
         }
 

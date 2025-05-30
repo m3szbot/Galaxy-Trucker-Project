@@ -93,9 +93,9 @@ public class CardBuilder {
             builtCard = new Pirates(this);
         } else if (cardName.equals("CombatZone")) {
             builtCard = new CombatZone(this);
-        } else if (cardName.equals("AbbandonedShip")) {
+        } else if (cardName.equals("AbandonedShip")) {
             builtCard = new AbandonedShip(this);
-        } else if (cardName.equals("AbbandonedStation")) {
+        } else if (cardName.equals("AbandonedStation")) {
             builtCard = new AbandonedStation(this);
         } else if (cardName.equals("Epidemic")) {
             builtCard = new Epidemic(this);
@@ -120,6 +120,7 @@ public class CardBuilder {
     public ElementType getBlowType() {
         return blowType;
     }
+
     public ElementType getRequirementType() {
         return requirementType;
     }

@@ -17,17 +17,16 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
      * Sets the attack state of the various players
      *
      * @param requirementNumber
-     * @return attackstates of the various player. It may be null for some player if a player
+     * @return attack states of the various player. It may be null for some player if a player
      * in front of them in the flightBoard has defeated the enemies.
      */
 
     public AttackStates[] setAttackStates(int requirementNumber, GameInformation gameInformation) {
 
         String message;
-        DataContainer dataContainer;
         int i;
         AttackStates[] results = new AttackStates[gameInformation.getFlightBoard().getPlayerOrderList().size()];
-        Float chosenFirePower;
+        float chosenFirePower;
 
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 

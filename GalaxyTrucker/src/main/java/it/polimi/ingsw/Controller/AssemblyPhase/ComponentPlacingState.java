@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -56,22 +57,22 @@ public class ComponentPlacingState implements GameState {
             return;
         }
 
-            int num1 = Integer.parseInt(parts[0]);
-            int num2 = Integer.parseInt(parts[1]);
+        int num1 = Integer.parseInt(parts[0]);
+        int num2 = Integer.parseInt(parts[1]);
 
-            if(num1 < 4 || num2 < 4 || num1 > 10 || num2 > 10) {
-                String message = "Placing position out of bounds!";
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
-                return;
-            }
+        if (num1 < 4 || num2 < 4 || num1 > 10 || num2 > 10) {
+            String message = "Placing position out of bounds!";
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+            assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+            return;
+        }
 
 
         if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-            if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 2, num2-1) != null ||
-                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 , num2-1) != null ||
-                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1-1, num2 - 2) != null ||
-                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1-1, num2 ) != null) {
+            if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 2, num2 - 1) != null ||
+                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1, num2 - 1) != null ||
+                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 1, num2 - 2) != null ||
+                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getComponent(num1 - 1, num2) != null) {
                 try {
                     assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
                     synchronized (assemblyProtocol.lockCoveredList) {
@@ -82,11 +83,11 @@ public class ComponentPlacingState implements GameState {
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
-            } else{
+            } else {
                 String message = "You can't place your component here, it would float in the air";
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             }
-        }else{
+        } else {
             String message = "Your hand is empty";
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
