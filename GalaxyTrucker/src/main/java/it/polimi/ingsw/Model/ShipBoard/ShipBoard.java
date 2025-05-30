@@ -466,9 +466,12 @@ public class ShipBoard implements Serializable {
      * Updates the shipBoard and shipBoardAttributes
      * TODO fracture
      *
+     * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
+     * @throws IllegalArgumentException if operation not possible.
      * @author Giacomo, Boti
      */
-    public void removeComponent(int visibleCol, int visibleRow, boolean checkDisconnectionTrigger) throws IllegalArgumentException {
+    public void removeComponent(int visibleCol, int visibleRow, boolean checkDisconnectionTrigger)
+            throws IllegalArgumentException, NoHumanCrewLeftException {
         checkIndexInBounds(visibleCol, visibleRow);
         int realCol = getRealIndex(visibleCol);
         int realRow = getRealIndex(visibleRow);
@@ -538,7 +541,7 @@ public class ShipBoard implements Serializable {
      * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void removeBattery(int visibleCol, int visibleRow) {
+    public void removeBattery(int visibleCol, int visibleRow) throws IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
@@ -560,10 +563,11 @@ public class ShipBoard implements Serializable {
      * Accounts for humans and aliens.
      * Updates shipBoardAttributes.
      *
+     * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
      * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void removeCrewMember(int visibleCol, int visibleRow) {
+    public void removeCrewMember(int visibleCol, int visibleRow) throws IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
@@ -584,12 +588,13 @@ public class ShipBoard implements Serializable {
     /**
      * Sets the crewType of the cabin at the selected coordinates, if possible.
      * Checks for alien supports.
+     * Denies change to alien crew if no human crew would be left.
      * Updates shipBoardAttributes.
      *
      * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void setCrewType(int visibleCol, int visibleRow, CrewType crewType) {
+    public void setCrewType(int visibleCol, int visibleRow, CrewType crewType) throws IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
@@ -598,28 +603,36 @@ public class ShipBoard implements Serializable {
         if (!(component instanceof Cabin))
             throw new IllegalArgumentException("The selected component is not a cabin");
 
-        // cabin with crew
-        if (component.getCrewMembers() > 0) {
-            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Human))
-                return;
-                // purple alien (1 per shipboard)
-            else if (crewType.equals(CrewType.Purple) && !shipBoardAttributes.getPurpleAlien() &&
-                    checkForAlienSupport(col, row, crewType)) {
-                ((Cabin) component).setCrewType(crewType);
-                // update shipboard attributes
-                component.accept(sbAttributesUpdaterVisitor);
-            }
-            // brown alien (1 per shipboard)
-            else if (crewType.equals(CrewType.Brown) && !shipBoardAttributes.getBrownAlien() &&
-                    checkForAlienSupport(col, row, crewType)) {
-                ((Cabin) component).setCrewType(crewType);
-                // update shipboard attributes
-                component.accept(sbAttributesUpdaterVisitor);
-            } else
-                throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
+        // save original data
+        int originalCrewCount = component.getCrewMembers();
+        CrewType originalCrewType = ((Cabin) component).getCrewType();
 
-        } else
-            throw new IllegalArgumentException("Crew type couldn't be set for the selected component.");
+        if (originalCrewCount <= 0)
+            throw new IllegalArgumentException("The selected cabin has no crew members.");
+
+        // change only if needed
+        if (!originalCrewType.equals(crewType)) {
+            // alien checks
+            if (crewType.equals(CrewType.Purple) || crewType.equals(CrewType.Brown)) {
+                if (shipBoardAttributes.getAlien(crewType))
+                    throw new IllegalArgumentException("Cannot change crew to alien: the alien is already present elsewhere.");
+
+                if (!checkForAlienSupport(col, row, crewType))
+                    throw new IllegalArgumentException("Cannot change crew to alien: no alien support nearby.");
+            }
+
+            // all conditions met to change crew type
+            try {
+                ((Cabin) component).setCrewType(crewType);
+                component.accept(sbAttributesUpdaterVisitor);
+            } catch (NoHumanCrewLeftException e) {
+                // revert changes if no human crew would be left (not done by try)
+                ((Cabin) component).setCrewType(originalCrewType);
+                ((Cabin) component).setNumberOfCurrentInhabitants(originalCrewCount);
+                component.accept(sbAttributesUpdaterVisitor);
+                throw new IllegalArgumentException("Cannot change crew to alien: no human crew would be left.");
+            }
+        }
     }
 
     /**
@@ -681,7 +694,8 @@ public class ShipBoard implements Serializable {
      * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void moveGoods(int visibleColStarter, int visibleRowStarter, int visibleColFinal, int visibleRowFinal, int[] goods) {
+    public void moveGoods(int visibleColStarter, int visibleRowStarter, int visibleColFinal, int visibleRowFinal, int[] goods)
+            throws IllegalArgumentException {
         // removeGoods throws IllegalArgumentException if not possible
         removeGoods(visibleColStarter, visibleRowStarter, goods);
 
@@ -702,7 +716,7 @@ public class ShipBoard implements Serializable {
      * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void removeGoods(int visibleCol, int visibleRow, int[] goods) {
+    public void removeGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
@@ -735,7 +749,7 @@ public class ShipBoard implements Serializable {
      * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void addGoods(int visibleCol, int visibleRow, int[] goods) {
+    public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
         checkIndexInBounds(visibleCol, visibleRow);
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);

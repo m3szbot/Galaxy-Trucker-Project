@@ -123,6 +123,19 @@ public class ShipBoardAttributes implements Serializable {
         return brownAlien;
     }
 
+    /**
+     * @return true if the given alien type is present, false otherwise (for human too).
+     * @author Boti
+     */
+    public boolean getAlien(CrewType crewType) {
+        if (crewType.equals(CrewType.Purple))
+            return purpleAlien;
+        if (crewType.equals(CrewType.Brown))
+            return brownAlien;
+        else
+            return false;
+    }
+
     public int[] getGoods() {
         return goods;
     }
@@ -250,10 +263,12 @@ public class ShipBoardAttributes implements Serializable {
      * Scans shipboard for Cabins and AlienSupports, and updates crewMembers, purpleAlien, brownAlien.
      * Checks for AlienSupports and removes aliens if no support is present.
      * 1 alien counts as 1 human.
+     * If no human crew left, player is forced to give up.
      *
+     * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
      * @author Boti
      */
-    void updateCabinsAlienSupports() {
+    void updateCabinsAlienSupports() throws NoHumanCrewLeftException {
         // reset crew members, aliens
         crewMembers = 0;
         purpleAlien = false;
@@ -263,40 +278,40 @@ public class ShipBoardAttributes implements Serializable {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
 
-                // if cabin with crew >0
+                // if cabin with crew >0 (not empty)
                 if ((component instanceof Cabin) && (component.getCrewMembers() > 0)) {
-                    // check humans
-                    if (((Cabin) component).getCrewType().equals(CrewType.Human)) {
-                        crewMembers += component.getCrewMembers();
-                    }
-
                     // check purple aliens
-                    else if (((Cabin) component).getCrewType().equals(CrewType.Purple)) {
+                    if (((Cabin) component).getCrewType().equals(CrewType.Purple)) {
                         // purple alien support present
-                        if (shipBoard.checkForAlienSupport(i, j, CrewType.Purple)) {
+                        if (shipBoard.checkForAlienSupport(i, j, CrewType.Purple))
                             purpleAlien = true;
-                            crewMembers += component.getCrewMembers();
-                        }
-                        // remove alien from cabin if no support is present
-                        else {
+
+                            // remove alien from cabin if no support is present
+                        else
                             ((Cabin) component).setNumberOfCurrentInhabitants(0);
-                        }
 
                         // check brown aliens
                     } else if (((Cabin) component).getCrewType().equals(CrewType.Brown)) {
                         // browns alien support present
-                        if (shipBoard.checkForAlienSupport(i, j, CrewType.Brown)) {
+                        if (shipBoard.checkForAlienSupport(i, j, CrewType.Brown))
                             brownAlien = true;
-                            crewMembers += component.getCrewMembers();
-                        }
-                        // remove alien from cabin if no support is present
-                        else {
+
+                            // remove alien from cabin if no support is present
+                        else
                             ((Cabin) component).setNumberOfCurrentInhabitants(0);
-                        }
                     }
+                    // update crew count
+                    crewMembers += component.getCrewMembers();
                 }
             }
         }
+
+        // no human crew left: forced to give up
+        // throw exception
+        if (!checkHumanCrew()) {
+            throw new NoHumanCrewLeftException();
+        }
+
     }
 
     /**
@@ -326,6 +341,18 @@ public class ShipBoardAttributes implements Serializable {
                 }
             }
         }
+    }
+
+    /**
+     * Check the shipboard for remaining human crew.
+     * Aliens and cabins must be up to date.
+     *
+     * @return true if there is human crew, false if no more human crew left.
+     * @author Boti
+     */
+    private boolean checkHumanCrew() {
+        return (crewMembers > 2 || (crewMembers == 2 && (!purpleAlien || !brownAlien)) ||
+                (crewMembers == 1 && !purpleAlien && !brownAlien));
     }
 
     /**

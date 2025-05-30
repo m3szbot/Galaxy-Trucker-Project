@@ -5,8 +5,8 @@ package it.polimi.ingsw.Model.ShipBoard;
  * (crewMembers = 0 or only aliens).
  * The player must be immediately disqualified from the flight.
  */
-public class ZeroHumanCrewLeftException extends RuntimeException {
-    public ZeroHumanCrewLeftException(String message) {
-        super(message);
+public class NoHumanCrewLeftException extends RuntimeException {
+    public NoHumanCrewLeftException() {
+        super("No human crew left on shipboard, player forced to give up.");
     }
 }

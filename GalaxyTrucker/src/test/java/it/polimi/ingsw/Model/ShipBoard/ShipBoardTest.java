@@ -464,6 +464,21 @@ public class ShipBoardTest {
 
     }
 
+    @Test
+    void noHumanCrewLeftException() throws NotPermittedPlacementException {
+        shipBoard.addComponent(new AlienSupport(universalSides, true), 7, 8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoard.setCrewType(7, 7, CrewType.Purple);
+        });
+        shipBoard.removeCrewMember(7, 7);
+        assertThrows(NoHumanCrewLeftException.class, () -> {
+            shipBoard.removeCrewMember(7, 7);
+        });
+        assertThrows(NoHumanCrewLeftException.class, () -> {
+            shipBoard.removeComponent(7, 7, false);
+        });
+    }
+
 
     // TESTS OF GIACOMO:
     // (testing mainly ShipboardAttributes)
