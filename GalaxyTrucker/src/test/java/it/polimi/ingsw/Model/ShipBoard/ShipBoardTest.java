@@ -31,6 +31,8 @@ public class ShipBoardTest {
     SideType[] specialSidesUniversalRight = new SideType[]{SideType.Special, SideType.Universal, SideType.Special, SideType.Special};
     SideType[] singleSidesSpecialFront = new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single};
     SideType[] singleSidesSpecialBack = new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Single};
+    SideType[] singleSidesSpecialRight = new SideType[]{SideType.Single, SideType.Special, SideType.Single, SideType.Single};
+    SideType[] singleSidesSpecialLeft = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Special};
 
     // connector components
     Component smoothRightUniversal = new Component(smoothSidesUniversalRight);
@@ -49,6 +51,14 @@ public class ShipBoardTest {
     }
 
     // TESTS OF BOTI
+
+    @Test
+    void TestSetupTestGameShipboard() {
+        shipBoard = new ShipBoard(GameType.TESTGAME);
+        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
+        assertFalse(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
+    }
 
     @Test
     void TestSetup() {
@@ -119,6 +129,17 @@ public class ShipBoardTest {
         shipBoard.addComponent(doubleConnector, 6, 6);
         generalViewTUI.printShipboard(shipBoard);
         assertTrue(shipBoard.isErroneous());
+    }
+
+    @Test
+    void checkFloatingComponent() throws NotPermittedPlacementException {
+        shipBoard.addComponent(universalConnector, 8, 7);
+        shipBoard.addComponent(universalConnector, 9, 7);
+        assertFalse(shipBoard.isErroneous());
+
+        shipBoard.removeComponent(8, 7, false);
+        assertTrue(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
     }
 
     @Test
@@ -366,6 +387,80 @@ public class ShipBoardTest {
 
     @Test
     void checkEngineErrors() throws NotPermittedPlacementException {
+        // Connector Engine (front, back, both erroneous)
+        // Cabin Engine (back)
+
+        // valid engine (backwards unobstructed)
+        assertFalse(shipBoard.isErroneous());
+        shipBoard.addComponent(new Component(universalSides), 7, 6);
+        shipBoard.addComponent(new Engine(singleSidesSpecialBack, false), 8, 7);
+        assertFalse(shipBoard.isErroneous());
+        // wrong engine (obstructed)
+        shipBoard.addComponent(new Engine(singleSidesSpecialBack, false), 8, 6);
+        assertTrue(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
+        // remove wrong engine
+        shipBoard.removeComponent(8, 6, false);
+        assertFalse(shipBoard.isErroneous());
+        // wrong engine (not backwards)
+        shipBoard.addComponent(new Engine(singleSidesSpecialFront, false), 8, 6);
+        assertTrue(shipBoard.isErroneous());
+
+    }
+
+    @Test
+    void checkCannonError() throws NotPermittedPlacementException {
+        // obstructed cannons
+        //           Connector Cannon (left, back)
+        // Connector Cabin     Connector
+        // Cannon    Connector
+        // (front, right)
+
+        // add connectors
+        shipBoard.addComponent(universalConnector, 7, 6);
+        shipBoard.addComponent(universalConnector, 6, 7);
+        shipBoard.addComponent(universalConnector, 8, 7);
+        shipBoard.addComponent(universalConnector, 7, 8);
+        assertFalse(shipBoard.isErroneous());
+        // add top right
+        // back
+        shipBoard.addComponent(new Cannon(singleSidesSpecialBack, true), 8, 6);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(8, 6, true);
+        assertFalse(shipBoard.isErroneous());
+        // left
+        shipBoard.addComponent(new Cannon(singleSidesSpecialLeft, true), 8, 6);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(8, 6, true);
+        assertFalse(shipBoard.isErroneous());
+        // front
+        shipBoard.addComponent(new Cannon(singleSidesSpecialFront, true), 8, 6);
+        assertFalse(shipBoard.isErroneous());
+        shipBoard.removeComponent(8, 6, true);
+        // right
+        shipBoard.addComponent(new Cannon(singleSidesSpecialRight, true), 8, 6);
+        assertFalse(shipBoard.isErroneous());
+        // add bottom left
+        // front
+        shipBoard.addComponent(new Cannon(singleSidesSpecialFront, true), 6, 8);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(6, 8, true);
+        assertFalse(shipBoard.isErroneous());
+        // right
+        shipBoard.addComponent(new Cannon(singleSidesSpecialRight, true), 6, 8);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(6, 8, true);
+        assertFalse(shipBoard.isErroneous());
+        // back
+        shipBoard.addComponent(new Cannon(singleSidesSpecialBack, true), 6, 8);
+        assertFalse(shipBoard.isErroneous());
+        shipBoard.removeComponent(6, 8, true);
+        // right
+        shipBoard.addComponent(new Cannon(singleSidesSpecialLeft, true), 6, 8);
+        assertFalse(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
+
+        assertEquals(1, shipBoard.getShipBoardAttributes().getSingleCannonPower());
 
     }
 
