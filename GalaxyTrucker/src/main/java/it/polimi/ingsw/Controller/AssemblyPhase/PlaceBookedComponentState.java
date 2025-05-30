@@ -34,10 +34,15 @@ public class PlaceBookedComponentState implements GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyPhase) {
-        for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
-            Component component = assemblyProtocol.getBookedMap().get(player).get(i);
-            String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+        if(assemblyProtocol.getBookedMap().get(player).size() > 0) {
+            for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
+                Component component = assemblyProtocol.getBookedMap().get(player).get(i);
+                String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
+                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+            }
+        }else{
+            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("You don't have any booked component");
+            assemblyPhase.setState(new AssemblyState(assemblyPhase.getAssemblyProtocol(), player));
         }
     }
 

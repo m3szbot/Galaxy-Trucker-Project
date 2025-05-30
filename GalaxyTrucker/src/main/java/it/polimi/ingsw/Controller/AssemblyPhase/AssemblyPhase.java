@@ -64,24 +64,6 @@ public class AssemblyPhase extends Phase {
 
         setGamePhaseToClientServer(GamePhase.Assembly);
 
-        /*
-        for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
-            int threadInt = i;
-            new Thread(() -> {
-                while (running.get() || end.get() < gameInformation.getMaxNumberOfPlayers()) {
-                    Runnable task = new AssemblyThread(
-                            gameInformation,
-                            gameInformation.getPlayerList().get(threadInt),
-                            assemblyProtocol,
-                            running,
-                            end
-                    );
-                    new Thread(task).start();  // ← qui lanci il thread che esegue il Runnable
-                }
-            }).start();
-        }
-        */
-
         CountDownLatch allPlayersReady = new CountDownLatch(gameInformation.getPlayerList().size());
         ExecutorService executor = Executors.newFixedThreadPool(gameInformation.getPlayerList().size());
         for (Player player : gameInformation.getPlayerList()) {

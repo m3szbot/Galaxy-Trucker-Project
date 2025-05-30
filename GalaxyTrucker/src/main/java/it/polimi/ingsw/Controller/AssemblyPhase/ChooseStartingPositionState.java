@@ -22,7 +22,15 @@ public class ChooseStartingPositionState implements GameState {
         assemblyPhase.amIChoosing.set(true);
         actionTaken = false;
         List<Integer> tiles = new ArrayList<>(assemblyProtocol.getFlightBoard().getStartingTiles());
-        String message = "In which position do you want to start? (1-4)";
+        String positions = null;
+        for(int i = 1; i <= assemblyProtocol.getFlightBoard().getStartingTiles().size(); i++ ) {
+            if (positions == null) {
+                positions = "" + i;
+            }else{
+                positions = positions + " - " + i;
+            }
+        }
+        String message = "In which position do you want to start? (" + positions + ")";
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
     }
 
@@ -33,11 +41,12 @@ public class ChooseStartingPositionState implements GameState {
             case "1":
                 actionTaken = true;
                 try {
-                    assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(3)); //3
+                    assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-1)); //3
                 } catch (IndexOutOfBoundsException e) {
                     String message = "Error in position choosing, please enter it again";
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                     assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
+                    break;
                 }
                 assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                 break;
@@ -45,29 +54,31 @@ public class ChooseStartingPositionState implements GameState {
                 actionTaken = true;
                 if (assemblyProtocol.getFlightBoard().getStartingTiles().size() >= 2) {
                     try {
-                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(2)); //2
+                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-2)); //2
                     } catch (IndexOutOfBoundsException e) {
                         String message = "Error in position choosing, please enter it again";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                         assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
+                        break;
                     }
                     assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                     break;
                 } else {
                     String message = "Sorry, there is only one position left";
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                    assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(1));
+                    assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(0));
                     break;
                 }
             case "3":
                 actionTaken = true;
                 if (assemblyProtocol.getFlightBoard().getStartingTiles().size() >= 3) {
                     try {
-                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(1)); //1
+                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-3)); //1
                     } catch (IndexOutOfBoundsException e) {
                         String message = "Error in position choosing, please enter it again";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                         assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
+                        break;
                     }
                     assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                     break;
@@ -81,11 +92,12 @@ public class ChooseStartingPositionState implements GameState {
                 actionTaken = true;
                 if (assemblyProtocol.getFlightBoard().getStartingTiles().size() == 4) {
                     try {
-                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(0)); //0
+                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-4)); //0
                     } catch (IndexOutOfBoundsException e) {
                         String message = "Error in position choosing, please enter it again";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                         assemblyPhase.setState(new ChooseStartingPositionState(assemblyProtocol, player));
+                        break;
                     }
                     assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
                     break;
