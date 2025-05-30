@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.Model.ShipBoard.ComponentAttributesVisitor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

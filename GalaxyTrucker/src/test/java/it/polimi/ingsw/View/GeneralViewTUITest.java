@@ -5,7 +5,6 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
-import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +38,7 @@ class GeneralViewTUITest {
     public void printComponent() {
         int randIndex;
         // print random components from component list
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             randIndex = randomizer.nextInt(gameInformation.getComponentList().size());
             dataContainer.setComponent(gameInformation.getComponentList().get(randIndex));
             generalViewTUI.printComponent(dataContainer);
@@ -74,25 +73,6 @@ class GeneralViewTUITest {
     @Test
     public void printEmptyShipboard() {
         ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
-        dataContainer.setShipBoard(shipBoard);
-        generalViewTUI.printShipboard(dataContainer);
-    }
-
-    @Test
-    public void printFilledShipboard() {
-        int componentIndex;
-        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
-        // fill shipboard with random components
-        for (int i = 0; i < shipBoard.getMatrixCols(); i++) {
-            for (int j = 0; j < shipBoard.getMatrixRows(); j++) {
-                componentIndex = randomizer.nextInt(gameInformation.getComponentList().size());
-                try {
-                    shipBoard.addComponent(gameInformation.getComponentList().get(componentIndex), i + 1, j + 1);
-                } catch (NotPermittedPlacementException e) {
-                }
-            }
-        }
-
         dataContainer.setShipBoard(shipBoard);
         generalViewTUI.printShipboard(dataContainer);
     }

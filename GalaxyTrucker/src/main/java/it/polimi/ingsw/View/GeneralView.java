@@ -2,7 +2,10 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.Components.*;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.ComponentStringGetterVisitor;
+import it.polimi.ingsw.Model.Components.ComponentVisitor;
+import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
@@ -22,6 +25,24 @@ public class GeneralView implements ViewServerInvokableMethods {
     // includes \n at the end of line
     public static final int COMPONENT_CHARACTERS_PER_LINE = 10;
 
+    /**
+     * Returns a number identifying the given side's type
+     *
+     * @return identifier number
+     * @author Boti
+     */
+    public static int componentSideTranslator(SideType sideType) {
+        if (sideType.equals(SideType.Smooth))
+            return 0;
+        else if (sideType.equals(SideType.Single))
+            return 1;
+        else if (sideType.equals(SideType.Double))
+            return 2;
+        else if (sideType.equals(SideType.Universal))
+            return 3;
+        else
+            return 4;
+    }
 
     public void printMessage(DataContainer dataContainer) {
         if (dataContainer.getMessage() == null)
@@ -40,7 +61,8 @@ public class GeneralView implements ViewServerInvokableMethods {
      * Print a component passed as parameter.
      */
     public void printComponent(Component component) {
-        String componentString = getCorrectComponentString(component);
+        ComponentVisitor<String> visitor = new ComponentStringGetterVisitor();
+        String componentString = (String) component.accept(visitor);
         System.out.printf(componentString);
     }
 
@@ -240,7 +262,8 @@ public class GeneralView implements ViewServerInvokableMethods {
      * Return String list of the 5 component lines, excluding the \n at the end of the lines.
      */
     private List<String> getComponentLines(Component component) {
-        String componentString = getCorrectComponentString(component);
+        ComponentVisitor visitor = new ComponentStringGetterVisitor();
+        String componentString = (String) component.accept(visitor);
         List<String> returnList = new ArrayList<>();
         // construct return string array
         for (int i = 0; i < COMPONENT_LINES; i++) {
@@ -248,200 +271,6 @@ public class GeneralView implements ViewServerInvokableMethods {
             returnList.add(componentString.substring(i * COMPONENT_CHARACTERS_PER_LINE, (i + 1) * COMPONENT_CHARACTERS_PER_LINE - 1));
         }
         return returnList;
-    }
-
-    /**
-     * Return correct string of component based on dynamic type.
-     */
-    private String getCorrectComponentString(Component component) {
-        // select component specific method
-        if (component instanceof AlienSupport) {
-            return getComponentString((AlienSupport) component);
-        } else if (component instanceof Battery) {
-            return getComponentString((Battery) component);
-        } else if (component instanceof Cabin) {
-            return getComponentString((Cabin) component);
-        } else if (component instanceof Cannon) {
-            return getComponentString((Cannon) component);
-        } else if (component instanceof Engine) {
-            return getComponentString((Engine) component);
-        } else if (component instanceof Shield) {
-            return getComponentString((Shield) component);
-        } else if (component instanceof Storage) {
-            return getComponentString((Storage) component);
-        }
-        // default component string
-        return getComponentString(component);
-    }
-
-    /**
-     * Get string of AlienSupport
-     */
-    private String getComponentString(AlienSupport component) {
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d  %s  %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isPurple() ? "Pur" : "Bro", componentSideTranslator(component.getRight()),
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Get string of Battery
-     */
-    private String getComponentString(Battery component) {
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d   %d   %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.getBatteryPower(), componentSideTranslator(component.getRight()),
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Get string of Cabin
-     */
-    // TODO last case  printed
-    private String getComponentString(Cabin component) {
-        String crew = "   ";
-        if (component.getCrewType() != null) {
-            switch (((Cabin) component).getCrewType()) {
-                case CrewType.Brown:
-                    crew = "Bro";
-                case CrewType.Purple:
-                    crew = "Pur";
-                case CrewType.Human:
-                    crew = "Hum";
-            }
-        }
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d  %s  %d
-                        |   %d   |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), crew, componentSideTranslator(component.getRight()),
-                component.getCrewMembers(),
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Get string of Cannon
-     */
-    private String getComponentString(Cannon component) {
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d   %d   %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isSingle() ? 1 : 2, componentSideTranslator(component.getRight()),
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Get string of Engine
-     */
-    private String getComponentString(Engine component) {
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d   %d   %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isSingle() ? 1 : 2, componentSideTranslator(component.getRight()),
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Get string of Shield
-     */
-    private String getComponentString(Shield component) {
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d       %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()),
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Get string of Storage
-     */
-    private String getComponentString(Storage component) {
-        int slots = component.getAvailableRedSlots() + component.getAvailableBlueSlots();
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d %s %d %d
-                        |%d %d %d %d|
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isRed() ? "Red" : "Blu", slots, componentSideTranslator(component.getRight()),
-                component.getGoods()[0], component.getGoods()[1], component.getGoods()[2], component.getGoods()[3],
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Get string of basic component
-     */
-    private String getComponentString(Component component) {
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d       %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(component.getFront()),
-                component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()),
-                componentSideTranslator(component.getBack()));
-    }
-
-    /**
-     * Returns a number identifying the given side's type
-     *
-     * @return identifier number
-     * @author Boti
-     */
-    private int componentSideTranslator(SideType sideType) {
-        if (sideType.equals(SideType.Smooth))
-            return 0;
-        else if (sideType.equals(SideType.Single))
-            return 1;
-        else if (sideType.equals(SideType.Double))
-            return 2;
-        else if (sideType.equals(SideType.Universal))
-            return 3;
-        else
-            return 4;
     }
 
     public void printComponent(DataContainer dataContainer) {
