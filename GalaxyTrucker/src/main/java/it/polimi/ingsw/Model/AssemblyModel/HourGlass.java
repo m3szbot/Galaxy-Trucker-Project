@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class HourGlass {
     private int state; // Represents the current state of the hourglass
     private boolean finished; // Indicates whether the timer has completed
-    private int life = 15; // Duration of the timer in seconds
+    private int life = 60; // Duration of the timer in seconds
     List<Player> listOfPlayers = new ArrayList<>();
 
     /**
