@@ -269,7 +269,6 @@ public class ShipBoardTest {
         });
     }
 
-    // TODO finish
     @Test
     void AddRemoveGoods() throws NotPermittedPlacementException {
         // 4 capacity each
@@ -363,6 +362,11 @@ public class ShipBoardTest {
         shipBoard.moveGoods(6, 7, 8, 7, new int[]{0, 1, 1, 1});
         assertEquals(1, shipBoard.getShipBoardAttributes().getRemainingBlueSlots());
         assertEquals(3, shipBoard.getShipBoardAttributes().getRemainingRedSlots());
+    }
+
+    @Test
+    void checkEngineErrors() throws NotPermittedPlacementException {
+
     }
 
 
