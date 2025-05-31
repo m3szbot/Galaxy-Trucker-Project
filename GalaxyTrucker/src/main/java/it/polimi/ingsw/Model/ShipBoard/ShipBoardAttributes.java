@@ -308,7 +308,7 @@ public class ShipBoardAttributes implements Serializable {
 
         // no human crew left: forced to give up
         // throw exception
-        if (!checkHumanCrew()) {
+        if (getHumanCrewMembers() == 0) {
             throw new NoHumanCrewLeftException();
         }
 
@@ -344,15 +344,11 @@ public class ShipBoardAttributes implements Serializable {
     }
 
     /**
-     * Check the shipboard for remaining human crew.
-     * Aliens and cabins must be up to date.
-     *
-     * @return true if there is human crew, false if no more human crew left.
+     * @return the number of human crew members on the shipboard.
      * @author Boti
      */
-    private boolean checkHumanCrew() {
-        return (crewMembers > 2 || (crewMembers == 2 && (!purpleAlien || !brownAlien)) ||
-                (crewMembers == 1 && !purpleAlien && !brownAlien));
+    public int getHumanCrewMembers() {
+        return (crewMembers - (purpleAlien ? 1 : 0) - (brownAlien ? 1 : 0));
     }
 
     /**

@@ -4,9 +4,14 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Model.Components.Cabin;
+import it.polimi.ingsw.Model.Components.CrewType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoardAttributes;
+
+import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.*;
 
 public class CorrectionThread implements Runnable {
     final GameInformation gameInformation;
@@ -26,42 +31,133 @@ public class CorrectionThread implements Runnable {
      */
     @Override
     public void run() {
-        boolean errors;
-        StringBuilder message = new StringBuilder();
-        int[] coordinates;
         ShipBoard shipBoard = player.getShipBoard();
+        ShipBoardAttributes shipBoardAttributes = shipBoard.getShipBoardAttributes();
+        String message;
+        int[] coordinates;
+        String inputString;
+
+        // CORRECT ERRORS
         // check if there are errors
-        errors = shipBoard.isErroneous();
+        boolean errors = shipBoard.isErroneous();
+        boolean removeComponentSuccess = false;
+
         // correct errors
         while (errors) {
-            // construct errors message
+            // print error messages
             playerMessenger.printShipboard(shipBoard);
-            message.append("There are errors in your ship, please correct them:\n");
-            for (int i = 0; i < shipBoard.getMatrixCols(); i++) {
-                for (int j = 0; j < shipBoard.getMatrixRows(); j++) {
-                    if (shipBoard.getErrorsMatrix()[i][j]) {
-                        message.append("Error in: %d %d\n", i + 1, j + 1);
-                    }
+            message = getErrorsMessage(shipBoard);
+            playerMessenger.printMessage(message);
+            message = "Enter column and row (col row):";
+            playerMessenger.printMessage(message);
+
+            // elaborate player input
+            while (!removeComponentSuccess) {
+                // get player input and remove component
+                try {
+                    coordinates = playerMessenger.getPlayerCoordinates();
+                    shipBoard.removeComponent(coordinates[0], coordinates[1], false);
+                    removeComponentSuccess = true;
+                } catch (PlayerDisconnectedException e) {
+                    // handle disconnected player
+                    gameMessenger.disconnectPlayer(gameInformation, player);
+                    return;
+                } catch (IllegalArgumentException e) {
+                    // print exception message to player
+                    playerMessenger.printMessage(e.getMessage());
+                    removeComponentSuccess = false;
                 }
             }
-            message.append("Enter column and row (col row):");
-            playerMessenger.printMessage(message.toString());
 
-            try {
-                coordinates = playerMessenger.getPlayerCoordinates();
-            } catch (PlayerDisconnectedException e) {
-                // handle disconnected player
-                gameMessenger.disconnectPlayer(gameInformation, player);
-                return;
-            }
-
-            // no check for col, row value - if out of bounds, nothing happens
-            // trigger automatically removes disconnected components - set to false
-            shipBoard.removeComponent(coordinates[0], coordinates[1], false);
+            // loop while there are still errors
             errors = shipBoard.isErroneous();
         }
         // errors corrected
-        playerMessenger.printMessage("Your ship is valid, please wait for other players.");
+
+
+        // SET CREW TYPE FOR CABINS
+        CrewType crewType = CrewType.Human;
+        boolean selectCrewSuccess = false;
+
+        // scan shipboard (only valid cells)
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+
+                // only ask player if alien could be set on the given component
+                if ((shipBoardAttributes.getHumanCrewMembers() > 2) && (shipBoard.getComponentMatrix()[i][j] instanceof Cabin) &&
+                        (// check for purple or brown alien conditions (alien not present + support nearby)
+                                (!shipBoardAttributes.getAlien(CrewType.Purple) && shipBoard.checkForAlienSupport(i, j, CrewType.Purple)) ||
+                                        (!shipBoardAttributes.getAlien(CrewType.Brown) && shipBoard.checkForAlienSupport(i, j, CrewType.Brown))
+                        )) {
+
+                    // elaborate player input
+                    while (!selectCrewSuccess) {
+                        // get player input string
+                        message = String.format("Select the crew type for the cabin at %d %d (Human/Purple/Brown): ", i + 1, j + 1);
+                        playerMessenger.printMessage(message);
+                        try {
+                            inputString = playerMessenger.getPlayerString();
+                        } catch (PlayerDisconnectedException e) {
+                            // handle disconnected player
+                            gameMessenger.disconnectPlayer(gameInformation, player);
+                            return;
+                        }
+
+                        // cast player input
+                        switch (inputString.toLowerCase()) {
+                            case "human" -> {
+                                crewType = CrewType.Human;
+                                selectCrewSuccess = true;
+                            }
+                            case "purple" -> {
+                                crewType = CrewType.Purple;
+                                selectCrewSuccess = true;
+                            }
+                            case "brown" -> {
+                                crewType = CrewType.Brown;
+                                selectCrewSuccess = true;
+                            }
+                            // invalid input
+                            default -> {
+                                playerMessenger.printMessage("Please enter a valid input!");
+                            }
+                        }
+                        // set crew type if successfully selected
+                        if (selectCrewSuccess) {
+                            try {
+                                shipBoard.setCrewType(i + 1, j + 1, crewType);
+                            } catch (IllegalArgumentException e) {
+                                playerMessenger.printMessage(e.getMessage());
+                                selectCrewSuccess = false;
+                            }
+                        }
+                        // loop until crew is correctly set for the current cabin
+                    }
+                }
+                // iterate to next component
+            }
+        }
+        // crew selection finished
+
+        playerMessenger.printMessage("Your ship is all set, please wait for other players.");
         // end of thread
+    }
+
+
+    /**
+     * Return a string listing the coordinates of the components with errors.
+     */
+    private String getErrorsMessage(ShipBoard shipBoard) {
+        StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append("There are errors in your ship, please correct them:\n");
+        // scan shipboard (only valid cells)
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                if (shipBoard.getErrorsMatrix()[i][j]) {
+                    messageBuilder.append("Error in: %d %d\n", i + 1, j + 1);
+                }
+            }
+        }
+        return messageBuilder.toString();
     }
 }

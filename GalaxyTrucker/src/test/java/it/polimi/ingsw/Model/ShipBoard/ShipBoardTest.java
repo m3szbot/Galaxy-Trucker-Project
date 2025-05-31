@@ -245,6 +245,7 @@ public class ShipBoardTest {
         shipBoard.addComponent(new AlienSupport(universalSides, true), 8, 7);
         shipBoard.setCrewType(7, 7, CrewType.Purple);
         assertEquals(3, shipBoard.getShipBoardAttributes().getCrewMembers());
+        assertEquals(2, shipBoard.getShipBoardAttributes().getHumanCrewMembers());
         assertTrue(shipBoard.getShipBoardAttributes().getPurpleAlien());
 
         // removals
@@ -253,6 +254,7 @@ public class ShipBoardTest {
         shipBoard.removeCrewMember(6, 7);
         // 1 human 0 alien
         assertEquals(1, shipBoard.getShipBoardAttributes().getCrewMembers());
+        assertEquals(1, shipBoard.getShipBoardAttributes().getHumanCrewMembers());
 
         // exceptions:
         // not cabin selected
@@ -265,6 +267,7 @@ public class ShipBoardTest {
             shipBoard.removeCrewMember(6, 7);
         });
         assertEquals(0, shipBoard.getShipBoardAttributes().getCrewMembers());
+        assertEquals(0, shipBoard.getShipBoardAttributes().getHumanCrewMembers());
 
         // remove from empty alien cabin: IllegalArgument
         assertThrows(IllegalArgumentException.class, () -> {

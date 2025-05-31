@@ -174,7 +174,9 @@ public class ShipBoard implements Serializable {
      * @author Giacomo, Boti
      */
     public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException, IllegalArgumentException {
-        checkIndexInBounds(visibleCol, visibleRow);
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
 
@@ -191,15 +193,13 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Throws IllegalArgumentException if entered coordinates are out of bounds of the shipBoard.
-     * To call at the start of every method that takes coordinates as input.
+     * Checks if the given visible coordinates respect the bounds of shipboard coordinates.
      *
-     * @throws IllegalArgumentException if coordinates out of bounds.
+     * @return true if coordinates are in bounds, false if out of bounds.
      * @author Boti
      */
-    private void checkIndexInBounds(int visibleCol, int visibleRow) throws IllegalArgumentException {
-        if (visibleCol < 0 || visibleCol > SB_COLS || visibleRow < 0 || visibleRow > SB_ROWS)
-            throw new IllegalArgumentException("The entered coordinates are out of bounds");
+    public static boolean checkCoordinatesInBounds(int visibleCol, int visibleRow) {
+        return (visibleCol >= 0 && visibleCol < SB_COLS && visibleRow >= 0 && visibleRow < SB_ROWS);
     }
 
     private int getRealIndex(int visibleIndex) {
@@ -208,7 +208,7 @@ public class ShipBoard implements Serializable {
 
     /**
      * Check if the requested cell is valid to place a component in.
-     * Call checkIndexInBounds before.
+     * Call checkCoordinatesInBounds before.
      * Special case for first component.
      *
      * @return true if placement is valid, false if invalid.
@@ -472,7 +472,9 @@ public class ShipBoard implements Serializable {
      */
     public void removeComponent(int visibleCol, int visibleRow, boolean checkDisconnectionTrigger)
             throws IllegalArgumentException, NoHumanCrewLeftException {
-        checkIndexInBounds(visibleCol, visibleRow);
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
         int realCol = getRealIndex(visibleCol);
         int realRow = getRealIndex(visibleRow);
         Component component = componentMatrix[realCol][realRow];
@@ -542,7 +544,9 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public void removeBattery(int visibleCol, int visibleRow) throws IllegalArgumentException {
-        checkIndexInBounds(visibleCol, visibleRow);
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
@@ -568,7 +572,9 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public void removeCrewMember(int visibleCol, int visibleRow) throws IllegalArgumentException, NoHumanCrewLeftException {
-        checkIndexInBounds(visibleCol, visibleRow);
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
@@ -599,7 +605,9 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public void setCrewType(int visibleCol, int visibleRow, CrewType crewType) throws IllegalArgumentException {
-        checkIndexInBounds(visibleCol, visibleRow);
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
@@ -645,7 +653,7 @@ public class ShipBoard implements Serializable {
      * @return true if connected to given alien support, false if not connected.
      * @author Boti
      */
-    boolean checkForAlienSupport(int realCol, int realRow, CrewType crewType) {
+    public boolean checkForAlienSupport(int realCol, int realRow, CrewType crewType) {
         Component component = componentMatrix[realCol][realRow];
         Component temp;
         // check front
@@ -692,6 +700,7 @@ public class ShipBoard implements Serializable {
         return false;
     }
 
+
     /**
      * Moves goods from the storage at the starting coordinates to the storage at the final coordinates, if possible.
      *
@@ -721,7 +730,9 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public void removeGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
-        checkIndexInBounds(visibleCol, visibleRow);
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
@@ -754,7 +765,9 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
-        checkIndexInBounds(visibleCol, visibleRow);
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];

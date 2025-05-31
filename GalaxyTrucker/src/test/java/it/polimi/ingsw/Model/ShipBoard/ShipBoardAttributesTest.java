@@ -80,59 +80,80 @@ public class ShipBoardAttributesTest {
     // Test addComponent attribute changes
     @Test
     void addRemovePurpleAlienCabin() throws NotPermittedPlacementException {
+        // 1 cabin(2humans) 1 Cabin(purple alien) 1 Alien support(purple)
         // add
+        shipBoard.addComponent(6, 7, new Cabin(singleSides));
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
+
         assertThrows(IllegalArgumentException.class, () -> {
             shipBoard.setCrewType(7, 7, CrewType.Brown);
         });
         assertTrue(shipBoardAttributes.getPurpleAlien());
         assertFalse(shipBoardAttributes.getBrownAlien());
-        assertEquals(1, shipBoardAttributes.getCrewMembers());
+        assertEquals(3, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getHumanCrewMembers());
 
         // remove cabin
-        shipBoard.removeComponent(7, 7, false);
+        try {
+            shipBoard.removeComponent(7, 7, false);
+        } catch (NoHumanCrewLeftException e) {
+
+        }
         assertFalse(shipBoardAttributes.getPurpleAlien());
-        assertEquals(0, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
     void addRemovePurpleAlienSupport() throws NotPermittedPlacementException {
+        // 1 Cabin(2humans) 1 Cabin(purple) 1 Alien support(purple)
         // add
+        shipBoard.addComponent(6, 7, new Cabin(singleSides));
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
+
         assertThrows(IllegalArgumentException.class, () -> {
             shipBoard.setCrewType(7, 7, CrewType.Brown);
         });
         assertTrue(shipBoardAttributes.getPurpleAlien());
         assertFalse(shipBoardAttributes.getBrownAlien());
-        assertEquals(1, shipBoardAttributes.getCrewMembers());
+        assertEquals(3, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getHumanCrewMembers());
 
         // remove alien support
         shipBoard.removeComponent(7, 8, false);
         assertFalse(shipBoardAttributes.getPurpleAlien());
-        assertEquals(0, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
     void addRemoveBrownAlienCabin() throws NotPermittedPlacementException {
+        // 1 Cabin(2 humans) 1 Cabin(brown) 1 Alien support(brown)
+        // add
+        shipBoard.addComponent(6, 7, new Cabin(singleSides));
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
         shipBoard.setCrewType(7, 7, CrewType.Brown);
+
         assertThrows(IllegalArgumentException.class, () -> {
             shipBoard.setCrewType(7, 7, CrewType.Purple);
         });
         assertFalse(shipBoardAttributes.getPurpleAlien());
         assertTrue(shipBoardAttributes.getBrownAlien());
-        assertEquals(1, shipBoardAttributes.getCrewMembers());
+        assertEquals(3, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getHumanCrewMembers());
 
         // remove cabin
         shipBoard.removeComponent(7, 7, false);
         assertFalse(shipBoardAttributes.getBrownAlien());
-        assertEquals(0, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
     void addRemoveBrownAlienSupport() throws NotPermittedPlacementException {
+        // 1 Cabin(2 humans) 1 Cabin(Brown alien) 1 Alien support (brown)
+        // must add cabin so there are enough humans
+        shipBoard.addComponent(6, 7, new Cabin(singleSides));
+
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
         shipBoard.setCrewType(7, 7, CrewType.Brown);
         assertThrows(IllegalArgumentException.class, () -> {
@@ -140,12 +161,13 @@ public class ShipBoardAttributesTest {
         });
         assertFalse(shipBoardAttributes.getPurpleAlien());
         assertTrue(shipBoardAttributes.getBrownAlien());
-        assertEquals(1, shipBoardAttributes.getCrewMembers());
+        assertEquals(3, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getHumanCrewMembers());
 
         // remove cabin
         shipBoard.removeComponent(7, 8, false);
         assertFalse(shipBoardAttributes.getBrownAlien());
-        assertEquals(0, shipBoardAttributes.getCrewMembers());
+        assertEquals(2, shipBoardAttributes.getCrewMembers());
     }
 
     @Test
