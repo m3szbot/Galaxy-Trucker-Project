@@ -530,6 +530,12 @@ public class ShipBoard implements Serializable {
 
     private void checkFracturedShipBoard() throws FracturedShipBoardException {
 
+
+    }
+
+    private List<ShipBoard> connectionMapper() {
+        List<ShipBoard> shipBoardsList = new ArrayList<>();
+        return shipBoardsList;
     }
 
     /**
