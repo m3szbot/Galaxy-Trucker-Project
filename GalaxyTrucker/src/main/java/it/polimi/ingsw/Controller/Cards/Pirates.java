@@ -82,7 +82,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredit);
-                        changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), daysLost, gameInformation.getFlightBoard());
+                        changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
 
                     } else {
 
