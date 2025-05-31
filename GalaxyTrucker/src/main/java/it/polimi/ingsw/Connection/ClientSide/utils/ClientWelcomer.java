@@ -26,19 +26,19 @@ public class ClientWelcomer {
 
         //there can be duplicated names! (but not in the same game)
 
-        System.out.print("Enter you're nickname: ");
+        System.out.print("Enter your nickname: ");
 
         input = scanner.nextLine();
 
         while (input.contains(" ")) {
 
-            System.out.println("You're nickname cannot contain spaces!");
+            System.out.println("Your nickname cannot contain spaces!");
             System.out.print("Enter a valid nickname: ");
             input = scanner.nextLine();
         }
 
         clientInfo.setNickname(input);
-        System.out.println("You're nickname is " + input);
+        System.out.println("Your nickname is " + input);
 
         System.out.print("Enter the viewType (GUI/TUI): ");
 
@@ -54,7 +54,7 @@ public class ClientWelcomer {
         }
 
         clientInfo.setViewType(ViewType.valueOf(input));
-        System.out.println("You're viewType is " + input);
+        System.out.println("Your viewType is " + input);
 
 
         System.out.print("Enter the connection type (RMI/SOCKET): ");
@@ -71,12 +71,12 @@ public class ClientWelcomer {
         }
 
         clientInfo.setConnectionType(ConnectionType.valueOf(input));
-        System.out.println("You're connection type is now " + input);
+        System.out.println("Your connection type is now " + input);
 
-        System.out.print("Enter the IP adress of the server: ");
+        System.out.print("Enter the IP address of the server: ");
         input = scanner.nextLine();
         clientInfo.setServerIp(input);
-        System.out.println("The ip adress of the server is " + input);
+        System.out.println("The ip address of the server is " + input);
 
         System.out.print("Do you want to resume an interrupted game ? (y/n)");
 

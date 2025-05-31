@@ -11,6 +11,7 @@ import java.util.List;
  * Controller class to handle FracturedShipBoardException.
  */
 public class FracturedShipBoardHandler extends Phase {
+
     Player player;
     List<ShipBoard> shipBoardsList;
 

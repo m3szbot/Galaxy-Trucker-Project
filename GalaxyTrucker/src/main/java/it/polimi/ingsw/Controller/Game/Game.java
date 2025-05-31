@@ -96,13 +96,13 @@ public class Game implements Runnable, Serializable {
      * Start the different phases of the game.
      */
     public void run() {
-        System.out.println("Starting assembly phase of game + " + gameCode + "...");
+        System.out.println("Starting assembly phase of game" + gameCode + "...");
         assemblyPhase.start();
-        System.out.println("Starting correction phase of game " + gameCode + "...");
+        System.out.println("Starting correction phase of game" + gameCode + "...");
         correctionPhase.start();
-        System.out.println("Starting flight phase of game " + gameCode + "..." );
+        System.out.println("Starting flight phase of game" + gameCode + "..." );
         flightPhase.start();
-        System.out.println("Starting evaluation phase of game " + gameCode + "...");
+        System.out.println("Starting evaluation phase of game" + gameCode + "...");
         evaluationPhase.start();
         gameState = GameState.GameOver;
         ClientMessenger.endGame(gameCode);
