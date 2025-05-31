@@ -39,37 +39,39 @@ public interface SufferBlows {
         for (Blow blow : blows) {
 
 
-            componentCoord = findHitComponent(player, blow, componentCoord);
+            if (blow != null) {
+                componentCoord = findHitComponent(player, blow, componentCoord);
 
-            if (componentCoord[0] != -1) {
-                //a component was hit
+                if (componentCoord[0] != -1) {
+                    //a component was hit
 
-                if (blowType == ElementType.CannonBlow) {
+                    if (blowType == ElementType.CannonBlow) {
 
-                    if (blow.isBig()) {
+                        if (blow.isBig()) {
 
-                        hitFlag = bigCannonBlowHit(player, gameInformation.getFlightBoard(), componentCoord[0], componentCoord[1]);
+                            hitFlag = bigCannonBlowHit(player, gameInformation.getFlightBoard(), componentCoord[0], componentCoord[1]);
 
+                        } else {
+                            //player can defend itself
+                            hitFlag = smallCannonBlowHit(player, componentCoord[0], componentCoord[1], blow.getDirection(), gameInformation);
+                        }
                     } else {
-                        //player can defend itself
-                        hitFlag = smallCannonBlowHit(player, componentCoord[0], componentCoord[1], blow.getDirection(), gameInformation);
-                    }
-                } else {
 
-                    if (blow.isBig()) {
-                        // player can defend itself only with cannon
-                        hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], gameInformation);
+                        if (blow.isBig()) {
+                            // player can defend itself only with cannon
+                            hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], gameInformation);
 
-                    } else {
-                        //blow is small
-                        hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], gameInformation);
+                        } else {
+                            //blow is small
+                            hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoord[0], componentCoord[1], gameInformation);
 
+                        }
                     }
                 }
-            }
 
-            //notifying everybody of the blow effect on the player.
-            notifyAll(player, blow.getDirection(), hitFlag, componentCoord[0], componentCoord[1], blowType, gameInformation);
+                //notifying everybody of the blow effect on the player.
+                notifyAll(player, blow.getDirection(), hitFlag, componentCoord[0], componentCoord[1], blowType, gameInformation);
+            }
         }
     }
 
@@ -207,7 +209,6 @@ public interface SufferBlows {
                         }
                     } catch (PlayerDisconnectedException e) {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                        ;
                         message = e.getMessage();
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                     }
@@ -283,7 +284,6 @@ public interface SufferBlows {
     private void notifyAll(Player player, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, GameInformation gameInformation) {
 
         String message;
-        DataContainer dataContainer;
 
         if (hitFlag) {
 
@@ -310,16 +310,9 @@ public interface SufferBlows {
 
     private boolean removeComponent(Player player, int xCoord, int yCoord, FlightBoard flightBoard) {
 
-        if (player.getShipBoard().getRealComponent(xCoord, yCoord).getComponentName().equals("Storage")) {
-
-            int[] goodsToRemove = ((Storage) player.getShipBoard().getRealComponent(xCoord, yCoord)).getGoods();
-
-            flightBoard.addGoods(goodsToRemove);
-
-        }
-
         player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
         return true;
+
     }
 
     private String directionSolver(int direction) {
