@@ -15,7 +15,7 @@ public class CardBuilder {
     private ElementType blowType, requirementType, lossType;
     private int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
     private int[] goods, planet1, planet2, planet3, planet4;
-    private Blow blows[];
+    private Blow[] blows;
     private String cardName;
 
 
