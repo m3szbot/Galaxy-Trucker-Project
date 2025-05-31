@@ -47,8 +47,9 @@ public class ShipBoard implements Serializable {
     // Keeps track of the connected components.
     // If shipboard is fractured, different connected parts are inserted into separate lists and only one list is kept.
     private final List<Component> connectedComponentsList;
-    // TODO
-    // 1 element is okay, 0 crew is removed
+    // real coordinates of the current center cabin
+    private int centerCabinCol;
+    private int centerCabinRow;
 
 
     /**
@@ -154,6 +155,9 @@ public class ShipBoard implements Serializable {
         } catch (NotPermittedPlacementException e) {
             System.out.println("Couldn't add starter cabin");
         }
+        // set center
+        centerCabinCol = getRealIndex(SB_CENTER_COL);
+        centerCabinRow = getRealIndex(SB_CENTER_ROW);
         starterCabin.accept(sbAttributesUpdaterVisitor);
     }
 
@@ -162,6 +166,10 @@ public class ShipBoard implements Serializable {
      */
     public void addComponent(int visibleCol, int visibleRow, Component component) throws NotPermittedPlacementException, IllegalArgumentException {
         addComponent(component, visibleCol, visibleRow);
+    }
+
+    private int getRealIndex(int visibleIndex) {
+        return visibleIndex - 1;
     }
 
     /**
@@ -200,10 +208,6 @@ public class ShipBoard implements Serializable {
      */
     public static boolean checkCoordinatesInBounds(int visibleCol, int visibleRow) {
         return (visibleCol >= 0 && visibleCol < SB_COLS && visibleRow >= 0 && visibleRow < SB_ROWS);
-    }
-
-    private int getRealIndex(int visibleIndex) {
-        return visibleIndex - 1;
     }
 
     /**
@@ -486,10 +490,42 @@ public class ShipBoard implements Serializable {
             shipBoardAttributes.destroyComponents(1);
             component.accept(sbAttributesUpdaterVisitor);
 
-            // check for fracture
-            checkFracturedShipBoard();
+            // if more sides connected, check for fracture
+            if (checkNumberOfConnectedSides(realCol, realRow) > 1) {
+                // check for fracture
+                checkFracturedShipBoard();
+            }
         }
 
+    }
+
+    /**
+     * @return the number of correctly connected sides of the given component.
+     * @author Boti
+     */
+    private int checkNumberOfConnectedSides(int realCol, int realRow) {
+        int count = 0;
+        Component current = componentMatrix[realCol][realRow];
+        Component temp;
+
+        // front
+        temp = componentMatrix[realCol][realRow - 1];
+        if ((temp != null) && (checkCompatibleJunction(current.getFront(), temp.getBack())))
+            count++;
+        // back
+        temp = componentMatrix[realCol][realRow + 1];
+        if ((temp != null) && (checkCompatibleJunction(current.getBack(), temp.getFront())))
+            count++;
+        // left
+        temp = componentMatrix[realCol - 1][realRow];
+        if ((temp != null) && (checkCompatibleJunction(current.getLeft(), temp.getRight())))
+            count++;
+        // right
+        temp = componentMatrix[realCol + 1][realRow];
+        if ((temp != null) && (checkCompatibleJunction(current.getRight(), temp.getLeft())))
+            count++;
+
+        return count;
     }
 
     private void checkFracturedShipBoard() throws FracturedShipBoardException {
@@ -534,7 +570,6 @@ public class ShipBoard implements Serializable {
     private boolean isConnector(SideType sideType) {
         return (sideType.equals(SideType.Single) || sideType.equals(SideType.Double) || sideType.equals(SideType.Universal));
     }
-
 
     /**
      * Remove a battery from the battery storage at the given coordinates, if possible.
@@ -625,7 +660,7 @@ public class ShipBoard implements Serializable {
         // change only if needed
         if (!originalCrewType.equals(crewType)) {
             // alien checks
-            if (crewType.equals(CrewType.Purple) || crewType.equals(CrewType.Brown)) {
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple) || crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Brown)) {
                 if (shipBoardAttributes.getAlien(crewType))
                     throw new IllegalArgumentException("Cannot change crew to alien: the alien is already present elsewhere.");
 
@@ -660,46 +695,45 @@ public class ShipBoard implements Serializable {
         temp = componentMatrix[realCol][realRow - 1];
         if (temp != null && checkCompatibleJunction(component.getFront(), temp.getBack()) && temp instanceof AlienSupport) {
             // check for purple
-            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple) && ((AlienSupport) temp).isPurple())
                 return true;
                 // check for brown
-            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+            else if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Brown) && !((AlienSupport) temp).isPurple())
                 return true;
         }
         // check back
         temp = componentMatrix[realCol][realRow + 1];
         if (temp != null && checkCompatibleJunction(component.getBack(), temp.getFront()) && temp instanceof AlienSupport) {
             // check for purple
-            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple) && ((AlienSupport) temp).isPurple())
                 return true;
                 // check for brown
-            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+            else if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Brown) && !((AlienSupport) temp).isPurple())
                 return true;
         }
         // check left
         temp = componentMatrix[realCol - 1][realRow];
         if (temp != null && checkCompatibleJunction(component.getLeft(), temp.getRight()) && temp instanceof AlienSupport) {
             // check for purple
-            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple) && ((AlienSupport) temp).isPurple())
                 return true;
                 // check for brown
-            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+            else if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Brown) && !((AlienSupport) temp).isPurple())
                 return true;
         }
         // check right
         temp = componentMatrix[realCol + 1][realRow];
         if (temp != null && checkCompatibleJunction(component.getRight(), temp.getLeft()) && temp instanceof AlienSupport) {
             // check for purple
-            if (crewType.equals(CrewType.Purple) && ((AlienSupport) temp).isPurple())
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple) && ((AlienSupport) temp).isPurple())
                 return true;
                 // check for brown
-            else if (crewType.equals(CrewType.Brown) && !((AlienSupport) temp).isPurple())
+            else if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Brown) && !((AlienSupport) temp).isPurple())
                 return true;
         }
         // no matching support found
         return false;
     }
-
 
     /**
      * Moves goods from the storage at the starting coordinates to the storage at the final coordinates, if possible.
