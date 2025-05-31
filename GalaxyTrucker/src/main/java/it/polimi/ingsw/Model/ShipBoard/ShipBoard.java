@@ -35,6 +35,7 @@ public class ShipBoard implements Serializable {
 
     // final Object: reference cannot be changed (but state/elements can change)
     private final transient ComponentVisitor<Void> sbAttributesUpdaterVisitor;
+    private final GameType gameType;
     private final ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private final Component[][] componentMatrix;
@@ -66,6 +67,7 @@ public class ShipBoard implements Serializable {
      * @author Giacomo
      */
     public ShipBoard(GameType gameType) {
+        this.gameType = gameType;
         this.shipBoardAttributes = new ShipBoardAttributes(this);
         this.sbAttributesUpdaterVisitor = new SBAttributesUpdaterVisitor(shipBoardAttributes);
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
@@ -485,15 +487,20 @@ public class ShipBoard implements Serializable {
 
         // if a present element is to be removed
         if (component != null) {
-            // remove the single component and update
-            componentMatrix[realCol][realRow] = null;
-            shipBoardAttributes.destroyComponents(1);
-            component.accept(sbAttributesUpdaterVisitor);
-
             // if more sides connected, check for fracture
+            // component must be removed after checkSides
             if (checkNumberOfConnectedSides(realCol, realRow) > 1) {
+                // remove the single component and update
+                componentMatrix[realCol][realRow] = null;
+                shipBoardAttributes.destroyComponents(1);
+                component.accept(sbAttributesUpdaterVisitor);
                 // check for fracture
                 checkFracturedShipBoard();
+            } else {
+                // remove the single component and update
+                componentMatrix[realCol][realRow] = null;
+                shipBoardAttributes.destroyComponents(1);
+                component.accept(sbAttributesUpdaterVisitor);
             }
         }
 
@@ -535,7 +542,14 @@ public class ShipBoard implements Serializable {
 
     private List<ShipBoard> connectionMapper() {
         List<ShipBoard> shipBoardsList = new ArrayList<>();
+
+
         return shipBoardsList;
+    }
+
+    private ShipBoard bfsMapper() {
+        ShipBoard shipBoard = new ShipBoard(gameType);
+        return shipBoard;
     }
 
     /**
