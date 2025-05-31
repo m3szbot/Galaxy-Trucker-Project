@@ -17,7 +17,7 @@ public class Blow implements Serializable {
     The direction is as follows: 0 front, 1 right, 2 back, 3 left.
      */
 
-    public Blow(int direction, boolean big) {
+    public Blow(Integer direction, boolean big) {
 
         this.direction = direction;
         this.big = big;

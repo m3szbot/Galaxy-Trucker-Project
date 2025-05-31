@@ -30,50 +30,46 @@ public abstract class Card implements Serializable {
 
     public abstract void showCard();
 
-    protected void printBlows(Blow[] blows){
+    protected void printBlows(Blow[] blows) {
 
-        for(int i = 0; i < blows.length; i++){
+        for (int i = 0; i < blows.length; i++) {
 
-            System.out.println("Blow " + i + 1 + " direction: " + solveDirection(blows[i].getDirection()));
+            if (blows[i] != null) {
+                System.out.println("Blow " + i + 1 + " direction: " + solveDirection(blows[i].getDirection()));
+            }
 
         }
     }
 
-    private String solveDirection(int direction){
+    private String solveDirection(int direction) {
 
-        if(direction == 0){
+        if (direction == 0) {
             return "front";
-        }
-        else if(direction == 1){
+        } else if (direction == 1) {
             return "right";
-        }
-        else if(direction == 2){
+        } else if (direction == 2) {
             return "back";
-        }
-        else{
+        } else {
             return "left";
         }
 
     }
 
-    private String solveGoodsColor(int goodIndex){
-        if(goodIndex == 0){
+    private String solveGoodsColor(int goodIndex) {
+        if (goodIndex == 0) {
             return "red";
-        }
-        else if(goodIndex == 1){
+        } else if (goodIndex == 1) {
             return "yellow";
-        }
-        else if(goodIndex == 2){
+        } else if (goodIndex == 2) {
             return "green";
-        }
-        else{
+        } else {
             return "blue";
         }
     }
 
-    protected void printGoods(int[] goods){
+    protected void printGoods(int[] goods) {
 
-        for(int i = 0;i < goods.length; i++){
+        for (int i = 0; i < goods.length; i++) {
             System.out.println(solveGoodsColor(i) + " goods quantity: " + goods[i]);
         }
     }
