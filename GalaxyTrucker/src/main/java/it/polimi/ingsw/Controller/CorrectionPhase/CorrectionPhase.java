@@ -40,7 +40,7 @@ public class CorrectionPhase extends Phase {
         scheduler.shutdown();
         // timeout (force shutdown if someone still didn't finish)
         try {
-            scheduler.awaitTermination(5, TimeUnit.MINUTES);
+            scheduler.awaitTermination(10, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
