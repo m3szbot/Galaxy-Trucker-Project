@@ -59,7 +59,9 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
         //rolling all dices
         for (i = 0; i < blows.length; i++) {
-            blows[i].rollDice();
+            if (blows[i] != null) {
+                blows[i].rollDice();
+            }
         }
 
         for (i = 0; i < numberOfPlayers; i++) {
