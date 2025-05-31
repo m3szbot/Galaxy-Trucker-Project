@@ -343,7 +343,7 @@ public interface SufferBlows {
         PlayerMessenger playerMessenger;
         int[] coordinates = new int[2];
 
-        message = "Enter the coordinates of the battery want to use: ";
+        message = "Enter the coordinates of the battery you want to use: ";
         playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
         playerMessenger.printMessage(message);
 
@@ -358,24 +358,24 @@ public interface SufferBlows {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
-            if (player.getShipBoard().getRealComponent(coordinates[0], coordinates[1]) != null) {
-
-                if ((player.getShipBoard().getRealComponent(coordinates[0], coordinates[1]).getComponentName().equals("Battery"))) {
-                    if ((player.getShipBoard().getRealComponent(coordinates[0], coordinates[1])).getBatteryPower() > 0) {
-                        break;
-                    }
-                }
+            try {
+                player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
+                break;
+            } catch (IllegalArgumentException e) {
+                message = e.getMessage();
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
             }
 
-            message = "Invalid coordinates, reenter coordinates: ";
+            //If there was an exception
+            message = "Reenter coordinates: ";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
         }
 
-        //player.getShipBoard().getShipBoardAttributes().updateBatteryPower(-1);
-        ((Battery) player.getShipBoard().getRealComponent(coordinates[0], coordinates[1])).removeBattery();
         return false;
+
     }
 
     private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
@@ -423,7 +423,7 @@ public interface SufferBlows {
                 if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
             }
         } else {
-            //blow come from the back
+            //blow comes from the back
             int temp;
 
             for (i = 0; i < rows; i++) {
