@@ -145,7 +145,7 @@ public class ShipBoard implements Serializable {
 
     private void addStarterCabin() {
         // TODO: colored starter cabin, to get from the componentList in gameInformation
-        Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal});
+        Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2);
         try {
             addComponent(SB_CENTER_COL, SB_CENTER_ROW, starterCabin);
         } catch (NotPermittedPlacementException e) {
