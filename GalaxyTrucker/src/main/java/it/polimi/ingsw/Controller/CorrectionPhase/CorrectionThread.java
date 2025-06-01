@@ -72,12 +72,16 @@ public class CorrectionThread implements Runnable {
             // loop while there are still errors
             errors = shipBoard.isErroneous();
         }
-        // errors corrected
 
+        // errors corrected
+        message = "There are no errors in your shipboard.\n";
+        playerMessenger.printMessage(message);
 
         // SET CREW TYPE FOR CABINS
         CrewType crewType = CrewType.Human;
         boolean selectCrewSuccess = false;
+
+        playerMessenger.printShipboard(shipBoard);
 
         // scan shipboard (only valid cells)
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
@@ -95,6 +99,7 @@ public class CorrectionThread implements Runnable {
                         // get player input string
                         message = String.format("Select the crew type for the cabin at %d %d (Human/Purple/Brown): ", i + 1, j + 1);
                         playerMessenger.printMessage(message);
+
                         try {
                             inputString = playerMessenger.getPlayerString();
                         } catch (PlayerDisconnectedException e) {
@@ -154,7 +159,7 @@ public class CorrectionThread implements Runnable {
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 if (shipBoard.getErrorsMatrix()[i][j]) {
-                    messageBuilder.append("Error in: %d %d\n", i + 1, j + 1);
+                    messageBuilder.append(String.format("Error in: %d %d\n", i + 1, j + 1));
                 }
             }
         }

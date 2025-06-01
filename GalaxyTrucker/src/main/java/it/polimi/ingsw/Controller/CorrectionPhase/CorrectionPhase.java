@@ -36,8 +36,10 @@ public class CorrectionPhase extends Phase {
             CorrectionThread playerThread = new CorrectionThread(gameInformation, player);
             scheduler.submit(playerThread);
         }
+
         // no new tasks should be added
         scheduler.shutdown();
+
         // timeout (force shutdown if someone still didn't finish)
         try {
             scheduler.awaitTermination(10, TimeUnit.MINUTES);
