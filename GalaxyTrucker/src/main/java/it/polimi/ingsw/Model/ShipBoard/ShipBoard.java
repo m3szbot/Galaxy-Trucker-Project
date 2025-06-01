@@ -549,7 +549,7 @@ public class ShipBoard implements Serializable {
      * Used when shipboard is fractured.
      *
      * @return list of possible shipboards to choose from.
-     * @authro Boti
+     * @author Boti
      */
     private List<ShipBoard> connectionMapper() {
         List<ShipBoard> shipBoardsList = new ArrayList<>();
