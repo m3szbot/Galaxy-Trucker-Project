@@ -478,20 +478,15 @@ public class ShipBoard implements Serializable {
 
         // if a present element is to be removed
         if (component != null) {
-            // if more sides connected, check for fracture
-            // component must be removed after checkSides
-            if (checkNumberOfConnectedSides(realCol, realRow) <= 1) {
-                // remove the single component and update
-                componentMatrix[realCol][realRow] = null;
-                shipBoardAttributes.destroyComponents(1);
-                component.accept(sbAttributesUpdaterVisitor);
+            // check sides before removing the component
+            int connectedSides = checkNumberOfConnectedSides(realCol, realRow);
+            // remove given component
+            componentMatrix[realCol][realRow] = null;
+            shipBoardAttributes.destroyComponents(1);
+            component.accept(sbAttributesUpdaterVisitor);
 
-            } else if (checkDisconnectionTrigger) {
-                // remove the single component and update
-                componentMatrix[realCol][realRow] = null;
-                shipBoardAttributes.destroyComponents(1);
-                component.accept(sbAttributesUpdaterVisitor);
-                // check for fracture - throw exceptions if needed
+            // check for fracture, throw exceptions if needed
+            if (connectedSides > 1 && checkDisconnectionTrigger) {
                 checkFracturedShipBoard();
             }
         }
