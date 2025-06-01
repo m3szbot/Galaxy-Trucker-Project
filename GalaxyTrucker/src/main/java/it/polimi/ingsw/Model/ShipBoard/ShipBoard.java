@@ -462,12 +462,13 @@ public class ShipBoard implements Serializable {
      * Removes a component from the specified position.
      * Updates the shipBoard and shipBoardAttributes
      *
-     * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
-     * @throws IllegalArgumentException if operation not possible.
+     * @throws IllegalArgumentException    if operation not possible.
+     * @throws NoHumanCrewLeftException    if no human crew left and player forced to give up.
+     * @throws FracturedShipBoardException if shipboard is fractured into multiple pieces.
      * @author Giacomo, Boti
      */
     public void removeComponent(int visibleCol, int visibleRow, boolean checkDisconnectionTrigger)
-            throws IllegalArgumentException, NoHumanCrewLeftException {
+            throws IllegalArgumentException, NoHumanCrewLeftException, FracturedShipBoardException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
             throw new IllegalArgumentException("Coordinates out of bounds.");
 
@@ -477,20 +478,15 @@ public class ShipBoard implements Serializable {
 
         // if a present element is to be removed
         if (component != null) {
-            // if more sides connected, check for fracture
-            // component must be removed after checkSides
-            if (checkNumberOfConnectedSides(realCol, realRow) <= 1) {
-                // remove the single component and update
-                componentMatrix[realCol][realRow] = null;
-                shipBoardAttributes.destroyComponents(1);
-                component.accept(sbAttributesUpdaterVisitor);
+            // check sides before removing the component
+            int connectedSides = checkNumberOfConnectedSides(realCol, realRow);
+            // remove given component
+            componentMatrix[realCol][realRow] = null;
+            shipBoardAttributes.destroyComponents(1);
+            component.accept(sbAttributesUpdaterVisitor);
 
-            } else if (checkDisconnectionTrigger) {
-                // remove the single component and update
-                componentMatrix[realCol][realRow] = null;
-                shipBoardAttributes.destroyComponents(1);
-                component.accept(sbAttributesUpdaterVisitor);
-                // check for fracture - throw exceptions if needed
+            // check for fracture, throw exceptions if needed
+            if (connectedSides > 1 && checkDisconnectionTrigger) {
                 checkFracturedShipBoard();
             }
         }
