@@ -58,9 +58,9 @@ public class GameMessenger {
      */
     public void endGameToAll() {
         for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
-             playerMessenger.endGame();
+            playerMessenger.endGame();
         }
-        for(Player player: playerMessengerMap.keySet()){
+        for (Player player : playerMessengerMap.keySet()) {
             ClientMessenger.getCentralServer().removeNickName(player.getNickName());
         }
 
@@ -74,9 +74,9 @@ public class GameMessenger {
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
         playerMessengerMap.get(player).clearPlayerResources();
-        System.out.println("Player " + player.getNickName() + " disconnected!");
         playerMessengerMap.remove(player);
         ClientMessenger.getCentralServer().removeNickName(player.getNickName());
+        System.out.println("Player " + player.getNickName() + " disconnected!");
     }
 
     /**
@@ -118,16 +118,15 @@ public class GameMessenger {
 
     public void sendShortCutMessageToAll(String message, boolean onlySocket) {
 
-        if(onlySocket){
+        if (onlySocket) {
 
-            for(PlayerMessenger playerMessenger : playerMessengerMap.values()){
-                if(playerMessenger.getConnectionType() == ConnectionType.SOCKET){
+            for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
+                if (playerMessenger.getConnectionType() == ConnectionType.SOCKET) {
                     playerMessenger.sendShortCutMessage(message);
                 }
             }
 
-        }
-        else {
+        } else {
             for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
                 playerMessenger.sendShortCutMessage(message);
             }

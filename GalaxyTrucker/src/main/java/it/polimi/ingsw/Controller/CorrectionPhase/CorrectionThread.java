@@ -62,9 +62,10 @@ public class CorrectionThread implements Runnable {
         // check if there are errors
         boolean errors = shipBoard.isErroneous();
         boolean removeComponentSuccess = false;
+        int errorTrials = 5 * 7 + 5;
 
         // correct errors
-        while (errors) {
+        while (errors && errorTrials > 0) {
             // print error messages
             playerMessenger.printShipboard(shipBoard);
             playerMessenger.printMessage(getErrorsMessage(shipBoard));
@@ -92,7 +93,6 @@ public class CorrectionThread implements Runnable {
                 } catch (IllegalArgumentException e) {
                     // print exception message to player
                     playerMessenger.printMessage(e.getMessage());
-                    removeTrials--;
 
                 } catch (NoHumanCrewLeftException e) {
                     // eliminate player
@@ -107,12 +107,13 @@ public class CorrectionThread implements Runnable {
                     FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, e);
                     handler.start();
                     // TODO delete, added for safety
-                    removeTrials--;
                 }
                 // try again if couldn't remove selected component
+                removeTrials--;
             }
             // loop while there are still errors
             errors = shipBoard.isErroneous();
+            errorTrials--;
         }
         // error correction finished
         // do not end thread
@@ -179,7 +180,6 @@ public class CorrectionThread implements Runnable {
                             // invalid input
                             default -> {
                                 playerMessenger.printMessage("Please enter a valid input!");
-                                selectTrials--;
                             }
                         }
 
@@ -191,10 +191,10 @@ public class CorrectionThread implements Runnable {
                                 // failed to set crew
                                 playerMessenger.printMessage(e.getMessage());
                                 selectCrewSuccess = false;
-                                selectTrials--;
                             }
                         }
                         // loop until crew is correctly set for the current cabin
+                        selectTrials--;
                     }
                 }
                 // iterate to next component
