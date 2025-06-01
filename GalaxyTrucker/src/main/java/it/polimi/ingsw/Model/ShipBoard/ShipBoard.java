@@ -462,12 +462,13 @@ public class ShipBoard implements Serializable {
      * Removes a component from the specified position.
      * Updates the shipBoard and shipBoardAttributes
      *
-     * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
-     * @throws IllegalArgumentException if operation not possible.
+     * @throws IllegalArgumentException    if operation not possible.
+     * @throws NoHumanCrewLeftException    if no human crew left and player forced to give up.
+     * @throws FracturedShipBoardException if shipboard is fractured into multiple pieces.
      * @author Giacomo, Boti
      */
     public void removeComponent(int visibleCol, int visibleRow, boolean checkDisconnectionTrigger)
-            throws IllegalArgumentException, NoHumanCrewLeftException {
+            throws IllegalArgumentException, NoHumanCrewLeftException, FracturedShipBoardException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
             throw new IllegalArgumentException("Coordinates out of bounds.");
 

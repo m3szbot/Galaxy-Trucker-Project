@@ -4,12 +4,11 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.CrewType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
-import it.polimi.ingsw.Model.ShipBoard.ShipBoardAttributes;
+import it.polimi.ingsw.Model.ShipBoard.*;
 
 import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.*;
 
@@ -27,17 +26,37 @@ public class CorrectionThread implements Runnable {
     }
 
     /**
-     * remove components until shipboard of player is valid
+     * Correct errors and set crew types.
      */
     @Override
     public void run() {
-        ShipBoard shipBoard = player.getShipBoard();
-        ShipBoardAttributes shipBoardAttributes = shipBoard.getShipBoardAttributes();
-        String message;
-        int[] coordinates;
-        String inputString;
+        // correct errors
+        if (errorCorrector()) {
+            return;
+        }
+        // errors corrected
+        playerMessenger.printMessage("There are no errors in your shipboard.\n");
 
-        // CORRECT ERRORS
+        // select crew types
+        if (selectCrewTypes()) {
+            return;
+        }
+        // crew selection finished
+        playerMessenger.printShipboard(player.getShipBoard());
+        playerMessenger.printMessage("Your ship is all set, please wait for other players.");
+        // end of thread
+    }
+
+    /**
+     * Handle the error correction of the player's shipboard. Returns true if the player's thread should be ended.
+     *
+     * @return true if the player's thread should be ended, false if not.
+     * @author Boti
+     */
+    private boolean errorCorrector() {
+        ShipBoard shipBoard = player.getShipBoard();
+        int[] coordinates;
+
         // check if there are errors
         boolean errors = shipBoard.isErroneous();
         boolean removeComponentSuccess = false;
@@ -46,42 +65,67 @@ public class CorrectionThread implements Runnable {
         while (errors) {
             // print error messages
             playerMessenger.printShipboard(shipBoard);
-            message = getErrorsMessage(shipBoard);
-            playerMessenger.printMessage(message);
-            message = "Enter column and row (col row):";
-            playerMessenger.printMessage(message);
+            playerMessenger.printMessage(getErrorsMessage(shipBoard));
+            playerMessenger.printMessage("Enter column and row of component to remove (col row):");
 
             // elaborate player input
             while (!removeComponentSuccess) {
-                // get player input and remove component
+                // get player input
                 try {
                     coordinates = playerMessenger.getPlayerCoordinates();
-                    shipBoard.removeComponent(coordinates[0], coordinates[1], false);
-                    removeComponentSuccess = true;
                 } catch (PlayerDisconnectedException e) {
                     // handle disconnected player
                     gameMessenger.disconnectPlayer(gameInformation, player);
-                    return;
+                    // end thread
+                    return true;
+                }
+
+                // remove component
+                try {
+                    shipBoard.removeComponent(coordinates[0], coordinates[1], false);
+                    // set only if no exceptions thrown
+                    removeComponentSuccess = true;
+
                 } catch (IllegalArgumentException e) {
                     // print exception message to player
                     playerMessenger.printMessage(e.getMessage());
-                    removeComponentSuccess = false;
-                }
-            }
 
+                } catch (NoHumanCrewLeftException e) {
+                    // eliminate player
+                    playerMessenger.printMessage(e.getMessage());
+                    gameInformation.removePlayers(player);
+                    // end thread
+                    return true;
+
+                } catch (FracturedShipBoardException e) {
+                    // handle fractured shipboard
+                    playerMessenger.printMessage(e.getMessage());
+                    FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, e);
+                    handler.start();
+                }
+                // try again if couldn't remove selected component
+            }
             // loop while there are still errors
             errors = shipBoard.isErroneous();
         }
+        // error correction finished
+        // do not end thread
+        return false;
+    }
 
-        // errors corrected
-        message = "There are no errors in your shipboard.\n";
-        playerMessenger.printMessage(message);
-
-        // SET CREW TYPE FOR CABINS
+    /**
+     * Handle the crew selection of the player's shipboard. Returns true if the player's thread should be ended.
+     *
+     * @return true if the player's thread should be ended, false if not.
+     * @author Boti
+     */
+    private boolean selectCrewTypes() {
+        ShipBoard shipBoard = player.getShipBoard();
+        ShipBoardAttributes shipBoardAttributes = shipBoard.getShipBoardAttributes();
+        String message;
+        String inputString;
         CrewType crewType = CrewType.Human;
         boolean selectCrewSuccess = false;
-
-        playerMessenger.printShipboard(shipBoard);
 
         // scan shipboard (only valid cells)
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
@@ -93,6 +137,8 @@ public class CorrectionThread implements Runnable {
                                 (!shipBoardAttributes.getAlien(CrewType.Purple) && shipBoard.checkForAlienSupport(i, j, CrewType.Purple)) ||
                                         (!shipBoardAttributes.getAlien(CrewType.Brown) && shipBoard.checkForAlienSupport(i, j, CrewType.Brown))
                         )) {
+                    // alien could be selected
+                    playerMessenger.printShipboard(shipBoard);
 
                     // elaborate player input
                     while (!selectCrewSuccess) {
@@ -105,7 +151,8 @@ public class CorrectionThread implements Runnable {
                         } catch (PlayerDisconnectedException e) {
                             // handle disconnected player
                             gameMessenger.disconnectPlayer(gameInformation, player);
-                            return;
+                            // end player thread
+                            return true;
                         }
 
                         // cast player input
@@ -127,11 +174,13 @@ public class CorrectionThread implements Runnable {
                                 playerMessenger.printMessage("Please enter a valid input!");
                             }
                         }
-                        // set crew type if successfully selected
+
+                        // set crew type if successfully cast
                         if (selectCrewSuccess) {
                             try {
                                 shipBoard.setCrewType(i + 1, j + 1, crewType);
                             } catch (IllegalArgumentException e) {
+                                // failed to set crew
                                 playerMessenger.printMessage(e.getMessage());
                                 selectCrewSuccess = false;
                             }
@@ -143,11 +192,9 @@ public class CorrectionThread implements Runnable {
             }
         }
         // crew selection finished
-
-        playerMessenger.printMessage("Your ship is all set, please wait for other players.");
-        // end of thread
+        // do not end player thread
+        return false;
     }
-
 
     /**
      * Return a string listing the coordinates of the components with errors.
@@ -165,4 +212,6 @@ public class CorrectionThread implements Runnable {
         }
         return messageBuilder.toString();
     }
+
+
 }
