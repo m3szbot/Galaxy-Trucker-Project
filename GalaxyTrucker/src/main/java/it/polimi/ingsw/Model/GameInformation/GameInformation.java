@@ -380,11 +380,15 @@ public class GameInformation implements Serializable {
     }
 
     /**
-     * removes a player from the connectedPlayerList
+     * Removes a player from the game: from connected player list, flightBoard.
      *
      * @param player
      */
     public void removePlayers(Player player) {
         connectedPlayerList.remove(player);
+        // remove from flightBoard if present
+        if (flightBoard.isInGame(player))
+            flightBoard.eliminatePlayer(player);
+
     }
 }
