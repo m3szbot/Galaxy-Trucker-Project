@@ -37,7 +37,8 @@ public class Blow implements Serializable {
 
     public void rollDice() {
 
-        roll = (int) (Math.random() * 13);
+        //Real index
+        roll = (int) ((Math.random() * 11) + 1);
 
     }
 }

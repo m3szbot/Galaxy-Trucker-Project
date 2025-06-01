@@ -18,8 +18,10 @@ public class Cabin extends Component {
     }
 
     @JsonCreator
-    public Cabin(@JsonProperty("sides") SideType[] sides) {
+    public Cabin(@JsonProperty("sides") SideType[] sides, @JsonProperty("crewType") CrewType jsonCrewType, @JsonProperty("numberOfCurrentInhabitants") int jsonNumberOfCurrentInhabitants) {
         super(sides);
+        this.crewType = jsonCrewType;
+        this.numberOfCurrentInhabitants = jsonNumberOfCurrentInhabitants;
     }
 
     public CrewType getCrewType() {

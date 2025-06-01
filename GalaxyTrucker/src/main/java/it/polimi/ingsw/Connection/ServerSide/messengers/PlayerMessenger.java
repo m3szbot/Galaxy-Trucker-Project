@@ -166,15 +166,15 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     /**
-     * @return the string that the player sent to the server
+     * @return the string that the player sent to the server, without trailing whitespaces.
      * @author carlo
      */
     public String getPlayerString() throws PlayerDisconnectedException {
-        return getPlayerInput();
+        return getPlayerInput().trim();
     }
 
     /**
-     * @return the string that the player sent to the server
+     * @return the string that the player sent to the server.
      * @author carlo
      */
     private String getPlayerInput() throws PlayerDisconnectedException {

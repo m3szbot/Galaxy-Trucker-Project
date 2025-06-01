@@ -107,10 +107,18 @@ public class AssemblyThread implements Runnable {
             // Handle user input if available
             String input = inputQueue.poll();
             if (input != null) {
-                currentState.handleInput(input, this);
+                try {
+                    currentState.handleInput(input, this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             // Update current game state (e.g., timers, state transitions)
-            currentState.update(this);
+             try {
+                 currentState.update(this);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
         }
 
         if (!amIChoosing.get()) {
@@ -128,7 +136,9 @@ public class AssemblyThread implements Runnable {
 
             }
         }
-    }finally {
+    } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
             latch.countDown();
         }
     }
