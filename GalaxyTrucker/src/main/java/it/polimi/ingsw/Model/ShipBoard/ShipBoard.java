@@ -484,9 +484,13 @@ public class ShipBoard implements Serializable {
             component.accept(new SBAttributesUpdaterVisitor(this));
 
             // check for fracture, throw exceptions if needed
+            // TODO handle fracture
+            /*
             if (connectedSides > 1 && checkDisconnectionTrigger) {
                 checkFracturedShipBoard();
             }
+
+             */
         }
 
     }
