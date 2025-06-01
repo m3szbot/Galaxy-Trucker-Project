@@ -347,11 +347,18 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         while (true) {
             String input = getPlayerInput();
             try {
-                String[] parts = input.split(" ");
+                /*
+                trim removes the spaces before and after the user input string. Split creates an array
+                starting from the inserted string using one or more blank spaces (\\s+) as separator
+                 */
+                String[] parts = input.trim().split("\\s+");
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException();
+                }
                 coordinates[0] = Integer.parseInt(parts[0]);
                 coordinates[1] = Integer.parseInt(parts[1]);
                 return coordinates;
-            } catch (NumberFormatException e) {
+            } catch (IllegalArgumentException e) {
                 printMessage("You didn't enter the coordinates in the correct syntax (X Y), please reenter them: ");
             }
         }
