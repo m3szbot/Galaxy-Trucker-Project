@@ -32,7 +32,6 @@ public class GameMessageSender implements Runnable {
         while (running.get()) {
 
             if(userInput.get() != null) {
-            //da cambiare
                 try {
 
                     dataExchanger.sendString(userInput.getAndSet(null));

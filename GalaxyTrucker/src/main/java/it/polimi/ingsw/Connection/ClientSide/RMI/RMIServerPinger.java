@@ -38,7 +38,6 @@ public class RMIServerPinger implements Runnable{
                 Thread.sleep(2000);
 
             } catch (InterruptedException e) {
-                //the player has terminated the joining phase
             }
 
         }

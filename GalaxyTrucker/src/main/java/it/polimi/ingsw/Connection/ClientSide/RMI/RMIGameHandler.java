@@ -61,12 +61,17 @@ public class RMIGameHandler {
 
         try{
 
-            new Thread(rmiServerPinger).start();
+            Thread pinger = new Thread(rmiServerPinger);
+            pinger.start();
 
             virtualServer.registerClient(InetAddress.getLocalHost().getHostAddress());
             virtualServer.makePlayerJoin(virtualClient, clientInfo);
 
             while(virtualClient.isInGame() && serverConnected.get());
+
+            if(!pinger.isInterrupted()){
+                pinger.interrupt();
+            }
 
         } catch (UnknownHostException e) {
 
