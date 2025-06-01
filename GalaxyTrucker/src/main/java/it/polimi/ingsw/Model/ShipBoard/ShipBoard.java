@@ -4,8 +4,7 @@ import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Shipboard used to create and store the player's ship and it's attributes.
@@ -45,9 +44,6 @@ public class ShipBoard implements Serializable {
     private final boolean[][] errorsMatrix;
     // Matrix: [cols][rows]
 
-    // Keeps track of the connected components.
-    // If shipboard is fractured, different connected parts are inserted into separate lists and only one list is kept.
-    private final List<Component> connectedComponentsList;
     // real coordinates of the current center cabin
     private int centerCabinCol;
     private int centerCabinRow;
@@ -73,8 +69,6 @@ public class ShipBoard implements Serializable {
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
-        // create connectedComponentsList
-        this.connectedComponentsList = new ArrayList<>();
 
 
         // Initialize component matrix as empty
@@ -198,7 +192,6 @@ public class ShipBoard implements Serializable {
             // update shipboard attributes
             component.accept(sbAttributesUpdaterVisitor);
             // add component to connected components list
-            connectedComponentsList.add(component);
         }
     }
 
@@ -221,7 +214,7 @@ public class ShipBoard implements Serializable {
      */
     private boolean checkValidPlacement(int realCol, int realRow) {
         // first component to add (to center)
-        if (connectedComponentsList.isEmpty() && (realCol == getRealIndex(SB_CENTER_COL))
+        if ((getComponentCount() == 0) && (realCol == getRealIndex(SB_CENTER_COL))
                 && (realRow == getRealIndex(SB_CENTER_ROW)))
             return true;
 
@@ -232,6 +225,21 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * @return the number of current components in the shipboard.
+     * @author Boti
+     */
+    private int getComponentCount() {
+        int count = 0;
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                if (componentMatrix[i][j] != null)
+                    count++;
+            }
+        }
+        return count;
+    }
+
+    /**
      * Check if adjacent cells contain components.
      *
      * @return true if there is at least one adjacent component, false if all adjacent cells are empty.
@@ -239,10 +247,6 @@ public class ShipBoard implements Serializable {
     private boolean checkAdjacency(int realCol, int realRow) {
         return (componentMatrix[realCol - 1][realRow] != null || componentMatrix[realCol + 1][realRow] != null ||
                 componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
-    }
-
-    public Component[][] getComponentMatrix() {
-        return componentMatrix;
     }
 
     public boolean[][] getValidityMatrix() {
@@ -260,23 +264,12 @@ public class ShipBoard implements Serializable {
         return componentMatrix[getRealIndex(visibleCol)][getRealIndex(visibleRow)];
     }
 
-    /**
-     * @return the component at the given real coordinates.
-     */
-    public Component getRealComponent(int realCol, int realRow) {
-        return componentMatrix[realCol][realRow];
-    }
-
     public int getMatrixRows() {
         return componentMatrix.length;
     }
 
     public int getMatrixCols() {
         return componentMatrix[0].length;
-    }
-
-    public ShipBoardAttributes getShipBoardAttributes() {
-        return shipBoardAttributes;
     }
 
     /**
@@ -288,7 +281,7 @@ public class ShipBoard implements Serializable {
      */
     public boolean isErroneous() {
         // 1 component only - cannot be connected
-        if (connectedComponentsList.size() == 1)
+        if (getComponentCount() <= 1)
             return false;
 
         // more components
@@ -303,7 +296,6 @@ public class ShipBoard implements Serializable {
         // no errors found
         return false;
     }
-
 
     /**
      * Scans the ship structure to identify errors.
@@ -466,11 +458,9 @@ public class ShipBoard implements Serializable {
         return false;
     }
 
-
     /**
      * Removes a component from the specified position.
      * Updates the shipBoard and shipBoardAttributes
-     * TODO fracture
      *
      * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
      * @throws IllegalArgumentException if operation not possible.
@@ -489,18 +479,19 @@ public class ShipBoard implements Serializable {
         if (component != null) {
             // if more sides connected, check for fracture
             // component must be removed after checkSides
-            if (checkNumberOfConnectedSides(realCol, realRow) > 1) {
+            if (checkNumberOfConnectedSides(realCol, realRow) <= 1) {
                 // remove the single component and update
                 componentMatrix[realCol][realRow] = null;
                 shipBoardAttributes.destroyComponents(1);
                 component.accept(sbAttributesUpdaterVisitor);
-                // check for fracture
+
+            } else if (checkDisconnectionTrigger) {
+                // remove the single component and update
+                componentMatrix[realCol][realRow] = null;
+                shipBoardAttributes.destroyComponents(1);
+                component.accept(sbAttributesUpdaterVisitor);
+                // check for fracture - throw exceptions if needed
                 checkFracturedShipBoard();
-            } else {
-                // remove the single component and update
-                componentMatrix[realCol][realRow] = null;
-                shipBoardAttributes.destroyComponents(1);
-                component.accept(sbAttributesUpdaterVisitor);
             }
         }
 
@@ -535,21 +526,182 @@ public class ShipBoard implements Serializable {
         return count;
     }
 
-    private void checkFracturedShipBoard() throws FracturedShipBoardException {
+    /**
+     * Check if the shipboard is fractured after removing components.
+     *
+     * @throws FracturedShipBoardException
+     * @throws NoHumanCrewLeftException
+     * @author Boti
+     */
+    private void checkFracturedShipBoard() throws FracturedShipBoardException, NoHumanCrewLeftException {
+        List<ShipBoard> shipBoardsList = connectionMapper();
 
+        // if 1 possible shipboard, ok
+
+        // if >1 possible shipboards: fracture
+        if (shipBoardsList.size() > 1)
+            throw new FracturedShipBoardException(shipBoardsList);
+
+        // if 0 possible shipboards: no human crew left
+        if (shipBoardsList.isEmpty())
+            throw new NoHumanCrewLeftException();
 
     }
 
+    /**
+     * Map all the different connected parts of the shipboard and return them as a list of shipboards to choose from.
+     * Used when shipboard is fractured.
+     *
+     * @return list of possible shipboards to choose from.
+     * @authro Boti
+     */
     private List<ShipBoard> connectionMapper() {
         List<ShipBoard> shipBoardsList = new ArrayList<>();
+        // add shipboard reachable from current center cabin
+        shipBoardsList.add(bfsMapper(centerCabinCol, centerCabinRow));
+        // indicates if the component has already been mapped
+        boolean connected;
 
+        // check remaining components
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                connected = false;
+                for (ShipBoard shipBoard : shipBoardsList) {
+                    if (shipBoard.getRealComponent(i, j) != null) {
+                        connected = true;
+                        break;
+                    }
+                }
+                // component not yet mapped
+                if (!connected)
+                    shipBoardsList.add(bfsMapper(i, j));
+            }
+        }
+        // all components mapped
 
+        // remove shipboards without human crew
+        List<ShipBoard> toRemove = new ArrayList<>();
+        for (ShipBoard shipBoard : shipBoardsList) {
+            if (shipBoard.getShipBoardAttributes().getHumanCrewMembers() == 0)
+                toRemove.add(shipBoard);
+        }
+
+        // remove shipboard and its components from the real shipboard
+        for (ShipBoard shipBoard : toRemove) {
+            // remove shipboard components from actual shipboard
+            eraseShipboard(shipBoard);
+            // remove shipboard from the removal list
+            shipBoardsList.remove(shipBoard);
+        }
+
+        // return remaining possible shipboards to choose from
         return shipBoardsList;
     }
 
-    private ShipBoard bfsMapper() {
-        ShipBoard shipBoard = new ShipBoard(gameType);
-        return shipBoard;
+    /**
+     * Create a new shipboard from the components reachable from the given starting coordinates,
+     * and return it.
+     * That is, map the current reachable shipboard using Breadth First Search.
+     *
+     * @return the shipboard of reachable components.
+     */
+    private ShipBoard bfsMapper(int realCol, int realRow) {
+        ShipBoard tmpShipboard = new ShipBoard(gameType);
+        Integer[] currentCoord, neighborCoord;
+        Component currentComp, neighborComp;
+
+        // store coordinates, not components - search based on coordinates
+        Set<Integer[]> visited = new HashSet<>();
+        Queue<Integer[]> queue = new LinkedList<>();
+
+        currentCoord = new Integer[]{realCol, realRow};
+        tmpShipboard.componentMatrix[currentCoord[0]][currentCoord[1]] = getRealComponent(currentCoord[0], currentCoord[1]);
+        queue.offer(currentCoord);
+        visited.add(currentCoord);
+
+        while (!queue.isEmpty()) {
+            // get current node
+            currentCoord = queue.poll();
+            currentComp = getRealComponent(currentCoord[0], currentCoord[1]);
+
+            // front
+            neighborCoord = new Integer[]{currentCoord[0], currentCoord[1] - 1};
+            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            // check not yet visited connected neighbor
+            if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    checkCompatibleJunction(currentComp.getFront(), neighborComp.getBack())) {
+                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                visited.add(neighborCoord);
+                queue.offer(neighborCoord);
+            }
+
+            // back
+            neighborCoord = new Integer[]{currentCoord[0], currentCoord[1] + 1};
+            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            // check not yet visited connected neighbor
+            if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    checkCompatibleJunction(currentComp.getBack(), neighborComp.getFront())) {
+                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                visited.add(neighborCoord);
+                queue.offer(neighborCoord);
+            }
+
+            // left
+            neighborCoord = new Integer[]{currentCoord[0] - 1, currentCoord[1]};
+            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            // check not yet visited connected neighbor
+            if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    checkCompatibleJunction(currentComp.getLeft(), neighborComp.getRight())) {
+                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                visited.add(neighborCoord);
+                queue.offer(neighborCoord);
+            }
+
+            // right
+            neighborCoord = new Integer[]{currentCoord[0] + 1, currentCoord[1]};
+            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            // check not yet visited connected neighbor
+            if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    checkCompatibleJunction(currentComp.getRight(), neighborComp.getLeft())) {
+                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                visited.add(neighborCoord);
+                queue.offer(neighborCoord);
+            }
+        }
+        // all reachable components visited
+        return tmpShipboard;
+    }
+
+    /**
+     * @return the component at the given real coordinates.
+     */
+    public Component getRealComponent(int realCol, int realRow) {
+        return componentMatrix[realCol][realRow];
+    }
+
+    public ShipBoardAttributes getShipBoardAttributes() {
+        return shipBoardAttributes;
+    }
+
+    /**
+     * Remove the passed shipboard components from the actual shipboard.
+     */
+    private void eraseShipboard(ShipBoard tmpShipboard) {
+        // remove elements from the real shipboard
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                if (tmpShipboard.getRealComponent(i, j) != null) {
+                    this.componentMatrix[i][j] = null;
+                    this.shipBoardAttributes.destroyComponents(1);
+                }
+            }
+        }
+        // update attributes
+        this.shipBoardAttributes.updateShipBoardAttributes();
+    }
+
+    public Component[][] getComponentMatrix() {
+        return componentMatrix;
     }
 
     /**
@@ -849,83 +1001,5 @@ public class ShipBoard implements Serializable {
         // update shipboard attributes
         component.accept(sbAttributesUpdaterVisitor);
     }
-
-
-    /**
-     * Checks if any components are not connected to the main structure.
-     * If a component is unreachable, it is removed.
-     *
-     * @param shipBoardAttributes The ShipBoard object that tracks destroyed components.
-     * @return True if any unreachable components were found, false otherwise.
-     * @author Giacomo
-     */
-    /*
-    public boolean checkNotReachable(ShipBoardAttributes shipBoardAttributes) {
-        boolean result = false;
-        int flag = 1;
-        boolean[][] mat = new boolean[12][12];
-        while (flag == 1) {
-            flag = 0;
-            for (int i = 0; i < 12; i++) {
-                for (int j = 0; j < 12; j++) {
-                    mat[i][j] = false;
-                }
-            }
-
-            goDownChecking(6, 6, mat);
-            for (int i = 0; i < 12; i++) {
-                for (int j = 0; j < 12; j++) {
-                    if (componentMatrix[i][j] != null) {
-                        if (!mat[i][j]) {
-                            flag = 1;
-                            result = true;
-                            removeComponent(j + 1, i + 1, false);
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    }
-    */
-
-    /**
-     * Recursively marks reachable components.
-     *
-     * @param x   The x-coordinate.
-     * @param y   The y-coordinate.
-     * @param mat The boolean matrix tracking visited positions.
-     * @author Giacomo
-     */
-    /*
-    private void goDownChecking(int x, int y, boolean[][] mat) {
-        if (x < 0 || x >= 12 || y < 0 || y >= 12) return;
-        if (componentMatrix[x][y] == null || mat[x][y]) return;
-        mat[x][y] = true;
-        // Right
-        if (y + 1 < 12 && componentMatrix[x][y + 1] != null &&
-                isCompatible(componentMatrix[x][y].getRight(), componentMatrix[x][y + 1].getLeft())) {
-            goDownChecking(x, y + 1, mat);
-        }
-
-        // Left
-        if (y - 1 >= 0 && componentMatrix[x][y - 1] != null &&
-                isCompatible(componentMatrix[x][y].getLeft(), componentMatrix[x][y - 1].getRight())) {
-            goDownChecking(x, y - 1, mat);
-        }
-
-        // Down
-        if (x + 1 < 12 && componentMatrix[x + 1][y] != null &&
-                isCompatible(componentMatrix[x][y].getBack(), componentMatrix[x + 1][y].getFront())) {
-            goDownChecking(x + 1, y, mat);
-        }
-
-        // Up
-        if (x - 1 >= 0 && componentMatrix[x - 1][y] != null &&
-                isCompatible(componentMatrix[x][y].getFront(), componentMatrix[x - 1][y].getBack())) {
-            goDownChecking(x - 1, y, mat);
-        }
-    }
-    */
 
 }
