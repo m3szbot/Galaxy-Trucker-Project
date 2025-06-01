@@ -76,7 +76,17 @@ public class GameMessenger {
         playerMessengerMap.get(player).clearPlayerResources();
         playerMessengerMap.remove(player);
         ClientMessenger.getCentralServer().removeNickName(player.getNickName());
-        System.out.println("Player " + player.getNickName() + " disconnected!");
+        System.out.println(String.format("Player %s disconnected!", player.getNickName()));
+        sendMessageToAll(String.format("Player %s disconnected!", player.getNickName()));
+    }
+
+    /**
+     * Send message to all players.
+     */
+    public void sendMessageToAll(String message) {
+        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
+            playerMessenger.printMessage(message);
+        }
     }
 
     /**
@@ -98,15 +108,6 @@ public class GameMessenger {
         gameInformation.getDisconnectedPlayerList().remove(player);
         gameInformation.getPlayerList().add(player);
         sendMessageToAll(String.format("%s has been reconnected", player));
-    }
-
-    /**
-     * Send message to all players.
-     */
-    public void sendMessageToAll(String message) {
-        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
-            playerMessenger.printMessage(message);
-        }
     }
 
     /**
