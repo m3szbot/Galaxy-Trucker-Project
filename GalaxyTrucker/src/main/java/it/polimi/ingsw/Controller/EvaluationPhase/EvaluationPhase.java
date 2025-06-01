@@ -80,10 +80,21 @@ public class EvaluationPhase extends Phase {
         }
         // sort players based on credits in descending order
         creditsList.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+        
         // create message string
         StringBuilder result = new StringBuilder();
+        int pos = 1;
         for (Map.Entry<Player, Integer> entry : creditsList) {
-            result.append(entry.getKey().getNickName()).append(": ").append(entry.getValue()).append("\n");
+            // print position
+            switch (pos) {
+                case 1 -> result.append("1st: ");
+                case 2 -> result.append("2nd: ");
+                case 3 -> result.append("3rd: ");
+                default -> result.append(String.format("%dth: ", pos));
+            }
+            // print player and credits
+            result.append(String.format("%s - %d\n", entry.getKey().getNickName(), entry.getValue()));
+            pos++;
         }
         return result.toString();
     }
