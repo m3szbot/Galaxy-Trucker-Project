@@ -22,6 +22,7 @@ public class AssemblyThread implements Runnable {
     AtomicBoolean isfinished = new AtomicBoolean(false);
     AtomicBoolean amIChoosing = new AtomicBoolean(false);
     AtomicBoolean end = new AtomicBoolean(false);
+    Thread t;
 
 
     public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, CountDownLatch latch) {
@@ -64,7 +65,7 @@ public class AssemblyThread implements Runnable {
         assemblyProtocol.getHourGlass().twist(assemblyProtocol, gameInformation.getPlayerList());
 
         // Separate thread for reading user input from the console
-        new Thread(() -> {
+         t = new Thread(() -> {
             AtomicBoolean disconnected = new AtomicBoolean(false);
             while (!end.get()) {
                 if (!disconnected.get()) {
@@ -93,7 +94,8 @@ public class AssemblyThread implements Runnable {
                     }
                 }
             }
-        }).start();
+        });
+        t.start();
 
 
         // Main non-blocking game loop
@@ -139,6 +141,7 @@ public class AssemblyThread implements Runnable {
     } catch (Exception e) {
             e.printStackTrace();
         }finally {
+            t.interrupt();
             latch.countDown();
         }
     }
