@@ -40,7 +40,6 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         System.out.println("Gained credit: " + gainedCredit);
         System.out.println("Blow type: " + blowType.toString());
         System.out.println("Requirement number: " + requirementNumber + " (fire power)");
-
         printBlows(blows);
 
 

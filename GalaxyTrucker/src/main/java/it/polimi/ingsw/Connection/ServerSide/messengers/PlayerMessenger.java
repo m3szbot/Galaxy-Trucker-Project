@@ -195,6 +195,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             } catch (RemoteException e) {
                 System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
                         "a disconnection probably occurred");
+                //add disconnect
                 throw new PlayerDisconnectedException(player);
 
             }
