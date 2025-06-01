@@ -10,9 +10,8 @@ public class FracturedShipBoardException extends RuntimeException {
     Player player;
     List<ShipBoard> shipBoardsList;
 
-    public FracturedShipBoardException(String message, Player player, List<ShipBoard> shipBoardsList) {
-        super(message);
-        this.player = player;
+    public FracturedShipBoardException(List<ShipBoard> shipBoardsList) {
+        super("Exception: the shipboard is fractured into more pieces.");
         this.shipBoardsList = shipBoardsList;
     }
 
