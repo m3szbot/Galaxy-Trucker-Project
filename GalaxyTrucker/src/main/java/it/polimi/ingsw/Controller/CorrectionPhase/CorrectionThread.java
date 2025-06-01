@@ -32,6 +32,7 @@ public class CorrectionThread implements Runnable {
     public void run() {
         // correct errors
         if (errorCorrector()) {
+            // end thread
             return;
         }
         // errors corrected
@@ -39,6 +40,7 @@ public class CorrectionThread implements Runnable {
 
         // select crew types
         if (selectCrewTypes()) {
+            // end thread
             return;
         }
         // crew selection finished
@@ -69,7 +71,8 @@ public class CorrectionThread implements Runnable {
             playerMessenger.printMessage("Enter column and row of component to remove (col row):");
 
             // elaborate player input
-            while (!removeComponentSuccess) {
+            int removeTrials = 5;
+            while (!removeComponentSuccess && removeTrials > 0) {
                 // get player input
                 try {
                     coordinates = playerMessenger.getPlayerCoordinates();
@@ -89,6 +92,7 @@ public class CorrectionThread implements Runnable {
                 } catch (IllegalArgumentException e) {
                     // print exception message to player
                     playerMessenger.printMessage(e.getMessage());
+                    removeTrials--;
 
                 } catch (NoHumanCrewLeftException e) {
                     // eliminate player
@@ -102,6 +106,8 @@ public class CorrectionThread implements Runnable {
                     playerMessenger.printMessage(e.getMessage());
                     FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, e);
                     handler.start();
+                    // TODO delete, added for safety
+                    removeTrials--;
                 }
                 // try again if couldn't remove selected component
             }
@@ -141,7 +147,8 @@ public class CorrectionThread implements Runnable {
                     playerMessenger.printShipboard(shipBoard);
 
                     // elaborate player input
-                    while (!selectCrewSuccess) {
+                    int selectTrials = 5;
+                    while (!selectCrewSuccess && selectTrials > 0) {
                         // get player input string
                         message = String.format("Select the crew type for the cabin at %d %d (Human/Purple/Brown): ", i + 1, j + 1);
                         playerMessenger.printMessage(message);
@@ -172,6 +179,7 @@ public class CorrectionThread implements Runnable {
                             // invalid input
                             default -> {
                                 playerMessenger.printMessage("Please enter a valid input!");
+                                selectTrials--;
                             }
                         }
 
@@ -183,6 +191,7 @@ public class CorrectionThread implements Runnable {
                                 // failed to set crew
                                 playerMessenger.printMessage(e.getMessage());
                                 selectCrewSuccess = false;
+                                selectTrials--;
                             }
                         }
                         // loop until crew is correctly set for the current cabin
