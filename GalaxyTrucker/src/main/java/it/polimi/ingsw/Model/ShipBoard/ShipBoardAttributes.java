@@ -12,8 +12,8 @@ import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.*;
  * @author Giacomo, Boti
  */
 public class ShipBoardAttributes implements Serializable {
+    // cannot have shipboard as attribute - circular reference
     // All attributes must be Serializable or transient
-    private final ShipBoard shipBoard;
 
     // STATIC SHIP ATTRIBUTES
     // covered sides of the ship
@@ -59,8 +59,6 @@ public class ShipBoardAttributes implements Serializable {
      * @author Giacomo, Boti
      */
     public ShipBoardAttributes(ShipBoard shipBoard) {
-        this.shipBoard = shipBoard;
-
         coveredSides = new boolean[]{false, false, false, false};
         singleEnginePower = 0;
         singleCannonPower = 0;
@@ -76,10 +74,6 @@ public class ShipBoardAttributes implements Serializable {
         remainingBlueSlots = 0;
         destroyedComponents = 0;
         credits = 0;
-    }
-
-    public ShipBoard getShipBoard() {
-        return shipBoard;
     }
 
     public boolean[] getCoveredSides() {
@@ -161,13 +155,13 @@ public class ShipBoardAttributes implements Serializable {
      * To use when shipBoard is fractured.
      * For normal updates use ComponentVisitor.
      */
-    void updateShipBoardAttributes() {
-        updateCoveredSides();
-        updateCannons();
-        updateEngines();
-        updateRemainingBatteries();
-        updateCabinsAlienSupports();
-        updateGoods();
+    void updateShipBoardAttributes(ShipBoard shipBoard) {
+        updateCoveredSides(shipBoard);
+        updateCannons(shipBoard);
+        updateEngines(shipBoard);
+        updateRemainingBatteries(shipBoard);
+        updateCabinsAlienSupports(shipBoard);
+        updateGoods(shipBoard);
     }
 
     /**
@@ -176,7 +170,7 @@ public class ShipBoardAttributes implements Serializable {
      *
      * @author Boti
      */
-    void updateCoveredSides() {
+    void updateCoveredSides(ShipBoard shipBoard) {
         coveredSides = new boolean[]{false, false, false, false};
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
@@ -196,7 +190,7 @@ public class ShipBoardAttributes implements Serializable {
      *
      * @author Boti
      */
-    void updateCannons() {
+    void updateCannons(ShipBoard shipBoard) {
         singleCannonPower = 0;
         numberForwardDoubleCannons = 0;
         numberLateralDoubleCannons = 0;
@@ -226,7 +220,7 @@ public class ShipBoardAttributes implements Serializable {
      *
      * @author Boti
      */
-    void updateEngines() {
+    void updateEngines(ShipBoard shipBoard) {
         singleEnginePower = 0;
         doubleEnginePower = 0;
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
@@ -247,7 +241,7 @@ public class ShipBoardAttributes implements Serializable {
      *
      * @author Boti
      */
-    void updateRemainingBatteries() {
+    void updateRemainingBatteries(ShipBoard shipBoard) {
         remainingBatteries = 0;
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
@@ -268,7 +262,7 @@ public class ShipBoardAttributes implements Serializable {
      * @throws NoHumanCrewLeftException if no human crew left and player forced to give up.
      * @author Boti
      */
-    void updateCabinsAlienSupports() throws NoHumanCrewLeftException {
+    void updateCabinsAlienSupports(ShipBoard shipBoard) throws NoHumanCrewLeftException {
         // reset crew members, aliens
         crewMembers = 0;
         purpleAlien = false;
@@ -322,7 +316,7 @@ public class ShipBoardAttributes implements Serializable {
      *
      * @author Boti
      */
-    void updateGoods() {
+    void updateGoods(ShipBoard shipBoard) {
         goods = new int[]{0, 0, 0, 0};
         remainingRedSlots = 0;
         remainingBlueSlots = 0;

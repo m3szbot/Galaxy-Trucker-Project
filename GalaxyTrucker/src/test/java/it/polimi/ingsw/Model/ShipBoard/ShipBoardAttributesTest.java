@@ -26,7 +26,6 @@ public class ShipBoardAttributesTest {
 
     @Test
     void testSetup() {
-        assertEquals(shipBoard, shipBoardAttributes.getShipBoard());
         assertEquals(2, shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW).getCrewMembers());
         assertEquals(2, shipBoardAttributes.getCrewMembers());
         assertFalse(shipBoardAttributes.getCoveredSides()[0]);
@@ -82,7 +81,7 @@ public class ShipBoardAttributesTest {
     void addRemovePurpleAlienCabin() throws NotPermittedPlacementException {
         // 1 cabin(2humans) 1 Cabin(purple alien) 1 Alien support(purple)
         // add
-        shipBoard.addComponent(6, 7, new Cabin(singleSides));
+        shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
 
@@ -108,7 +107,7 @@ public class ShipBoardAttributesTest {
     void addRemovePurpleAlienSupport() throws NotPermittedPlacementException {
         // 1 Cabin(2humans) 1 Cabin(purple) 1 Alien support(purple)
         // add
-        shipBoard.addComponent(6, 7, new Cabin(singleSides));
+        shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
 
@@ -130,7 +129,7 @@ public class ShipBoardAttributesTest {
     void addRemoveBrownAlienCabin() throws NotPermittedPlacementException {
         // 1 Cabin(2 humans) 1 Cabin(brown) 1 Alien support(brown)
         // add
-        shipBoard.addComponent(6, 7, new Cabin(singleSides));
+        shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
         shipBoard.setCrewType(7, 7, CrewType.Brown);
 
@@ -152,7 +151,7 @@ public class ShipBoardAttributesTest {
     void addRemoveBrownAlienSupport() throws NotPermittedPlacementException {
         // 1 Cabin(2 humans) 1 Cabin(Brown alien) 1 Alien support (brown)
         // must add cabin so there are enough humans
-        shipBoard.addComponent(6, 7, new Cabin(singleSides));
+        shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
 
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
         shipBoard.setCrewType(7, 7, CrewType.Brown);
@@ -274,7 +273,7 @@ public class ShipBoardAttributesTest {
     @Test
     void addRemoveHumanCrew() throws NotPermittedPlacementException {
         // add
-        shipBoard.addComponent(8, 7, new Cabin(singleSides));
+        shipBoard.addComponent(8, 7, new Cabin(singleSides, CrewType.Human, 2));
         assertEquals(4, shipBoardAttributes.getCrewMembers());
 
         // remove

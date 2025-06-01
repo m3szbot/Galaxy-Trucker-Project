@@ -241,7 +241,7 @@ public class ShipBoardTest {
     @Test
     void setCrewRemoveCrewMember() throws NotPermittedPlacementException {
         // Cabin(2 humans) Cabin(1 alien) AlienSupport
-        shipBoard.addComponent(new Cabin(universalSides), 6, 7);
+        shipBoard.addComponent(new Cabin(universalSides, CrewType.Human, 2), 6, 7);
         shipBoard.addComponent(new AlienSupport(universalSides, true), 8, 7);
         shipBoard.setCrewType(7, 7, CrewType.Purple);
         assertEquals(3, shipBoard.getShipBoardAttributes().getCrewMembers());
@@ -529,7 +529,7 @@ public class ShipBoardTest {
 
     @Test
     void addComponent4() throws NotPermittedPlacementException {
-        shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
+        shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}, CrewType.Human, 2), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(), 4);
         shipBoard.removeComponent(7, 8, true);
         assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(), 2);
@@ -561,7 +561,7 @@ public class ShipBoardTest {
 
     @Test
     void addComponent8() throws NotPermittedPlacementException {
-        shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 8);
+        shipBoard.addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 7, 8);
         assertEquals(shipBoard.getShipBoardAttributes().getCrewMembers(), 4);
         shipBoard.addComponent(new AlienSupport(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true), 8, 8);
         shipBoard.setCrewType(7, 8, CrewType.Purple);

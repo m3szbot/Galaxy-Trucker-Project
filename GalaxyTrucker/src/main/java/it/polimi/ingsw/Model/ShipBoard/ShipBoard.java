@@ -33,7 +33,6 @@ public class ShipBoard implements Serializable {
     public static final int SB_FIRST_REAL_ROW = 4;
 
     // final Object: reference cannot be changed (but state/elements can change)
-    private final transient ComponentVisitor<Void> sbAttributesUpdaterVisitor;
     private final GameType gameType;
     private final ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
@@ -65,7 +64,6 @@ public class ShipBoard implements Serializable {
     public ShipBoard(GameType gameType) {
         this.gameType = gameType;
         this.shipBoardAttributes = new ShipBoardAttributes(this);
-        this.sbAttributesUpdaterVisitor = new SBAttributesUpdaterVisitor(shipBoardAttributes);
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
@@ -154,7 +152,7 @@ public class ShipBoard implements Serializable {
         // set center
         centerCabinCol = getRealIndex(SB_CENTER_COL);
         centerCabinRow = getRealIndex(SB_CENTER_ROW);
-        starterCabin.accept(sbAttributesUpdaterVisitor);
+        starterCabin.accept(new SBAttributesUpdaterVisitor(this));
     }
 
     /**
@@ -190,7 +188,7 @@ public class ShipBoard implements Serializable {
             // add component to shipBoard
             componentMatrix[col][row] = component;
             // update shipboard attributes
-            component.accept(sbAttributesUpdaterVisitor);
+            component.accept(new SBAttributesUpdaterVisitor(this));
             // add component to connected components list
         }
     }
@@ -483,7 +481,7 @@ public class ShipBoard implements Serializable {
             // remove given component
             componentMatrix[realCol][realRow] = null;
             shipBoardAttributes.destroyComponents(1);
-            component.accept(sbAttributesUpdaterVisitor);
+            component.accept(new SBAttributesUpdaterVisitor(this));
 
             // check for fracture, throw exceptions if needed
             if (connectedSides > 1 && checkDisconnectionTrigger) {
@@ -693,7 +691,7 @@ public class ShipBoard implements Serializable {
             }
         }
         // update attributes
-        this.shipBoardAttributes.updateShipBoardAttributes();
+        this.shipBoardAttributes.updateShipBoardAttributes(this);
     }
 
     public Component[][] getComponentMatrix() {
@@ -760,7 +758,7 @@ public class ShipBoard implements Serializable {
         if (component.getBatteryPower() - 1 >= 0) {
             ((Battery) component).removeBattery();
             // update shipboard attributes
-            component.accept(sbAttributesUpdaterVisitor);
+            component.accept(new SBAttributesUpdaterVisitor(this));
         } else
             throw new IllegalArgumentException("Not enough batteries at the selected component.");
     }
@@ -790,7 +788,7 @@ public class ShipBoard implements Serializable {
         if (component.getCrewMembers() >= 1) {
             ((Cabin) component).removeInhabitant();
             // update shipboard attributes
-            component.accept(sbAttributesUpdaterVisitor);
+            component.accept(new SBAttributesUpdaterVisitor(this));
         }
         // 0 crew on cabin
         else {
@@ -839,12 +837,12 @@ public class ShipBoard implements Serializable {
             // all conditions met to change crew type
             try {
                 ((Cabin) component).setCrewType(crewType);
-                component.accept(sbAttributesUpdaterVisitor);
+                component.accept(new SBAttributesUpdaterVisitor(this));
             } catch (NoHumanCrewLeftException e) {
                 // revert changes if no human crew would be left (not done by try)
                 ((Cabin) component).setCrewType(originalCrewType);
                 ((Cabin) component).setNumberOfCurrentInhabitants(originalCrewCount);
-                component.accept(sbAttributesUpdaterVisitor);
+                component.accept(new SBAttributesUpdaterVisitor(this));
                 throw new IllegalArgumentException("Cannot change crew to alien: no human crew would be left.");
             }
         }
@@ -956,7 +954,7 @@ public class ShipBoard implements Serializable {
         // no problems, remove goods from component
         ((Storage) component).removeGoods(goods);
         // update shipboard attributes
-        component.accept(sbAttributesUpdaterVisitor);
+        component.accept(new SBAttributesUpdaterVisitor(this));
     }
 
     /**
@@ -995,7 +993,7 @@ public class ShipBoard implements Serializable {
         // no problems, add goods to component
         ((Storage) component).addGoods(goods);
         // update shipboard attributes
-        component.accept(sbAttributesUpdaterVisitor);
+        component.accept(new SBAttributesUpdaterVisitor(this));
     }
 
 }

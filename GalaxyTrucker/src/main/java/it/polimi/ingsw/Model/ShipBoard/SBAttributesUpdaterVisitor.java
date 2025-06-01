@@ -8,10 +8,10 @@ import it.polimi.ingsw.Model.Components.*;
  * @author Boti
  */
 public class SBAttributesUpdaterVisitor implements ComponentVisitor {
-    ShipBoardAttributes shipBoardAttributes;
+    ShipBoard shipBoard;
 
-    public SBAttributesUpdaterVisitor(ShipBoardAttributes shipBoardAttributes) {
-        this.shipBoardAttributes = shipBoardAttributes;
+    public SBAttributesUpdaterVisitor(ShipBoard shipBoard) {
+        this.shipBoard = shipBoard;
     }
 
     // Void is used to signal no returned type when using Generics
@@ -19,25 +19,25 @@ public class SBAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Void visitAlienSupport(AlienSupport alienSupport) {
-        shipBoardAttributes.updateCabinsAlienSupports();
+        shipBoard.getShipBoardAttributes().updateCabinsAlienSupports(shipBoard);
         return null;
     }
 
     @Override
     public Void visitBattery(Battery battery) {
-        shipBoardAttributes.updateRemainingBatteries();
+        shipBoard.getShipBoardAttributes().updateRemainingBatteries(shipBoard);
         return null;
     }
 
     @Override
     public Void visitCabin(Cabin cabin) {
-        shipBoardAttributes.updateCabinsAlienSupports();
+        shipBoard.getShipBoardAttributes().updateCabinsAlienSupports(shipBoard);
         return null;
     }
 
     @Override
     public Void visitCannon(Cannon cannon) {
-        shipBoardAttributes.updateCannons();
+        shipBoard.getShipBoardAttributes().updateCannons(shipBoard);
         return null;
     }
 
@@ -48,19 +48,19 @@ public class SBAttributesUpdaterVisitor implements ComponentVisitor {
 
     @Override
     public Void visitEngine(Engine engine) {
-        shipBoardAttributes.updateEngines();
+        shipBoard.getShipBoardAttributes().updateEngines(shipBoard);
         return null;
     }
 
     @Override
     public Void visitShield(Shield shield) {
-        shipBoardAttributes.updateCoveredSides();
+        shipBoard.getShipBoardAttributes().updateCoveredSides(shipBoard);
         return null;
     }
 
     @Override
     public Void visitStorage(Storage storage) {
-        shipBoardAttributes.updateGoods();
+        shipBoard.getShipBoardAttributes().updateGoods(shipBoard);
         return null;
     }
 }

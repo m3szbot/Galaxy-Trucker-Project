@@ -18,7 +18,7 @@ class CabinTest {
     @Test
     void constructor_shouldInitializeFieldsCorrectly() {
         // Arrange & Act
-        Cabin cabin = new Cabin(TEST_SIDES);
+        Cabin cabin = new Cabin(TEST_SIDES, CrewType.Human, 2);
 
         // Assert
         assertArrayEquals(TEST_SIDES, new SideType[]{
@@ -47,7 +47,7 @@ class CabinTest {
     @Test
     void removeInhabitant_shouldDecrementCount() {
         // Arrange
-        Cabin cabin = new Cabin(TEST_SIDES);
+        Cabin cabin = new Cabin(TEST_SIDES, CrewType.Human, 2);
         cabin.setCrewType(CrewType.Human); // Defaults to 2 inhabitants
 
         // Act
@@ -60,7 +60,7 @@ class CabinTest {
     @Test
     void removeInhabitant_whenZero_shouldNotGoNegative() {
         // Arrange
-        Cabin cabin = new Cabin(TEST_SIDES);
+        Cabin cabin = new Cabin(TEST_SIDES, CrewType.Human, 2);
         cabin.setCrewType(CrewType.Purple); // Sets to 1 inhabitant
         cabin.removeInhabitant(); // Should be 0 now
 
