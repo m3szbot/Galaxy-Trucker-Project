@@ -243,6 +243,79 @@ public class ShipBoardTest {
             shipBoard.addComponent(4, i, singleConnector);
 
         generalViewTUI.printShipboard(shipBoard);
+        assertFalse(shipBoard.isErroneous());
+    }
+
+    @Test
+    void fillShipBoardWithDoubleConnectors() throws NotPermittedPlacementException {
+        // check if shipboard borders are set correctly
+
+        // col 7
+        shipBoard.addComponent(doubleConnector, 7, 6);
+        shipBoard.addComponent(doubleConnector, 7, 8);
+        // col 8
+        shipBoard.addComponent(doubleConnector, 8, 8);
+        shipBoard.addComponent(doubleConnector, 8, 9);
+        shipBoard.addComponent(doubleConnector, 8, 7);
+        shipBoard.addComponent(doubleConnector, 8, 6);
+        shipBoard.addComponent(doubleConnector, 8, 5);
+        // col 9
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(9, i, doubleConnector);
+        // col 10
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(10, i, doubleConnector);
+        // col 6
+        shipBoard.addComponent(doubleConnector, 6, 6);
+        shipBoard.addComponent(doubleConnector, 6, 5);
+        shipBoard.addComponent(doubleConnector, 6, 7);
+        shipBoard.addComponent(doubleConnector, 6, 8);
+        shipBoard.addComponent(doubleConnector, 6, 9);
+        // col 5
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(5, i, doubleConnector);
+        // col 4
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(4, i, doubleConnector);
+
+        generalViewTUI.printShipboard(shipBoard);
+        assertFalse(shipBoard.isErroneous());
+    }
+
+    @Test
+    void fillShipBoardWithUniversalConnectors() throws NotPermittedPlacementException {
+        // check if shipboard borders are set correctly
+
+        // col 7
+        shipBoard.addComponent(universalConnector, 7, 6);
+        shipBoard.addComponent(universalConnector, 7, 8);
+        // col 8
+        shipBoard.addComponent(universalConnector, 8, 8);
+        shipBoard.addComponent(universalConnector, 8, 9);
+        shipBoard.addComponent(universalConnector, 8, 7);
+        shipBoard.addComponent(universalConnector, 8, 6);
+        shipBoard.addComponent(universalConnector, 8, 5);
+        // col 9
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(9, i, universalConnector);
+        // col 10
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(10, i, universalConnector);
+        // col 6
+        shipBoard.addComponent(universalConnector, 6, 6);
+        shipBoard.addComponent(universalConnector, 6, 5);
+        shipBoard.addComponent(universalConnector, 6, 7);
+        shipBoard.addComponent(universalConnector, 6, 8);
+        shipBoard.addComponent(universalConnector, 6, 9);
+        // col 5
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(5, i, universalConnector);
+        // col 4
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(4, i, universalConnector);
+
+        generalViewTUI.printShipboard(shipBoard);
+        assertFalse(shipBoard.isErroneous());
     }
 
     @Test
@@ -286,17 +359,10 @@ public class ShipBoardTest {
     }
 
     @Test
-    void floatingObstructedCannonError() throws NotPermittedPlacementException {
-        // Cabin Cannon(left)
-        assertFalse(shipBoard.isErroneous());
-        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialLeft, true));
-        assertTrue(shipBoard.isErroneous());
-
-    }
-
-    @Test
     void fillShipBoardWithSpecialConnectors() throws NotPermittedPlacementException {
         // check if shipboard borders are set correctly
+        // check if error correction covers whole shipboard
+        assertFalse(shipBoard.isErroneous());
 
         // col 7
         shipBoard.addComponent(specialConnector, 7, 6);
@@ -327,7 +393,20 @@ public class ShipBoardTest {
             shipBoard.addComponent(4, i, specialConnector);
 
         generalViewTUI.printShipboard(shipBoard);
+        // check correct error count
+        assertTrue(shipBoard.isErroneous());
+        assertEquals(27, shipBoard.getErrorCount());
     }
+
+    @Test
+    void floatingObstructedCannonError() throws NotPermittedPlacementException {
+        // Cabin Cannon(left)
+        assertFalse(shipBoard.isErroneous());
+        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialLeft, true));
+        assertTrue(shipBoard.isErroneous());
+
+    }
+
 
     @Test
     void removeBattery() throws NotPermittedPlacementException {
