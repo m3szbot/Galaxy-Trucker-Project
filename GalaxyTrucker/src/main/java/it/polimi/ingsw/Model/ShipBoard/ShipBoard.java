@@ -311,42 +311,36 @@ public class ShipBoard implements Serializable {
         // iterate columns
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
             // iterate rows
-            for (int realRow = SB_FIRST_REAL_ROW; realRow < SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
                 // default: no error in cell
                 // override if cell erroneous
                 errorsMatrix[realCol][realRow] = false;
                 component = componentMatrix[realCol][realRow];
 
-                // no component, no errors
-                if (component == null)
-                    break;
 
                 // if component is present, check for errors
-
-                // check if adjacent
-                if (!checkAdjacency(realCol, realRow)) {
-                    errorsMatrix[realCol][realRow] = true;
-                    break;
-                }
-
-                // check junctions
-                if (!checkCorrectJunctions(realCol, realRow)) {
-                    errorsMatrix[realCol][realRow] = true;
-                    break;
-                }
-
-                // check if Engine
-                if (component instanceof Engine) {
-                    if (checkEngineErrors(realCol, realRow)) {
+                if (component != null) {
+                    // check if adjacent
+                    if (!checkAdjacency(realCol, realRow)) {
                         errorsMatrix[realCol][realRow] = true;
-                        break;
                     }
-                }
-                // check if Cannon
-                else if (component instanceof Cannon) {
-                    if (checkCannonErrors(realCol, realRow)) {
+
+                    // check junctions
+                    else if (!checkCorrectJunctions(realCol, realRow)) {
                         errorsMatrix[realCol][realRow] = true;
-                        break;
+                    }
+
+                    // check if Engine
+                    else if (component instanceof Engine) {
+                        if (checkEngineErrors(realCol, realRow)) {
+                            errorsMatrix[realCol][realRow] = true;
+                        }
+                    }
+                    // check if Cannon
+                    else if (component instanceof Cannon) {
+                        if (checkCannonErrors(realCol, realRow)) {
+                            errorsMatrix[realCol][realRow] = true;
+                        }
                     }
                 }
             }
@@ -415,25 +409,18 @@ public class ShipBoard implements Serializable {
         Cannon component = (Cannon) componentMatrix[realCol][realRow];
         // cannon obstructed
         // front cannon obstructed
-        if (component.getFront().equals(SideType.Special)) {
-            if (componentMatrix[realCol][realRow - 1] != null)
-                return true;
-        }
-        // right cannon
-        else if (component.getRight().equals(SideType.Special)) {
-            if (componentMatrix[realCol + 1][realRow] != null)
-                return true;
-        }
-        // left cannon
-        else if (component.getLeft().equals(SideType.Special)) {
-            if (componentMatrix[realCol - 1][realRow] != null)
-                return true;
-        }
-        // back cannon
-        else {
-            if (componentMatrix[realCol][realRow + 1] != null)
-                return true;
-        }
+        if (component.getFront().equals(SideType.Special) && componentMatrix[realCol][realRow - 1] != null)
+            return true;
+            // back cannon
+        else if (component.getBack().equals(SideType.Special) && componentMatrix[realCol][realRow + 1] != null)
+            return true;
+            // right cannon
+        else if (component.getRight().equals(SideType.Special) && componentMatrix[realCol + 1][realRow] != null)
+            return true;
+            // left cannon
+        else if (component.getLeft().equals(SideType.Special) && componentMatrix[realCol - 1][realRow] != null)
+            return true;
+
         // no errors found
         return false;
     }
