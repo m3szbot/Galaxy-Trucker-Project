@@ -15,6 +15,7 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.ViewServerInvokableMethods;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 
 /**
@@ -188,8 +189,21 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             try {
                 return socketDataExchanger.getString();
             } catch (IOException e) {
-                System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
-                        "a disconnection probably occurred");
+
+                if(e instanceof SocketTimeoutException){
+                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                    synchronized (dataContainerLock){
+                        dataContainer.clearContainer();
+                        dataContainer.setCommand("disconnect");
+                        sendDataContainer();
+                    }
+                }
+                else {
+
+                    System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                            "a disconnection probably occurred");
+                }
+
                 throw new PlayerDisconnectedException(player);
             }
         } else {
@@ -197,9 +211,17 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             try {
                 return virtualClient.getString();
             } catch (RemoteException e) {
-                System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
-                        "a disconnection probably occurred");
-                //add disconnect
+
+                if(e.getMessage().equals("inactivity")){
+
+                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                }
+                else {
+
+                    System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                            "a disconnection probably occurred");
+                }
+
                 throw new PlayerDisconnectedException(player);
 
             }

@@ -123,7 +123,8 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
             if(time == TIMEOUT){
                 System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
-                throw new RemoteException("Player was kicked out because of inactivity");
+                setInGame(false);
+                throw new RemoteException("inactivity");
             }
 
             input = userInput.getAndSet(null);

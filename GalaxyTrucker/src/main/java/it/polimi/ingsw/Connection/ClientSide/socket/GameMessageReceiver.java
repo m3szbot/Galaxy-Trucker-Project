@@ -66,7 +66,12 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             setGamePhase(dataContainer.getGamePhase());
         } else if (command.equals("endGame")) {
             endGame();
-        } else {
+        }
+        else if(command.equals("disconnect")){
+            System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
+            running.set(false);
+        }
+        else {
             callView(dataContainer);
         }
     }
