@@ -43,14 +43,37 @@ public class ShipBoardTest {
     Component specialConnector = new Component(specialSides);
 
 
+    @Test
+    void checkFloatingBottomRightCorner() throws NotPermittedPlacementException {
+        // create bridge to bottom right corner, then remove connection one by one
+        shipBoard.addComponent(universalConnector, 7, 8);
+        shipBoard.addComponent(universalConnector, 8, 8);
+        shipBoard.addComponent(universalConnector, 9, 8);
+        shipBoard.addComponent(universalConnector, 10, 8);
+        shipBoard.addComponent(universalConnector, 10, 9);
+        assertFalse(shipBoard.isErroneous());
+
+        // removals
+        shipBoard.removeComponent(7, 8, false);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(8, 8, false);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(9, 8, false);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(10, 8, false);
+        assertTrue(shipBoard.isErroneous());
+        shipBoard.removeComponent(10, 9, false);
+        assertFalse(shipBoard.isErroneous());
+    }
+
+    // TESTS OF BOTI
+
     @BeforeEach
     void setUp() {
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         shipBoard = new ShipBoard(gameInformation.getGameType());
     }
-
-    // TESTS OF BOTI
 
     @Test
     void TestSetupTestGameShipboard() {
@@ -137,6 +160,18 @@ public class ShipBoardTest {
         shipBoard.addComponent(universalConnector, 9, 7);
         assertFalse(shipBoard.isErroneous());
 
+        shipBoard.removeComponent(8, 7, false);
+        assertTrue(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void checkFloatingCabin() throws NotPermittedPlacementException {
+        shipBoard.addComponent(universalConnector, 8, 7);
+        shipBoard.addComponent(new Cabin(universalSides, CrewType.Human, 2), 8, 6);
+        assertFalse(shipBoard.isErroneous());
+
+        // float
         shipBoard.removeComponent(8, 7, false);
         assertTrue(shipBoard.isErroneous());
         generalViewTUI.printShipboard(shipBoard);

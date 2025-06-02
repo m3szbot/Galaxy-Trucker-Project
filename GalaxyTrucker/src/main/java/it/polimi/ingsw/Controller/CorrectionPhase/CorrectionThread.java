@@ -60,11 +60,11 @@ public class CorrectionThread implements Runnable {
         int[] coordinates;
 
         // controls
-        boolean errors = shipBoard.isErroneous();
-        int errorTrials = 5 * 7 + 5;
+        boolean isErroneous = shipBoard.isErroneous();
+        int errorTrials = shipBoard.getErrorCount() + 5;
 
         // correct errors
-        while (errors && errorTrials > 0) {
+        while (isErroneous && errorTrials > 0) {
             // print error messages
             playerMessenger.printShipboard(shipBoard);
             playerMessenger.printMessage(getErrorsMessage(shipBoard));
@@ -111,11 +111,13 @@ public class CorrectionThread implements Runnable {
                     FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
                     handler.start();
                 }
+
                 // try again if couldn't remove selected component
                 removeTrials--;
             }
+
             // loop while there are still errors
-            errors = shipBoard.isErroneous();
+            isErroneous = shipBoard.isErroneous();
             errorTrials--;
         }
         // error correction finished

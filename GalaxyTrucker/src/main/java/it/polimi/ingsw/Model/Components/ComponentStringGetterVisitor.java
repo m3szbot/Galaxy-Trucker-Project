@@ -77,13 +77,13 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
         return String.format("""
                         +---%d---+
                         | %s |
-                        %d   %d   %d
+                        %d       %d
                         |       |
                         +---%d---+
                         """,
                 componentSideTranslator(component.getFront()),
                 component.getComponentName().substring(0, 5),
-                componentSideTranslator(component.getLeft()), component.isSingle() ? 1 : 2, componentSideTranslator(component.getRight()),
+                componentSideTranslator(component.getLeft()), componentSideTranslator(component.getRight()),
                 componentSideTranslator(component.getBack()));
     }
 
