@@ -7,6 +7,8 @@ import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.util.Arrays;
+
 /**
  * Interface that define a default method which handles a player being
  * inflicted a loss in terms of crew members or goods.
@@ -37,7 +39,10 @@ public interface TokenLoss {
             //removing goods
             int[] goodsOnShip = player.getShipBoard().getShipBoardAttributes().getGoods();
 
+            //Checking if there's goods on the ship to be removed
             if (goodsOnShip[0] + goodsOnShip[1] + goodsOnShip[2] + goodsOnShip[3] > 0) {
+
+                System.out.println("There are " + Arrays.toString(goodsOnShip) + "goods to be removed on your ship.\n");
 
                 //there are some goods that can be removed
                 quantity = removeGoods(player, quantity, goodsOnShip, gameInformation);
@@ -45,9 +50,10 @@ public interface TokenLoss {
             }
 
             if (quantity > 0) {
-                //need to remove batteries
 
+                //need to remove batteries
                 removeBatteries(player, quantity, gameInformation);
+
             }
         }
 
@@ -57,7 +63,6 @@ public interface TokenLoss {
 
         String message;
         PlayerMessenger playerMessenger;
-        Component component;
         int[] coordinates = new int[2];
         //removing crew members or aliens
         int availableCrew = player.getShipBoard().getShipBoardAttributes().getCrewMembers();
@@ -99,25 +104,29 @@ public interface TokenLoss {
         String message;
         PlayerMessenger playerMessenger;
         int numberOfColourGoodsToRemove;
-        boolean errorFlag = true;
+        boolean errorFlag;
         int[] coordinates = new int[2], tempNumberToRemove = new int[]{0, 0, 0, 0};
 
         //Cycles through the different types of goods on the ship, from the most valuable to the least
-        for (int i = 0; i <= 3 && quantity > 0; i++) {
+        for (int i = 0; i <= 3; i++) {
             //Sets the right number of goods of a particular color that the player has to remove
             if (quantity < goodsOnShip[i]) {
+                //Part of them if the total left to remove is lower than the number of goods of that color left
                 numberOfColourGoodsToRemove = quantity;
                 quantity = 0;
             } else {
+                //All of them if the total left to remove is lower than the number of goods of that color left
                 numberOfColourGoodsToRemove = goodsOnShip[i];
-                quantity -= numberOfColourGoodsToRemove;
+                quantity = quantity - numberOfColourGoodsToRemove;
             }
 
-            while (errorFlag) {
+            errorFlag = true;
+            //Stays in the cycle until there is no error and the number of goods of a color to be removed is 0
+            while (errorFlag && numberOfColourGoodsToRemove > 0) {
 
                 errorFlag = false;
-                message = "You have to remove" + numberOfColourGoodsToRemove + colorSolver(i) + "goods." +
-                        "Enter the coordinates of the storage from which to remove the" + colorSolver(i) + "goods:";
+                message = "You have to remove " + numberOfColourGoodsToRemove + " " + colorSolver(i) + " goods." +
+                        " Enter the coordinates of the storage from which to remove the " + colorSolver(i) + " goods:";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
@@ -130,7 +139,7 @@ public interface TokenLoss {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
 
-                message = "Enter the number of" + colorSolver(i) + "goods you want to remove from this storage:";
+                message = "Enter the number of " + colorSolver(i) + " goods you want to remove from this storage:";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
@@ -159,6 +168,7 @@ public interface TokenLoss {
                     tempNumberToRemove[j] = 0;
                 }
             }
+            System.out.println("i = " + i);
         }
 
         //In case the goods on the ship were not enough the remaining number is taken from the battery stock
@@ -281,7 +291,6 @@ public interface TokenLoss {
         String message;
         PlayerMessenger playerMessenger;
         int numberOfBatteriesToRemove;
-        Component component;
         int[] coordinates = new int[2];
 
         if (batteriesAvailable > 0) {
@@ -295,7 +304,7 @@ public interface TokenLoss {
 
             while (numberOfBatteriesToRemove > 0) {
 
-                message = "Enter coordinates of the battery station from which to remove a battery:\n ";
+                message = "Enter coordinates of the battery station from which to remove a battery: ";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
