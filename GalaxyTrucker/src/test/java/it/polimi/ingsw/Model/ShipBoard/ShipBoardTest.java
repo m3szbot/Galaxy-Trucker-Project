@@ -178,6 +178,15 @@ public class ShipBoardTest {
     }
 
     @Test
+    void floatingObstructedCannonError() throws NotPermittedPlacementException {
+        // Cabin Cannon(left)
+        assertFalse(shipBoard.isErroneous());
+        shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialLeft, true));
+        assertTrue(shipBoard.isErroneous());
+
+    }
+
+    @Test
     void fillShipBoardWithSpecialConnectors() throws NotPermittedPlacementException {
         // check if shipboard borders are set correctly
 
