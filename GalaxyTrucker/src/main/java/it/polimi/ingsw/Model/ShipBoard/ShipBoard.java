@@ -284,8 +284,8 @@ public class ShipBoard implements Serializable {
 
         // more components
         checkErrors();
+        // check shipboard for erroneous cells
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            // iterate rows
             for (int realRow = SB_FIRST_REAL_ROW; realRow < SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
                 if (errorsMatrix[realCol][realRow])
                     return true;
