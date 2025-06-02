@@ -86,7 +86,8 @@ public class AssemblyPhase extends Phase {
                 }
                 try {
                     Thread.sleep(100);
-                } catch (InterruptedException ignored) {
+                } catch (InterruptedException e) {
+                    break;
                 }
             }
         });
@@ -94,11 +95,11 @@ public class AssemblyPhase extends Phase {
 
         try {
             allPlayersReady.await();
-            t.join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         executor.shutdownNow();
+        t.interrupt();
 
         message = "Assembly phase has ended";
         for (Player player : gameInformation.getPlayerList()) {

@@ -17,6 +17,9 @@ public class AssemblingEndState implements GameState {
     @Override
     public void enter(AssemblyThread assemblyPhase) {
         assemblyPhase.isfinished.set(true);
+        if(assemblyProtocol.getFlightBoard().getPlayerOrderList().size() == assemblyPhase.gameInformation.getPlayerList().size()){
+            assemblyPhase.setRunning(false);
+        }
         if(!assemblyPhase.running.get()){
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
             assemblyPhase.end.set(true);

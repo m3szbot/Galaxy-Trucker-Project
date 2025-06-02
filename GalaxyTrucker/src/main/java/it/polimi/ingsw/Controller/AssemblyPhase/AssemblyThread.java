@@ -72,18 +72,26 @@ public class AssemblyThread implements Runnable {
                     try {
                         String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
                         inputQueue.offer(input);
+                        try{
+                            Thread.sleep(100);
+                        }catch (InterruptedException e){
+                            break;
+                        }
                     } catch (PlayerDisconnectedException e) {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
                         String message = e.getMessage();
                         disconnected.set(true);
                         for (Player player : gameInformation.getPlayerList()) {
-                            if (!player.equals(associatedPlayer)) {ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);}
+                            if (!player.equals(associatedPlayer)) {
+                                ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                            }
                         }
                     }
                 } else {
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException ignored) {
+                    } catch (InterruptedException e) {
+                        break;
                     }
 
                     if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
@@ -103,7 +111,8 @@ public class AssemblyThread implements Runnable {
             //System.out.println("prova2");
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                break;
             }
 
             // Handle user input if available
@@ -141,6 +150,7 @@ public class AssemblyThread implements Runnable {
     } catch (Exception e) {
             e.printStackTrace();
         }finally {
+            end.set(true);
             t.interrupt();
             latch.countDown();
         }
