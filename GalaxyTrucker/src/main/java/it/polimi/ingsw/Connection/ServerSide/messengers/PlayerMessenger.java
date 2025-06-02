@@ -194,7 +194,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                     System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
                     synchronized (dataContainerLock){
                         dataContainer.clearContainer();
-                        dataContainer.setCommand("disconnect");
+                        dataContainer.setCommand("inactivity");
                         sendDataContainer();
                     }
                 }
