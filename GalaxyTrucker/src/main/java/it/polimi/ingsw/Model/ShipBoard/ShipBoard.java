@@ -219,7 +219,7 @@ public class ShipBoard implements Serializable {
         // not first component to add
         return (validityMatrix[realCol][realRow] &&
                 componentMatrix[realCol][realRow] == null &&
-                checkAdjacency(realCol, realRow));
+                checkNotEmptyNeighbors(realCol, realRow));
     }
 
     /**
@@ -238,11 +238,12 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Check if adjacent cells contain components.
+     * Check if adjacent cells contain components. Used in addComponent.
      *
-     * @return true if there is at least one adjacent component, false if all adjacent cells are empty.
+     * @return true if at least 1 neighbor cell is not empty, false if all neighbor cells are empty.
+     * @author Boti
      */
-    private boolean checkAdjacency(int realCol, int realRow) {
+    private boolean checkNotEmptyNeighbors(int realCol, int realRow) {
         return (componentMatrix[realCol - 1][realRow] != null || componentMatrix[realCol + 1][realRow] != null ||
                 componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
     }
@@ -284,15 +285,8 @@ public class ShipBoard implements Serializable {
 
         // more components
         checkErrors();
-        // check shipboard for erroneous cells
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow < SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
-                if (errorsMatrix[realCol][realRow])
-                    return true;
-            }
-        }
-        // no errors found
-        return false;
+
+        return (getErrorCount() > 0);
     }
 
     /**
@@ -320,8 +314,8 @@ public class ShipBoard implements Serializable {
 
                 // if component is present, check for errors
                 if (component != null) {
-                    // check if adjacent
-                    if (!checkAdjacency(realCol, realRow)) {
+                    // check if connected to a neighbor
+                    if (!checkConnectedToNeighbor(realCol, realRow)) {
                         errorsMatrix[realCol][realRow] = true;
                     }
 
@@ -348,7 +342,68 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * @return the number of errors in the shipboard.
+     * @author Boti
+     */
+    public int getErrorCount() {
+        checkErrors();
+        int count = 0;
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+                if (errorsMatrix[realCol][realRow])
+                    count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Check if component is connected through a connector to any adjacent cell.
+     * Empty cells are not connected, return false.
+     * Used in checkErrors.
+     *
+     * @return true if component is connected to at least 1 neighbor, false if not.
+     * @author Boti
+     */
+    private boolean checkConnectedToNeighbor(int realCol, int realRow) {
+        Component current = componentMatrix[realCol][realRow];
+        Component temp;
+
+        // starter cabin cannot cause errors
+        if (getComponentCount() == 1 && realCol == getRealIndex(SB_CENTER_COL) && realRow == getRealIndex(SB_CENTER_ROW))
+            return true;
+
+        // empty cells are not connected
+        if (current == null)
+            return false;
+
+        // front
+        temp = componentMatrix[realCol][realRow - 1];
+        if (temp != null && isConnector(current.getFront()) && checkCompatibleJunction(current.getFront(), temp.getBack()))
+            return true;
+
+        // back
+        temp = componentMatrix[realCol][realRow + 1];
+        if (temp != null && isConnector(current.getBack()) && checkCompatibleJunction(current.getBack(), temp.getFront()))
+            return true;
+
+        // left
+        temp = componentMatrix[realCol - 1][realRow];
+        if (temp != null && isConnector(current.getLeft()) && checkCompatibleJunction(current.getLeft(), temp.getRight()))
+            return true;
+
+        // right
+        temp = componentMatrix[realCol + 1][realRow];
+        if (temp != null && isConnector(current.getRight()) && checkCompatibleJunction(current.getRight(), temp.getLeft()))
+            return true;
+
+        // no connections found
+        return false;
+    }
+
+    /**
      * Checks if a component has correct junctions with its neighboring components.
+     * Connection with empty neighbor is always correct.
      *
      * @return True if the junctions are correct, false otherwise.
      * @author Giacomo, Boti
@@ -422,25 +477,6 @@ public class ShipBoard implements Serializable {
             return true;
 
         // no errors found
-        return false;
-    }
-
-    /**
-     * Check if the 2 provided junctions are compatible.
-     *
-     * @return true if junctions are compatible, false if incompatible.
-     * @author Boti
-     */
-    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
-        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
-            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
-        } else if (sideA.equals(SideType.Single)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Double)) {
-            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Universal)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        }
         return false;
     }
 
@@ -531,6 +567,25 @@ public class ShipBoard implements Serializable {
         if (shipBoardsList.isEmpty())
             throw new NoHumanCrewLeftException();
 
+    }
+
+    /**
+     * Check if the 2 provided junctions are compatible.
+     *
+     * @return true if junctions are compatible, false if incompatible.
+     * @author Boti
+     */
+    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
+        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
+            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
+        } else if (sideA.equals(SideType.Single)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Double)) {
+            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Universal)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        }
+        return false;
     }
 
     /**

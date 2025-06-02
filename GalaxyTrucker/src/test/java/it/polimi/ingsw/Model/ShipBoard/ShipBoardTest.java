@@ -23,6 +23,7 @@ public class ShipBoardTest {
     GeneralView generalViewTUI = new GeneralView();
 
     // components sides
+    SideType[] smoothSides = new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth};
     SideType[] smoothSidesUniversalRight = new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth};
     SideType[] singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
     SideType[] doubleSides = new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double};
@@ -36,6 +37,7 @@ public class ShipBoardTest {
 
     // connector components
     Component smoothRightUniversal = new Component(smoothSidesUniversalRight);
+    Component smoothSidesConnector = new Component(smoothSides);
     Component singleConnector = new Component(singleSides);
     Component doubleConnector = new Component(doubleSides);
     Component universalConnector = new Component(universalSides);
@@ -54,6 +56,7 @@ public class ShipBoardTest {
         assertFalse(shipBoard.isErroneous());
 
         // removals
+        // error caused by floating cabin
         shipBoard.removeComponent(7, 8, false);
         assertTrue(shipBoard.isErroneous());
         shipBoard.removeComponent(8, 8, false);
@@ -95,6 +98,34 @@ public class ShipBoardTest {
         assertThrows(NotPermittedPlacementException.class, () -> {
             shipBoard.addComponent(singleConnector, 9, 9);
         });
+    }
+
+    @Test
+    void testErrorCount1SmoothConnector() throws NotPermittedPlacementException {
+        // add smooth connectors to test error count of unconnected sides
+        assertEquals(0, shipBoard.getErrorCount());
+        // smooth connectors + 1 cabin
+        shipBoard.addComponent(smoothSidesConnector, 7, 8);
+        generalViewTUI.printShipboard(shipBoard);
+        assertEquals(2, shipBoard.getErrorCount());
+    }
+
+    @Test
+    void testErrorCount5SmoothConnectors() throws NotPermittedPlacementException {
+        // add smooth connectors to test error count of unconnected sides
+        assertEquals(0, shipBoard.getErrorCount());
+        // smooth connectors + 1 cabin
+        shipBoard.addComponent(smoothSidesConnector, 7, 8);
+        assertEquals(2, shipBoard.getErrorCount());
+        shipBoard.addComponent(smoothSidesConnector, 8, 8);
+        assertEquals(3, shipBoard.getErrorCount());
+        shipBoard.addComponent(smoothSidesConnector, 8, 9);
+        assertEquals(4, shipBoard.getErrorCount());
+        shipBoard.addComponent(smoothSidesConnector, 9, 8);
+        assertEquals(5, shipBoard.getErrorCount());
+        shipBoard.addComponent(smoothSidesConnector, 9, 9);
+        generalViewTUI.printShipboard(shipBoard);
+        assertEquals(6, shipBoard.getErrorCount());
     }
 
     // check connectors (Single, Double, Universal)
@@ -156,6 +187,7 @@ public class ShipBoardTest {
 
     @Test
     void checkFloatingComponent() throws NotPermittedPlacementException {
+        shipBoard.addComponent(universalConnector, 6, 7);
         shipBoard.addComponent(universalConnector, 8, 7);
         shipBoard.addComponent(universalConnector, 9, 7);
         assertFalse(shipBoard.isErroneous());
@@ -167,6 +199,7 @@ public class ShipBoardTest {
 
     @Test
     void checkFloatingCabin() throws NotPermittedPlacementException {
+        shipBoard.addComponent(universalConnector, 6, 7);
         shipBoard.addComponent(universalConnector, 8, 7);
         shipBoard.addComponent(new Cabin(universalSides, CrewType.Human, 2), 8, 6);
         assertFalse(shipBoard.isErroneous());
@@ -210,6 +243,46 @@ public class ShipBoardTest {
             shipBoard.addComponent(4, i, singleConnector);
 
         generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void fillShipBoardWithSmoothConnectors() throws NotPermittedPlacementException {
+        // check if shipboard borders are set correctly
+        // check if error correction covers whole shipboard
+        assertFalse(shipBoard.isErroneous());
+
+        // col 7
+        shipBoard.addComponent(smoothSidesConnector, 7, 6);
+        shipBoard.addComponent(smoothSidesConnector, 7, 8);
+        // col 8
+        shipBoard.addComponent(smoothSidesConnector, 8, 8);
+        shipBoard.addComponent(smoothSidesConnector, 8, 9);
+        shipBoard.addComponent(smoothSidesConnector, 8, 7);
+        shipBoard.addComponent(smoothSidesConnector, 8, 6);
+        shipBoard.addComponent(smoothSidesConnector, 8, 5);
+        // col 9
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(9, i, smoothSidesConnector);
+        // col 10
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(10, i, smoothSidesConnector);
+        // col 6
+        shipBoard.addComponent(smoothSidesConnector, 6, 6);
+        shipBoard.addComponent(smoothSidesConnector, 6, 5);
+        shipBoard.addComponent(smoothSidesConnector, 6, 7);
+        shipBoard.addComponent(smoothSidesConnector, 6, 8);
+        shipBoard.addComponent(smoothSidesConnector, 6, 9);
+        // col 5
+        for (int i = 6; i <= 9; i++)
+            shipBoard.addComponent(5, i, smoothSidesConnector);
+        // col 4
+        for (int i = 7; i <= 9; i++)
+            shipBoard.addComponent(4, i, smoothSidesConnector);
+
+        generalViewTUI.printShipboard(shipBoard);
+        // check correct error count
+        assertTrue(shipBoard.isErroneous());
+        assertEquals(27, shipBoard.getErrorCount());
     }
 
     @Test
