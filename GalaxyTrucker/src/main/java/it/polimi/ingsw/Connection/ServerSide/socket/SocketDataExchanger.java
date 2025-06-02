@@ -28,7 +28,7 @@ public class SocketDataExchanger {
         clientSocket.setSoTimeout(millisecond);
     }
 
-    public String getString() throws IOException{
+    public String getString() throws IOException {
 
         return inputStream.readUTF();
 
