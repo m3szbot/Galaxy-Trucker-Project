@@ -317,34 +317,36 @@ public class ShipBoard implements Serializable {
                 errorsMatrix[realCol][realRow] = false;
                 component = componentMatrix[realCol][realRow];
 
+                // no component, no errors
+                if (component == null)
+                    break;
+
                 // if component is present, check for errors
-                if (component != null) {
 
-                    // check if adjacent
-                    if (!checkAdjacency(realCol, realRow)) {
+                // check if adjacent
+                if (!checkAdjacency(realCol, realRow)) {
+                    errorsMatrix[realCol][realRow] = true;
+                    break;
+                }
+
+                // check junctions
+                if (!checkCorrectJunctions(realCol, realRow)) {
+                    errorsMatrix[realCol][realRow] = true;
+                    break;
+                }
+
+                // check if Engine
+                if (component instanceof Engine) {
+                    if (checkEngineErrors(realCol, realRow)) {
                         errorsMatrix[realCol][realRow] = true;
                         break;
                     }
-
-                    // check junctions
-                    if (!checkCorrectJunctions(realCol, realRow)) {
+                }
+                // check if Cannon
+                else if (component instanceof Cannon) {
+                    if (checkCannonErrors(realCol, realRow)) {
                         errorsMatrix[realCol][realRow] = true;
                         break;
-                    }
-
-                    // check if Engine
-                    if (component instanceof Engine) {
-                        if (checkEngineErrors(realCol, realRow)) {
-                            errorsMatrix[realCol][realRow] = true;
-                            break;
-                        }
-                    }
-                    // check if Cannon
-                    else if (component instanceof Cannon) {
-                        if (checkCannonErrors(realCol, realRow)) {
-                            errorsMatrix[realCol][realRow] = true;
-                            break;
-                        }
                     }
                 }
             }
@@ -363,28 +365,27 @@ public class ShipBoard implements Serializable {
         if (currentComponent == null)
             return true;
 
-            // component present
-        else {
-            // return false if incompatible junction
-            // left neighbour
-            if ((componentMatrix[realCol - 1][realRow] != null) &&
-                    !checkCompatibleJunction(currentComponent.getLeft(), componentMatrix[realCol - 1][realRow].getRight()))
-                return false;
-            // right neighbour
-            if ((componentMatrix[realCol + 1][realRow] != null) &&
-                    !checkCompatibleJunction(currentComponent.getRight(), componentMatrix[realCol + 1][realRow].getLeft()))
-                return false;
-            // front neighbour
-            if ((componentMatrix[realCol][realRow - 1] != null) &&
-                    (!checkCompatibleJunction(currentComponent.getFront(), componentMatrix[realCol][realRow - 1].getBack())))
-                return false;
-            // back neighbour
-            if ((componentMatrix[realCol][realRow + 1] != null) &&
-                    (!checkCompatibleJunction(currentComponent.getBack(), componentMatrix[realCol][realRow + 1].getFront())))
-                return false;
-            // no incorrect junctions
-            return true;
-        }
+        // component present
+        // return false if incompatible junction
+
+        // left neighbour
+        if ((componentMatrix[realCol - 1][realRow] != null) &&
+                !checkCompatibleJunction(currentComponent.getLeft(), componentMatrix[realCol - 1][realRow].getRight()))
+            return false;
+        // right neighbour
+        if ((componentMatrix[realCol + 1][realRow] != null) &&
+                !checkCompatibleJunction(currentComponent.getRight(), componentMatrix[realCol + 1][realRow].getLeft()))
+            return false;
+        // front neighbour
+        if ((componentMatrix[realCol][realRow - 1] != null) &&
+                (!checkCompatibleJunction(currentComponent.getFront(), componentMatrix[realCol][realRow - 1].getBack())))
+            return false;
+        // back neighbour
+        if ((componentMatrix[realCol][realRow + 1] != null) &&
+                (!checkCompatibleJunction(currentComponent.getBack(), componentMatrix[realCol][realRow + 1].getFront())))
+            return false;
+        // no incorrect junctions
+        return true;
     }
 
     /**
@@ -465,7 +466,7 @@ public class ShipBoard implements Serializable {
      * @throws FracturedShipBoardException if shipboard is fractured into multiple pieces.
      * @author Giacomo, Boti
      */
-    public void removeComponent(int visibleCol, int visibleRow, boolean checkDisconnectionTrigger)
+    public void removeComponent(int visibleCol, int visibleRow, boolean checkFracture)
             throws IllegalArgumentException, NoHumanCrewLeftException, FracturedShipBoardException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
             throw new IllegalArgumentException("Coordinates out of bounds.");
@@ -474,23 +475,22 @@ public class ShipBoard implements Serializable {
         int realRow = getRealIndex(visibleRow);
         Component component = componentMatrix[realCol][realRow];
 
+        if (component == null) {
+            throw new IllegalArgumentException("No component present at the given coordinates.");
+        }
+
         // if a present element is to be removed
-        if (component != null) {
-            // check sides before removing the component
-            int connectedSides = checkNumberOfConnectedSides(realCol, realRow);
-            // remove given component
-            componentMatrix[realCol][realRow] = null;
-            shipBoardAttributes.destroyComponents(1);
-            component.accept(new SBAttributesUpdaterVisitor(this));
+        // check sides before removing the component
+        int connectedSides = checkNumberOfConnectedSides(realCol, realRow);
+        // remove given component
+        componentMatrix[realCol][realRow] = null;
+        shipBoardAttributes.destroyComponents(1);
+        component.accept(new SBAttributesUpdaterVisitor(this));
 
-            // check for fracture, throw exceptions if needed
-            // TODO handle fracture
-            /*
-            if (connectedSides > 1 && checkDisconnectionTrigger) {
-                checkFracturedShipBoard();
-            }
-
-             */
+        // check for fracture, throw exceptions if needed
+        // TODO handle fracture
+        if (connectedSides > 1 && checkFracture) {
+            checkFracturedShipBoard();
         }
 
     }
@@ -554,6 +554,7 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     private List<ShipBoard> connectionMapper() {
+        // TODO if null component at center, find new center
         List<ShipBoard> shipBoardsList = new ArrayList<>();
         // add shipboard reachable from current center cabin
         shipBoardsList.add(bfsMapper(centerCabinCol, centerCabinRow));

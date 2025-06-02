@@ -59,6 +59,10 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         this.virtualClient = virtualClient;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public ConnectionType getConnectionType() {
         return connectionType;
     }

@@ -59,9 +59,8 @@ public class CorrectionThread implements Runnable {
         ShipBoard shipBoard = player.getShipBoard();
         int[] coordinates;
 
-        // check if there are errors
+        // controls
         boolean errors = shipBoard.isErroneous();
-        boolean removeComponentSuccess = false;
         int errorTrials = 5 * 7 + 5;
 
         // correct errors
@@ -71,8 +70,11 @@ public class CorrectionThread implements Runnable {
             playerMessenger.printMessage(getErrorsMessage(shipBoard));
             playerMessenger.printMessage("Enter column and row of component to remove (col row):");
 
-            // elaborate player input
+            // controls
+            boolean removeComponentSuccess = false;
             int removeTrials = 5;
+
+            // elaborate player input
             while (!removeComponentSuccess && removeTrials > 0) {
                 // get player input
                 try {
@@ -86,6 +88,7 @@ public class CorrectionThread implements Runnable {
 
                 // remove component
                 try {
+                    // TODO enable fracture trigger
                     shipBoard.removeComponent(coordinates[0], coordinates[1], false);
                     // set only if no exceptions thrown
                     removeComponentSuccess = true;
@@ -102,11 +105,11 @@ public class CorrectionThread implements Runnable {
                     return true;
 
                 } catch (FracturedShipBoardException e) {
+                    // TODO delete print
+                    System.out.println("Shipboard fractured!");
                     // handle fractured shipboard
-                    playerMessenger.printMessage(e.getMessage());
-                    FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, e);
+                    FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
                     handler.start();
-                    // TODO delete, added for safety
                 }
                 // try again if couldn't remove selected component
                 removeTrials--;

@@ -54,6 +54,9 @@ public class Player implements Serializable {
         return shipBoard;
     }
 
+    public void setShipBoard(ShipBoard shipBoard) {
+        this.shipBoard = shipBoard;
+    }
 }
 
 
