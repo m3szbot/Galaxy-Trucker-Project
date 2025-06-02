@@ -111,9 +111,11 @@ public class CorrectionThread implements Runnable {
                     FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
                     handler.start();
                 }
+
                 // try again if couldn't remove selected component
                 removeTrials--;
             }
+            
             // loop while there are still errors
             errors = shipBoard.isErroneous();
             errorTrials--;
