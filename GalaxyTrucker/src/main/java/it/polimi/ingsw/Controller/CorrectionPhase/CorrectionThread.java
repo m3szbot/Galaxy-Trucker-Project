@@ -61,7 +61,7 @@ public class CorrectionThread implements Runnable {
 
         // controls
         boolean isErroneous = shipBoard.isErroneous();
-        int errorTrials = 5 * 7 + 5;
+        int errorTrials = shipBoard.getErrorCount() + 5;
 
         // correct errors
         while (isErroneous && errorTrials > 0) {
