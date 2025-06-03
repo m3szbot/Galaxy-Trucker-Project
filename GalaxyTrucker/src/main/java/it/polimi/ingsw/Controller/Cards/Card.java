@@ -35,7 +35,7 @@ public abstract class Card implements Serializable {
         for (int i = 0; i < blows.length; i++) {
 
             if (blows[i] != null) {
-                System.out.println("Blow " + (i + 1) + "coming from the " + solveDirection(blows[i].getDirection()));
+                System.out.println("Blow " + (i + 1) + " coming from the " + solveDirection(blows[i].getDirection()));
             }
 
         }
@@ -44,13 +44,13 @@ public abstract class Card implements Serializable {
     private String solveDirection(int direction) {
 
         if (direction == 0) {
-            return "back";
-        } else if (direction == 1) {
-            return "left";
-        } else if (direction == 2) {
             return "front";
-        } else {
+        } else if (direction == 1) {
             return "right";
+        } else if (direction == 2) {
+            return "back";
+        } else {
+            return "left";
         }
 
     }
