@@ -114,6 +114,12 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         throw new RemoteException();
     }
 
+    //not in use for now. May be necessary for future versions for correcting problems
+
+    public void unblockUserInput() throws RemoteException{
+        userInput.set(" ");
+    }
+
     public String getString() throws RemoteException{
 
         String input;

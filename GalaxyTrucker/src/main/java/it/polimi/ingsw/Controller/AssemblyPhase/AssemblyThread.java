@@ -150,8 +150,6 @@ public class AssemblyThread implements Runnable {
     } catch (Exception e) {
             e.printStackTrace();
         }finally {
-            end.set(true);
-            t.interrupt();
             latch.countDown();
         }
     }

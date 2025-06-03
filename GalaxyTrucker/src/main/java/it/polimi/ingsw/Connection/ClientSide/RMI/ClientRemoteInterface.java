@@ -38,4 +38,6 @@ public interface ClientRemoteInterface extends Remote{
 
     public boolean isAlive() throws RemoteException;
 
+    public void unblockUserInput() throws RemoteException;
+
 }

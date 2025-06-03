@@ -23,6 +23,7 @@ public class AssemblingEndState implements GameState {
         if(!assemblyPhase.running.get()){
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
             assemblyPhase.end.set(true);
+
             return;
         }
         String message = "Do you want to turn the hourglass? (write ---> yes <---, or wait for other players to complete their shipboard)";
