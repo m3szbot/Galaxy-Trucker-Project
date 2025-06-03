@@ -35,7 +35,7 @@ public abstract class Card implements Serializable {
         for (int i = 0; i < blows.length; i++) {
 
             if (blows[i] != null) {
-                System.out.println("Blow " + i + 1 + " direction: " + solveDirection(blows[i].getDirection()));
+                System.out.println("Blow " + (i + 1) + " coming from the " + solveDirection(blows[i].getDirection()));
             }
 
         }

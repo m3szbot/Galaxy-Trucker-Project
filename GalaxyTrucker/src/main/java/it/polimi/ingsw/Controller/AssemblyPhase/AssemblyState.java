@@ -54,7 +54,7 @@ public class AssemblyState implements GameState {
         switch (input.toLowerCase()) {
             case "place":
                 actionTaken = true;
-                assemblyPhase.setState(new ComponentPlacingState(protocol, player));
+                assemblyPhase.setState(new ComponentPlacingState(protocol, player, false));
                 break;
             case "draw":
                 actionTaken = true;
@@ -113,10 +113,15 @@ public class AssemblyState implements GameState {
                 break;
             case "book":
                 actionTaken = true;
-                if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-                    assemblyPhase.getAssemblyProtocol().bookComponent(player);
-                } else {
-                    message = "Your hand is empty";
+                if(assemblyPhase.getAssemblyProtocol().getBookedMap().get(player).size() < 2) {
+                    if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+                        assemblyPhase.getAssemblyProtocol().bookComponent(player);
+                    } else {
+                        message = "Your hand is empty";
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                    }
+                }else{
+                    message = "You don't have any remaining space for booking components, place them in order to gain new space";
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }
                 assemblyPhase.setState(new AssemblyState(protocol, player));

@@ -63,7 +63,7 @@ public class PlaceBookedComponentState implements GameState {
                 synchronized (assemblyProtocol.lockUncoveredList) {
                     assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
                 }
-                assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player));
+                assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player, true));
             } else {
                 String message = "The Booked Component chose doesn't exist";
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);

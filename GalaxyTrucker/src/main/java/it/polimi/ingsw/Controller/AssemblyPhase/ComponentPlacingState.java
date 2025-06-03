@@ -15,16 +15,17 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public class ComponentPlacingState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
-
+    private Boolean booked;
     /**
      * Constructs a ComponentPlacingState for the current player.
      *
      * @param protocol the game logic handler
      * @param player   the current player placing the component
      */
-    public ComponentPlacingState(AssemblyProtocol protocol, Player player) {
+    public ComponentPlacingState(AssemblyProtocol protocol, Player player, Boolean booked) {
         this.assemblyProtocol = protocol;
         this.player = player;
+        this.booked = booked;
     }
 
     /**
@@ -63,35 +64,41 @@ public class ComponentPlacingState implements GameState {
         if (num1 < 4 || num2 < 4 || num1 > 10 || num2 > 10) {
             String message = "Placing position out of bounds!";
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+            if (booked){
+                assemblyPhase.getAssemblyProtocol().bookComponent(player);
+            }
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
-            return;
-        }
-
-
-
-        if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-            if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 2, num2 - 1) != null ||
-                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1, num2 - 1) != null ||
-                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2 - 2) != null ||
-                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2) != null) {
-                try {
-                    assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
-                    synchronized (assemblyProtocol.lockCoveredList) {
-                        assemblyPhase.getAssemblyProtocol().newComponent(player);
+        }else {
+            if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
+                if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 2, num2 - 1) != null ||
+                        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1, num2 - 1) != null ||
+                        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2 - 2) != null ||
+                        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2) != null) {
+                    try {
+                        assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player), num1, num2);
+                        synchronized (assemblyProtocol.lockCoveredList) {
+                            assemblyPhase.getAssemblyProtocol().newComponent(player);
+                        }
+                    } catch (NotPermittedPlacementException e) {
+                        String message = "Your are not allowed to place your component here";
+                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                        if (booked){
+                            assemblyPhase.getAssemblyProtocol().bookComponent(player);
+                        }
                     }
-                } catch (NotPermittedPlacementException e) {
-                    String message = "Your are not allowed to place your component here";
+                } else {
+                    String message = "You can't place your component here, it would float in the air";
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                    if (booked){
+                        assemblyPhase.getAssemblyProtocol().bookComponent(player);
+                    }
                 }
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             } else {
-                String message = "You can't place your component here, it would float in the air";
+                String message = "Your hand is empty";
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
-        } else {
-            String message = "Your hand is empty";
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-            assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
         }
     }
 }

@@ -100,6 +100,7 @@ public class AssemblyPhase extends Phase {
         }
         executor.shutdownNow();
         t.interrupt();
+        assemblyProtocol.getHourGlass().stopHourglass();
 
         message = "Assembly phase has ended";
         for (Player player : gameInformation.getPlayerList()) {

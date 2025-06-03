@@ -87,7 +87,7 @@ public class CardBuilder {
 
     public Card getBuiltCard() {
 
-        if (cardName.equals("MeteorSwarm")) {
+        if (cardName.equals("SmallMeteorSwarm") || cardName.equals("BigMeteorSwarm")) {
             builtCard = new MeteorSwarm(this);
         } else if (cardName.equals("Pirates")) {
             builtCard = new Pirates(this);
