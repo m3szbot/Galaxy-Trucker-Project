@@ -131,6 +131,37 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     /**
+     * Method which is used to unblock the getPlayerInput blocking method. It works
+     * by setting a fictitious user input, which is a space character, which is then sent
+     * to the server. This allows the server to bypass an input.
+     *
+     * @author carlo
+     */
+
+    public void unblockUserInputGetterCall(){
+
+        if(connectionType == ConnectionType.SOCKET){
+            synchronized (dataContainerLock){
+                dataContainer.clearContainer();
+                dataContainer.setCommand("unblock");
+                sendDataContainer();
+            }
+        }
+        else{
+
+            try {
+
+                virtualClient.unblockUserInput();
+
+            } catch (RemoteException e) {
+                System.err.println("Error while calling remote client method through rmi");
+            }
+
+        }
+
+    }
+
+    /**
      * Clears all players resources.
      */
     public void clearPlayerResources() {

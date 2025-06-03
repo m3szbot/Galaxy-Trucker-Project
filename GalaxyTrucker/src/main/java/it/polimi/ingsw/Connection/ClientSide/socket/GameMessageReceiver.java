@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Thread that receive the messages that the server sends to the player
@@ -25,13 +26,14 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
     private AtomicBoolean running;
     private int viewIndex;
     private SocketDataExchanger dataExchanger;
+    private AtomicReference<String> userInput;
 
-
-    public GameMessageReceiver(GeneralView[] views, SocketDataExchanger dataExchanger, AtomicBoolean running) {
+    public GameMessageReceiver(GeneralView[] views, SocketDataExchanger dataExchanger, AtomicBoolean running, AtomicReference<String> userInput) {
 
         this.views = views;
         this.running = running;
         this.dataExchanger = dataExchanger;
+        this.userInput = userInput;
 
     }
 
@@ -70,6 +72,9 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
         else if(command.equals("inactivity")){
             System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
             running.set(false);
+        }
+        else if(command.equals("unblock")){
+            userInput.set(" ");
         }
         else {
             callView(dataContainer);

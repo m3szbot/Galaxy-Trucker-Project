@@ -81,7 +81,7 @@ public class GameStarter {
 
         AtomicBoolean running = new AtomicBoolean(true);
 
-        Thread messageReceiver = new Thread(new GameMessageReceiver(views, dataExchanger, running));
+        Thread messageReceiver = new Thread(new GameMessageReceiver(views, dataExchanger, running, clientInfo.getUserInput()));
         Thread messageSender = new Thread(new GameMessageSender(dataExchanger, running, clientInfo.getUserInput()));
 
         messageReceiver.start();
