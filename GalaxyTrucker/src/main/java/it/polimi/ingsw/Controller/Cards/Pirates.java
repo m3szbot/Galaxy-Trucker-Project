@@ -42,7 +42,6 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         System.out.println("Requirement number: " + requirementNumber + " (fire power)");
         printBlows(blows);
 
-
     }
 
     @Override
