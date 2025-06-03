@@ -79,14 +79,15 @@ public class CorrectionThread implements Runnable {
                 // get player input
                 try {
                     coordinates = playerMessenger.getPlayerCoordinates();
-                } catch (PlayerDisconnectedException e) {
+                } catch (Exception e) {
                     // handle disconnected player
+                    e.printStackTrace();
                     gameMessenger.disconnectPlayer(gameInformation, player);
                     // end thread
                     return true;
                 }
 
-                // remove component
+                // remove componentnioninini
                 try {
                     // TODO enable fracture trigger
                     shipBoard.removeComponent(coordinates[0], coordinates[1], false);

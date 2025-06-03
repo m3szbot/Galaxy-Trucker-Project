@@ -21,6 +21,7 @@ public class HourGlass {
     private boolean finished; // Indicates whether the timer has completed
     private int life = 60; // Duration of the timer in seconds
     List<Player> listOfPlayers = new ArrayList<>();
+    ScheduledExecutorService scheduler;
 
     /**
      * Constructor initializes the HourGlass with a default state and finished status.
@@ -37,7 +38,7 @@ public class HourGlass {
     public void twist(AssemblyProtocol assemblyProtocol, List<Player> players) {
         if (finished == true) { // Ensures the hourglass is not already running
             finished = false;
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            scheduler = Executors.newScheduledThreadPool(1);
 
             Runnable task = new Runnable() {
                 int elapsedTime = 0; // Tracks elapsed time
@@ -67,6 +68,10 @@ public class HourGlass {
         } else {
             System.out.println("The HourGlass has been already twisted!");
         }
+    }
+
+    public void stopHourglass() {
+        scheduler.shutdownNow();
     }
 
     /**
