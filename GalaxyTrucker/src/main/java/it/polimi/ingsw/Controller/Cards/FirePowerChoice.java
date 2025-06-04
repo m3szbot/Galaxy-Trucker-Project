@@ -41,7 +41,7 @@ public interface FirePowerChoice {
             message = "Your fire power is " + defaultFirePower +
                     ", but you still have " + forwardDoubleCannons + " double cannons pointing forward (+2 each) and " +
                     notForwardDoubleCannons + " double cannons not pointing forward (+1 each). " +
-                    " Would you like to use double cannons to increase you're fire power ?";
+                    " Would you like to use double cannons to increase your fire power ?";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 

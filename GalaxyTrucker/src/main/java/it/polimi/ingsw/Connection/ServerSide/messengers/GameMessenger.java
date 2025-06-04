@@ -73,6 +73,9 @@ public class GameMessenger {
     public void disconnectPlayer(GameInformation gameInformation, Player player) {
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
+        if(gameInformation.getFlightBoard().getPlayerOrderList().contains(player)){
+            gameInformation.getFlightBoard().getPlayerOrderList().remove(player);
+        }
         playerMessengerMap.get(player).clearPlayerResources();
         playerMessengerMap.remove(player);
         ClientMessenger.getCentralServer().removeNickName(player.getNickName());
