@@ -57,7 +57,7 @@ public class AssemblyThread implements Runnable {
     public GameInformation getGameInformation() {
         return gameInformation;
     }
-
+/*
     @Override
     public void run() {
         try {
@@ -139,4 +139,115 @@ public class AssemblyThread implements Runnable {
             latch.countDown();
         }
     }
+    */
+    @Override
+    public void run() {
+        try {
+            setState(new AssemblyState(assemblyProtocol, associatedPlayer));
+            assemblyProtocol.getHourGlass().twist(assemblyProtocol, gameInformation.getPlayerList());
+            
+            // Separate thread for reading user input from the console
+            t = new Thread(() -> {
+                AtomicBoolean disconnected = new AtomicBoolean(false);
+                while (!end.get()) {
+                    if (!disconnected.get()) {
+                        try {
+                            String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
+                            inputQueue.offer(input);
+                            try{
+                                Thread.sleep(100);
+                            }catch (InterruptedException e){
+
+                                break;
+                            }
+                        } catch (PlayerDisconnectedException e) {
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
+                            String message = e.getMessage();
+                            disconnected.set(true);
+                            for (Player player : gameInformation.getPlayerList()) {
+                                if (!player.equals(associatedPlayer)) {
+                                    ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                                }
+                            }
+                        }
+                    } else {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+
+                            break;
+                        }
+
+                        if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
+                            disconnected.set(false);
+                            String message = "Welcome back! You have been reconnected.";
+                            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(associatedPlayer).printMessage(message);
+
+                        }
+                    }
+                }
+            });
+            t.start();
+
+
+            // Main non-blocking game loop
+            while (running.get()) {
+                //System.out.println("prova2");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    break;
+                }
+
+                // Handle user input if available
+                String input = inputQueue.poll();
+                if (input != null) {
+                    try {
+                        currentState.handleInput(input, this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                // Update current game state (e.g., timers, state transitions)
+                try {
+                    currentState.update(this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (!amIChoosing.get()) {
+                setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
+                while (!isfinished.get()) {
+                    String input = inputQueue.poll();
+                    if (input != null) {
+                        try {
+                            currentState.handleInput(input, this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            currentState.update(this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            end.set(true);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).unblockUserInputGetterCall();
+            latch.countDown();
+        }
+    }
+
 }
+
+
+

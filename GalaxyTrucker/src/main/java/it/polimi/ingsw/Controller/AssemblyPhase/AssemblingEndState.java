@@ -19,11 +19,12 @@ public class AssemblingEndState implements GameState {
         assemblyPhase.isfinished.set(true);
         if(assemblyProtocol.getFlightBoard().getPlayerOrderList().size() == assemblyPhase.gameInformation.getPlayerList().size()){
             assemblyPhase.setRunning(false);
+            return;
         }
         if(!assemblyPhase.running.get()){
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
             //assemblyPhase.end.set(true);
-            return;
+            //return;
         }else{
             String message = "Do you want to turn the hourglass? (write ---> yes <---, or wait for other players to complete their shipboard)";
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
