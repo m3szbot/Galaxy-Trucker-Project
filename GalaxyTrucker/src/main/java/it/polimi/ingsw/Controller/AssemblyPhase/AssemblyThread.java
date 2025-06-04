@@ -57,95 +57,13 @@ public class AssemblyThread implements Runnable {
     public GameInformation getGameInformation() {
         return gameInformation;
     }
-/*
-    @Override
-    public void run() {
-        try {
-        setState(new AssemblyState(assemblyProtocol, associatedPlayer));
-        assemblyProtocol.getHourGlass().twist(assemblyProtocol, gameInformation.getPlayerList());
-        AtomicBoolean disconnected = new AtomicBoolean(false);
-        
-        // Main non-blocking game loop
-        while (running.get()) {
-            if (!disconnected.get()) {
-                try {
-                    String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
-                    if (input != null) {
-                        try {
-                            currentState.handleInput(input, this);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
-                    String message = e.getMessage();
-                    disconnected.set(true);
-                    for (Player player : gameInformation.getPlayerList()) {
-                        if (!player.equals(associatedPlayer)) {
-                            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                        }
-                    }
-                }
-            }else{
-                if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
-                    disconnected.set(false);
-                    String message = "Welcome back! You have been reconnected.";
-                    ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(associatedPlayer).printMessage(message);
-                }
-            }
-            // Update current game state (e.g., timers, state transitions)
-             try {
-                 currentState.update(this);
-             } catch (Exception e) {
-                 e.printStackTrace();
-             }
-        }
 
-        if (!amIChoosing.get()) {
-            setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
-            while (!isfinished.get()) {
-                if (!disconnected.get()) {
-                    try {
-                        String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
-                        if (input != null) {
-                            try {
-                                currentState.handleInput(input, this);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                currentState.update(this);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (PlayerDisconnectedException e) {
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
-                        String message = e.getMessage();
-                        disconnected.set(true);
-                        for (Player player : gameInformation.getPlayerList()) {
-                            if (!player.equals(associatedPlayer)) {
-                                ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            latch.countDown();
-        }
-    }
-    */
     @Override
     public void run() {
         try {
             setState(new AssemblyState(assemblyProtocol, associatedPlayer));
             assemblyProtocol.getHourGlass().twist(assemblyProtocol, gameInformation.getPlayerList());
-            
+
             // Separate thread for reading user input from the console
             t = new Thread(() -> {
                 AtomicBoolean disconnected = new AtomicBoolean(false);
@@ -192,7 +110,6 @@ public class AssemblyThread implements Runnable {
 
             // Main non-blocking game loop
             while (running.get()) {
-                //System.out.println("prova2");
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -231,10 +148,10 @@ public class AssemblyThread implements Runnable {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException ignored) {
-                        }
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ignored) {
                     }
                 }
             }
