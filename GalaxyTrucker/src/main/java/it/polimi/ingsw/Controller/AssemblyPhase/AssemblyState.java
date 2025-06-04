@@ -17,10 +17,6 @@ public class AssemblyState implements GameState {
     private boolean actionTaken = false;
     private AssemblyProtocol protocol;
     private Player player;
-    DataContainer dataContainer;
-    /**
-     * Constructs a new AssemblyState for the given player.
-     */
     public AssemblyState(AssemblyProtocol protocol, Player player) {
         this.protocol = protocol;
         this.player = player;
