@@ -22,7 +22,6 @@ public class FlightPhase extends Phase {
         setGamePhaseToClientServer(GamePhase.Flight);
         System.out.println("Flight phase has started");
 
-        DataContainer dataContainer;
         FlightBoard flightBoard = gameInformation.getFlightBoard();
 
         // send initial flightBoard to players
