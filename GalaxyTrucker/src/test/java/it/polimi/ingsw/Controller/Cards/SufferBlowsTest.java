@@ -1,12 +1,13 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +16,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +27,6 @@ class SufferBlowsTest {
     class Operator implements SufferBlows {
     }
 
-    ;
 
     Operator operator = new Operator();
 
@@ -53,7 +56,8 @@ class SufferBlowsTest {
 
         flightBoard = new FlightBoard(GameType.TESTGAME, cardsList);
 
-        player = new Player("player", Color.BLUE, gameInformation);
+        player = new Player("player", Color.RED, gameInformation);
+
     }
 
     @AfterEach
@@ -64,8 +68,8 @@ class SufferBlowsTest {
     @Test
     void blowDodgedVertically() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
-        player.getShipBoard().addComponent(new Component(), 5, 5);
-        player.getShipBoard().addComponent(new Component(), 4, 4);
+        player.getShipBoard().addComponent(new Component(), 7, 6);
+        player.getShipBoard().addComponent(new Component(), 6, 7);
 
         //creating 2 blows and setting the private field
 
@@ -89,10 +93,88 @@ class SufferBlowsTest {
     }
 
     @Test
+    void findHitComponentTest() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, NotPermittedPlacementException {
+
+
+        player.getShipBoard().addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
+        player.getShipBoard().addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 8);
+
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 7, 6);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 8, 6);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 8, 5);
+
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 6, 7);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 5, 7);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 4, 7);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 5, 8);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 4, 8);
+
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 8, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 9, 7);
+
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, false, 3), 8, 8);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, false, 3), 9, 8);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 2), 10, 8);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 1), 8, 9);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, true, 2), 9, 9);
+        player.getShipBoard().addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 4, 9);
+        player.getShipBoard().addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 5, 9);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 9, 6);
+        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}), 6, 6);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 10, 7);
+
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 6, 5);
+        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Special}), 5, 6);
+
+
+        int[] componentCoordinates = new int[2];
+        Blow[] blows = new Blow[4];
+
+        blows[0] = new Blow(0, false);
+        blows[1] = new Blow(1, false);
+        blows[2] = new Blow(2, false);
+        blows[3] = new Blow(3, false);
+
+        Method findHitComponent = SufferBlows.class.getDeclaredMethod("findHitComponent", Player.class, Blow.class, int[].class);
+        findHitComponent.setAccessible(true);
+        Field rollField = Blow.class.getDeclaredField("roll");
+        rollField.setAccessible(true);
+        rollField.setInt(blows[0], 7);
+        rollField.setInt(blows[1], 7);
+        rollField.setInt(blows[2], 7);
+        rollField.setInt(blows[3], 7);
+
+
+        flightView = new FlightViewTUI();
+
+        componentCoordinates = (int[]) findHitComponent.invoke(player, blows[0], componentCoordinates);
+        assertNotEquals(-1, componentCoordinates[0]);
+        assertNotEquals(-1, componentCoordinates[1]);
+        System.out.println(Arrays.toString(componentCoordinates));
+
+        componentCoordinates = (int[]) findHitComponent.invoke(player, blows[1], componentCoordinates);
+        assertNotEquals(-1, componentCoordinates[0]);
+        assertNotEquals(-1, componentCoordinates[1]);
+        System.out.println(Arrays.toString(componentCoordinates));
+
+        componentCoordinates = (int[]) findHitComponent.invoke(player, blows[2], componentCoordinates);
+        assertNotEquals(-1, componentCoordinates[0]);
+        assertNotEquals(-1, componentCoordinates[1]);
+        System.out.println(Arrays.toString(componentCoordinates));
+
+        componentCoordinates = (int[]) findHitComponent.invoke(player, blows[3], componentCoordinates);
+        assertNotEquals(-1, componentCoordinates[0]);
+        assertNotEquals(-1, componentCoordinates[1]);
+        System.out.println(Arrays.toString(componentCoordinates));
+
+
+    }
+
+    @Test
     void blowDodgedHorizontally() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
-        player.getShipBoard().addComponent(new Component(), 5, 5);
-        player.getShipBoard().addComponent(new Component(), 4, 4);
+        player.getShipBoard().addComponent(new Component(), 7, 6);
+        player.getShipBoard().addComponent(new Component(), 6, 7);
 
         //creating 2 blows and setting the private field
 
@@ -119,8 +201,8 @@ class SufferBlowsTest {
     void bigCannonBlowHit() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 7);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
-        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 4, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 7, 6);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, CrewType.Human, 2), 8, 7);
 
         ((Storage) player.getShipBoard().getComponent(5, 6)).addGoods(new int[]{3, 1, 1, 0});
 
@@ -157,8 +239,8 @@ class SufferBlowsTest {
     @Test
     void smallCannonBlowHitTarget() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
-        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 5, 7); //target component
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 6, 7); //target component
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 6); //target component
         player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}), 8, 7);
 
 
@@ -192,8 +274,8 @@ class SufferBlowsTest {
     void smallCannonBlowHitShield() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         player.getShipBoard().addComponent(new Component(), 6, 6); //target component
-        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}), 5, 5);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 4, 4);
+        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}), 6, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 7, 6);
 
 
         Blow blow = new Blow(0, false);
@@ -221,9 +303,9 @@ class SufferBlowsTest {
     @Test
     void bigMeteorBlowHitTarget() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
-        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 4, 7);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
-        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 8, 7);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, CrewType.Human, 2), 7, 6);
 
         ((Storage) player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
@@ -260,19 +342,19 @@ class SufferBlowsTest {
 
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 6, 7);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 7, 6);
-        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 8, 8);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}), 8, 7);
 
         //front pointing cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, false), 7, 8);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, false), 8, 8);
 
         //right pointing cannon
         player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 8, 9);
 
         //back pointing cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 8, 7);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 6);
 
         //left pointing cannon
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal}, false), 9, 7);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal}, false), 5, 6);
 
         //fictitious battery
 
@@ -317,9 +399,9 @@ class SufferBlowsTest {
     @Test
     void bigMeteorBlowWithCannonActivated() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 7, 8);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, 1), 8, 7);
-        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal}, false), 8, 6);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 7, 6);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, 1), 6, 7);
+        player.getShipBoard().addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal}, false), 8, 7);
 
         Blow blows[] = new Blow[2];
 
@@ -352,7 +434,7 @@ class SufferBlowsTest {
     void smallMeteorBlowHitSmoothSide() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         //target component
-        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth}), 6, 6);
+        player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Universal}), 8, 7);
 
         Blow blows[] = new Blow[4];
 
@@ -380,9 +462,9 @@ class SufferBlowsTest {
     void smallMeteorBlowWithShieldActivated() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
         //target component
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 4), 6, 6);
-        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}), 2, 2);
-        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Special}), 1, 1);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 4), 7, 6);
+        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}), 6, 7);
+        player.getShipBoard().addComponent(new Shield(new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Special}), 8, 7);
 
         Blow blows[] = new Blow[4];
 
@@ -415,14 +497,14 @@ class SufferBlowsTest {
     @Test
     void smallMeteorBlowHit() throws NoSuchFieldException, IllegalAccessException, NotPermittedPlacementException {
 
-        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 4, 7);
-        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 5, 7);
-        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}), 6, 7);
+        player.getShipBoard().addComponent(new Storage(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, true, 5), 6, 7);
+        player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, 3), 7, 6);
+        player.getShipBoard().addComponent(new Cabin(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double}, CrewType.Human, 2), 8, 7);
 
         ((Storage) player.getShipBoard().getComponent(3, 6)).addGoods(new int[]{3, 1, 1, 0});
 
 
-        Blow blows[] = new Blow[3];
+        Blow[] blows = new Blow[3];
 
         blows[0] = new Blow(3, false);
         blows[1] = new Blow(3, false);

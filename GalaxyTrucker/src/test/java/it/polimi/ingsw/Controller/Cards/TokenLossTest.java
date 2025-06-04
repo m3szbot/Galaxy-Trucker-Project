@@ -1,11 +1,11 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
@@ -67,12 +67,12 @@ class TokenLossTest {
     @Test
     void removingInhabitantsWithWrongEnteredValues() throws NotPermittedPlacementException {
 
-        Cabin humanCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single});
+        Cabin humanCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single}, CrewType.Human, 2);
         humanCabin.setCrewType(CrewType.Human);
-        Cabin alienCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single});
+        Cabin alienCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single}, CrewType.Human, 2);
         alienCabin.setCrewType(CrewType.Purple);
         //this adds 2 crew members to the shipboard, which is not normal
-        Cabin emptyCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single});
+        Cabin emptyCabin = new Cabin(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single, SideType.Single}, CrewType.Human, 2);
         alienCabin.setCrewType(CrewType.Brown);
         //making the cabin (3, 3) empty for testing purposes
 
