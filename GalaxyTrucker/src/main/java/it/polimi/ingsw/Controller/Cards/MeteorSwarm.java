@@ -29,6 +29,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Blow type: " + blowType.toString());
+
         printBlows(blows);
     }
 
@@ -38,14 +39,17 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
         PlayerMessenger playerMessenger;
 
-        //leader rolling the dices for each blow
+        //rolling all dices
         for (int i = 0; i < blows.length; i++) {
-            blows[i].rollDice();
+            if (blows[i] != null) {
+                blows[i].rollDice();
+            }
         }
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
 
             hit(player, blows, blowType, gameInformation);
+
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();

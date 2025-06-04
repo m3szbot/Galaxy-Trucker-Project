@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.Components.Storage;
@@ -8,6 +7,7 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;

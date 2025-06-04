@@ -1,12 +1,12 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.FlightView.FlightView;
 import it.polimi.ingsw.View.FlightView.FlightViewTUI;
@@ -80,7 +80,7 @@ class FirePowerChoiceTest {
 
     @Test
     void threeDoubleCannonsActivatedWithIncorrectValues() throws NotPermittedPlacementException {
-        
+
 
         player.getShipBoard().addComponent(new Battery(new SideType[]{SideType.Single, SideType.Double, SideType.Universal, SideType.Double}, 3), 6, 6);
         player.getShipBoard().addComponent(new Component(new SideType[]{SideType.Double, SideType.Universal, SideType.Double, SideType.Single}), 4, 4);
