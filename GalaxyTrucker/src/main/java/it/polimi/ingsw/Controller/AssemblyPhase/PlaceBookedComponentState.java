@@ -56,20 +56,25 @@ public class PlaceBookedComponentState implements GameState {
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyPhase) {
-        int index = Integer.parseInt(input);
-        index = index;
-        if (index == 0 || index == 1) {
-            if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
-                synchronized (assemblyProtocol.lockUncoveredList) {
-                    assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+        try {
+            int index = Integer.parseInt(input);
+            if (index == 0 || index == 1) {
+                if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
+                    synchronized (assemblyProtocol.lockUncoveredList) {
+                        assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+                    }
+                    assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player, true));
+                } else {
+                    String message = "The Booked Component chose doesn't exist";
+                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                    assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
                 }
-                assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player, true));
             } else {
-                String message = "The Booked Component chose doesn't exist";
+                String message = "Wrong input";
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
-        }else{
+        }catch (NumberFormatException e){
             String message = "Wrong input";
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
