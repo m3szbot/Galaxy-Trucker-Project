@@ -49,7 +49,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
             playerDoubleEngineNumber = player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower();
 
             //Check if the player has any engine power to be used (if it's 0 anyway the player is eliminated)
-            if ((playerSingleEnginePower < 0) && (playerDoubleEngineNumber < 0 || playerRemainingBatteries < 0)) {
+            if (!(playerSingleEnginePower > 0) && !(playerDoubleEngineNumber > 0 && playerRemainingBatteries > 0)) {
 
                 message = "Player" + player.getNickName() + "has no engine power and can't go through open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);

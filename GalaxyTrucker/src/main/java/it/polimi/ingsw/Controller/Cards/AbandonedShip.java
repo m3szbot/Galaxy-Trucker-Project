@@ -47,6 +47,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
     public void resolve(GameInformation gameInformation) {
 
+        boolean solved = false;
         PlayerMessenger playerMessenger;
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
@@ -61,6 +62,8 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
+
+                        solved = true;
                         //player decides to solve the card
 
                         inflictLoss(player, lossType, lossNumber, gameInformation);
@@ -71,6 +74,10 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         break;
+                    } else {
+                        message = player.getNickName() + "hasn't solved the card.\n";
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                        gameInformation.getFlightBoard().updateFlightBoard();
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
@@ -78,11 +85,18 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
             }
+
+            message = "You finished your turn, wait for the other players.\n";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
         }
 
-        message = "Nobody solved the card!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-        gameInformation.getFlightBoard().updateFlightBoard();
+        if (!solved) {
+            message = "Nobody solved the card!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+            gameInformation.getFlightBoard().updateFlightBoard();
+        }
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);

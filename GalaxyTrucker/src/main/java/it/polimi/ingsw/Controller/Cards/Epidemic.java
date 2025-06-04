@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -32,9 +33,15 @@ public class Epidemic extends Card {
 
     public void resolve(GameInformation gameInformation) {
 
+        Player player;
+        PlayerMessenger playerMessenger;
+
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
-            removeAdjacentAstronauts(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+
+            removeAdjacentAstronauts(player, gameInformation);
+
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
@@ -65,7 +72,7 @@ public class Epidemic extends Card {
 
             for (j = 0; j < cols; j++) {
 
-                centralComponent = player.getShipBoard().getComponent(i, j);
+                centralComponent = player.getShipBoard().getRealComponent(i, j);
 
                 //component is not null
                 if (centralComponent != null) {
@@ -75,10 +82,10 @@ public class Epidemic extends Card {
                         if (centralComponent.getCrewMembers() > 0) {
                             //the cabin can be potentially infected if some conditions are verified
 
-                            frontComponent = player.getShipBoard().getComponent(i, j + 1);
-                            backComponent = player.getShipBoard().getComponent(i, j - 1);
-                            rightComponent = player.getShipBoard().getComponent(i + 1, j);
-                            leftComponent = player.getShipBoard().getComponent(i - 1, j);
+                            frontComponent = player.getShipBoard().getRealComponent(i, j + 1);
+                            backComponent = player.getShipBoard().getRealComponent(i, j - 1);
+                            rightComponent = player.getShipBoard().getRealComponent(i + 1, j);
+                            leftComponent = player.getShipBoard().getRealComponent(i - 1, j);
 
                             //checking if there is a cabin on the front
 
@@ -142,8 +149,14 @@ public class Epidemic extends Card {
             }
         }
 
-        message = "Player " + player.getNickName() + "lost " + numberOfRemovedInhabitants +
+        message = "Player " + player.getNickName() + " lost " + numberOfRemovedInhabitants +
                 " inhabitants from the epidemic!";
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            System.out.println("Error while sleeping");
+        }
     }
 }

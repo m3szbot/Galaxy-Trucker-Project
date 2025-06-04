@@ -39,10 +39,16 @@ public interface SufferBlows {
 
             if (blow != null) {
 
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    System.out.println("Error while sleeping");
+                }
+
                 componentCoordinates = findHitComponent(player, blow, componentCoordinates);
 
-                message = "Coordinates of the component expected to be hit: " + (componentCoordinates[0] + 1) + " " + (componentCoordinates[1] + 1);
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                //message = "Coordinates of the component expected to be hit: " + (componentCoordinates[0] + 1) + " " + (componentCoordinates[1] + 1);
+                //ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
 

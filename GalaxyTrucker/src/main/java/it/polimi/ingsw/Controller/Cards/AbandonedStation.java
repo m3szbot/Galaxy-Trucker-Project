@@ -44,6 +44,8 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
     public void resolve(GameInformation gameInformation) {
 
+        boolean solved = false;
+
         PlayerMessenger playerMessenger;
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
@@ -76,6 +78,17 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
             }
+
+            message = "You finished your turn, wait for the other players.\n";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
+        }
+
+        if (!solved) {
+            message = "Nobody solved the card!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+            gameInformation.getFlightBoard().updateFlightBoard();
         }
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {

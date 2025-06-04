@@ -80,8 +80,6 @@ public class Planets extends Card implements GoodsGain, Movable {
         List<Player> players = gameInformation.getFlightBoard().getPlayerOrderList();
 
         //At the beginning all the planets are still to be occupied
-
-
         numberOfPlanets = countPlanetsToLandOn();
         freePlanet = numberOfPlanets;
 
@@ -174,6 +172,11 @@ public class Planets extends Card implements GoodsGain, Movable {
                 message = e.getMessage();
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
+
+            message = "You finished your turn, wait for the other players.\n";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
