@@ -55,6 +55,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 gameInformation.removePlayers(player);
+                numberOfPlayers--;
 
                 message = "Player" + player.getNickName() + "has been lost in the open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
