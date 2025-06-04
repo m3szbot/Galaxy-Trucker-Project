@@ -93,20 +93,15 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
                 throw new RemoteException("Player was kicked out because of inactivity");
             }
 
-            input = userInput.getAndSet(null);
-
-            if(input != null){
-                return input;
+            if(userInput.get() != null){
+                return userInput.getAndSet(null);
             }
+
             try{
                 time++;
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 System.err.println("Thread in getString method of virtual client was abnormally interrupted");
-            }
-
-            if(userInput.get() != null){
-                return userInput.getAndSet(null);
             }
 
         }
@@ -122,7 +117,6 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
     public String getString() throws RemoteException{
 
-        String input;
         int time = 0;
 
         while(true){
@@ -133,11 +127,10 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
                 throw new RemoteException("inactivity");
             }
 
-            input = userInput.getAndSet(null);
-
-            if(input != null){
-                return input;
+            if(userInput.get() != null){
+                return userInput.getAndSet(null);
             }
+
             try{
                 time++;
                 Thread.sleep(50);
@@ -145,9 +138,6 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
                 System.err.println("Thread in getString method of virtual client was abnormally interrupted");
             }
 
-            if(userInput.get() != null){
-                return userInput.getAndSet(null);
-            }
 
         }
 
