@@ -6,8 +6,8 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class AssemblingEndState implements GameState {
-    AssemblyProtocol assemblyProtocol;
-    Player player;
+    private AssemblyProtocol assemblyProtocol;
+    private Player player;
 
     public AssemblingEndState(AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
@@ -16,12 +16,12 @@ public class AssemblingEndState implements GameState {
 
     @Override
     public void enter(AssemblyThread assemblyPhase) {
-        assemblyPhase.isfinished.set(true);
-        if(assemblyProtocol.getFlightBoard().getPlayerOrderList().size() == assemblyPhase.gameInformation.getPlayerList().size()){
+        assemblyPhase.getIsfinished().set(true);
+        if(assemblyProtocol.getFlightBoard().getPlayerOrderList().size() == assemblyPhase.getGameInformation().getPlayerList().size()){
             assemblyPhase.setRunning(false);
             return;
         }
-        if(!assemblyPhase.running.get()){
+        if(!assemblyPhase.getRunning().get()){
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
             //assemblyPhase.end.set(true);
             //return;
@@ -37,19 +37,19 @@ public class AssemblingEndState implements GameState {
        switch (input.toLowerCase()) {
            case "yes":
                if(assemblyProtocol.getHourGlass().isFinished() == true) {
-                   if (assemblyPhase.gameInformation.getGameType().equals(GameType.NORMALGAME)) {
+                   if (assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
                        if (assemblyProtocol.getHourGlass().getState() == 2) {
                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
                        } else {
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
                        }
                    }else{
                        if (assemblyProtocol.getHourGlass().getState() == 1){
                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
                        }else{
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.gameInformation.getPlayerList());
+                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
                        }
                    }
                }
