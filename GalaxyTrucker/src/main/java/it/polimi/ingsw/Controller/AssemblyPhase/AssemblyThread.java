@@ -12,17 +12,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AssemblyThread implements Runnable {
-    GameInformation gameInformation;
-    Player associatedPlayer;
-    AssemblyProtocol assemblyProtocol;
+    private GameInformation gameInformation;
+    private Player associatedPlayer;
+    private AssemblyProtocol assemblyProtocol;
     private GameState currentState;
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
-    AtomicBoolean running;
-    CountDownLatch latch;
-    AtomicBoolean isfinished = new AtomicBoolean(false);
-    AtomicBoolean amIChoosing = new AtomicBoolean(false);
-    AtomicBoolean end = new AtomicBoolean(false);
-    Thread t;
+    private AtomicBoolean running;
+    private CountDownLatch latch;
+    private AtomicBoolean isfinished = new AtomicBoolean(false);
+    private AtomicBoolean amIChoosing = new AtomicBoolean(false);
+    private AtomicBoolean end = new AtomicBoolean(false);
+    private Thread t;
 
 
     public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, CountDownLatch latch) {
@@ -56,6 +56,38 @@ public class AssemblyThread implements Runnable {
 
     public GameInformation getGameInformation() {
         return gameInformation;
+    }
+
+    public Player getAssociatedPlayer() {
+        return associatedPlayer;
+    }
+
+    public GameState getCurrentState() {
+        return currentState;
+    }
+
+    public BlockingQueue<String> getInputQueue() {
+        return inputQueue;
+    }
+
+    public AtomicBoolean getRunning() {
+        return running;
+    }
+
+    public CountDownLatch getLatch() {
+        return latch;
+    }
+
+    public AtomicBoolean getAmIChoosing() {
+        return amIChoosing;
+    }
+
+    public AtomicBoolean getEnd() {
+        return end;
+    }
+
+    public AtomicBoolean getIsfinished() {
+        return isfinished;
     }
 
     @Override

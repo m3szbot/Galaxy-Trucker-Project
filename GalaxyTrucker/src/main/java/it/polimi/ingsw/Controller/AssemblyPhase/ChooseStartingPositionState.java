@@ -19,7 +19,7 @@ public class ChooseStartingPositionState implements GameState {
 
     @Override
     public void enter(AssemblyThread assemblyPhase) {
-        assemblyPhase.amIChoosing.set(true);
+        assemblyPhase.getAmIChoosing().set(true);
         actionTaken = false;
         List<Integer> tiles = new ArrayList<>(assemblyProtocol.getFlightBoard().getStartingTiles());
         String positions = null;

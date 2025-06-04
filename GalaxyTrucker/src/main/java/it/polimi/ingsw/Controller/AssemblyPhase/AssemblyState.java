@@ -80,7 +80,7 @@ public class AssemblyState implements GameState {
                 break;
             case "turn":
                 actionTaken = true;
-                if(assemblyPhase.assemblyProtocol.getHourGlass().isFinished() == true) {
+                if(assemblyPhase.getAssemblyProtocol().getHourGlass().isFinished() == true) {
                     if (assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
                         if (assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 2) {
                             message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
@@ -88,7 +88,7 @@ public class AssemblyState implements GameState {
                         } else {
                             message = "Turn the hourglass";
                             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
+                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.getGameInformation().getPlayerList());
                         }
                     } else {
                         if (assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 1) {
@@ -97,7 +97,7 @@ public class AssemblyState implements GameState {
                         } else {
                             message = "Turn the hourglass";
                             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.gameInformation.getPlayerList());
+                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.getGameInformation().getPlayerList());
                         }
                     }
                 }
