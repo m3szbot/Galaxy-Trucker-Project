@@ -85,8 +85,6 @@ public interface TokenLoss {
                 coordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
             try {
@@ -135,8 +133,6 @@ public interface TokenLoss {
                     coordinates = playerMessenger.getPlayerCoordinates();
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
 
                 message = "Enter the number of " + colorSolver(i) + " goods you want to remove from this storage:";
@@ -147,8 +143,6 @@ public interface TokenLoss {
                     tempNumberToRemove[i] = playerMessenger.getPlayerInt();
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
 
                 try {
@@ -312,8 +306,6 @@ public interface TokenLoss {
                     coordinates = playerMessenger.getPlayerCoordinates();
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
 
                 try {

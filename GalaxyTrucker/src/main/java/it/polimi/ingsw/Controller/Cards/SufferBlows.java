@@ -192,8 +192,6 @@ public interface SufferBlows {
                 }
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
         } else {
@@ -239,8 +237,6 @@ public interface SufferBlows {
                         }
                     } catch (PlayerDisconnectedException e) {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                        message = e.getMessage();
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                     }
 
                 } else { //player doesn't have batteries
@@ -302,8 +298,6 @@ public interface SufferBlows {
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
             } else {
 
@@ -387,8 +381,6 @@ public interface SufferBlows {
 
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
             try {

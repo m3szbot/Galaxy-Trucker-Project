@@ -87,8 +87,6 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
 
             } else if (results[i] == AttackStates.PlayerDefeated) {

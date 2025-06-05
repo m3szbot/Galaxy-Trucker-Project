@@ -44,8 +44,6 @@ public interface GoodsGain {
             discardingPhaseFlag = playerMessenger.getPlayerBoolean();
         } catch (PlayerDisconnectedException e) {
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-            message = e.getMessage();
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
         }
 
         while (discardingPhaseFlag) {
@@ -59,8 +57,6 @@ public interface GoodsGain {
                 coordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
             int[] goodsToRemove;
@@ -89,8 +85,6 @@ public interface GoodsGain {
                 discardingPhaseFlag = playerMessenger.getPlayerBoolean();
             } catch (PlayerDisconnectedException error) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = error.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
         }
 
@@ -110,8 +104,6 @@ public interface GoodsGain {
             rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
         } catch (PlayerDisconnectedException e) {
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-            message = e.getMessage();
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
         }
 
         while (rearrangementPhaseFlag) {
@@ -128,8 +120,6 @@ public interface GoodsGain {
                 sourceCoordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
             message = "Enter coordinate of the destination storage component: ";
@@ -140,8 +130,6 @@ public interface GoodsGain {
                 destCoordinates = playerMessenger.getPlayerCoordinates();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
             int[] movingGoods;
@@ -166,8 +154,6 @@ public interface GoodsGain {
 
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
         }
     }
@@ -198,8 +184,6 @@ public interface GoodsGain {
                     placementPhaseFlag = playerMessenger.getPlayerBoolean();
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    message = e.getMessage();
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                 }
 
                 while (placementPhaseFlag) {
@@ -213,8 +197,6 @@ public interface GoodsGain {
                         coordinates = playerMessenger.getPlayerCoordinates();
                     } catch (PlayerDisconnectedException e) {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                        message = e.getMessage();
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                     }
 
                     //Asks for which goods they want to add to the storage
@@ -244,8 +226,6 @@ public interface GoodsGain {
                             placementPhaseFlag = playerMessenger.getPlayerBoolean();
                         } catch (PlayerDisconnectedException e) {
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                            message = e.getMessage();
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         }
 
                         //Resets the array for the next cycle
@@ -588,8 +568,6 @@ public interface GoodsGain {
                 goods[i] = playerMessenger.getPlayerInt();
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                message = e.getMessage();
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             }
 
         }
