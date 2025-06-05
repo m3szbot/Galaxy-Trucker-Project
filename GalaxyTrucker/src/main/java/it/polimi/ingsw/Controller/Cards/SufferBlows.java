@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
@@ -29,7 +30,6 @@ public interface SufferBlows {
 
     default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) {
 
-        String message;
         int[] componentCoordinates = new int[2];
         boolean hitFlag;
 
@@ -39,6 +39,7 @@ public interface SufferBlows {
 
             if (blow != null) {
 
+                //Pause before each blow
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
@@ -46,9 +47,6 @@ public interface SufferBlows {
                 }
 
                 componentCoordinates = findHitComponent(player, blow, componentCoordinates);
-
-                //message = "Coordinates of the component expected to be hit: " + (componentCoordinates[0] + 1) + " " + (componentCoordinates[1] + 1);
-                //ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
 
@@ -159,7 +157,7 @@ public interface SufferBlows {
 
     private boolean bigCannonBlowHit(Player player, GameInformation gameInformation, int xCoord, int yCoord) {
 
-        return removeComponent(player, xCoord, yCoord);
+        return removeComponent(player, xCoord, yCoord, gameInformation);
 
     }
 
@@ -187,7 +185,7 @@ public interface SufferBlows {
 
                 } else { //player decides to not defend themselves
 
-                    hitFlag = removeComponent(player, xCoord, yCoord);
+                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
 
                 }
             } catch (PlayerDisconnectedException e) {
@@ -197,7 +195,7 @@ public interface SufferBlows {
         } else {
 
             //Removes the component if there's no shield
-            hitFlag = removeComponent(player, xCoord, yCoord);
+            hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
         }
 
         //False if not hit
@@ -233,7 +231,7 @@ public interface SufferBlows {
 
                         } else { //player decide to not defend itself
 
-                            hitFlag = removeComponent(player, xCoord, yCoord);
+                            hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
                         }
                     } catch (PlayerDisconnectedException e) {
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
@@ -241,7 +239,7 @@ public interface SufferBlows {
 
                 } else { //player doesn't have batteries
 
-                    hitFlag = removeComponent(player, xCoord, yCoord);
+                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
 
                 }
 
@@ -253,7 +251,7 @@ public interface SufferBlows {
 
         } else { //player doesn't have a cannon
 
-            hitFlag = removeComponent(player, xCoord, yCoord);
+            hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
         }
 
         return hitFlag;
@@ -293,7 +291,7 @@ public interface SufferBlows {
 
                     } else {
 
-                        hitFlag = removeComponent(player, xCoord, yCoord);
+                        hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
 
                     }
                 } catch (PlayerDisconnectedException e) {
@@ -301,7 +299,7 @@ public interface SufferBlows {
                 }
             } else {
 
-                hitFlag = removeComponent(player, xCoord, yCoord);
+                hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
 
             }
 
@@ -340,9 +338,20 @@ public interface SufferBlows {
         }
     }
 
-    private boolean removeComponent(Player player, int xCoord, int yCoord) {
+    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) {
 
-        player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+        String message;
+        PlayerMessenger playerMessenger;
+
+        try {
+            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+        } catch (NoHumanCrewLeftException e) {
+            message = e.getMessage();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
+            gameInformation.getFlightBoard().eliminatePlayer(player);
+        }
         return true;
 
     }

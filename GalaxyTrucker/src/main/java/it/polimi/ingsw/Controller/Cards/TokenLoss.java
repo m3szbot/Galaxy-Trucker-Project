@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.Arrays;
@@ -64,6 +65,7 @@ public interface TokenLoss {
         String message;
         PlayerMessenger playerMessenger;
         int[] coordinates = new int[2];
+
         //removing crew members or aliens
         int availableCrew = player.getShipBoard().getShipBoardAttributes().getCrewMembers();
         int numberOfCrewToRemove;
@@ -94,6 +96,13 @@ public interface TokenLoss {
                 message = e.getMessage();
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
+            } catch (NoHumanCrewLeftException e) {
+                message = e.getMessage();
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
+
+                gameInformation.getFlightBoard().eliminatePlayer(player);
+                numberOfCrewToRemove = 0;
             }
         }
     }
@@ -168,116 +177,6 @@ public interface TokenLoss {
         //In case the goods on the ship were not enough the remaining number is taken from the battery stock
         return quantity;
     }
-
-    //Lascio per sicurezza il metodo originale finchè non è certo che funzioni tutto a dovere
-    /*
-    private int removeGoods(Player player, int quantity, int[] goodsOnShip, GameInformation gameInformation) {
-
-        String message;
-        PlayerMessenger playerMessenger;
-        String goodColor;
-        int numberOfGoodsToRemove;
-        Component component;
-        int[] coordinates = new int[2];
-
-        for (int i = 0; i < 4 && quantity > 0; i++) {
-
-            if (goodsOnShip[i] > 0) {
-
-                goodColor = colorSolver(i);
-
-                //Calculates how many goods the player has to remove
-                if (goodsOnShip[i] >= quantity) {
-
-                    numberOfGoodsToRemove = quantity;
-                    quantity = 0;
-
-                } else {
-
-                    quantity -= goodsOnShip[i];
-                    numberOfGoodsToRemove = goodsOnShip[i];
-                }
-
-
-                while (numberOfGoodsToRemove > 0) {
-
-                    int[] availableGoods;
-                    int numberOfRemovedGoods = 0;
-                    int[] goodsRemoved = {0, 0, 0, 0};
-
-                    message = "You must remove " + numberOfGoodsToRemove + " " + goodColor + " goods, " +
-                            "enter coordinate of storage component: ";
-                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                    playerMessenger.printMessage(message);
-
-                    component = player.getShipBoard().getComponent(coordinates[0], coordinates[1]);
-
-                    if (component.getComponentName().equals("Storage")) {
-
-                        availableGoods = ((Storage) component).getGoods();
-
-                        if (availableGoods[i] > 0) {
-
-                            while (true) {
-
-                                message = "Enter number of " + goodColor + " goods that you want to remove: ";
-                                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                                playerMessenger.printMessage(message);
-
-                                try {
-                                    numberOfRemovedGoods = playerMessenger.getPlayerInt();
-                                } catch (PlayerDisconnectedException e) {
-                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                                    ;
-                                    message = e.getMessage();
-                                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                                }
-                                goodsRemoved[i] = numberOfRemovedGoods;
-
-                                if (numberOfRemovedGoods <= availableGoods[i] && numberOfRemovedGoods <= numberOfGoodsToRemove && numberOfRemovedGoods > 0) {
-
-                                    numberOfGoodsToRemove -= numberOfRemovedGoods;
-                                    gameInformation.getFlightBoard().addGoods(goodsRemoved);
-                                    ((Storage) component).removeGoods(goodsRemoved);
-                                    player.getShipBoard().getShipBoardAttributes().updateGoods(new int[]{-goodsRemoved[0], -goodsRemoved[1], -goodsRemoved[2], -goodsRemoved[3]});
-
-                                    if (((Storage) component).isRed()) {
-                                        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(1, numberOfRemovedGoods);
-                                    } else {
-                                        player.getShipBoard().getShipBoardAttributes().updateAvailableSlots(0, numberOfRemovedGoods);
-                                    }
-                                    break;
-
-                                }
-
-                                message = "The number of goods you entered is invalid";
-                                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                                playerMessenger.printMessage(message);
-
-                            }
-
-                        } else {
-                            message = "The storage component you selected does not contain " + goodColor + " goods";
-                            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                            playerMessenger.printMessage(message);
-                        }
-
-                    } else {
-                        message = "The component you selected is not a storage";
-                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                        playerMessenger.printMessage(message);
-                    }
-
-                }
-
-            }
-
-        }
-
-        return quantity;
-    }
-
-     */
 
     private void removeBatteries(Player player, int quantity, GameInformation gameInformation) {
 
