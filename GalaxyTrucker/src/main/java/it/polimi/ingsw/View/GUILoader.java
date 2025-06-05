@@ -11,14 +11,9 @@ public class GUILoader extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        /*
-        Parent root = FXMLLoader.load(getClass().getResource(view.getFXML()));
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Galaxy Trucker");
-        primaryStage.show();
 
-         */
+
+
     }
 
 

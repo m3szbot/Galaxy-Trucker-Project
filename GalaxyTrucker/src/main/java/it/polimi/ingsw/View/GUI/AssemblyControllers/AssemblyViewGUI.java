@@ -1,18 +1,9 @@
 /*package it.polimi.ingsw.View.AssemblyView;
 
-import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Model.AssemblyModel.Deck;
-import it.polimi.ingsw.Model.Components.Component;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -44,7 +35,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
     }
 
     public String getFXML(){
-        return "/fxml/AssemblyView.fxml";
+        return "/fxml/AssemblyView/AssemblyView.fxml";
     }
 
     @FXML
@@ -84,7 +75,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
 
     private void openChoicePopup(List<Component> components) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/componentChoicePopUp.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/componentChoicePopUp.fxml"));
 
             AnchorPane popupRoot = loader.load();
 
@@ -126,7 +117,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
 
     public void openDeckChoicePopup(){
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/deckChoicePopUp.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/deckChoicePopUp.fxml"));
 
             AnchorPane popupRoot = loader.load();
             HBox container = (HBox) popupRoot.lookup("#imageContainer");
@@ -164,7 +155,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
 
     public void openShowDeckPopup(List<Card> cards){
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/showDeckPopUp.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/showDeckPopUp.fxml"));
             AnchorPane popupRoot = loader.load();
             HBox container = (HBox) popupRoot.lookup("#imageContainer");
 
