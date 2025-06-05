@@ -32,32 +32,32 @@
     "cardName": "AbandonedShip",
     "daysLost": 1,
     "lossType": "CrewMember",
-    "numOfLosses": 3,
-    "numOfGainedCredits": 4
+    "lossNumber": 3,
+    "gainedCredits": 4
   },
   {
     "level": 1,
     "cardName": "AbandonedShip",
     "daysLost": 1,
     "lossType": "CrewMember",
-    "numOfLosses": 2,
-    "numOfGainedCredits": 3
+    "lossNumber": 2,
+    "gainedCredits": 3
   },
   {
     "level": 2,
     "cardName": "AbandonedShip",
     "daysLost": 1,
     "lossType": "CrewMember",
-    "numOfLosses": 4,
-    "numOfGainedCredits": 6
+    "lossNumber": 4,
+    "gainedCredits": 6
   },
   {
     "level": 2,
     "cardName": "AbandonedShip",
     "daysLost": 1,
     "lossType": "CrewMember",
-    "numOfLosses": 5,
-    "numOfGainedCredits": 8
+    "lossNumber": 5,
+    "gainedCredits": 8
   },
   {
     "level": 2,
@@ -122,7 +122,7 @@
     "gainedCredits": 5,
     "requirementType": "FirePower",
     "lossType": "CrewMember",
-    "lossQuantity": 3,
+    "lossNumber": 3,
     "requirementNumber": 6
   },
   {
@@ -132,7 +132,7 @@
     "gainedCredits": 8,
     "requirementType": "FirePower",
     "lossType": "CrewMember",
-    "lossQuantity": 4,
+    "lossNumber": 4,
     "requirementNumber": 7
   },
   {
@@ -443,7 +443,7 @@
     "requirementType": "FirePower",
     "lossType": "Goods",
     "requirementNumber": 4,
-    "lossQuantity": 2,
+    "lossNumber": 2,
     "goods": [
       0,
       1,
@@ -457,7 +457,7 @@
     "requirementType": "FirePower",
     "lossType": "Goods",
     "requirementNumber": 8,
-    "lossQuantity": 3,
+    "lossNumber": 3,
     "goods": [
       1,
       2,
