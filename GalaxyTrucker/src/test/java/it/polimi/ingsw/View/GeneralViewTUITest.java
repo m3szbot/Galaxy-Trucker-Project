@@ -7,6 +7,7 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.View.TUI.TuiView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ class GeneralViewTUITest {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         dataContainer = new DataContainer();
         // abstract class cannot be instantiated
-        generalViewTUI = new GeneralView();
+        generalViewTUI = new TuiView();
     }
 
     @Test

@@ -3,11 +3,8 @@ package it.polimi.ingsw.Connection.ClientSide.socket;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
-import it.polimi.ingsw.View.AssemblyView.AssemblyViewTUI;
-import it.polimi.ingsw.View.CorrectionView.CorrectionViewTUI;
-import it.polimi.ingsw.View.EvaluationView.EvaluationViewTUI;
-import it.polimi.ingsw.View.FlightView.FlightViewTUI;
 import it.polimi.ingsw.View.GeneralView;
+import it.polimi.ingsw.View.TUI.TuiView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -50,10 +47,10 @@ public class GameStarter {
 
         if (viewType == ViewType.TUI) {
 
-            views[0] = new AssemblyViewTUI();
-            views[1] = new CorrectionViewTUI();
-            views[2] = new FlightViewTUI();
-            views[3] = new EvaluationViewTUI();
+            views[0] = new TuiView();
+            views[1] = new TuiView();
+            views[2] = new TuiView();
+            views[3] = new TuiView();
 
         } else {/*
 

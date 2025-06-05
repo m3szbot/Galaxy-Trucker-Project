@@ -1,6 +1,5 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyThread;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -20,7 +19,4 @@ public interface ViewServerInvokableMethods {
 
     public void printFlightBoard(FlightBoard flightBoard);
 
-    default String getFXML() {
-        return null;
-    }
 }

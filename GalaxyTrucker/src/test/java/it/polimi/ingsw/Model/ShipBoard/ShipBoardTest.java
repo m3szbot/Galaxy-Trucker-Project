@@ -4,6 +4,7 @@ import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.View.GeneralView;
+import it.polimi.ingsw.View.TUI.TuiView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ public class ShipBoardTest {
     ShipBoard shipBoard;
 
     // view to print shipboard to debug
-    GeneralView generalViewTUI = new GeneralView();
+    GeneralView generalViewTUI = new TuiView();
 
     // components sides
     SideType[] smoothSides = new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth};
