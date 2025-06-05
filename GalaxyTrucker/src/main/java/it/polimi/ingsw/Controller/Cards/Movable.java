@@ -13,11 +13,9 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public interface Movable {
 
     /**
-     *
-     * @param player target player
+     * @param player       target player
      * @param numberOfDays number of tiles the player will be moved forward
-     * @param flightBoard flightboard of the current game
-     *
+     * @param flightBoard  flightBoard of the current game
      * @author Carlo
      */
 

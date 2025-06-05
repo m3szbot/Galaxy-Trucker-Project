@@ -36,19 +36,42 @@ public class StarDust extends Card implements Movable {
 
     public void resolve(GameInformation gameInformation) {
 
+        String message;
         PlayerMessenger playerMessenger;
+        int externalJunctions;
+        Player player;
 
         List<Player> players = gameInformation.getFlightBoard().getPlayerOrderList();
 
         for (int i = gameInformation.getFlightBoard().getPlayerOrderList().size() - 1; i >= 0; i--) {
 
-            changePlayerPosition(players.get(i), -players.get(i).getShipBoard().countExternalJunctions(), gameInformation.getFlightBoard());
+            player = players.get(i);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            externalJunctions = player.getShipBoard().countExternalJunctions();
+
+            changePlayerPosition(player, -externalJunctions, gameInformation.getFlightBoard());
+
+            if (externalJunctions > 0) {
+                message = "Player " + player.getNickName() + " has receded of " + externalJunctions + " positions!\n";
+                playerMessenger.printMessage(message);
+
+            } else {
+                message = "Player " + player.getNickName() + " has not receded!\n";
+                playerMessenger.printMessage(message);
+
+            }
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                System.out.println("Error while sleeping");
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 
