@@ -40,7 +40,7 @@ public interface SufferBlows {
             if (blow != null) {
 
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     System.out.println("Error while sleeping");
                 }
