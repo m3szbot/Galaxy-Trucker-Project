@@ -9,6 +9,7 @@ import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import javax.management.ObjectInstance;
+import java.util.List;
 
 /**
  * class that represent the card epidemic
@@ -39,16 +40,69 @@ public class Epidemic extends Card {
         Player player;
         String message;
         PlayerMessenger playerMessenger;
+        List<int[]> cabinsToInfect;
+        int[] coordinates;
+        boolean isEliminated = false;
+        int numberOfRemovedInhabitants = 0;
+
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
-
-            message = "An epidemic is spreading in your ship!\t You may lose many crew members to the disease!\n";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+            message = "An epidemic is spreading in your ship!  You may lose many crew members to the disease!\n";
             playerMessenger.printMessage(message);
 
-            removeAdjacentAstronauts(player, gameInformation);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println("Error while sleeping");
+            }
+
+            cabinsToInfect = player.getShipBoard().getJoinedCabinsVisibleCoordinates();
+
+            if (!cabinsToInfect.isEmpty()) {
+
+                for (int j = 0; j < cabinsToInfect.size(); j++) {
+
+                    coordinates = cabinsToInfect.get(j);
+
+                    try {
+                        player.getShipBoard().removeCrewMember(coordinates[0], coordinates[1]);
+                        numberOfRemovedInhabitants++;
+                    } catch (NoHumanCrewLeftException e) {
+
+                        message = e.getMessage();
+                        playerMessenger.printMessage(message);
+
+                        gameInformation.getFlightBoard().eliminatePlayer(player);
+                        isEliminated = true;
+                        break;
+
+                    }
+
+                }
+            }
+
+            if (isEliminated) {
+
+                message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and has been eliminated!\n";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            } else {
+
+                message = "Player " + player.getNickName() + " lost " + numberOfRemovedInhabitants +
+                        " inhabitants from the epidemic!";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            }
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println("Error while sleeping");
+            }
 
         }
 
