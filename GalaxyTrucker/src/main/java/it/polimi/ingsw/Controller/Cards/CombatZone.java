@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -29,6 +29,18 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         this.blows = cardBuilder.getBlows();
         this.blowType = cardBuilder.getBlowType();
         this.lossType = cardBuilder.getLossType();
+
+    }
+
+    public void showCard() {
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Loss type: " + lossType.toString());
+        System.out.println("Blow type: " + blowType.toString());
+
+        printBlows(blows);
 
     }
 
@@ -107,18 +119,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         gameInformation.getFlightBoard().updateFlightBoard();
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-    }
-
-    public void showCard() {
-
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Days lost: " + daysLost);
-        System.out.println("Loss type: " + lossType.toString());
-        System.out.println("Blow type: " + blowType.toString());
-
-        printBlows(blows);
 
     }
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -16,7 +16,6 @@ public class ComponentPlacingState implements GameState {
     private AssemblyProtocol assemblyProtocol;
     private Player player;
     private Boolean booked;
-
     /**
      * Constructs a ComponentPlacingState for the current player.
      *
@@ -59,16 +58,15 @@ public class ComponentPlacingState implements GameState {
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
         }
         try {
-            int num1 = Integer.parseInt(parts[0]);
-            int num2 = Integer.parseInt(parts[1]);
+            int num1 = Integer.parseInt(parts[0]); int num2 = Integer.parseInt(parts[1]);
             if (num1 < 4 || num2 < 4 || num1 > 10 || num2 > 10) {
                 String message = "Placing position out of bounds!";
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                if (booked) {
+                if (booked){
                     assemblyPhase.getAssemblyProtocol().bookComponent(player);
                 }
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
-            } else {
+            }else {
                 if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
                     if (assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 2, num2 - 1) != null ||
                             assemblyPhase.getGameInformation().getPlayerList().get(assemblyPhase.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1, num2 - 1) != null ||
@@ -82,14 +80,14 @@ public class ComponentPlacingState implements GameState {
                         } catch (NotPermittedPlacementException e) {
                             String message = "Your are not allowed to place your component here";
                             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                            if (booked) {
+                            if (booked){
                                 assemblyPhase.getAssemblyProtocol().bookComponent(player);
                             }
                         }
                     } else {
                         String message = "You can't place your component here, it would float in the air";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                        if (booked) {
+                        if (booked){
                             assemblyPhase.getAssemblyProtocol().bookComponent(player);
                         }
                     }

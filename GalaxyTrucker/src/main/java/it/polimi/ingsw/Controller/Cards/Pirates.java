@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -29,6 +29,18 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         this.requirementNumber = cardBuilder.getRequirementNumber();
         this.blowType = cardBuilder.getBlowType();
         this.blows = cardBuilder.getBlows();
+
+    }
+
+    public void showCard() {
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Gained credit: " + gainedCredit);
+        System.out.println("Blow type: " + blowType.toString());
+        System.out.println("Requirement number: " + requirementNumber + " (fire power)");
+        printBlows(blows);
 
     }
 
@@ -102,18 +114,6 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
-
-    }
-
-    public void showCard() {
-
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Days lost: " + daysLost);
-        System.out.println("Gained credit: " + gainedCredit);
-        System.out.println("Blow type: " + blowType.toString());
-        System.out.println("Requirement number: " + requirementNumber + " (fire power)");
-        printBlows(blows);
 
     }
 

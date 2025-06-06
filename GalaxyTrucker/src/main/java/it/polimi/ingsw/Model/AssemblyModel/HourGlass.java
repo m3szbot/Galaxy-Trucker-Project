@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Model.AssemblyModel;
 
-import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.ArrayList;
@@ -17,11 +17,11 @@ import java.util.concurrent.TimeUnit;
  * @author Giacomo
  */
 public class HourGlass {
-    List<Player> listOfPlayers = new ArrayList<>();
-    ScheduledExecutorService scheduler;
     private int state; // Represents the current state of the hourglass
     private boolean finished; // Indicates whether the timer has completed
     private int life = 60; // Duration of the timer in seconds
+    List<Player> listOfPlayers = new ArrayList<>();
+    ScheduledExecutorService scheduler;
 
     /**
      * Constructor initializes the HourGlass with a default state and finished status.
@@ -46,7 +46,7 @@ public class HourGlass {
                 @Override
                 public void run() {
                     if (elapsedTime < life) {
-                        if (elapsedTime % 15 == 0) {
+                        if(elapsedTime % 15 == 0) {
                             String message = ("Elapsed Time: " + elapsedTime + "s");
                             ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendMessageToAll(message);
 
@@ -70,15 +70,15 @@ public class HourGlass {
         }
     }
 
+    public void stopHourglass() {
+        scheduler.shutdownNow();
+    }
+
     /**
      * Updates the state of the hourglass when the timer finishes.
      */
     private void updateState() {
         state++;
-    }
-
-    public void stopHourglass() {
-        scheduler.shutdownNow();
     }
 
     /**

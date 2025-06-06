@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide.Messengers;
+package it.polimi.ingsw.Connection.ServerSide.messengers;
 
 import it.polimi.ingsw.Connection.ServerSide.Server;
 
@@ -21,11 +21,10 @@ public class ClientMessenger {
     /**
      * when a new game is started, addGame must be called to add the gameMessenger for
      * the game
-     *
      * @param gameCode of the added game
      */
 
-    public static void addGame(int gameCode) {
+    public static void addGame(int gameCode){
 
         gameMessengerMap.put(gameCode, new GameMessenger());
 
@@ -44,11 +43,11 @@ public class ClientMessenger {
      * @return gameMessenger of the current game
      */
 
-    public static GameMessenger getGameMessenger(int gameCode) {
+    public static GameMessenger getGameMessenger(int gameCode){
         return gameMessengerMap.get(gameCode);
     }
 
-    public static void endGame(int gameCode) {
+    public static void endGame(int gameCode){
         gameMessengerMap.remove(gameCode);
     }
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.AssemblyModel.Deck;
@@ -35,8 +35,7 @@ public class ShowDeckState implements GameState {
     @Override
     public void enter(AssemblyThread assemblyPhase) {
         String message = "Choose a deck from 1 to 3 writing the number:";
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-    }
+        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);}
 
     /**
      * Handles the user's input to select a deck, validates the index,
@@ -50,7 +49,7 @@ public class ShowDeckState implements GameState {
         int index = Integer.parseInt(input);
 
         if (index > 0 && index <= 3) {
-            if (assemblyProtocol.getDeck(index - 1).getInUse() == false) {
+            if(assemblyProtocol.getDeck(index-1).getInUse() == false) {
                 synchronized (assemblyProtocol.lockDecksList) {
                     Deck deck = assemblyPhase.getAssemblyProtocol().showDeck(index);
                     for (Card card : deck.getCards()) {
@@ -58,7 +57,8 @@ public class ShowDeckState implements GameState {
                     }
                 }
                 assemblyPhase.setState(new DeckInUseState(assemblyProtocol, player, index));
-            } else {
+            }
+            else{
                 String message = "Deck already in use!";
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));

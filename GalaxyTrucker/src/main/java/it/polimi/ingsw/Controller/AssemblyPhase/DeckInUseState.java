@@ -1,8 +1,10 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 
-import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 public class DeckInUseState implements GameState {
@@ -23,12 +25,13 @@ public class DeckInUseState implements GameState {
     }
 
     public void handleInput(String input, AssemblyThread assemblyPhase) {
-        if (input.toLowerCase().equals("yes")) {
+        if(input.toLowerCase().equals("yes")){
             synchronized (assemblyProtocol.lockDecksList) {
-                assemblyProtocol.getDeck(index - 1).setInUse(false);
+                assemblyProtocol.getDeck(index-1).setInUse(false);
             }
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
-        } else {
+        }
+        else{
             String message = "Invalid Input";
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             assemblyPhase.setState(new DeckInUseState(assemblyProtocol, player, index));

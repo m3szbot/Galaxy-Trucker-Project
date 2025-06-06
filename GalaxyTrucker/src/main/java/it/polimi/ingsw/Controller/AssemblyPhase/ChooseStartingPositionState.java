@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -23,10 +23,10 @@ public class ChooseStartingPositionState implements GameState {
         actionTaken = false;
         List<Integer> tiles = new ArrayList<>(assemblyProtocol.getFlightBoard().getStartingTiles());
         String positions = null;
-        for (int i = 1; i <= assemblyProtocol.getFlightBoard().getStartingTiles().size(); i++) {
+        for(int i = 1; i <= assemblyProtocol.getFlightBoard().getStartingTiles().size(); i++ ) {
             if (positions == null) {
                 positions = "" + i;
-            } else {
+            }else{
                 positions = positions + " - " + i;
             }
         }
@@ -41,7 +41,7 @@ public class ChooseStartingPositionState implements GameState {
             case "1":
                 actionTaken = true;
                 try {
-                    assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size() - 1)); //3
+                    assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-1)); //3
                 } catch (IndexOutOfBoundsException e) {
                     String message = "Error in position choosing, please enter it again";
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
@@ -54,7 +54,7 @@ public class ChooseStartingPositionState implements GameState {
                 actionTaken = true;
                 if (assemblyProtocol.getFlightBoard().getStartingTiles().size() >= 2) {
                     try {
-                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size() - 2)); //2
+                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-2)); //2
                     } catch (IndexOutOfBoundsException e) {
                         String message = "Error in position choosing, please enter it again";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
@@ -73,7 +73,7 @@ public class ChooseStartingPositionState implements GameState {
                 actionTaken = true;
                 if (assemblyProtocol.getFlightBoard().getStartingTiles().size() >= 3) {
                     try {
-                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size() - 3)); //1
+                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-3)); //1
                     } catch (IndexOutOfBoundsException e) {
                         String message = "Error in position choosing, please enter it again";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
@@ -92,7 +92,7 @@ public class ChooseStartingPositionState implements GameState {
                 actionTaken = true;
                 if (assemblyProtocol.getFlightBoard().getStartingTiles().size() == 4) {
                     try {
-                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size() - 4)); //0
+                        assemblyProtocol.getFlightBoard().addPlayer(player, assemblyProtocol.getFlightBoard().getStartingTiles().get(assemblyProtocol.getFlightBoard().getStartingTiles().size()-4)); //0
                     } catch (IndexOutOfBoundsException e) {
                         String message = "Error in position choosing, please enter it again";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
