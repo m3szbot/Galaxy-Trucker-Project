@@ -213,6 +213,7 @@ public class ShipBoardTest {
         shipBoard.removeComponent(8, 7, false);
         assertTrue(shipBoard.isErroneous());
         generalViewTUI.printShipboard(shipBoard);
+
     }
 
     @Test
