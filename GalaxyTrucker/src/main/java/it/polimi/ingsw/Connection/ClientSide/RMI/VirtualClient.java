@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide.RMI;
 
-import it.polimi.ingsw.Connection.ClientSide.Utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;

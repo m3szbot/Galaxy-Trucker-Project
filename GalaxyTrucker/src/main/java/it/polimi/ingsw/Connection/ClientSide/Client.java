@@ -2,9 +2,9 @@ package it.polimi.ingsw.Connection.ClientSide;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.RMIGameHandler;
 import it.polimi.ingsw.Connection.ClientSide.Socket.SocketGameHandler;
-import it.polimi.ingsw.Connection.ClientSide.Utils.ClientInfo;
-import it.polimi.ingsw.Connection.ClientSide.Utils.ClientWelcomer;
-import it.polimi.ingsw.Connection.ClientSide.Utils.InputDaemon;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientWelcomer;
+import it.polimi.ingsw.Connection.ClientSide.utils.InputDaemon;
 import it.polimi.ingsw.Connection.ConnectionType;
 
 /**

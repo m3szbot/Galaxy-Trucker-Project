@@ -1,20 +1,25 @@
 package it.polimi.ingsw.Connection.ServerSide.RMI;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
-import it.polimi.ingsw.Connection.ClientSide.Utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class VirtualServer extends UnicastRemoteObject implements ServerRemoteInterface {
+public class VirtualServer extends UnicastRemoteObject implements ServerRemoteInterface{
 
     private Server centralServer;
 
-    public VirtualServer(Server centralServer) throws RemoteException {
+    public VirtualServer(Server centralServer) throws RemoteException{
 
         this.centralServer = centralServer;
 
+    }
+
+    @Override
+    public boolean isAlive() throws RemoteException {
+        return true;
     }
 
     @Override
@@ -41,10 +46,5 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
             System.out.println("Client " + clientInfo.getNickname() + " disconnected!");
         }
 
-    }
-
-    @Override
-    public boolean isAlive() throws RemoteException {
-        return true;
     }
 }

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide.Utils;
+package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ViewType;

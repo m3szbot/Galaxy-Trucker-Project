@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ClientSide.Utils;
+package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
@@ -10,21 +10,21 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author carlo
  */
 
-public class InputDaemon extends Thread {
+public class InputDaemon extends Thread{
 
     AtomicReference<String> userInput;
 
-    public InputDaemon(AtomicReference<String> userInput) {
+    public InputDaemon(AtomicReference<String> userInput){
         this.userInput = userInput;
     }
 
-    public void run() {
+    public void run(){
 
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
-            userInput.set(scanner.nextLine());
-        }
+       while(true){
+           userInput.set(scanner.nextLine());
+       }
 
     }
 }

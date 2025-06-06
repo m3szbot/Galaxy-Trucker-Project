@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide.Socket;
 
-import it.polimi.ingsw.Connection.ClientSide.Utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide.Socket;
 
-import it.polimi.ingsw.Connection.ClientSide.Utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 
 import java.io.IOException;
 
