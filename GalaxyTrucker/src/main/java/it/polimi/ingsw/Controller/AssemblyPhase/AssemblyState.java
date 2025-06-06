@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -17,6 +16,7 @@ public class AssemblyState implements GameState {
     private boolean actionTaken = false;
     private AssemblyProtocol protocol;
     private Player player;
+
     public AssemblyState(AssemblyProtocol protocol, Player player) {
         this.protocol = protocol;
         this.player = player;
@@ -31,7 +31,7 @@ public class AssemblyState implements GameState {
         startTime = System.currentTimeMillis();
         actionTaken = false;
         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printShipboard(player.getShipBoard());
-        if(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player)!= null) {
+        if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
         }
         String message = "👾AssemblyPhase (Place (current component) / Draw (a new component) / Choose (a component) / Show (a deck) / Rotate (current component) / Turn (the hourglass) / Book (current component and have a new one) / Place booked (component) / End (finish your assembling phase)";
@@ -76,7 +76,7 @@ public class AssemblyState implements GameState {
                 break;
             case "turn":
                 actionTaken = true;
-                if(assemblyPhase.getAssemblyProtocol().getHourGlass().isFinished() == true) {
+                if (assemblyPhase.getAssemblyProtocol().getHourGlass().isFinished() == true) {
                     if (assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
                         if (assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 2) {
                             message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
@@ -96,8 +96,7 @@ public class AssemblyState implements GameState {
                             assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.getGameInformation().getPlayerList());
                         }
                     }
-                }
-                else{
+                } else {
                     message = "HourGlass is already running";
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }
@@ -109,14 +108,14 @@ public class AssemblyState implements GameState {
                 break;
             case "book":
                 actionTaken = true;
-                if(assemblyPhase.getAssemblyProtocol().getBookedMap().get(player).size() < 2) {
+                if (assemblyPhase.getAssemblyProtocol().getBookedMap().get(player).size() < 2) {
                     if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
                         assemblyPhase.getAssemblyProtocol().bookComponent(player);
                     } else {
                         message = "Your hand is empty";
                         ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                     }
-                }else{
+                } else {
                     message = "You don't have any remaining space for booking components, place them in order to gain new space";
                     ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 }

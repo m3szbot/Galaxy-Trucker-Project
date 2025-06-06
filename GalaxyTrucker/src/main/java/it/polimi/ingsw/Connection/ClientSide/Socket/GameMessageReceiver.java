@@ -1,8 +1,8 @@
-package it.polimi.ingsw.Connection.ClientSide.socket;
+package it.polimi.ingsw.Connection.ClientSide.Socket;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientServerInvokableMethods;
-import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
-import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.Socket.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.View.GeneralView;
 
@@ -68,15 +68,12 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             setGamePhase(dataContainer.getGamePhase());
         } else if (command.equals("endGame")) {
             endGame();
-        }
-        else if(command.equals("inactivity")){
+        } else if (command.equals("inactivity")) {
             System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
             running.set(false);
-        }
-        else if(command.equals("unblock")){
+        } else if (command.equals("unblock")) {
             userInput.set(" ");
-        }
-        else {
+        } else {
             callView(dataContainer);
         }
     }

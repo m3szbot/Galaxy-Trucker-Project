@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide.socket;
+package it.polimi.ingsw.Connection.ServerSide.Socket;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
@@ -106,7 +106,7 @@ public class ClientSocketHandler extends Thread {
             } else if (e instanceof SocketTimeoutException) {
                 System.out.println("Player was kicked out because of inactivity");
 
-                try{
+                try {
                     dataExchanger.sendString("disconnect");
                 } catch (IOException ex) {
                     System.err.println("Error while sending disconnection message");
@@ -324,7 +324,7 @@ public class ClientSocketHandler extends Thread {
 
     }
 
-    private void notifyAllPlayers(String message, boolean onlySocket){
+    private void notifyAllPlayers(String message, boolean onlySocket) {
 
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendShortCutMessageToAll(message, onlySocket);
 

@@ -1,5 +1,7 @@
-package it.polimi.ingsw.Connection.ClientSide.socket;
+package it.polimi.ingsw.Connection.ClientSide.Socket;
+
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
+
 import java.io.IOException;
 
 public class SocketGameHandler {
@@ -8,7 +10,7 @@ public class SocketGameHandler {
     private GameStarter gamehandler = new GameStarter();
     private ClientInfo clientInfo;
 
-    public SocketGameHandler(ClientInfo clientInfo){
+    public SocketGameHandler(ClientInfo clientInfo) {
         this.clientInfo = clientInfo;
     }
 

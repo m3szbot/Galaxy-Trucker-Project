@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.Serializable;

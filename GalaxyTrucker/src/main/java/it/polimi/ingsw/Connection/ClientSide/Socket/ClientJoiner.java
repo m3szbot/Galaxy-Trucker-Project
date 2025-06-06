@@ -1,7 +1,7 @@
-package it.polimi.ingsw.Connection.ClientSide.socket;
+package it.polimi.ingsw.Connection.ClientSide.Socket;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
-import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.IOException;
@@ -26,12 +26,11 @@ public class ClientJoiner {
     private AtomicReference<String> userInput;
 
     /**
-     *
      * @param clientInfo
      * @return true if the joining process terminated correctly, false otherwise
      */
 
-    public boolean start(ClientInfo clientInfo){
+    public boolean start(ClientInfo clientInfo) {
 
         userInput = clientInfo.getUserInput();
 
@@ -40,15 +39,14 @@ public class ClientJoiner {
             return startTUI(clientInfo);
 
 
-        }
-        else{
+        } else {
             //TODO (GUI)
         }
 
         return false;
     }
 
-    private boolean startTUI(ClientInfo clientInfo){
+    private boolean startTUI(ClientInfo clientInfo) {
 
         SocketDataExchanger dataExchanger;
         AtomicBoolean terminatedFlag = new AtomicBoolean(false);
@@ -80,27 +78,23 @@ public class ClientJoiner {
                         terminatedFlag.set(true);
 
 
-                    }
-                    else if(message.equals("nickname updated")){
+                    } else if (message.equals("nickname updated")) {
 
                         clientInfo.setNickname(dataExchanger.getString());
                         dataExchanger.sendString(String.valueOf(clientInfo.getGameCode()));
 
-                    }
-                    else if(message.equals("disconnect")){
+                    } else if (message.equals("disconnect")) {
                         System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
                         terminatedFlag.set(true);
                         errorFlag.set(true);
                         break;
-                    }
-                    else if(message.equals("trialsEx")){
+                    } else if (message.equals("trialsEx")) {
 
                         System.out.println("You are trying to keep the server busy! Disconnection will happen soon.");
                         terminatedFlag.set(true);
                         errorFlag.set(true);
                         break;
-                    }
-                    else if (message.equals("start")) {
+                    } else if (message.equals("start")) {
                         break;
                     } else {
 
@@ -165,7 +159,7 @@ public class ClientJoiner {
     }
 
 
-    private SocketDataExchanger setUpConnection(ClientInfo clientInfo) throws IOException{
+    private SocketDataExchanger setUpConnection(ClientInfo clientInfo) throws IOException {
 
         SocketDataExchanger dataExchanger;
 
@@ -179,8 +173,8 @@ public class ClientJoiner {
         outputStream.flush();
         inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-       dataExchanger = new SocketDataExchanger(clientSocket, inputStream, outputStream);
-       return dataExchanger;
+        dataExchanger = new SocketDataExchanger(clientSocket, inputStream, outputStream);
+        return dataExchanger;
 
     }
 

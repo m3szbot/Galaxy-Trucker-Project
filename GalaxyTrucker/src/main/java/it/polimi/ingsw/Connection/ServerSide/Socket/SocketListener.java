@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide.socket;
+package it.polimi.ingsw.Connection.ServerSide.Socket;
 
 import it.polimi.ingsw.Connection.ServerSide.Server;
 
