@@ -43,7 +43,7 @@ public interface TokenLoss {
             //Checking if there's goods on the ship to be removed
             if (goodsOnShip[0] + goodsOnShip[1] + goodsOnShip[2] + goodsOnShip[3] > 0) {
 
-                System.out.println("There are " + Arrays.toString(goodsOnShip) + "goods to be removed on your ship.\n");
+                System.out.println("There are " + Arrays.toString(goodsOnShip) + " goods to be removed on your ship.\n");
 
                 //there are some goods that can be removed
                 quantity = removeGoods(player, quantity, goodsOnShip, gameInformation);
@@ -171,7 +171,6 @@ public interface TokenLoss {
                     tempNumberToRemove[j] = 0;
                 }
             }
-            System.out.println("i = " + i);
         }
 
         //In case the goods on the ship were not enough the remaining number is taken from the battery stock

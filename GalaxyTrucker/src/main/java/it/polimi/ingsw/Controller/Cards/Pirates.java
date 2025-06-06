@@ -96,10 +96,10 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 break;
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
-                hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
-
                 message = "Player " + player.getNickName() + " is under pirate fire!!\n";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
 
             }
 

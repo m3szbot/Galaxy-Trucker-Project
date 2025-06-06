@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
@@ -219,7 +220,7 @@ public interface SufferBlows {
 
                     message = "A big asteroid is directed on position ["
                             + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
-                            direction + "!\nDo you want to defend yourself with the " +
+                            directionSolver(direction) + "!\nDo you want to defend yourself with the " +
                             "double cannon pointing towards its direction ?";
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
@@ -280,7 +281,7 @@ public interface SufferBlows {
                 //player can defend themselves by using shields
                 message = "A small asteroid is directed on position ["
                         + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
-                        direction + "!\nDo you want to defend yourself with shields ?";
+                        directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
@@ -427,14 +428,13 @@ public interface SufferBlows {
 
                 if (player.getShipBoard().getRealComponent(xCoord, i) != null) {
 
-                    if (player.getShipBoard().getRealComponent(xCoord, i).getComponentName().equals("Cannon")
+                    if (player.getShipBoard().getRealComponent(xCoord, i) instanceof Cannon
                             && (player.getShipBoard().getRealComponent(xCoord, i).getFront() == SideType.Special)) {
 
                         //there is a cannon that can hit the blow
 
                         cannonCoords[0] = xCoord;
                         cannonCoords[1] = i;
-                        return cannonCoords;
 
                     }
                 }
@@ -459,6 +459,7 @@ public interface SufferBlows {
 
                 if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
             }
+
         } else {
             //blow comes from the back
             int temp;
@@ -489,7 +490,7 @@ public interface SufferBlows {
 
         if (player.getShipBoard().getRealComponent(i, temp) != null) {
 
-            if (player.getShipBoard().getRealComponent(i, temp).getComponentName().equals("Cannon")
+            if (player.getShipBoard().getRealComponent(i, temp) instanceof Cannon
                     && ((player.getShipBoard().getRealComponent(i, temp).getRight() == SideType.Special
                     && direction == 1)
                     || (player.getShipBoard().getRealComponent(i, temp).getLeft() == SideType.Special)
@@ -508,7 +509,7 @@ public interface SufferBlows {
     private boolean checkCannonPresenceOnBack(Player player, int[] cannonCoords, int i, int temp) {
         if (player.getShipBoard().getRealComponent(temp, i) != null) {
 
-            if (player.getShipBoard().getRealComponent(temp, i).getComponentName().equals("Cannon")
+            if (player.getShipBoard().getRealComponent(temp, i) instanceof Cannon
                     && ((player.getShipBoard().getRealComponent(temp, i).getBack() == SideType.Special))) {
 
                 cannonCoords[0] = temp;
