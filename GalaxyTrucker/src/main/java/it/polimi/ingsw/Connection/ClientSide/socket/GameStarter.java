@@ -1,7 +1,7 @@
-package it.polimi.ingsw.Connection.ClientSide.Socket;
+package it.polimi.ingsw.Connection.ClientSide.socket;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
-import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.View.GeneralView;
 import it.polimi.ingsw.View.TUI.TUIView;

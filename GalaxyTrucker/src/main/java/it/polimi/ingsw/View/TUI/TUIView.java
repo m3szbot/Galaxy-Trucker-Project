@@ -1,6 +1,6 @@
 package it.polimi.ingsw.View.TUI;
 
-import it.polimi.ingsw.Connection.ServerSide.Socket.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.ComponentStringGetterVisitor;

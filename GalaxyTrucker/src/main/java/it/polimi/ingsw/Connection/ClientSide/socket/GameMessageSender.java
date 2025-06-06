@@ -1,6 +1,6 @@
-package it.polimi.ingsw.Connection.ClientSide.Socket;
+package it.polimi.ingsw.Connection.ClientSide.socket;
 
-import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +31,7 @@ public class GameMessageSender implements Runnable {
 
         while (running.get()) {
 
-            if (userInput.get() != null) {
+            if(userInput.get() != null) {
                 try {
 
                     dataExchanger.sendString(userInput.getAndSet(null));
@@ -42,7 +42,7 @@ public class GameMessageSender implements Runnable {
                     running.set(false);
                 }
 
-                try {
+                try{
                     Thread.sleep(100);
 
                 } catch (InterruptedException e) {

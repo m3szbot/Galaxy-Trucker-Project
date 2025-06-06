@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide.Socket;
+package it.polimi.ingsw.Connection.ServerSide.socket;
 
 
 import it.polimi.ingsw.Controller.Cards.Card;

@@ -3,7 +3,7 @@ package it.polimi.ingsw.Connection.ServerSide;
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMIListener;
 import it.polimi.ingsw.Connection.ServerSide.RMI.VirtualServer;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.Socket.SocketListener;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketListener;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -136,25 +136,27 @@ public class Server {
     }
 
     /**
+     *
      * @param nickname
      * @return true if the nickName is already present
      */
 
-    public boolean checkNickname(String nickname) {
-        if (nicknameList.contains(nickname)) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean checkNickname(String nickname){
+       if(nicknameList.contains(nickname)){
+           return true;
+       }
+       else{
+           return false;
+       }
     }
 
-    public void addNickName(String nickName) {
+    public void addNickName(String nickName){
         synchronized (nicknameList) {
             nicknameList.add(nickName);
         }
     }
 
-    public void removeNickName(String nickname) throws IllegalArgumentException {
+    public void removeNickName(String nickname) throws IllegalArgumentException{
         synchronized (nicknameList) {
 
             if (nicknameList.contains(nickname)) {

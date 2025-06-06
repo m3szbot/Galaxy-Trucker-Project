@@ -4,8 +4,8 @@ import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientServerInvokableMethods;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.Socket.DataContainer;
-import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -131,6 +131,37 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     /**
+     * Method which is used to unblock the getPlayerInput blocking method. It works
+     * by setting a fictitious user input, which is a space character, which is then sent
+     * to the server. This allows the server to bypass an input.
+     *
+     * @author carlo
+     */
+
+    public void unblockUserInputGetterCall(){
+
+        if(connectionType == ConnectionType.SOCKET){
+            synchronized (dataContainerLock){
+                dataContainer.clearContainer();
+                dataContainer.setCommand("unblock");
+                sendDataContainer();
+            }
+        }
+        else{
+
+            try {
+
+                virtualClient.unblockUserInput();
+
+            } catch (RemoteException e) {
+                System.err.println("Error while calling remote client method through rmi");
+            }
+
+        }
+
+    }
+
+    /**
      * Clears all players resources.
      */
     public void clearPlayerResources() {
@@ -139,36 +170,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 socketDataExchanger.closeResources();
             } catch (IOException e) {
                 System.err.println("Error while closing all players resources");
-            }
-
-        }
-
-    }
-
-    /**
-     * Method which is used to unblock the getPlayerInput blocking method. It works
-     * by setting a fictitious user input, which is a space character, which is then sent
-     * to the server. This allows the server to bypass an input.
-     *
-     * @author carlo
-     */
-
-    public void unblockUserInputGetterCall() {
-
-        if (connectionType == ConnectionType.SOCKET) {
-            synchronized (dataContainerLock) {
-                dataContainer.clearContainer();
-                dataContainer.setCommand("unblock");
-                sendDataContainer();
-            }
-        } else {
-
-            try {
-
-                virtualClient.unblockUserInput();
-
-            } catch (RemoteException e) {
-                System.err.println("Error while calling remote client method through rmi");
             }
 
         }
@@ -220,14 +221,15 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 return socketDataExchanger.getString();
             } catch (IOException e) {
 
-                if (e instanceof SocketTimeoutException) {
+                if(e instanceof SocketTimeoutException){
                     System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                    synchronized (dataContainerLock) {
+                    synchronized (dataContainerLock){
                         dataContainer.clearContainer();
                         dataContainer.setCommand("inactivity");
                         sendDataContainer();
                     }
-                } else {
+                }
+                else {
 
                     System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
                             "a disconnection probably occurred");
@@ -241,10 +243,11 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 return virtualClient.getString();
             } catch (RemoteException e) {
 
-                if (e.getMessage().equals("inactivity")) {
+                if(e.getMessage().equals("inactivity")){
 
                     System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                } else {
+                }
+                else {
 
                     System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
                             "a disconnection probably occurred");

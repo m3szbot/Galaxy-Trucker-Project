@@ -2,7 +2,7 @@ package it.polimi.ingsw.Connection.ServerSide.messengers;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ConnectionType;
-import it.polimi.ingsw.Connection.ServerSide.Socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -73,7 +73,7 @@ public class GameMessenger {
     public void disconnectPlayer(GameInformation gameInformation, Player player) {
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
-        if (gameInformation.getFlightBoard().getPlayerOrderList().contains(player)) {
+        if(gameInformation.getFlightBoard().getPlayerOrderList().contains(player)){
             gameInformation.getFlightBoard().getPlayerOrderList().remove(player);
         }
         playerMessengerMap.get(player).clearPlayerResources();

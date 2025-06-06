@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide.Socket;
+package it.polimi.ingsw.Connection.ServerSide.socket;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,7 +18,7 @@ public class SocketDataExchanger {
     private ObjectOutputStream outputStream;
     private Socket clientSocket;
 
-    public SocketDataExchanger(Socket clientSocket, ObjectInputStream inputStream, ObjectOutputStream outputStream) {
+    public SocketDataExchanger(Socket clientSocket, ObjectInputStream inputStream, ObjectOutputStream outputStream){
         this.clientSocket = clientSocket;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
@@ -34,20 +34,20 @@ public class SocketDataExchanger {
 
     }
 
-    public void sendString(String input) throws IOException {
+    public void sendString(String input) throws IOException{
         outputStream.writeUTF(input);
         outputStream.flush();
     }
 
-    public void sendContainer(DataContainer container) throws IOException {
-        synchronized (outputStream) {
+    public void sendContainer(DataContainer container) throws IOException{
+        synchronized (outputStream){
             outputStream.writeObject(container);
             outputStream.flush();
             outputStream.reset();
         }
     }
 
-    public DataContainer getContainer() throws IOException {
+    public DataContainer getContainer() throws IOException{
 
         try {
 
@@ -62,7 +62,7 @@ public class SocketDataExchanger {
     }
 
 
-    public void closeResources() throws IOException {
+    public void closeResources() throws IOException{
 
         clientSocket.close();
         inputStream.close();
