@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -29,19 +29,6 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         this.lossType = cardBuilder.getLossType();
         this.requirementNumber = cardBuilder.getRequirementNumber();
         this.lossNumber = cardBuilder.getLossNumber();
-
-    }
-
-    public void showCard() {
-
-        System.out.println("\nCard name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Days lost: " + daysLost);
-        System.out.println("Loss type: " + lossType.toString());
-        System.out.println("Loss number: " + lossNumber);
-        System.out.println("Gained credit: " + gainedCredit);
-        System.out.println("Requirement number: " + requirementNumber + " (fire power)\n");
-
 
     }
 
@@ -110,6 +97,19 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+
+    }
+
+    public void showCard() {
+
+        System.out.println("\nCard name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Loss type: " + lossType.toString());
+        System.out.println("Loss number: " + lossNumber);
+        System.out.println("Gained credit: " + gainedCredit);
+        System.out.println("Requirement number: " + requirementNumber + " (fire power)\n");
+
 
     }
 

@@ -2,7 +2,7 @@ package it.polimi.ingsw.Connection.ServerSide;
 
 import it.polimi.ingsw.Connection.ServerSide.RMI.RMIListener;
 import it.polimi.ingsw.Connection.ServerSide.RMI.VirtualServer;
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Socket.SocketListener;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Controller.Game.GameState;

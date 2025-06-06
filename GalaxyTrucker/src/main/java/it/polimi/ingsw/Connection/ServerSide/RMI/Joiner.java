@@ -2,7 +2,7 @@ package it.polimi.ingsw.Connection.ServerSide.RMI;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -13,14 +13,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Joiner {
 
+    private final int MAXTRIALS = 5;
     private ClientInfo clientInfo;
     private int trials;
-    private final int MAXTRIALS = 5;
     private Server centralServer;
     private ClientRemoteInterface virtualClient;
     private AtomicBoolean clientConnected = new AtomicBoolean(true);
 
-    public Joiner(ClientInfo clientInfo, Server centralServer, ClientRemoteInterface virtualClient) throws RemoteException{
+    public Joiner(ClientInfo clientInfo, Server centralServer, ClientRemoteInterface virtualClient) throws RemoteException {
         this.clientInfo = clientInfo;
         this.centralServer = centralServer;
         virtualClient.setInputTimeOut(false);
@@ -31,20 +31,19 @@ public class Joiner {
     public void start() throws RemoteException {
 
 
-        if(clientInfo.getGameCode() != -1){
+        if (clientInfo.getGameCode() != -1) {
             //joining an existing game
-        }
-        else{
+        } else {
             startLobby();
         }
 
     }
 
-    public void checkUsername() throws RemoteException{
+    public void checkUsername() throws RemoteException {
 
         String message;
 
-        while(centralServer.checkNickname(clientInfo.getNickname()) && clientConnected.get()){
+        while (centralServer.checkNickname(clientInfo.getNickname()) && clientConnected.get()) {
 
             message = "nickname '" + clientInfo.getNickname() + "' has already been chosen, please enter a new one: ";
             virtualClient.printMessage(message);
@@ -56,7 +55,7 @@ public class Joiner {
     }
 
 
-    private void startLobby() throws RemoteException{
+    private void startLobby() throws RemoteException {
 
         Thread rmiClientPinger = new Thread(new RMIClientPinger(virtualClient, clientConnected));
         rmiClientPinger.start();
@@ -65,13 +64,13 @@ public class Joiner {
 
         checkUsername();
 
-        while(clientConnected.get()){
+        while (clientConnected.get()) {
 
             message = "Press 'Enter' key to enter in a game: ";
 
             virtualClient.printMessage(message);
 
-            if(checkEnterKey()){
+            if (checkEnterKey()) {
 
                 try {
 
@@ -86,22 +85,20 @@ public class Joiner {
                         centralServer.getLock().unlock();
                         break;
 
-                    }
-                    else{
+                    } else {
 
                         message = "Somebody is already joining a new game, please wait.";
                         virtualClient.printMessage(message);
                     }
 
-                }catch (RemoteException e){
+                } catch (RemoteException e) {
                     //need to release the lock
                     centralServer.getLock().unlock();
 
                     throw e;
                 }
 
-            }
-            else{
+            } else {
 
                 message = "The string you entered is invalid!";
                 virtualClient.printMessage(message);
@@ -111,7 +108,7 @@ public class Joiner {
 
         }
 
-        if(clientConnected.get()){
+        if (clientConnected.get()) {
 
             rmiClientPinger.interrupt();
 
@@ -119,9 +116,9 @@ public class Joiner {
 
     }
 
-    private boolean checkEnterKey() throws RemoteException{
+    private boolean checkEnterKey() throws RemoteException {
 
-        if(virtualClient.getString(clientConnected).isEmpty()){
+        if (virtualClient.getString(clientConnected).isEmpty()) {
             return true;
         }
         return false;
@@ -141,11 +138,11 @@ public class Joiner {
 
     }
 
-    private void makeNonFirstPlayerJoin() throws RemoteException{
+    private void makeNonFirstPlayerJoin() throws RemoteException {
         addPlayerToGame(false, 0, null);
     }
 
-    private void makeFirstPlayerJoin() throws RemoteException{
+    private void makeFirstPlayerJoin() throws RemoteException {
 
         int numberOfPlayers;
         GameType gameType;
@@ -224,7 +221,7 @@ public class Joiner {
 
     }
 
-    private void addPlayerToGame(boolean isFirstPlayer, int numberOfPlayers, GameType gameType) throws RemoteException{
+    private void addPlayerToGame(boolean isFirstPlayer, int numberOfPlayers, GameType gameType) throws RemoteException {
 
         String message;
         Player playerToAdd;
@@ -261,15 +258,15 @@ public class Joiner {
         }
     }
 
-    private void notifyAllPlayers(String message, boolean onlySocket){
+    private void notifyAllPlayers(String message, boolean onlySocket) {
 
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendShortCutMessageToAll(message, onlySocket);
 
     }
 
-    private void checkTrials() throws RemoteException{
+    private void checkTrials() throws RemoteException {
 
-        if(trials == MAXTRIALS){
+        if (trials == MAXTRIALS) {
             virtualClient.printMessage("You are trying to keep the server busy! Disconnection will happen soon.");
             throw new RemoteException("Player " + clientInfo.getNickname() + " (" + clientInfo.getNickname() + ")" +
                     " was kicked out because of too many input failures. The client probably had" +

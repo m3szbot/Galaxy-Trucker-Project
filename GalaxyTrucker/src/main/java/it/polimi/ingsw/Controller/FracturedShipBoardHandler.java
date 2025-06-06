@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.Player;

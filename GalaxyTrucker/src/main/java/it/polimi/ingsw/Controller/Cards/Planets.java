@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -32,40 +32,6 @@ public class Planets extends Card implements GoodsGain, Movable {
         this.planet2 = cardBuilder.getPlanet2();
         this.planet3 = cardBuilder.getPlanet3();
         this.planet4 = cardBuilder.getPlanet4();
-
-    }
-
-    public void showCard() {
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Days lost: " + daysLost);
-
-        if (planet1 != null) {
-
-            System.out.println("\nPlanet 1 offers: ");
-            printGoods(planet1);
-
-        }
-
-        if (planet2 != null) {
-
-            System.out.println("\nPlanet 2 offers: ");
-            printGoods(planet2);
-
-        }
-
-        if (planet3 != null) {
-
-            System.out.println("\nPlanet 3 offers: ");
-            printGoods(planet3);
-        }
-
-        if (planet4 != null) {
-
-            System.out.println("\nPlanet 4 offers: ");
-            printGoods(planet4);
-        }
-
 
     }
 
@@ -182,6 +148,40 @@ public class Planets extends Card implements GoodsGain, Movable {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+
+    }
+
+    public void showCard() {
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+
+        if (planet1 != null) {
+
+            System.out.println("\nPlanet 1 offers: ");
+            printGoods(planet1);
+
+        }
+
+        if (planet2 != null) {
+
+            System.out.println("\nPlanet 2 offers: ");
+            printGoods(planet2);
+
+        }
+
+        if (planet3 != null) {
+
+            System.out.println("\nPlanet 3 offers: ");
+            printGoods(planet3);
+        }
+
+        if (planet4 != null) {
+
+            System.out.println("\nPlanet 4 offers: ");
+            printGoods(planet4);
+        }
+
 
     }
 

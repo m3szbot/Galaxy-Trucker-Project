@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ServerSide.Socket;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.Game;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Controller.AssemblyPhase.AssemblyPhase;
 import it.polimi.ingsw.Controller.CorrectionPhase.CorrectionPhase;
 import it.polimi.ingsw.Controller.EvaluationPhase.EvaluationPhase;
@@ -100,7 +100,7 @@ public class Game implements Runnable, Serializable {
         assemblyPhase.start();
         System.out.println("Starting correction phase of game" + gameCode + "...");
         correctionPhase.start();
-        System.out.println("Starting flight phase of game" + gameCode + "..." );
+        System.out.println("Starting flight phase of game" + gameCode + "...");
         flightPhase.start();
         System.out.println("Starting evaluation phase of game" + gameCode + "...");
         evaluationPhase.start();

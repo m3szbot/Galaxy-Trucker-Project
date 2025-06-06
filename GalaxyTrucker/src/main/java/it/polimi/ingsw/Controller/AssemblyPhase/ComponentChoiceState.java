@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -26,14 +26,9 @@ public class ComponentChoiceState implements GameState {
      * @param protocol the game logic handler
      * @param player   the current player
      */
-    public ComponentChoiceState( AssemblyProtocol protocol, Player player) {
+    public ComponentChoiceState(AssemblyProtocol protocol, Player player) {
         this.assemblyProtocol = protocol;
         this.player = player;
-    }
-
-    @Override
-    public void update(AssemblyThread assemblyPhase) {
-        GameState.super.update(assemblyPhase);
     }
 
     /**
@@ -45,8 +40,8 @@ public class ComponentChoiceState implements GameState {
     public void enter(AssemblyThread assemblyPhase) {
         components = new ArrayList<>(assemblyPhase.getAssemblyProtocol().getUncoveredList());
         int i = 0;
-        for(Component component : components) {
-            message = i + ": " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack()  + " Left: " + component.getLeft();
+        for (Component component : components) {
+            message = i + ": " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             i++;
         }
@@ -79,12 +74,11 @@ public class ComponentChoiceState implements GameState {
         switch (caseManagement) {
             case 1:
                 synchronized (assemblyProtocol.lockUncoveredList) {
-                    if(components.get(Integer.parseInt(input.toLowerCase())) == assemblyPhase.getAssemblyProtocol().getUncoveredList().get(Integer.parseInt(input.toLowerCase()))) {
+                    if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyPhase.getAssemblyProtocol().getUncoveredList().get(Integer.parseInt(input.toLowerCase()))) {
                         assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(imput));
                         component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
-                        message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
-                    }
-                    else {
+                        message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
+                    } else {
                         message = "Component has been already taken";
                     }
                 }
@@ -97,7 +91,12 @@ public class ComponentChoiceState implements GameState {
 
 
         }
-        assemblyPhase.setState(new AssemblyState( assemblyProtocol, player));
+        assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+    }
+
+    @Override
+    public void update(AssemblyThread assemblyPhase) {
+        GameState.super.update(assemblyPhase);
     }
 
 }

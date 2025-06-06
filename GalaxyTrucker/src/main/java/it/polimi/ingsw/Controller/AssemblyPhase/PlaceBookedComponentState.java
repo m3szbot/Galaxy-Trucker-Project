@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -34,13 +34,13 @@ public class PlaceBookedComponentState implements GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyPhase) {
-        if(assemblyProtocol.getBookedMap().get(player).size() > 0) {
+        if (assemblyProtocol.getBookedMap().get(player).size() > 0) {
             for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
                 Component component = assemblyProtocol.getBookedMap().get(player).get(i);
                 String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             }
-        }else{
+        } else {
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("You don't have any booked component");
             assemblyPhase.setState(new AssemblyState(assemblyPhase.getAssemblyProtocol(), player));
         }
@@ -74,7 +74,7 @@ public class PlaceBookedComponentState implements GameState {
                 ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
                 assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             String message = "Wrong input";
             ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
             assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));

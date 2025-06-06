@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -23,14 +23,6 @@ public class MeteorSwarm extends Card implements SufferBlows {
         this.blows = cardBuilder.getBlows();
         this.blowType = cardBuilder.getBlowType();
 
-    }
-
-    public void showCard() {
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Blow type: " + blowType.toString());
-
-        printBlows(blows);
     }
 
     @Override
@@ -62,5 +54,13 @@ public class MeteorSwarm extends Card implements SufferBlows {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+    }
+
+    public void showCard() {
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Blow type: " + blowType.toString());
+
+        printBlows(blows);
     }
 }

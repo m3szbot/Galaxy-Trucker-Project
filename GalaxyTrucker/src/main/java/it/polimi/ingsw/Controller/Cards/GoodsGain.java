@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -90,6 +90,30 @@ public interface GoodsGain {
 
     }
 
+    private int[] askForGoods(Player player, String messageType, int start, int end, GameInformation gameInformation) {
+
+        int[] goods = {0, 0, 0, 0};
+        String message;
+        PlayerMessenger playerMessenger;
+        String[] colors = {"red", "yellow", "green", "blue"};
+
+        for (int i = start; i <= end; i++) {
+
+            message = "Enter number of " + colors[i] + " goods to " + messageType;
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
+            try {
+                goods[i] = playerMessenger.getPlayerInt();
+            } catch (PlayerDisconnectedException e) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+            }
+
+        }
+
+        return goods;
+    }
+
     private void rearrangementPhase(Player player, GameInformation gameInformation) {
 
         String message;
@@ -155,93 +179,6 @@ public interface GoodsGain {
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
-        }
-    }
-
-
-    private void GoodsPlacementPhase(Player player, int[] goods, GameInformation gameInformation) {
-        String message;
-        PlayerMessenger playerMessenger;
-        boolean placementPhaseFlag = false;
-        int[] coordinates = new int[2], goodsToAdd;
-        int remainingRedSlots, remainingBlueSlots;
-
-        //Check if there's goods left to add
-        if (goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) {
-
-            //Check if there's storage space left
-            if (!(player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0 || player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() > 0)) {
-                message = "You don't have enough storage slots available on your ship.\n";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                playerMessenger.printMessage(message);
-            } else {
-
-                message = "Do you want to add goods to your ship ? ";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                playerMessenger.printMessage(message);
-
-                try {
-                    placementPhaseFlag = playerMessenger.getPlayerBoolean();
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                }
-
-                while (placementPhaseFlag) {
-
-                    //Asks for coordinates
-                    message = "Enter coordinates of storage component to place the goods: ";
-                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                    playerMessenger.printMessage(message);
-
-                    try {
-                        coordinates = playerMessenger.getPlayerCoordinates();
-                    } catch (PlayerDisconnectedException e) {
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    }
-
-                    //Asks for which goods they want to add to the storage
-                    goodsToAdd = askForGoods(player, "add", 0, 3, gameInformation);
-
-                    //Tries to add the goods to the specified component
-                    try {
-                        player.getShipBoard().addGoods(coordinates[0], coordinates[1], goodsToAdd);
-                    } catch (IllegalArgumentException e) {
-                        message = e.getMessage();
-                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                        playerMessenger.printMessage(message);
-                    }
-
-                    remainingRedSlots = player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots();
-                    remainingBlueSlots = player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots();
-
-                    //Checks if the player can add more goods
-                    if ((goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) && (remainingRedSlots > 0 || remainingBlueSlots > 0)) {
-
-                        //Asks if the player wants to keep adding good to their ship
-                        message = "Do you still want to add goods to your ship ?";
-                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                        playerMessenger.printMessage(message);
-
-                        try {
-                            placementPhaseFlag = playerMessenger.getPlayerBoolean();
-                        } catch (PlayerDisconnectedException e) {
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                        }
-
-                        //Resets the array for the next cycle
-                        for (int j = 0; j <= 3; j++) {
-                            goodsToAdd[j] = 0;
-                        }
-                    } else {
-                        placementPhaseFlag = false;
-                    }
-                }
-            }
-
-        } else {
-            message = "There's no more goods left to take.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
         }
     }
 
@@ -551,28 +488,90 @@ public interface GoodsGain {
 
      */
 
-    private int[] askForGoods(Player player, String messageType, int start, int end, GameInformation gameInformation) {
-
-        int[] goods = {0, 0, 0, 0};
+    private void GoodsPlacementPhase(Player player, int[] goods, GameInformation gameInformation) {
         String message;
         PlayerMessenger playerMessenger;
-        String[] colors = {"red", "yellow", "green", "blue"};
+        boolean placementPhaseFlag = false;
+        int[] coordinates = new int[2], goodsToAdd;
+        int remainingRedSlots, remainingBlueSlots;
 
-        for (int i = start; i <= end; i++) {
+        //Check if there's goods left to add
+        if (goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) {
 
-            message = "Enter number of " + colors[i] + " goods to " + messageType;
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
+            //Check if there's storage space left
+            if (!(player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0 || player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() > 0)) {
+                message = "You don't have enough storage slots available on your ship.\n";
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
+            } else {
 
-            try {
-                goods[i] = playerMessenger.getPlayerInt();
-            } catch (PlayerDisconnectedException e) {
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                message = "Do you want to add goods to your ship ? ";
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
+
+                try {
+                    placementPhaseFlag = playerMessenger.getPlayerBoolean();
+                } catch (PlayerDisconnectedException e) {
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                }
+
+                while (placementPhaseFlag) {
+
+                    //Asks for coordinates
+                    message = "Enter coordinates of storage component to place the goods: ";
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                    playerMessenger.printMessage(message);
+
+                    try {
+                        coordinates = playerMessenger.getPlayerCoordinates();
+                    } catch (PlayerDisconnectedException e) {
+                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    }
+
+                    //Asks for which goods they want to add to the storage
+                    goodsToAdd = askForGoods(player, "add", 0, 3, gameInformation);
+
+                    //Tries to add the goods to the specified component
+                    try {
+                        player.getShipBoard().addGoods(coordinates[0], coordinates[1], goodsToAdd);
+                    } catch (IllegalArgumentException e) {
+                        message = e.getMessage();
+                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                        playerMessenger.printMessage(message);
+                    }
+
+                    remainingRedSlots = player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots();
+                    remainingBlueSlots = player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots();
+
+                    //Checks if the player can add more goods
+                    if ((goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) && (remainingRedSlots > 0 || remainingBlueSlots > 0)) {
+
+                        //Asks if the player wants to keep adding good to their ship
+                        message = "Do you still want to add goods to your ship ?";
+                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                        playerMessenger.printMessage(message);
+
+                        try {
+                            placementPhaseFlag = playerMessenger.getPlayerBoolean();
+                        } catch (PlayerDisconnectedException e) {
+                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        }
+
+                        //Resets the array for the next cycle
+                        for (int j = 0; j <= 3; j++) {
+                            goodsToAdd[j] = 0;
+                        }
+                    } else {
+                        placementPhaseFlag = false;
+                    }
+                }
             }
 
+        } else {
+            message = "There's no more goods left to take.\n";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
         }
-
-        return goods;
     }
 
     private boolean checkGoodsAvailability(int[] firstGoods, int[] secondGoods, int start, int end) {

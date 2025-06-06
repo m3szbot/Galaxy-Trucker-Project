@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -29,20 +29,6 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
         this.lossNumber = cardBuilder.getLossNumber();
         this.goods = cardBuilder.getGoods();
         this.requirementNumber = cardBuilder.getRequirementNumber();
-
-
-    }
-
-    public void showCard() {
-
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Days lost: " + daysLost);
-        System.out.println("Loss type: " + lossType.toString());
-        System.out.println("Loss number: " + lossNumber);
-        System.out.println("Requirement number: " + requirementNumber + " (fire power)");
-
-        printGoods(goods);
 
 
     }
@@ -106,6 +92,20 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+
+    }
+
+    public void showCard() {
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Loss type: " + lossType.toString());
+        System.out.println("Loss number: " + lossNumber);
+        System.out.println("Requirement number: " + requirementNumber + " (fire power)");
+
+        printGoods(goods);
+
 
     }
 }

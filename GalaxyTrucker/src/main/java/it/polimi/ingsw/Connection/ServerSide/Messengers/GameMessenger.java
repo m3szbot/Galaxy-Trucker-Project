@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Connection.ServerSide.messengers;
+package it.polimi.ingsw.Connection.ServerSide.Messengers;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ConnectionType;

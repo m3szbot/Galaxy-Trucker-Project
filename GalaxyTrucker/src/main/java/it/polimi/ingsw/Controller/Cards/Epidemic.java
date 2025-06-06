@@ -1,14 +1,12 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-
-import javax.management.ObjectInstance;
 
 /**
  * class that represent the card epidemic
@@ -22,13 +20,6 @@ public class Epidemic extends Card {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
-
-    }
-
-    public void showCard() {
-
-        System.out.println("\nCard name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
 
     }
 
@@ -57,6 +48,13 @@ public class Epidemic extends Card {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+    }
+
+    public void showCard() {
+
+        System.out.println("\nCard name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+
     }
 
     /**

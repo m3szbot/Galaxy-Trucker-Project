@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
-import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.GameMessenger;
+import it.polimi.ingsw.Connection.ServerSide.Messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.CrewType;
@@ -126,6 +126,23 @@ public class CorrectionThread implements Runnable {
     }
 
     /**
+     * Return a string listing the coordinates of the components with errors.
+     */
+    private String getErrorsMessage(ShipBoard shipBoard) {
+        StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append("There are errors in your ship, please correct them:\n");
+        // scan shipboard (only valid cells)
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                if (shipBoard.getErrorsMatrix()[i][j]) {
+                    messageBuilder.append(String.format("Error in: %d %d\n", i + 1, j + 1));
+                }
+            }
+        }
+        return messageBuilder.toString();
+    }
+
+    /**
      * Handle the crew selection of the player's shipboard. Returns true if the player's thread should be ended.
      *
      * @return true if the player's thread should be ended, false if not.
@@ -208,23 +225,6 @@ public class CorrectionThread implements Runnable {
         // crew selection finished
         // do not end player thread
         return false;
-    }
-
-    /**
-     * Return a string listing the coordinates of the components with errors.
-     */
-    private String getErrorsMessage(ShipBoard shipBoard) {
-        StringBuilder messageBuilder = new StringBuilder();
-        messageBuilder.append("There are errors in your ship, please correct them:\n");
-        // scan shipboard (only valid cells)
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                if (shipBoard.getErrorsMatrix()[i][j]) {
-                    messageBuilder.append(String.format("Error in: %d %d\n", i + 1, j + 1));
-                }
-            }
-        }
-        return messageBuilder.toString();
     }
 
 
