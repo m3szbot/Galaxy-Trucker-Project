@@ -6,7 +6,7 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.TUI.TuiView;
+import it.polimi.ingsw.View.TUI.TUIView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ class FlightBoardTest {
     FlightBoard flightBoard;
     GameInformation gameInformation;
     Player playerA, playerB, playerC, playerD;
-    TuiView flightViewTUI;
+    TUIView flightViewTUI;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +49,7 @@ class FlightBoardTest {
 
         flightBoard = gameInformation.getFlightBoard();
 
-        flightViewTUI = new TuiView();
+        flightViewTUI = new TUIView();
     }
 
     @Test

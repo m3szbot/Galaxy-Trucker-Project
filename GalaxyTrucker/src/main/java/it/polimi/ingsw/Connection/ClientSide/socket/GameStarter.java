@@ -4,7 +4,7 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.View.GeneralView;
-import it.polimi.ingsw.View.TUI.TuiView;
+import it.polimi.ingsw.View.TUI.TUIView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,10 +47,10 @@ public class GameStarter {
 
         if (viewType == ViewType.TUI) {
 
-            views[0] = new TuiView();
-            views[1] = new TuiView();
-            views[2] = new TuiView();
-            views[3] = new TuiView();
+            views[0] = new TUIView();
+            views[1] = new TUIView();
+            views[2] = new TUIView();
+            views[3] = new TUIView();
 
         } else {/*
 

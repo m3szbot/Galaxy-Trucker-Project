@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Model.Components;
 
-import static it.polimi.ingsw.View.TUI.TuiView.componentSideTranslator;
+import static it.polimi.ingsw.View.TUI.TUIView.componentSideTranslator;
 
 public class ComponentStringGetterVisitor implements ComponentVisitor {
     @Override
