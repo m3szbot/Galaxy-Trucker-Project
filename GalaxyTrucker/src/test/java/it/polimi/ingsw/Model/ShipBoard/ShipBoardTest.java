@@ -8,6 +8,9 @@ import it.polimi.ingsw.View.TUI.TUIView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -209,6 +212,54 @@ public class ShipBoardTest {
         shipBoard.removeComponent(8, 7, false);
         assertTrue(shipBoard.isErroneous());
         generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void getJoinedCabinsVisibleCoordinates() throws NotPermittedPlacementException {
+        List<int[]> coordinatesList = new ArrayList<>();
+        // no connected cabins
+        assertTrue(shipBoard.getJoinedCabinsVisibleCoordinates().isEmpty());
+
+        // no connected cabins:
+        // Cabin
+        // Component Cabin
+        shipBoard.addComponent(7, 8, new Component(universalSides));
+        shipBoard.addComponent(8, 8, new Cabin(universalSides, CrewType.Human, 2));
+        assertTrue(shipBoard.getJoinedCabinsVisibleCoordinates().isEmpty());
+
+        // 3 connected cabins:
+        // Ca(77) Ca(87)
+        // Co     Ca(88)
+        shipBoard.addComponent(8, 7, new Cabin(universalSides, CrewType.Human, 2));
+        coordinatesList.add(new int[]{7, 7});
+        coordinatesList.add(new int[]{8, 7});
+        coordinatesList.add(new int[]{8, 8});
+
+        for (int i = 0; i < coordinatesList.size(); i++) {
+            assertArrayEquals(coordinatesList.get(i), shipBoard.getJoinedCabinsVisibleCoordinates().get(i));
+        }
+
+        // 5 connected cabins
+        //        Ca
+        // Ca(77) Ca(87) Ca
+        // Co     Ca(88)
+        shipBoard.addComponent(8, 6, new Cabin(universalSides, CrewType.Human, 2));
+        shipBoard.addComponent(9, 7, new Cabin(universalSides, CrewType.Human, 2));
+        coordinatesList = new ArrayList<>();
+        coordinatesList.add(new int[]{7, 7});
+        coordinatesList.add(new int[]{8, 6});
+        coordinatesList.add(new int[]{8, 7});
+        coordinatesList.add(new int[]{8, 8});
+        coordinatesList.add(new int[]{9, 7});
+
+        for (int i = 0; i < coordinatesList.size(); i++) {
+            assertArrayEquals(coordinatesList.get(i), shipBoard.getJoinedCabinsVisibleCoordinates().get(i));
+        }
+
+        // remove center conencting cabin
+        shipBoard.removeComponent(8, 7, false);
+        assertTrue(shipBoard.getJoinedCabinsVisibleCoordinates().isEmpty());
+
     }
 
     @Test
