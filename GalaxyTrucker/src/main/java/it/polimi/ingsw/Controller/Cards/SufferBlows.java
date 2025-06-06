@@ -31,8 +31,10 @@ public interface SufferBlows {
 
     default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) {
 
+        String message;
+        PlayerMessenger playerMessenger;
         int[] componentCoordinates = new int[2];
-        boolean hitFlag;
+        boolean hitFlag, isEliminated = false;
 
         for (Blow blow : blows) {
 
@@ -51,37 +53,54 @@ public interface SufferBlows {
 
                 if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
 
-                    //a component was hit
-                    if (blowType == ElementType.CannonBlow) {
+                    try {
+                        //a component was hit
+                        if (blowType == ElementType.CannonBlow) {
 
-                        if (blow.isBig()) {
+                            if (blow.isBig()) {
 
-                            hitFlag = bigCannonBlowHit(player, gameInformation, componentCoordinates[0], componentCoordinates[1]);
+                                hitFlag = bigCannonBlowHit(player, gameInformation, componentCoordinates[0], componentCoordinates[1]);
 
+                            } else {
+
+                                //player can defend itself
+                                hitFlag = smallCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], blow.getDirection(), gameInformation);
+                            }
                         } else {
 
-                            //player can defend itself
-                            hitFlag = smallCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], blow.getDirection(), gameInformation);
+                            //BlowType is Meteorite
+                            if (blow.isBig()) {
+
+                                // player can defend itself only with cannon
+                                hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                            } else {
+
+                                //blow is small
+                                hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                            }
                         }
-                    } else {
+                    } catch (NoHumanCrewLeftException e) {
 
-                        //BlowType is Meteorite
-                        if (blow.isBig()) {
+                        message = e.getMessage();
+                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                        playerMessenger.printMessage(message);
 
-                            // player can defend itself only with cannon
-                            hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
-
-                        } else {
-
-                            //blow is small
-                            hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
-
-                        }
+                        gameInformation.getFlightBoard().eliminatePlayer(player);
+                        isEliminated = true;
                     }
                 }
 
                 //notifying everybody of the blow effect on the player.
                 notifyAll(player, blow.getDirection(), hitFlag, componentCoordinates[0], componentCoordinates[1], blowType, gameInformation);
+
+                if (isEliminated) {
+
+                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                }
             }
         }
     }
@@ -341,18 +360,7 @@ public interface SufferBlows {
 
     private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) {
 
-        String message;
-        PlayerMessenger playerMessenger;
-
-        try {
-            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
-        } catch (NoHumanCrewLeftException e) {
-            message = e.getMessage();
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
-
-            gameInformation.getFlightBoard().eliminatePlayer(player);
-        }
+        player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
         return true;
 
     }
@@ -403,7 +411,7 @@ public interface SufferBlows {
             }
 
             //If there was an exception
-            message = "Reenter coordinates: ";
+            message = "Please enter new coordinates: ";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
@@ -507,6 +515,7 @@ public interface SufferBlows {
     }
 
     private boolean checkCannonPresenceOnBack(Player player, int[] cannonCoords, int i, int temp) {
+
         if (player.getShipBoard().getRealComponent(temp, i) != null) {
 
             if (player.getShipBoard().getRealComponent(temp, i) instanceof Cannon
