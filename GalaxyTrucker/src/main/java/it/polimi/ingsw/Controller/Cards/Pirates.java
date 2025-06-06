@@ -98,6 +98,9 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
                 hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
 
+                message = "Player " + player.getNickName() + " is under pirate fire!!\n";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
             }
 
             message = "You finished your turn, wait for the other players.\n";
