@@ -223,11 +223,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 if(e instanceof SocketTimeoutException){
                     System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                    synchronized (dataContainerLock){
-                        dataContainer.clearContainer();
-                        dataContainer.setCommand("inactivity");
-                        sendDataContainer();
-                    }
                 }
                 else {
 

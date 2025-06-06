@@ -106,11 +106,6 @@ public class ClientSocketHandler extends Thread {
             } else if (e instanceof SocketTimeoutException) {
                 System.out.println("Player was kicked out because of inactivity");
 
-                try{
-                    dataExchanger.sendString("disconnect");
-                } catch (IOException ex) {
-                    System.err.println("Error while sending disconnection message");
-                }
             } else {
                 System.out.println("Client " + nickName + " disconnected!");
             }

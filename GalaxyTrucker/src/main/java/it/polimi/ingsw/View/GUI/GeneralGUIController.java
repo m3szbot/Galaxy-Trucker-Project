@@ -24,6 +24,8 @@ public class GeneralGUIController {
     @FXML
     public void initialize(){
 
+        //the first phase is lobby phase
+
         loadPhaseGUI("/fxml/LobbyView/LobbyView.fxml");
 
     }
