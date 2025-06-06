@@ -261,6 +261,10 @@ public class ShipBoardTest {
         shipBoard.removeComponent(8, 7, false);
         assertTrue(shipBoard.getJoinedCabinsVisibleCoordinates().isEmpty());
 
+        // add connector instead
+        shipBoard.addComponent(8, 7, new Component(universalSides));
+        assertTrue(shipBoard.getJoinedCabinsVisibleCoordinates().isEmpty());
+
     }
 
     @Test
