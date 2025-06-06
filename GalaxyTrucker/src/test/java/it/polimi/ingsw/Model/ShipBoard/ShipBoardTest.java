@@ -91,10 +91,11 @@ public class ShipBoardTest {
     }
 
     @Test
-    void TestSetup() {
+    void TestSetupNormalGameShipboard() {
         // check starter cabin
         assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
         assertFalse(shipBoard.isErroneous());
+        generalViewTUI.printFullShipboard(shipBoard);
     }
 
     @Test

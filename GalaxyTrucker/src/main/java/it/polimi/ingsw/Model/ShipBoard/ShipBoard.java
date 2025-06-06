@@ -31,6 +31,9 @@ public class ShipBoard implements Serializable {
     // (components in [FIRST_REAL...MAX - FIRST_REAL (included!)])
     public static final int SB_FIRST_REAL_COL = 3;
     public static final int SB_FIRST_REAL_ROW = 4;
+    // last INCLUDED! column/row on the shipboard
+    public static final int SB_LAST_REAL_COL = 9;
+    public static final int SB_LAST_REAL_ROW = 8;
 
     // final Object: reference cannot be changed (but state/elements can change)
     private final GameType gameType;
@@ -231,8 +234,8 @@ public class ShipBoard implements Serializable {
      */
     private int getComponentCount() {
         int count = 0;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 if (componentMatrix[realCol][realRow] != null)
                     count++;
             }
@@ -306,9 +309,9 @@ public class ShipBoard implements Serializable {
 
         // max-real included!
         // iterate columns
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
             // iterate rows
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 // default: no error in cell
                 // override if cell erroneous
                 errorsMatrix[realCol][realRow] = false;
@@ -351,8 +354,8 @@ public class ShipBoard implements Serializable {
     public int getErrorCount() {
         checkErrors();
         int count = 0;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 if (errorsMatrix[realCol][realRow])
                     count++;
             }
@@ -610,8 +613,8 @@ public class ShipBoard implements Serializable {
         boolean connected;
 
         // check remaining components
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 connected = false;
                 for (ShipBoard shipBoard : shipBoardsList) {
                     if (shipBoard.getRealComponent(realCol, realRow) != null) {
@@ -735,8 +738,8 @@ public class ShipBoard implements Serializable {
      */
     private void eraseShipboard(ShipBoard tmpShipboard) {
         // remove elements from the real shipboard
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 if (tmpShipboard.getRealComponent(realCol, realRow) != null) {
                     this.componentMatrix[realCol][realRow] = null;
                     this.shipBoardAttributes.destroyComponents(1);
@@ -761,8 +764,8 @@ public class ShipBoard implements Serializable {
      */
     public int countExternalJunctions() {
         int externalJunctions = 0;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 Component component = componentMatrix[realCol][realRow];
                 if (component != null) {
                     // check front
@@ -1061,8 +1064,8 @@ public class ShipBoard implements Serializable {
         Component current, temp;
 
         // find cabins
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 current = componentMatrix[realCol][realRow];
                 if (current instanceof Cabin) {
                     // check if current cabin is connected to a neighbor cabin
