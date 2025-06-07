@@ -56,7 +56,15 @@ public class FracturedShipBoardHandler extends Phase {
 
             // select shipboard
             try {
-                player.setShipBoard(shipBoardsList.get(selected));
+                // erase all other possible shipboard
+                for (ShipBoard shipBoard : shipBoardsList) {
+                    if (!shipBoard.equals(shipBoardsList.get(selected))) {
+                        player.getShipBoard().eraseShipboard(shipBoard);
+                    }
+                }
+                // set new center
+                player.getShipBoard().findNewCenterCabin();
+
                 // set only if no exception thrown
                 selectionSuccess = true;
             } catch (IndexOutOfBoundsException e) {

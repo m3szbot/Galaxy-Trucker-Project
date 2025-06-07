@@ -553,11 +553,8 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     private List<ShipBoard> connectionMapper() {
+        // list of all new shipboards (without crew too)
         List<ShipBoard> shipBoardsList = new ArrayList<>();
-
-        // TODO if null component at center, find new center
-        if (componentMatrix[centerCabinCol][centerCabinRow] == null)
-            findNewCenterCabin();
 
         // add shipboard reachable from current center cabin
         shipBoardsList.add(bfsMapper(centerCabinCol, centerCabinRow));
@@ -594,6 +591,7 @@ public class ShipBoard implements Serializable {
         }
 
         // remove shipboard and its components from the real shipboard
+        // (necessary to maintain and update the real shipboard's attributes)
         for (ShipBoard shipBoard : toRemove) {
             // remove shipboard components from actual shipboard
             eraseShipboard(shipBoard);
@@ -603,11 +601,6 @@ public class ShipBoard implements Serializable {
 
         // return remaining possible shipboards to choose from
         return shipBoardsList;
-    }
-
-    // TODO
-    private void findNewCenterCabin() {
-        return;
     }
 
     /**
@@ -649,6 +642,15 @@ public class ShipBoard implements Serializable {
             // get current node
             currentCoord = queue.poll();
             currentComp = getRealComponent(currentCoord.getCol(), currentCoord.getRow());
+
+            // if current component a cabin with human inhabitants, set as new center for the tmp shipboard
+            if (currentComp instanceof Cabin && currentComp.getCrewMembers() > 0 &&
+                    ((Cabin) currentComp).getCrewType().equals(CrewType.Human)) {
+                tmpShipboard.centerCabinCol = currentCoord.getCol();
+                tmpShipboard.centerCabinRow = currentCoord.getRow();
+            }
+
+            // check neighbors (bfs)
 
             // front
             neighborCoord = new Coordinate(currentCoord.getCol(), currentCoord.getRow() - 1);
@@ -735,11 +737,11 @@ public class ShipBoard implements Serializable {
     /**
      * Remove the passed shipboard components from the actual shipboard.
      */
-    private void eraseShipboard(ShipBoard tmpShipboard) {
+    public void eraseShipboard(ShipBoard toErase) {
         // remove elements from the real shipboard
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
             for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
-                if (tmpShipboard.getRealComponent(realCol, realRow) != null) {
+                if (toErase.getRealComponent(realCol, realRow) != null) {
                     this.componentMatrix[realCol][realRow] = null;
                     this.shipBoardAttributes.destroyComponents(1);
                 }
@@ -772,6 +774,11 @@ public class ShipBoard implements Serializable {
             count++;
 
         return count;
+    }
+
+    // TODO
+    public void findNewCenterCabin() {
+        return;
     }
 
     public Component[][] getComponentMatrix() {
