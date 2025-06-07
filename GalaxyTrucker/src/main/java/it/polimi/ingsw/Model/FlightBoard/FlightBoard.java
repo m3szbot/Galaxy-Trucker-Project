@@ -103,10 +103,10 @@ public class FlightBoard implements Serializable {
 
 
     /**
-     * @return flightBoard adventure cards.
+     * @return copy of adventure cards on the flightboard.
      */
     public Stack<Card> getCardsStack() {
-        return cardsStack;
+        return (Stack<Card>) cardsStack.clone();
     }
 
     /**
@@ -142,10 +142,10 @@ public class FlightBoard implements Serializable {
     }
 
     /**
-     * @return playerOrderList
+     * @return a copy of playerOrderList.
      */
     public List<Player> getPlayerOrderList() {
-        return playerOrderList;
+        return new ArrayList<>(playerOrderList);
     }
 
     /**
