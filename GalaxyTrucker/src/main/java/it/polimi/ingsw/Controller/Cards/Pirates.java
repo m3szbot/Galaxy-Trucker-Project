@@ -48,7 +48,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
     public void resolve(GameInformation gameInformation) {
 
-        int numberOfPlayers = gameInformation.getFlightBoard().getPlayerOrderList().size(), i;
+        int numberOfPlayers, i;
         String message;
         PlayerMessenger playerMessenger;
         AttackStates[] results;
@@ -62,9 +62,10 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
             }
         }
 
-        for (i = 0; i < numberOfPlayers; i++) {
+        for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             Player player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+
             if (results[i] == AttackStates.EnemyDefeated) {
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
@@ -92,8 +93,8 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 }
-
                 break;
+
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
                 message = "Player " + player.getNickName() + " is under pirate fire!!\n";
@@ -103,7 +104,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
             }
 
-            message = "You finished your turn, wait for the other players.\n";
+            message = "You finished your turn, please wait for the other players.\n";
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 

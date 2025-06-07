@@ -1,15 +1,15 @@
 package it.polimi.ingsw.Connection.ClientSide.socket;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
+import it.polimi.ingsw.Connection.ClientSide.utils.ViewCommunicator;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
-import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Client joiner is responsible for the second phase of the client
@@ -23,8 +23,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientJoiner {
 
-    private AtomicReference<String> userInput;
-
     /**
      *
      * @param clientInfo
@@ -33,23 +31,7 @@ public class ClientJoiner {
 
     public boolean start(ClientInfo clientInfo){
 
-        userInput = clientInfo.getUserInput();
-
-        if (clientInfo.getViewType() == ViewType.TUI) {
-
-            return startTUI(clientInfo);
-
-
-        }
-        else{
-            //TODO (GUI)
-        }
-
-        return false;
-    }
-
-    private boolean startTUI(ClientInfo clientInfo){
-
+        ViewCommunicator viewCommunicator = clientInfo.getViewCommunicator();
         SocketDataExchanger dataExchanger;
         AtomicBoolean terminatedFlag = new AtomicBoolean(false);
         AtomicBoolean errorFlag = new AtomicBoolean(false);
@@ -61,7 +43,7 @@ public class ClientJoiner {
             dataExchanger.sendString(clientInfo.getNickname());
 
         } catch (IOException e) {
-            System.err.println("An error was encountered while setting up the socket connection");
+            viewCommunicator.showData("An error was encountered while setting up the socket connection", true);
             return false;
         }
 
@@ -87,24 +69,19 @@ public class ClientJoiner {
                         dataExchanger.sendString(String.valueOf(clientInfo.getGameCode()));
 
                     }
-                    else if(message.equals("disconnect")){
-                        System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
-                        terminatedFlag.set(true);
-                        errorFlag.set(true);
-                        break;
-                    }
                     else if(message.equals("trialsEx")){
 
-                        System.out.println("You are trying to keep the server busy! Disconnection will happen soon.");
+                        viewCommunicator.showData("You are trying to keep the server busy! Disconnection will happen soon.", false);
                         terminatedFlag.set(true);
                         errorFlag.set(true);
                         break;
                     }
                     else if (message.equals("start")) {
+                        ClientInputManager.unblockInput();
                         break;
                     } else {
 
-                        System.out.println(message);
+                        viewCommunicator.showData(message, false);
                     }
 
                 }
@@ -112,7 +89,7 @@ public class ClientJoiner {
             } catch (IOException e) {
                 terminatedFlag.set(true);
                 errorFlag.set(true);
-                System.err.println("An error was encountered while communicating with the server");
+                viewCommunicator.showData("An error was encountered while communicating with the server", true);
             }
 
         });
@@ -121,28 +98,28 @@ public class ClientJoiner {
 
             while (!terminatedFlag.get()) {
 
-                if (userInput.get() != null) {
-
-                    try {
-
-                        dataExchanger.sendString(userInput.getAndSet(null));
-
-                    } catch (IOException e) {
-                        terminatedFlag.set(true);
-                        errorFlag.set(true);
-                        System.err.println("An error was encountered while sending data to the server");
-                    }
-                }
-
                 try {
-                    Thread.sleep(100);
 
-                } catch (InterruptedException e) {
+                    String userInput = ClientInputManager.getUserInput();
+
+                    if(!userInput.equals("unblocked")) {
+
+                        dataExchanger.sendString(userInput);
+                    }
+
+                } catch (Exception e) {
                     terminatedFlag.set(true);
                     errorFlag.set(true);
-                    System.err.println("Sender thread was abnormally interrupted");
-                }
 
+                    if(e instanceof IOException) {
+
+                        viewCommunicator.showData("An error was encountered while sending data to the server", true);
+                    }
+                    else{
+
+                        viewCommunicator.showData("Timeout reached, you are considered inactive, disconnection will soon happen", false);
+                    }
+                }
             }
 
         });
@@ -154,16 +131,17 @@ public class ClientJoiner {
 
             messageReceiver.join();
             messageSender.join();
+            ClientInputManager.setTimeOut(300000);
 
         } catch (InterruptedException e1) {
-            System.err.println("Error: message receiver or sender was interrupted abnormally");
+            viewCommunicator.showData("Error: message receiver or sender was interrupted abnormally", true);
             errorFlag.set(true);
         }
 
         return !(errorFlag.get());
 
-    }
 
+    }
 
     private SocketDataExchanger setUpConnection(ClientInfo clientInfo) throws IOException{
 

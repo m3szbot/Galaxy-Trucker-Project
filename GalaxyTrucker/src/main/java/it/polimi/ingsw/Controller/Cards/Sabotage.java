@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -29,16 +30,34 @@ public class Sabotage extends Card implements SmallestCrew {
         Player smallestCrewPlayer = calculateSmallestCrew(gameInformation.getFlightBoard());
         String message;
         PlayerMessenger playerMessenger;
+        boolean isEliminated = false;
 
-        if (destroyRandomComponent(smallestCrewPlayer, gameInformation.getFlightBoard())) {
+        try {
+            if (destroyRandomComponent(smallestCrewPlayer, gameInformation.getFlightBoard())) {
 
-            message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-        } else {
+            } else {
 
-            message = "Player " + smallestCrewPlayer.getNickName() +
-                    "was lucky enough to not get hit!";
+                message = "Player " + smallestCrewPlayer.getNickName() +
+                        " was lucky enough to not get hit!";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            }
+        } catch (NoHumanCrewLeftException e) {
+
+            message = e.getMessage();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
+            playerMessenger.printMessage(message);
+
+            gameInformation.getFlightBoard().eliminatePlayer(smallestCrewPlayer);
+            isEliminated = true;
+        }
+
+        if (isEliminated) {
+
+            message = "Player " + smallestCrewPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }
@@ -69,13 +88,12 @@ public class Sabotage extends Card implements SmallestCrew {
 
         for (i = 0; i < 3; i++) {
 
-
-            x = (int) (Math.random() * 13);
-            y = (int) (Math.random() * 13);
+            x = (int) ((Math.random() * 11) + 1);
+            y = (int) ((Math.random() * 11) + 1);
 
             if (player.getShipBoard().getComponent(x, y) != null) {
 
-                if (player.getShipBoard().getComponent(x, y).getComponentName().equals("Storage")) {
+                if (player.getShipBoard().getComponent(x, y) instanceof Storage) {
 
                     int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(x, y)).getGoods();
 

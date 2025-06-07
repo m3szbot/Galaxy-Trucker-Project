@@ -3,9 +3,13 @@ package it.polimi.ingsw.Connection.ClientSide;
 import it.polimi.ingsw.Connection.ClientSide.RMI.RMIGameHandler;
 import it.polimi.ingsw.Connection.ClientSide.socket.SocketGameHandler;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientWelcomer;
 import it.polimi.ingsw.Connection.ClientSide.utils.InputDaemon;
 import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ViewType;
+import it.polimi.ingsw.View.GUILoader;
+import javafx.application.Application;
 
 /**
  * Client class. The client lifecycle is composed of
@@ -24,14 +28,24 @@ public class Client {
 
         ClientWelcomer welcomer = new ClientWelcomer();
         ClientInfo clientInfo = new ClientInfo();
-        InputDaemon inputDaemon = new InputDaemon(clientInfo.getUserInput());
-        SocketGameHandler socketHandler = new SocketGameHandler(clientInfo);
-        RMIGameHandler rmiHandler = new RMIGameHandler(clientInfo);
+
 
         welcomer.start(clientInfo);
 
-        inputDaemon.setDaemon(true);
-        inputDaemon.start();
+        if(clientInfo.getViewType() == ViewType.TUI) {
+
+            InputDaemon inputDaemon = new InputDaemon();
+            inputDaemon.setDaemon(true);
+            inputDaemon.start();
+
+        }
+        else{
+            Application.launch(GUILoader.class, args);
+        }
+
+        ClientInputManager.setTimeOut(60000);
+        SocketGameHandler socketHandler = new SocketGameHandler(clientInfo);
+        RMIGameHandler rmiHandler = new RMIGameHandler(clientInfo);
 
         if(clientInfo.getConnectionType() == ConnectionType.SOCKET){
 
@@ -45,6 +59,7 @@ public class Client {
         }
 
         System.out.println("Disconnected");
+
     }
 
 }

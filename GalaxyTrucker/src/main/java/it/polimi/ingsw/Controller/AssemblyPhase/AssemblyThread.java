@@ -23,6 +23,7 @@ public class AssemblyThread implements Runnable {
     private AtomicBoolean amIChoosing = new AtomicBoolean(false);
     private AtomicBoolean end = new AtomicBoolean(false);
     private Thread t;
+    private AtomicBoolean blocked = new AtomicBoolean(false);
 
 
     public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, CountDownLatch latch) {
@@ -48,6 +49,10 @@ public class AssemblyThread implements Runnable {
      */
     public void setRunning(boolean value) {
         running.set(value);
+    }
+
+    public void setEnd(){
+        end.set(true);
     }
 
     public AssemblyProtocol getAssemblyProtocol() {
@@ -102,8 +107,13 @@ public class AssemblyThread implements Runnable {
                 while (!end.get()) {
                     if (!disconnected.get()) {
                         try {
+
+                            blocked.set(true);
                             String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
+                            blocked.set(false);
+
                             inputQueue.offer(input);
+
                             try{
                                 Thread.sleep(100);
                             }catch (InterruptedException e){
@@ -190,9 +200,13 @@ public class AssemblyThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
-            end.set(true);
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).unblockUserInputGetterCall();
+
+            setEnd();
+            if(blocked.get()) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).unblockUserInputGetterCall();
+            }
             latch.countDown();
+
         }
     }
 

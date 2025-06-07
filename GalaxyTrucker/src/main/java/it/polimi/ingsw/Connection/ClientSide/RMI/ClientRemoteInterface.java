@@ -30,8 +30,6 @@ public interface ClientRemoteInterface extends Remote{
 
     public void endGame() throws RemoteException;
 
-    public void setInputTimeOut(boolean value) throws RemoteException;
-
     public boolean isInGame() throws RemoteException;
 
     public void setInGame(boolean inGame) throws RemoteException;

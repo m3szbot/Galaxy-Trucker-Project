@@ -1,17 +1,17 @@
 package it.polimi.ingsw.Connection.ClientSide.socket;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientServerInvokableMethods;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
+import it.polimi.ingsw.Connection.ClientSide.utils.ViewCommunicator;
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.View.GeneralView;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Thread that receive the messages that the server sends to the player
@@ -21,19 +21,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class GameMessageReceiver implements Runnable, ClientServerInvokableMethods {
 
-    private GeneralView[] views;
-    private ObjectInputStream in;
+    private ViewCommunicator viewCommunicator;
     private AtomicBoolean running;
     private int viewIndex;
     private SocketDataExchanger dataExchanger;
-    private AtomicReference<String> userInput;
 
-    public GameMessageReceiver(GeneralView[] views, SocketDataExchanger dataExchanger, AtomicBoolean running, AtomicReference<String> userInput) {
+    public GameMessageReceiver(ViewCommunicator viewCommunicator, SocketDataExchanger dataExchanger, AtomicBoolean running) {
 
-        this.views = views;
+        this.viewCommunicator = viewCommunicator;
         this.running = running;
         this.dataExchanger = dataExchanger;
-        this.userInput = userInput;
 
     }
 
@@ -51,10 +48,10 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
 
             } catch (IOException e) {
                 running.set(false);
-                System.out.println("You have been disconnected from the server");
+                viewCommunicator.showData("You have been disconnected from the server", false);
                 break;
             } catch (Exception e) {
-                System.err.println("Unexpected error in receiver: " + e.getMessage());
+                viewCommunicator.showData("Unexpected error in receiver: " + e.getMessage(), true);
                 e.printStackTrace();
             }
 
@@ -74,7 +71,7 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             running.set(false);
         }
         else if(command.equals("unblock")){
-            userInput.set(" ");
+            ClientInputManager.unblockInput();
         }
         else {
             callView(dataContainer);
@@ -99,7 +96,7 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
 
     private void callView(DataContainer container) {
 
-        GeneralView currentView = views[viewIndex];
+        GeneralView currentView = viewCommunicator.getView(viewIndex);
         String methodName = container.getCommand();
 
         if (currentView == null) {

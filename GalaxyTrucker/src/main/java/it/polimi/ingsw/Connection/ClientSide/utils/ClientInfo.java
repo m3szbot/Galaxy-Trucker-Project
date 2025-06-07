@@ -6,7 +6,6 @@ import it.polimi.ingsw.Connection.ViewType;
 
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Bean class which stores the client info, including
@@ -28,12 +27,24 @@ public class ClientInfo implements Serializable {
     private int gameCode;
     private transient String serverIp;
     private transient Socket serverSocket;
-    private transient AtomicReference<String> userInput;
     private transient SocketDataExchanger dataExchanger;
+    private transient ViewCommunicator viewCommunicator;
 
     public ClientInfo() {
-        userInput = new AtomicReference<>(null);
         gameCode = -1;
+    }
+
+    private void setViewCommunicator(){
+        if(viewType == ViewType.TUI){
+            this.viewCommunicator = new ViewCommunicator(ViewType.TUI);
+        }
+        else{
+            this.viewCommunicator = new ViewCommunicator(ViewType.GUI);
+        }
+    }
+
+    public ViewCommunicator getViewCommunicator(){
+        return this.viewCommunicator;
     }
 
     public SocketDataExchanger getDataExchanger() {
@@ -42,10 +53,6 @@ public class ClientInfo implements Serializable {
 
     public void setDataExchanger(SocketDataExchanger dataExchanger) {
         this.dataExchanger = dataExchanger;
-    }
-
-    public AtomicReference<String> getUserInput() {
-        return userInput;
     }
 
     public Socket getServerSocket() {
@@ -86,6 +93,7 @@ public class ClientInfo implements Serializable {
 
     public void setViewType(ViewType viewType) {
         this.viewType = viewType;
+        setViewCommunicator();
     }
 
     public int getServerPort() {

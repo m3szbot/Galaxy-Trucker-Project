@@ -2,8 +2,8 @@ package it.polimi.ingsw.Connection.ServerSide.RMI;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.Server;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Controller.Game.GameState;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -23,7 +23,6 @@ public class Joiner {
     public Joiner(ClientInfo clientInfo, Server centralServer, ClientRemoteInterface virtualClient) throws RemoteException{
         this.clientInfo = clientInfo;
         this.centralServer = centralServer;
-        virtualClient.setInputTimeOut(false);
         this.virtualClient = virtualClient;
         this.trials = 0;
     }
@@ -250,7 +249,6 @@ public class Joiner {
             message = "You have joined the game of " + centralServer.getCurrentStartingGame().getCreator() + " (game code " + centralServer.getCurrentStartingGame().getGameCode() + ")";
         }
         virtualClient.printMessage(message);
-        virtualClient.setInputTimeOut(true);
         virtualClient.setInGame(true);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
