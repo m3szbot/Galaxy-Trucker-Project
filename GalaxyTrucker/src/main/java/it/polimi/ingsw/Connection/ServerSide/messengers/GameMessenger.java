@@ -71,10 +71,12 @@ public class GameMessenger {
      * Disconnects the player from the game.
      */
     public void disconnectPlayer(GameInformation gameInformation, Player player) {
+
         gameInformation.getPlayerList().remove(player);
         gameInformation.getDisconnectedPlayerList().add(player);
+
         if(gameInformation.getFlightBoard().getPlayerOrderList().contains(player)){
-            gameInformation.getFlightBoard().getPlayerOrderList().remove(player);
+            gameInformation.getFlightBoard().eliminatePlayer(player);
         }
         playerMessengerMap.get(player).clearPlayerResources();
         playerMessengerMap.remove(player);
