@@ -1,8 +1,10 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -39,6 +41,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
         String message;
         PlayerMessenger playerMessenger;
+        Player player;
 
         //rolling all dices
         for (int i = 0; i < blows.length; i++) {
@@ -47,19 +50,51 @@ public class MeteorSwarm extends Card implements SufferBlows {
             }
         }
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+        for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
-            message = "Player " + player.getNickName() + " is in a meteor swarm!!\n";
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+            message = "Player " + player.getNickName() + " is in a meteor swarm!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-            hit(player, blows, blowType, gameInformation);
+            try {
+                hit(player, blows, blowType, gameInformation);
+
+            } catch (NoHumanCrewLeftException e) {
+
+                message = e.getMessage();
+                playerMessenger.printMessage(message);
+
+                gameInformation.getFlightBoard().eliminatePlayer(player);
+                i--;
+                continue;
+
+            } catch (PlayerDisconnectedException e) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                i--;
+                continue;
+            }
+
+            if (playerMessenger != null) {
+
+                message = "You survived the meteor storm!\n";
+                playerMessenger.printMessage(message);
+
+            }
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println("Error while sleeping");
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
     }
