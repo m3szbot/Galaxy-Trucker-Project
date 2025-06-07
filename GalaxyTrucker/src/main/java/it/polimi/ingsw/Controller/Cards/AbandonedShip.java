@@ -86,6 +86,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     i--;
+
                 } catch (NoHumanCrewLeftException e) {
 
                     message = e.getMessage();

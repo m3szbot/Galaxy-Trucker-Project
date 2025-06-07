@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -35,8 +35,16 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
-            chosenFirePower = chooseFirePower(player, gameInformation);
+            try {
+                chosenFirePower = chooseFirePower(player, gameInformation);
+
+            } catch (PlayerDisconnectedException e) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                i--;
+                continue;
+            }
 
             if (chosenFirePower > requirementNumber) {
 
@@ -66,7 +74,6 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
             }
 
             message = "Please wait for the other players.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
         }
