@@ -242,7 +242,7 @@ public class GameInformation implements Serializable {
         // Serve ad ignorare le proprietà(campi) sconosciuti degli oggetti json con campi aggiuntivi
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        // Registrazione esplicita dei subtypes
+        // Explicit registration of all subtypes
         mapper.registerSubtypes(
                 AlienSupport.class,
                 Battery.class,
