@@ -16,6 +16,10 @@ public class ShipBoardAttributesTest {
     SideType[] singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
     SideType[] singleSidesSpecialFront = new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single};
     SideType[] singleSidesSpecialBack = new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Single};
+    SideType[] universalSidesSpecialFront = new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal};
+    SideType[] universalSidesSpecialRight = new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal};
+    SideType[] universalSidesSpecialBack = new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal};
+    SideType[] universalSidesSpecialLeft = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special};
 
     @BeforeEach
     void setUp() {
@@ -257,6 +261,27 @@ public class ShipBoardAttributesTest {
         // remove
         shipBoard.removeComponent(8, 7, false);
         assertEquals(0, shipBoardAttributes.getNumberLateralDoubleCannons());
+    }
+
+    @Test
+    void singleCannonAllDirections() throws NotPermittedPlacementException {
+        shipBoard.addComponent(7, 6, new Cannon(universalSidesSpecialFront, true));
+        shipBoard.addComponent(6, 7, new Cannon(universalSidesSpecialLeft, true));
+        shipBoard.addComponent(8, 7, new Cannon(universalSidesSpecialRight, true));
+        shipBoard.addComponent(7, 8, new Cannon(universalSidesSpecialBack, true));
+
+        assertEquals(2.5, shipBoardAttributes.getSingleCannonPower());
+    }
+
+    @Test
+    void doubleCannonAllDirections() throws NotPermittedPlacementException {
+        shipBoard.addComponent(7, 6, new Cannon(universalSidesSpecialFront, false));
+        shipBoard.addComponent(6, 7, new Cannon(universalSidesSpecialLeft, false));
+        shipBoard.addComponent(8, 7, new Cannon(universalSidesSpecialRight, false));
+        shipBoard.addComponent(7, 8, new Cannon(universalSidesSpecialBack, false));
+
+        assertEquals(1, shipBoardAttributes.getNumberForwardDoubleCannons());
+        assertEquals(3, shipBoardAttributes.getNumberLateralDoubleCannons());
     }
 
     @Test
