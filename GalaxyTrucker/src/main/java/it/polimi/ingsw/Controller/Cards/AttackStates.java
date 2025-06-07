@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
-public enum AttackStates {
+import java.io.Serializable;
+
+public enum AttackStates implements Serializable {
     Equalized, PlayerDefeated, EnemyDefeated;
 }
