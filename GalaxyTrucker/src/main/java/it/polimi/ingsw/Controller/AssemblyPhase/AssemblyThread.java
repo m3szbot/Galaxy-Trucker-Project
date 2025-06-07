@@ -122,13 +122,7 @@ public class AssemblyThread implements Runnable {
                             }
                         } catch (PlayerDisconnectedException e) {
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
-                            String message = e.getMessage();
                             disconnected.set(true);
-                            for (Player player : gameInformation.getPlayerList()) {
-                                if (!player.equals(associatedPlayer)) {
-                                    ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                                }
-                            }
                         }
                     } else {
                         try {
