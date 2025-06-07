@@ -41,11 +41,11 @@ public class StarDust extends Card implements Movable {
         int externalJunctions;
         Player player;
 
-        List<Player> players = gameInformation.getFlightBoard().getPlayerOrderList();
+        gameInformation.getFlightBoard().getPlayerOrderList();
 
         for (int i = gameInformation.getFlightBoard().getPlayerOrderList().size() - 1; i >= 0; i--) {
 
-            player = players.get(i);
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             externalJunctions = player.getShipBoard().countExternalJunctions();
 
@@ -62,7 +62,7 @@ public class StarDust extends Card implements Movable {
             }
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 System.out.println("Error while sleeping");
             }
@@ -70,6 +70,7 @@ public class StarDust extends Card implements Movable {
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
+
         for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
