@@ -13,7 +13,7 @@ public class CardBuilder {
 
     private Card builtCard;
     private ElementType blowType, requirementType, lossType;
-    private int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
+    private int daysLost, gainedCredits, requirementNumber, cardLevel, lossNumber;
     private int[] goods, planet1, planet2, planet3, planet4;
     private Blow[] blows;
     private String cardName;
@@ -50,8 +50,8 @@ public class CardBuilder {
         return this;
     }
 
-    public CardBuilder buildGainedCredit(int gainedCredit) {
-        this.gainedCredit = gainedCredit;
+    public CardBuilder buildGainedCredits(int gainedCredits) {
+        this.gainedCredits = gainedCredits;
         return this;
     }
 
@@ -133,8 +133,8 @@ public class CardBuilder {
         return daysLost;
     }
 
-    public int getGainedCredit() {
-        return gainedCredit;
+    public int getGainedCredits() {
+        return gainedCredits;
     }
 
     public int getRequirementNumber() {

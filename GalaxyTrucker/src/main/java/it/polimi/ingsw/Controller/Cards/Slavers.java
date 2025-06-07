@@ -15,7 +15,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public class Slavers extends AttackStatesSetting implements CreditsGain, Movable, TokenLoss, FirePowerChoice {
 
     private int daysLost;
-    private int gainedCredit;
+    private int gainedCredits;
     private ElementType lossType;
     private int lossNumber;
     private int requirementNumber;
@@ -25,7 +25,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
         this.daysLost = cardBuilder.getDaysLost();
-        this.gainedCredit = cardBuilder.getGainedCredit();
+        this.gainedCredits = cardBuilder.getGainedCredits();
         this.lossType = cardBuilder.getLossType();
         this.requirementNumber = cardBuilder.getRequirementNumber();
         this.lossNumber = cardBuilder.getLossNumber();
@@ -39,7 +39,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         System.out.println("Days lost: " + daysLost);
         System.out.println("Loss type: " + lossType.toString());
         System.out.println("Loss number: " + lossNumber);
-        System.out.println("Gained credit: " + gainedCredit);
+        System.out.println("Gained credit: " + gainedCredits);
         System.out.println("Requirement number: " + requirementNumber + " (fire power)\n");
 
 
@@ -79,7 +79,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                                 "has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                        giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredit);
+                        giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredits);
 
                     } else {
 

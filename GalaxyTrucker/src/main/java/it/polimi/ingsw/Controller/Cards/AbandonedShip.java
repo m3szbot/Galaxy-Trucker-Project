@@ -17,7 +17,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
     private int daysLost;
     private ElementType lossType;
     private int lossNumber;
-    private int gainedCredit;
+    private int gainedCredits;
 
     public AbandonedShip(CardBuilder cardBuilder) {
 
@@ -26,7 +26,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         this.daysLost = cardBuilder.getDaysLost();
         this.lossType = cardBuilder.getLossType();
         this.lossNumber = cardBuilder.getLossNumber();
-        this.gainedCredit = cardBuilder.getGainedCredit();
+        this.gainedCredits = cardBuilder.getGainedCredits();
 
 
     }
@@ -39,7 +39,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         System.out.println("Days lost: " + daysLost);
         System.out.println("Loss type: " + lossType.toString());
         System.out.println("Loss number: " + lossNumber);
-        System.out.println("Gained credit: " + gainedCredit);
+        System.out.println("Gained credit: " + gainedCredits);
 
     }
 
@@ -67,7 +67,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                         //player decides to solve the card
 
                         inflictLoss(player, lossType, lossNumber, gameInformation);
-                        giveCredits(player, gainedCredit);
+                        giveCredits(player, gainedCredits);
                         changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
 
                         message = player.getNickName() + "has solved the card!";

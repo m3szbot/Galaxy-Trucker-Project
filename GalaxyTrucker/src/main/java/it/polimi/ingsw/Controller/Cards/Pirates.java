@@ -15,7 +15,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public class Pirates extends AttackStatesSetting implements SufferBlows, CreditsGain, Movable, FirePowerChoice {
 
     private int daysLost;
-    private int gainedCredit;
+    private int gainedCredits;
     private int requirementNumber;
     private ElementType blowType;
     private Blow[] blows;
@@ -25,7 +25,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
         this.daysLost = cardBuilder.getDaysLost();
-        this.gainedCredit = cardBuilder.getGainedCredit();
+        this.gainedCredits = cardBuilder.getGainedCredits();
         this.requirementNumber = cardBuilder.getRequirementNumber();
         this.blowType = cardBuilder.getBlowType();
         this.blows = cardBuilder.getBlows();
@@ -37,7 +37,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Days lost: " + daysLost);
-        System.out.println("Gained credit: " + gainedCredit);
+        System.out.println("Gained credit: " + gainedCredits);
         System.out.println("Blow type: " + blowType.toString());
         System.out.println("Requirement number: " + requirementNumber + " (fire power)");
         printBlows(blows);
@@ -80,7 +80,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                                 "has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                        giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredit);
+                        giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredits);
                         changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
 
                     } else {
