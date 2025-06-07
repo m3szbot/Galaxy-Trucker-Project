@@ -103,7 +103,7 @@ public class FlightBoard implements Serializable {
 
 
     /**
-     * @return copy of adventure cards on the flightboard.
+     * @return copy of adventure cards on the flightboard (safe get).
      */
     public Stack<Card> getCardsStack() {
         return (Stack<Card>) cardsStack.clone();
@@ -133,12 +133,18 @@ public class FlightBoard implements Serializable {
         return startingTiles;
     }
 
+    /**
+     * @return copy of eliminated list (safe get).
+     */
     public List<Player> getEliminatedList() {
-        return eliminatedList;
+        return new ArrayList<>(eliminatedList);
     }
 
+    /**
+     * @return copy of gaveUpList (safe get).
+     */
     public List<Player> getGaveUpList() {
-        return gaveUpList;
+        return new ArrayList<>(gaveUpList);
     }
 
     /**
