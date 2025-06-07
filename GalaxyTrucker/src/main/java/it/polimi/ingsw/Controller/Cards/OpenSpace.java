@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -36,32 +36,30 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
         PlayerMessenger playerMessenger;
         Player player;
-        int numberOfPlayers = gameInformation.getFlightBoard().getPlayerOrderList().size();
         int enginePowerChosen, playerSingleEnginePower, playerDoubleEngineNumber, playerRemainingBatteries;
-        List<Player> players = gameInformation.getFlightBoard().getPlayerOrderList();
+        gameInformation.getFlightBoard().getPlayerOrderList();
 
-        for (int i = 0; i < numberOfPlayers; i++) {
+        for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
-            player = players.get(i);
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             playerSingleEnginePower = player.getShipBoard().getShipBoardAttributes().getSingleEnginePower();
             playerRemainingBatteries = player.getShipBoard().getShipBoardAttributes().getRemainingBatteries();
             playerDoubleEngineNumber = player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower();
 
-            //Check if the player has any engine power to be used (if it's 0 anyway the player is eliminated)
+            //Check if the player has any engine power to be used (if not the player is eliminated)
             if (!(playerSingleEnginePower > 0) && !(playerDoubleEngineNumber > 0 && playerRemainingBatteries > 0)) {
 
-                message = "Player" + player.getNickName() + " has no engine power and can't go through open space.";
+                message = "Player " + player.getNickName() + " has no engine power and can't go through the open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-                gameInformation.getFlightBoard().eliminatePlayer(player);
-                numberOfPlayers = gameInformation.getFlightBoard().getPlayerOrderList().size();
-                i--;
 
                 //Notify the player
                 message = "You are lost in space.\n";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
+
+                gameInformation.getFlightBoard().eliminatePlayer(player);
+                i--;
 
                 //Notify everyone
                 message = "Player" + player.getNickName() + " has been lost in the open space.";
@@ -69,12 +67,18 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
             } else {
 
-                enginePowerChosen = chooseEnginePower(player, gameInformation);
-                changePlayerPosition(player, enginePowerChosen, gameInformation.getFlightBoard());
+                try {
+                    enginePowerChosen = chooseEnginePower(player, gameInformation);
+                    changePlayerPosition(player, enginePowerChosen, gameInformation.getFlightBoard());
 
-                message = "Player " + player.getNickName() + " has moved " +
-                        enginePowerChosen + " position forward!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                    message = "Player " + player.getNickName() + " has moved " +
+                            enginePowerChosen + " position forward!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                } catch (PlayerDisconnectedException e) {
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
+                }
 
             }
 
