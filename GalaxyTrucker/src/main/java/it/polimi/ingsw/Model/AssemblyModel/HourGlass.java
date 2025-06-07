@@ -66,7 +66,7 @@ public class HourGlass {
             // Schedules the task to run every second
             scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
         } else {
-            System.out.println("The HourGlass has been already twisted!");
+            //System.out.println("The HourGlass has been already twisted!");
         }
     }
 
