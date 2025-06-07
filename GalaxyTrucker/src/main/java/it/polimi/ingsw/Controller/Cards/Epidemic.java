@@ -44,7 +44,6 @@ public class Epidemic extends Card {
         boolean isEliminated;
         int numberOfRemovedInhabitants = 0;
 
-
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             isEliminated = false;
@@ -72,6 +71,7 @@ public class Epidemic extends Card {
                     try {
                         player.getShipBoard().removeCrewMember(coordinates[0], coordinates[1]);
                         numberOfRemovedInhabitants++;
+
                     } catch (NoHumanCrewLeftException e) {
 
                         message = e.getMessage();
@@ -79,19 +79,17 @@ public class Epidemic extends Card {
 
                         gameInformation.getFlightBoard().eliminatePlayer(player);
                         isEliminated = true;
+                        i--;
                         break;
-
-                    } catch (FracturedShipBoardException e) {
-
-                        message = e.getMessage();
-                        playerMessenger.printMessage(message);
-
-                        FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
-                        handler.start();
 
                     }
 
                 }
+            } else {
+
+                message = "The disease couldn't spread in your ship.\n";
+                playerMessenger.printMessage(message);
+
             }
 
             if (isEliminated) {
@@ -116,10 +114,12 @@ public class Epidemic extends Card {
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
+
         for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+
     }
 
 }
