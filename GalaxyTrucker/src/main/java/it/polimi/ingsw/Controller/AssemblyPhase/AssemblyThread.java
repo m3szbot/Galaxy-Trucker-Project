@@ -112,9 +112,12 @@ public class AssemblyThread implements Runnable {
                     if (!disconnected.get()) {
                         try {
                             blocked.set(true);
+
                             String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
                             blocked.set(false);
+
                             inputQueue.offer(input);
+
                             try{
                                 Thread.sleep(100);
                             }catch (InterruptedException e){

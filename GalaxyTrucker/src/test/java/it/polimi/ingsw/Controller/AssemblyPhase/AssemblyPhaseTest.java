@@ -1,11 +1,9 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.AssemblyView.AssemblyView;
 
 public class AssemblyPhaseTest {
     AssemblyPhase ass;
-    AssemblyView view;
     Player gecky;
 /*
     @BeforeEach

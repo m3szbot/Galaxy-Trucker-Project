@@ -37,6 +37,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
     public void resolve(GameInformation gameInformation) {
 
+        String message;
         PlayerMessenger playerMessenger;
 
         //rolling all dices
@@ -47,6 +48,9 @@ public class MeteorSwarm extends Card implements SufferBlows {
         }
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+
+            message = "Player " + player.getNickName() + " is in a meteor swarm!!\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             hit(player, blows, blowType, gameInformation);
 

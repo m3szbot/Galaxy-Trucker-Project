@@ -15,21 +15,22 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public interface SmallestCrew {
 
     /**
-     *
      * @param flightBoard flight board of the current game
      * @return the player with the smallest number of inhabitants on the ship
-     *
      * @author Carlo
      */
 
     default Player calculateSmallestCrew(FlightBoard flightBoard) {
 
-        int smallestCrew = 100;
-        Player smallestCrewPlayer = null;
+        int smallestCrew = flightBoard.getPlayerOrderList().getLast().getShipBoard().getShipBoardAttributes().getCrewMembers();
+        Player smallestCrewPlayer = null, player;
 
-        for (Player player : flightBoard.getPlayerOrderList()) {
+        for (int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--) {
 
-            if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() < smallestCrew) {
+            player = flightBoard.getPlayerOrderList().get(i);
+
+            //Searches for the player with the smallest crew, if there's more than one it selects the first on the list
+            if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() <= smallestCrew) {
 
                 smallestCrew = player.getShipBoard().getShipBoardAttributes().getCrewMembers();
                 smallestCrewPlayer = player;

@@ -18,7 +18,7 @@ import java.util.List;
  * Implementations of all the methods of general view for the tui gamemode.
  */
 
-public class TuiView extends GeneralView {
+public class TUIView extends GeneralView {
 
     public static final int COMPONENT_LINES = 5;
     // includes \n at the end of line

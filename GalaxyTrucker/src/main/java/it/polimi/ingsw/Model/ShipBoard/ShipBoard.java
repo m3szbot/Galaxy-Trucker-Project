@@ -31,6 +31,9 @@ public class ShipBoard implements Serializable {
     // (components in [FIRST_REAL...MAX - FIRST_REAL (included!)])
     public static final int SB_FIRST_REAL_COL = 3;
     public static final int SB_FIRST_REAL_ROW = 4;
+    // last INCLUDED! column/row on the shipboard
+    public static final int SB_LAST_REAL_COL = 9;
+    public static final int SB_LAST_REAL_ROW = 8;
 
     // final Object: reference cannot be changed (but state/elements can change)
     private final GameType gameType;
@@ -70,44 +73,44 @@ public class ShipBoard implements Serializable {
 
 
         // Initialize component matrix as empty
-        for (int i = 0; i < SB_COLS; i++) {
-            for (int j = 0; j < SB_ROWS; j++) {
-                componentMatrix[i][j] = null;
+        for (int realCol = 0; realCol < SB_COLS; realCol++) {
+            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+                componentMatrix[realCol][realRow] = null;
             }
         }
         // Initialize all positions as valid
-        for (int i = 0; i < SB_COLS; i++) {
-            for (int j = 0; j < SB_ROWS; j++) {
-                validityMatrix[i][j] = true;
+        for (int realCol = 0; realCol < SB_COLS; realCol++) {
+            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+                validityMatrix[realCol][realRow] = true;
             }
         }
         // Initialize error matrix as error free
-        for (int i = 0; i < SB_COLS; i++) {
-            for (int j = 0; j < SB_ROWS; j++) {
-                errorsMatrix[i][j] = false;
+        for (int realCol = 0; realCol < SB_COLS; realCol++) {
+            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+                errorsMatrix[realCol][realRow] = false;
             }
         }
 
         // Set forbidden zones for component placement
         // Set forbidden zones in the structure
         // forbidden rows
-        for (int i = 0; i < SB_COLS; i++) {
-            validityMatrix[i][0] = false;
-            validityMatrix[i][1] = false;
-            validityMatrix[i][2] = false;
-            validityMatrix[i][3] = false;
-            validityMatrix[i][9] = false;
-            validityMatrix[i][10] = false;
-            validityMatrix[i][11] = false;
+        for (int realCol = 0; realCol < SB_COLS; realCol++) {
+            validityMatrix[realCol][0] = false;
+            validityMatrix[realCol][1] = false;
+            validityMatrix[realCol][2] = false;
+            validityMatrix[realCol][3] = false;
+            validityMatrix[realCol][9] = false;
+            validityMatrix[realCol][10] = false;
+            validityMatrix[realCol][11] = false;
 
         }
         // forbidden columns
-        for (int i = 0; i < SB_ROWS; i++) {
-            validityMatrix[0][i] = false;
-            validityMatrix[1][i] = false;
-            validityMatrix[2][i] = false;
-            validityMatrix[10][i] = false;
-            validityMatrix[11][i] = false;
+        for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+            validityMatrix[0][realRow] = false;
+            validityMatrix[1][realRow] = false;
+            validityMatrix[2][realRow] = false;
+            validityMatrix[10][realRow] = false;
+            validityMatrix[11][realRow] = false;
         }
         // inside cells
         // NormalGame
@@ -123,9 +126,9 @@ public class ShipBoard implements Serializable {
         }
         // TestGame
         else {
-            for (int i = 0; i < SB_ROWS; i++) {
-                validityMatrix[3][i] = false;
-                validityMatrix[9][i] = false;
+            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+                validityMatrix[3][realRow] = false;
+                validityMatrix[9][realRow] = false;
             }
             validityMatrix[4][4] = false;
             validityMatrix[4][5] = false;
@@ -162,10 +165,6 @@ public class ShipBoard implements Serializable {
         addComponent(component, visibleCol, visibleRow);
     }
 
-    private int getRealIndex(int visibleIndex) {
-        return visibleIndex - 1;
-    }
-
     /**
      * Adds a component to the specified position in the structure matrix,
      * and updates Shipboard Attributes.
@@ -191,6 +190,13 @@ public class ShipBoard implements Serializable {
             component.accept(new SBAttributesUpdaterVisitor(this));
             // add component to connected components list
         }
+    }
+
+    /**
+     * @return the realIndex from the passed visibleIndex.
+     */
+    private int getRealIndex(int visibleIndex) {
+        return visibleIndex - 1;
     }
 
     /**
@@ -228,9 +234,9 @@ public class ShipBoard implements Serializable {
      */
     private int getComponentCount() {
         int count = 0;
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                if (componentMatrix[i][j] != null)
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+                if (componentMatrix[realCol][realRow] != null)
                     count++;
             }
         }
@@ -303,9 +309,9 @@ public class ShipBoard implements Serializable {
 
         // max-real included!
         // iterate columns
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
             // iterate rows
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 // default: no error in cell
                 // override if cell erroneous
                 errorsMatrix[realCol][realRow] = false;
@@ -348,8 +354,8 @@ public class ShipBoard implements Serializable {
     public int getErrorCount() {
         checkErrors();
         int count = 0;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_COLS - SB_FIRST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_ROWS - SB_FIRST_REAL_ROW; realRow++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 if (errorsMatrix[realCol][realRow])
                     count++;
             }
@@ -551,6 +557,25 @@ public class ShipBoard implements Serializable {
     }
 
     /**
+     * Check if the 2 provided junctions are compatible.
+     *
+     * @return true if junctions are compatible, false if incompatible.
+     * @author Boti
+     */
+    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
+        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
+            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
+        } else if (sideA.equals(SideType.Single)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Double)) {
+            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Universal)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        }
+        return false;
+    }
+
+    /**
      * Check if the shipboard is fractured after removing components.
      *
      * @throws FracturedShipBoardException
@@ -573,25 +598,6 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Check if the 2 provided junctions are compatible.
-     *
-     * @return true if junctions are compatible, false if incompatible.
-     * @author Boti
-     */
-    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
-        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
-            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
-        } else if (sideA.equals(SideType.Single)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Double)) {
-            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Universal)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        }
-        return false;
-    }
-
-    /**
      * Map all the different connected parts of the shipboard and return them as a list of shipboards to choose from.
      * Used when shipboard is fractured.
      *
@@ -607,18 +613,18 @@ public class ShipBoard implements Serializable {
         boolean connected;
 
         // check remaining components
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 connected = false;
                 for (ShipBoard shipBoard : shipBoardsList) {
-                    if (shipBoard.getRealComponent(i, j) != null) {
+                    if (shipBoard.getRealComponent(realCol, realRow) != null) {
                         connected = true;
                         break;
                     }
                 }
                 // component not yet mapped
                 if (!connected)
-                    shipBoardsList.add(bfsMapper(i, j));
+                    shipBoardsList.add(bfsMapper(realCol, realRow));
             }
         }
         // all components mapped
@@ -732,10 +738,10 @@ public class ShipBoard implements Serializable {
      */
     private void eraseShipboard(ShipBoard tmpShipboard) {
         // remove elements from the real shipboard
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                if (tmpShipboard.getRealComponent(i, j) != null) {
-                    this.componentMatrix[i][j] = null;
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+                if (tmpShipboard.getRealComponent(realCol, realRow) != null) {
+                    this.componentMatrix[realCol][realRow] = null;
                     this.shipBoardAttributes.destroyComponents(1);
                 }
             }
@@ -758,21 +764,21 @@ public class ShipBoard implements Serializable {
      */
     public int countExternalJunctions() {
         int externalJunctions = 0;
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                Component component = componentMatrix[i][j];
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+                Component component = componentMatrix[realCol][realRow];
                 if (component != null) {
                     // check front
-                    if (isConnector(component.getFront()) && componentMatrix[i][j - 1] == null)
+                    if (isConnector(component.getFront()) && componentMatrix[realCol][realRow - 1] == null)
                         externalJunctions++;
                     // check back
-                    if (isConnector(component.getBack()) && componentMatrix[i][j + 1] == null)
+                    if (isConnector(component.getBack()) && componentMatrix[realCol][realRow + 1] == null)
                         externalJunctions++;
                     // check left
-                    if (isConnector(component.getLeft()) && componentMatrix[i - 1][j] == null)
+                    if (isConnector(component.getLeft()) && componentMatrix[realCol - 1][realRow] == null)
                         externalJunctions++;
                     // check right
-                    if (isConnector(component.getRight()) && componentMatrix[i + 1][j] == null)
+                    if (isConnector(component.getRight()) && componentMatrix[realCol + 1][realRow] == null)
                         externalJunctions++;
                 }
             }
@@ -1044,6 +1050,66 @@ public class ShipBoard implements Serializable {
         ((Storage) component).addGoods(goods);
         // update shipboard attributes
         component.accept(new SBAttributesUpdaterVisitor(this));
+    }
+
+    /**
+     * Scan the shipboard and return the list of the visible coordinates of joined cabins.
+     * Used by the Epidemic card.
+     *
+     * @return the list of the visible coordinates of joined cabins.
+     * @author Ludo, Boti
+     */
+    public List<int[]> getJoinedCabinsVisibleCoordinates() {
+        List<int[]> coordinatesList = new ArrayList<>();
+        Component current, temp;
+
+        // find cabins
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+                current = componentMatrix[realCol][realRow];
+                if (current instanceof Cabin) {
+                    // check if current cabin is connected to a neighbor cabin
+
+                    // front
+                    temp = componentMatrix[realCol][realRow - 1];
+                    if (temp instanceof Cabin && isConnector(current.getFront()) && checkCompatibleJunction(current.getFront(), temp.getBack())) {
+                        coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
+                        // jump to next cell
+                        continue;
+                    }
+                    // back
+                    temp = componentMatrix[realCol][realRow + 1];
+                    if (temp instanceof Cabin && isConnector(current.getBack()) && checkCompatibleJunction(current.getBack(), temp.getFront())) {
+                        coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
+                        // jump to next cell
+                        continue;
+                    }
+                    // left
+                    temp = componentMatrix[realCol - 1][realRow];
+                    if (temp instanceof Cabin && isConnector(current.getLeft()) && checkCompatibleJunction(current.getLeft(), temp.getRight())) {
+                        coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
+                        // jump to next cell
+                        continue;
+                    }
+                    // right
+                    temp = componentMatrix[realCol + 1][realRow];
+                    if (temp instanceof Cabin && isConnector(current.getRight()) && checkCompatibleJunction(current.getRight(), temp.getLeft())) {
+                        coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
+                        // jump to next cell
+                        continue;
+                    }
+                }
+            }
+        }
+        // finished scanning
+        return coordinatesList;
+    }
+
+    /**
+     * @return the visibleIndex from the passed realIndex.
+     */
+    private int getVisibleIndex(int realIndex) {
+        return realIndex + 1;
     }
 
 }

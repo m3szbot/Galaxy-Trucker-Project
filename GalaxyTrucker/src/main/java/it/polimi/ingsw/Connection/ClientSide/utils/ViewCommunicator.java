@@ -3,7 +3,7 @@ package it.polimi.ingsw.Connection.ClientSide.utils;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController;
 import it.polimi.ingsw.View.GeneralView;
-import it.polimi.ingsw.View.TUI.TuiView;
+import it.polimi.ingsw.View.TUI.TUIView;
 
 public class ViewCommunicator {
 
@@ -18,10 +18,10 @@ public class ViewCommunicator {
 
         if(viewType == ViewType.TUI){
 
-            this.views[0] = new TuiView();
-            this.views[1] = new TuiView();
-            this.views[2] = new TuiView();
-            this.views[3] = new TuiView();
+            this.views[0] = new TUIView();
+            this.views[1] = new TUIView();
+            this.views[2] = new TUIView();
+            this.views[3] = new TUIView();
 
         }
         else{

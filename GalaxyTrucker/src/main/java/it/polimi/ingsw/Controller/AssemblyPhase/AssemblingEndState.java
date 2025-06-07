@@ -18,8 +18,8 @@ public class AssemblingEndState implements GameState {
     public void enter(AssemblyThread assemblyPhase) {
         assemblyPhase.getIsfinished().set(true);
         if(assemblyProtocol.getFlightBoard().getPlayerOrderList().size() == assemblyPhase.getGameInformation().getPlayerList().size()){
-            assemblyPhase.setRunning(false);
             assemblyPhase.setEnd();
+            assemblyPhase.setRunning(false);
             return;
         }
         if(!assemblyPhase.getRunning().get()){
