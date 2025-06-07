@@ -74,7 +74,7 @@ public class CorrectionThread implements Runnable {
             boolean removeComponentSuccess = false;
             int removeTrials = 5;
 
-            // elaborate player input
+            // elaborate player input: removal loop
             while (!removeComponentSuccess && removeTrials > 0) {
                 // get player input
                 try {
@@ -88,12 +88,13 @@ public class CorrectionThread implements Runnable {
 
                 // remove component
                 try {
-                    // TODO enable fracture trigger
-                    shipBoard.removeComponent(coordinates[0], coordinates[1], false);
-                    // set only if no exceptions thrown
+                    // flag used to exit/repeat removal loop
                     removeComponentSuccess = true;
+                    shipBoard.removeComponent(coordinates[0], coordinates[1], true);
 
                 } catch (IllegalArgumentException e) {
+                    // repeat removal loop
+                    removeComponentSuccess = false;
                     // print exception message to player
                     playerMessenger.printMessage(e.getMessage());
 
@@ -105,8 +106,6 @@ public class CorrectionThread implements Runnable {
                     return true;
 
                 } catch (FracturedShipBoardException e) {
-                    // TODO delete print
-                    System.out.println("Shipboard fractured!");
                     // handle fractured shipboard
                     FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
                     handler.start();
@@ -123,6 +122,23 @@ public class CorrectionThread implements Runnable {
         // error correction finished
         // do not end thread
         return false;
+    }
+
+    /**
+     * Return a string listing the coordinates of the components with errors.
+     */
+    private String getErrorsMessage(ShipBoard shipBoard) {
+        StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append("There are errors in your ship, please correct them:\n");
+        // scan shipboard (only valid cells)
+        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
+            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+                if (shipBoard.getErrorsMatrix()[i][j]) {
+                    messageBuilder.append(String.format("Error in: %d %d\n", i + 1, j + 1));
+                }
+            }
+        }
+        return messageBuilder.toString();
     }
 
     /**
@@ -208,23 +224,6 @@ public class CorrectionThread implements Runnable {
         // crew selection finished
         // do not end player thread
         return false;
-    }
-
-    /**
-     * Return a string listing the coordinates of the components with errors.
-     */
-    private String getErrorsMessage(ShipBoard shipBoard) {
-        StringBuilder messageBuilder = new StringBuilder();
-        messageBuilder.append("There are errors in your ship, please correct them:\n");
-        // scan shipboard (only valid cells)
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
-                if (shipBoard.getErrorsMatrix()[i][j]) {
-                    messageBuilder.append(String.format("Error in: %d %d\n", i + 1, j + 1));
-                }
-            }
-        }
-        return messageBuilder.toString();
     }
 
 

@@ -258,8 +258,13 @@ public class ShipBoardTest {
             assertArrayEquals(coordinatesList.get(i), shipBoard.getJoinedCabinsVisibleCoordinates().get(i));
         }
 
-        // remove center conencting cabin
+        //remove inhabitants from connecting cabin
+        shipBoard.removeCrewMember(8, 7);
+        shipBoard.removeCrewMember(8, 7);
+
+        // remove center connecting cabin
         shipBoard.removeComponent(8, 7, false);
+        assertTrue(shipBoard.getJoinedCabinsVisibleCoordinates().isEmpty());
         assertTrue(shipBoard.getJoinedCabinsVisibleCoordinates().isEmpty());
 
         // add connector instead

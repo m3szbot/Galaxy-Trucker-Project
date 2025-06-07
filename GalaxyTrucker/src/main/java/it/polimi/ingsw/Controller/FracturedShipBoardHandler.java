@@ -27,11 +27,12 @@ public class FracturedShipBoardHandler extends Phase {
 
     @Override
     public void start() {
-        playerMessenger.printMessage("Your shipboard has broken into multiple parts:\n");
+        playerMessenger.printMessage("Your shipboard has broken into multiple parts:");
 
         // print shipboards
         for (int i = 0; i < shipBoardsList.size(); i++) {
-            playerMessenger.printMessage(String.format("Possible shipboard %d:\n", i));
+            playerMessenger.printMessage("\n###############################################################################");
+            playerMessenger.printMessage(String.format("Possible shipboard %d:", i));
             playerMessenger.printShipboard(shipBoardsList.get(i));
         }
 

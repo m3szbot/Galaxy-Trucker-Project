@@ -507,72 +507,20 @@ public class ShipBoard implements Serializable {
         if (component == null) {
             throw new IllegalArgumentException("No component present at the given coordinates.");
         }
+        // present component to be removed
 
-        // if a present element is to be removed
-        // check sides before removing the component
-        int connectedSides = checkNumberOfConnectedSides(realCol, realRow);
         // remove given component
         componentMatrix[realCol][realRow] = null;
         shipBoardAttributes.destroyComponents(1);
         component.accept(new SBAttributesUpdaterVisitor(this));
 
         // check for fracture, throw exceptions if needed
-        // TODO handle fracture
-        /*
-        if (connectedSides > 1 && checkFracture) {
+        // components with 1 neighbor cannot fracture shipboard
+        if (checkFracture && getNumberOfAllNeighbours(realCol, realRow) > 1) {
             checkFracturedShipBoard();
         }
 
-         */
 
-    }
-
-    /**
-     * @return the number of correctly connected sides of the given component.
-     * @author Boti
-     */
-    private int checkNumberOfConnectedSides(int realCol, int realRow) {
-        int count = 0;
-        Component current = componentMatrix[realCol][realRow];
-        Component temp;
-
-        // front
-        temp = componentMatrix[realCol][realRow - 1];
-        if ((temp != null) && (checkCompatibleJunction(current.getFront(), temp.getBack())))
-            count++;
-        // back
-        temp = componentMatrix[realCol][realRow + 1];
-        if ((temp != null) && (checkCompatibleJunction(current.getBack(), temp.getFront())))
-            count++;
-        // left
-        temp = componentMatrix[realCol - 1][realRow];
-        if ((temp != null) && (checkCompatibleJunction(current.getLeft(), temp.getRight())))
-            count++;
-        // right
-        temp = componentMatrix[realCol + 1][realRow];
-        if ((temp != null) && (checkCompatibleJunction(current.getRight(), temp.getLeft())))
-            count++;
-
-        return count;
-    }
-
-    /**
-     * Check if the 2 provided junctions are compatible.
-     *
-     * @return true if junctions are compatible, false if incompatible.
-     * @author Boti
-     */
-    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
-        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
-            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
-        } else if (sideA.equals(SideType.Single)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Double)) {
-            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Universal)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        }
-        return false;
     }
 
     /**
@@ -583,9 +531,8 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     private void checkFracturedShipBoard() throws FracturedShipBoardException, NoHumanCrewLeftException {
+        // map possible shipboards
         List<ShipBoard> shipBoardsList = connectionMapper();
-
-        // if 1 possible shipboard, ok
 
         // if >1 possible shipboards: fracture
         if (shipBoardsList.size() > 1)
@@ -595,6 +542,7 @@ public class ShipBoard implements Serializable {
         if (shipBoardsList.isEmpty())
             throw new NoHumanCrewLeftException();
 
+        // if 1 possible shipboard, ok
     }
 
     /**
@@ -605,26 +553,35 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     private List<ShipBoard> connectionMapper() {
-        // TODO if null component at center, find new center
         List<ShipBoard> shipBoardsList = new ArrayList<>();
+
+        // TODO if null component at center, find new center
+        if (componentMatrix[centerCabinCol][centerCabinRow] == null)
+            findNewCenterCabin();
+
         // add shipboard reachable from current center cabin
         shipBoardsList.add(bfsMapper(centerCabinCol, centerCabinRow));
+
         // indicates if the component has already been mapped
-        boolean connected;
+        boolean mapped;
 
         // check remaining components
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
             for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
-                connected = false;
-                for (ShipBoard shipBoard : shipBoardsList) {
-                    if (shipBoard.getRealComponent(realCol, realRow) != null) {
-                        connected = true;
-                        break;
+                // if component of real shipboard not null
+                if (componentMatrix[realCol][realRow] != null) {
+                    mapped = false;
+                    // check if component is mapped already
+                    for (ShipBoard shipBoard : shipBoardsList) {
+                        if (shipBoard.getRealComponent(realCol, realRow) != null) {
+                            mapped = true;
+                            break;
+                        }
                     }
+                    // component not yet mapped
+                    if (!mapped)
+                        shipBoardsList.add(bfsMapper(realCol, realRow));
                 }
-                // component not yet mapped
-                if (!connected)
-                    shipBoardsList.add(bfsMapper(realCol, realRow));
             }
         }
         // all components mapped
@@ -648,77 +605,100 @@ public class ShipBoard implements Serializable {
         return shipBoardsList;
     }
 
+    // TODO
+    private void findNewCenterCabin() {
+        return;
+    }
+
     /**
-     * Create a new shipboard from the components reachable from the given starting coordinates,
-     * and return it.
-     * That is, map the current reachable shipboard using Breadth First Search.
+     * Create a new shipboard from the components reachable from the given starting coordinates and return it.
+     * That is, map the current reachable shipboard using Breadth First Search starting from the given coordinates.
      *
      * @return the shipboard of reachable components.
+     * @author Boti
      */
     private ShipBoard bfsMapper(int realCol, int realRow) {
+        if (componentMatrix[realCol][realRow] == null)
+            throw new IllegalArgumentException("bfsMapper cannot take empty cell.");
+
+        // create new shipboard
+        // center cabin is automatically added - to remove!
         ShipBoard tmpShipboard = new ShipBoard(gameType);
-        Integer[] currentCoord, neighborCoord;
-        Component currentComp, neighborComp;
+
+        // remove center cabin added by shipboard constructor, if current mapping is not starting from center cabin
+        if (realCol != getRealIndex(SB_CENTER_COL) && realRow != getRealIndex(SB_CENTER_ROW)) {
+            tmpShipboard.componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = null;
+        }
 
         // store coordinates, not components - search based on coordinates
-        Set<Integer[]> visited = new HashSet<>();
-        Queue<Integer[]> queue = new LinkedList<>();
+        Set<Coordinate> visited = new HashSet<>();
+        Queue<Coordinate> queue = new LinkedList<>();
 
-        currentCoord = new Integer[]{realCol, realRow};
-        tmpShipboard.componentMatrix[currentCoord[0]][currentCoord[1]] = getRealComponent(currentCoord[0], currentCoord[1]);
-        queue.offer(currentCoord);
+        // contains doesn't work with List<Integer[]> array entries
+        Coordinate currentCoord, neighborCoord;
+        Component currentComp, neighborComp;
+
+        // add starting coordinates, component
+        currentCoord = new Coordinate(realCol, realRow);
+        tmpShipboard.componentMatrix[currentCoord.getCol()][currentCoord.getRow()] = getRealComponent(currentCoord.getCol(), currentCoord.getRow());
         visited.add(currentCoord);
+        queue.offer(currentCoord);
 
+        // empty queue
         while (!queue.isEmpty()) {
             // get current node
             currentCoord = queue.poll();
-            currentComp = getRealComponent(currentCoord[0], currentCoord[1]);
+            currentComp = getRealComponent(currentCoord.getCol(), currentCoord.getRow());
 
             // front
-            neighborCoord = new Integer[]{currentCoord[0], currentCoord[1] - 1};
-            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            neighborCoord = new Coordinate(currentCoord.getCol(), currentCoord.getRow() - 1);
+            neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
                     checkCompatibleJunction(currentComp.getFront(), neighborComp.getBack())) {
-                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);
                 queue.offer(neighborCoord);
             }
 
             // back
-            neighborCoord = new Integer[]{currentCoord[0], currentCoord[1] + 1};
-            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            neighborCoord = new Coordinate(currentCoord.getCol(), currentCoord.getRow() + 1);
+            neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
                     checkCompatibleJunction(currentComp.getBack(), neighborComp.getFront())) {
-                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);
                 queue.offer(neighborCoord);
             }
 
             // left
-            neighborCoord = new Integer[]{currentCoord[0] - 1, currentCoord[1]};
-            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            neighborCoord = new Coordinate(currentCoord.getCol() - 1, currentCoord.getRow());
+            neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
                     checkCompatibleJunction(currentComp.getLeft(), neighborComp.getRight())) {
-                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);
                 queue.offer(neighborCoord);
             }
 
             // right
-            neighborCoord = new Integer[]{currentCoord[0] + 1, currentCoord[1]};
-            neighborComp = getRealComponent(neighborCoord[0], neighborCoord[1]);
+            neighborCoord = new Coordinate(currentCoord.getCol() + 1, currentCoord.getRow());
+            neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
                     checkCompatibleJunction(currentComp.getRight(), neighborComp.getLeft())) {
-                tmpShipboard.componentMatrix[neighborCoord[0]][neighborCoord[1]] = neighborComp;
+                tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);
                 queue.offer(neighborCoord);
             }
         }
+
+
         // all reachable components visited
+        // update attributes (for human crew and others)
+        tmpShipboard.getShipBoardAttributes().updateShipBoardAttributes(tmpShipboard);
         return tmpShipboard;
     }
 
@@ -727,6 +707,25 @@ public class ShipBoard implements Serializable {
      */
     public Component getRealComponent(int realCol, int realRow) {
         return componentMatrix[realCol][realRow];
+    }
+
+    /**
+     * Check if the 2 provided junctions are compatible.
+     *
+     * @return true if junctions are compatible, false if incompatible.
+     * @author Boti
+     */
+    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
+        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
+            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
+        } else if (sideA.equals(SideType.Single)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Double)) {
+            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Universal)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        }
+        return false;
     }
 
     public ShipBoardAttributes getShipBoardAttributes() {
@@ -748,6 +747,31 @@ public class ShipBoard implements Serializable {
         }
         // update attributes
         this.shipBoardAttributes.updateShipBoardAttributes(this);
+    }
+
+    /**
+     * Counts the number of neighbours (unconnected or connected) for the given cell. Works with empty center cells too.
+     *
+     * @return the number of neighbours (connected or unconnected).
+     * @author Boti
+     */
+    private int getNumberOfAllNeighbours(int realCol, int realRow) {
+        int count = 0;
+
+        // front
+        if (componentMatrix[realCol][realRow - 1] != null)
+            count++;
+        // back
+        if (componentMatrix[realCol][realRow + 1] != null)
+            count++;
+        // left
+        if (componentMatrix[realCol - 1][realRow] != null)
+            count++;
+        // right
+        if (componentMatrix[realCol + 1][realRow] != null)
+            count++;
+
+        return count;
     }
 
     public Component[][] getComponentMatrix() {
@@ -1053,10 +1077,10 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Scan the shipboard and return the list of the visible coordinates of joined cabins.
+     * Scan the shipboard and return the list of the visible coordinates of joined cabins with inhabitants.
      * Used by the Epidemic card.
      *
-     * @return the list of the visible coordinates of joined cabins.
+     * @return the list of the visible coordinates of joined cabins with inhabitants.
      * @author Ludo, Boti
      */
     public List<int[]> getJoinedCabinsVisibleCoordinates() {
@@ -1067,33 +1091,37 @@ public class ShipBoard implements Serializable {
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
             for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 current = componentMatrix[realCol][realRow];
-                if (current instanceof Cabin) {
+                if (current instanceof Cabin && current.getCrewMembers() > 0) {
                     // check if current cabin is connected to a neighbor cabin
 
                     // front
                     temp = componentMatrix[realCol][realRow - 1];
-                    if (temp instanceof Cabin && isConnector(current.getFront()) && checkCompatibleJunction(current.getFront(), temp.getBack())) {
+                    if (temp instanceof Cabin && temp.getCrewMembers() > 0 && isConnector(current.getFront())
+                            && checkCompatibleJunction(current.getFront(), temp.getBack())) {
                         coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
                         // jump to next cell
                         continue;
                     }
                     // back
                     temp = componentMatrix[realCol][realRow + 1];
-                    if (temp instanceof Cabin && isConnector(current.getBack()) && checkCompatibleJunction(current.getBack(), temp.getFront())) {
+                    if (temp instanceof Cabin && temp.getCrewMembers() > 0 && isConnector(current.getBack())
+                            && checkCompatibleJunction(current.getBack(), temp.getFront())) {
                         coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
                         // jump to next cell
                         continue;
                     }
                     // left
                     temp = componentMatrix[realCol - 1][realRow];
-                    if (temp instanceof Cabin && isConnector(current.getLeft()) && checkCompatibleJunction(current.getLeft(), temp.getRight())) {
+                    if (temp instanceof Cabin && temp.getCrewMembers() > 0 && isConnector(current.getLeft())
+                            && checkCompatibleJunction(current.getLeft(), temp.getRight())) {
                         coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
                         // jump to next cell
                         continue;
                     }
                     // right
                     temp = componentMatrix[realCol + 1][realRow];
-                    if (temp instanceof Cabin && isConnector(current.getRight()) && checkCompatibleJunction(current.getRight(), temp.getLeft())) {
+                    if (temp instanceof Cabin && temp.getCrewMembers() > 0 && isConnector(current.getRight())
+                            && checkCompatibleJunction(current.getRight(), temp.getLeft())) {
                         coordinatesList.add(new int[]{getVisibleIndex(realCol), getVisibleIndex(realRow)});
                         // jump to next cell
                         continue;
