@@ -98,15 +98,6 @@ public interface TokenLoss {
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
-            } catch (NoHumanCrewLeftException e) {
-
-                message = e.getMessage();
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                playerMessenger.printMessage(message);
-
-                gameInformation.getFlightBoard().eliminatePlayer(player);
-                numberOfCrewToRemove = 0;
-
             }
         }
     }

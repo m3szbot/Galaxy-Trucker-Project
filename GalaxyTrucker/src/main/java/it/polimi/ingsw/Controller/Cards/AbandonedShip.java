@@ -52,6 +52,8 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
 
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
             //player can afford to lose some crew members to solve the card if he wants to
 
             if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= lossNumber) {
@@ -84,9 +86,10 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                 }
             }
 
-            message = "You finished your turn, wait for the other players.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "You finished your turn, wait for the other players.\n";
+                playerMessenger.printMessage(message);
+            }
 
         }
 
