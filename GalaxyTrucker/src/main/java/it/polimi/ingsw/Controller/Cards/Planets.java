@@ -76,8 +76,9 @@ public class Planets extends Card implements GoodsGain, Movable {
         String message;
         PlayerMessenger playerMessenger;
         int planetChosen, numberOfPlanets, freePlanet;
+        Player player;
 
-        List<Player> players = gameInformation.getFlightBoard().getPlayerOrderList();
+        gameInformation.getFlightBoard().getPlayerOrderList();
 
         //At the beginning all the planets are still to be occupied
         numberOfPlanets = countPlanetsToLandOn();
@@ -85,17 +86,18 @@ public class Planets extends Card implements GoodsGain, Movable {
 
         planetOccupation = new boolean[numberOfPlanets];
 
-        for (Player player : players) {
+        for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
+
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             message = "Would you like to land on a planet ?";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
             try {
                 if (playerMessenger.getPlayerBoolean()) {
 
                     message = "Enter the planet you want to land on(1-" + numberOfPlanets + "): ";
-                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
 
                     while (true) {
@@ -107,7 +109,7 @@ public class Planets extends Card implements GoodsGain, Movable {
                             if (!planetOccupation[planetChosen - 1]) {
 
                                 message = "Player " + player.getNickName() +
-                                        "has landed on planet " + planetChosen + " !";
+                                        " has landed on planet " + planetChosen + " !";
                                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                                 freePlanet--;
 
@@ -139,15 +141,13 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                             } else {
 
-                                message = "The planet you selected has already been occupied";
-                                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                                message = "The planet you selected has already been occupied.\n";
                                 playerMessenger.printMessage(message);
 
                             }
                         } else {
 
-                            message = "The planet you chose is invalid";
-                            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                            message = "The planet you chose is invalid.\n";
                             playerMessenger.printMessage(message);
 
                         }
@@ -155,7 +155,7 @@ public class Planets extends Card implements GoodsGain, Movable {
                     }
 
                     if (freePlanet == 0) {
-                        message = "All planets were occupied!";
+                        message = "All planets are occupied.\n";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         break;
                     }
@@ -163,23 +163,28 @@ public class Planets extends Card implements GoodsGain, Movable {
                 } else {
 
                     message = "Player " + player.getNickName() +
-                            " decided to not land on any planet!";
+                            " decided to not land on any planet.\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 }
             } catch (PlayerDisconnectedException e) {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                i--;
+                continue;
             }
 
-            message = "You finished your turn, wait for the other players.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "You finished your turn, wait for the other players.\n";
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(message);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 
