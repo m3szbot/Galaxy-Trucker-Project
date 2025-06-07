@@ -53,10 +53,6 @@ public class AssemblyThread implements Runnable {
 
     public void setEnd(){
         end.set(true);
-
-        if(blocked.get()) {
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).unblockUserInputGetterCall();
-        }
     }
 
     public AssemblyProtocol getAssemblyProtocol() {
@@ -111,8 +107,8 @@ public class AssemblyThread implements Runnable {
                 while (!end.get()) {
                     if (!disconnected.get()) {
                         try {
-                            blocked.set(true);
 
+                            blocked.set(true);
                             String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
                             blocked.set(false);
 
@@ -205,7 +201,12 @@ public class AssemblyThread implements Runnable {
             e.printStackTrace();
         }finally {
 
+            setEnd();
+            if(blocked.get()) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).unblockUserInputGetterCall();
+            }
             latch.countDown();
+
         }
     }
 

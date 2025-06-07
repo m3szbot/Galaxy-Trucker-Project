@@ -210,10 +210,12 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     }
 
     /**
-     * @return the string that the player sent to the server.
+     * @return the string that the player sent to the server. It must be
+     * synchronized as 2 different threads cannot read from the same input
+     * source --> critical error
      * @author carlo
      */
-    private String getPlayerInput() throws PlayerDisconnectedException {
+    private synchronized String getPlayerInput() throws PlayerDisconnectedException {
 
         if (connectionType == ConnectionType.SOCKET) {
 
@@ -403,6 +405,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 trim removes the spaces before and after the user input string. Split creates an array
                 starting from the inserted string using one or more blank spaces (\\s+) as separator
                  */
+
                 String[] parts = input.trim().split("\\s+");
                 if (parts.length != 2) {
                     throw new IllegalArgumentException();

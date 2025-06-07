@@ -29,6 +29,8 @@ public class CorrectionPhase extends Phase {
      * or times out (player shipboard incorrect, player gets removed).
      */
     public void start() {
+
+
         setGamePhaseToClientServer(GamePhase.Correction);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads
