@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -40,6 +41,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         System.out.println("Gained credit: " + gainedCredits);
         System.out.println("Blow type: " + blowType.toString());
         System.out.println("Requirement number: " + requirementNumber + " (fire power)");
+
         printBlows(blows);
 
     }
@@ -48,11 +50,13 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
     public void resolve(GameInformation gameInformation) {
 
-        int numberOfPlayers, i;
+        int i;
         String message;
         PlayerMessenger playerMessenger;
         AttackStates[] results;
+        Player player;
 
+        //Cycles through the player list so doesn't need any catches
         results = setAttackStates(requirementNumber, gameInformation);
 
         //rolling all dices
@@ -64,20 +68,21 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
-            Player player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             if (results[i] == AttackStates.EnemyDefeated) {
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
+
                         //player decides to collect the reward
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
-                                "has collected the reward!";
+                                " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredits);
@@ -85,13 +90,17 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
                     } else {
 
+                        //player decides not to collect the reward
+
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
-                                "hasn't collected the reward!";
+                                " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
+                    continue;
                 }
                 break;
 
@@ -100,19 +109,37 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 message = "Player " + player.getNickName() + " is under pirate fire!!\n";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
+                try {
+                    hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
+
+                } catch (NoHumanCrewLeftException e) {
+
+                    message = e.getMessage();
+                    playerMessenger.printMessage(message);
+
+                    gameInformation.getFlightBoard().eliminatePlayer(player);
+                    i--;
+                    continue;
+
+                } catch (PlayerDisconnectedException e) {
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
+                    continue;
+                }
 
             }
 
-            message = "You finished your turn, please wait for the other players.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "You finished your turn, please wait for the other players.\n";
+                playerMessenger.printMessage(message);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 
