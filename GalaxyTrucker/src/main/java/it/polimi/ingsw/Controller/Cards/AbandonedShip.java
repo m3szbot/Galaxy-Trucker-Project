@@ -4,10 +4,11 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card abbandonedShip
+ * class that represent the card abandonedShip
  *
  * @author carlo
  */
@@ -48,59 +49,80 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
     public void resolve(GameInformation gameInformation) {
 
         boolean solved = false;
+        Player player;
         PlayerMessenger playerMessenger;
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+        for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             //player can afford to lose some crew members to solve the card if he wants to
 
-            if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= lossNumber) {
+            if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() > lossNumber) {
 
-                message = "Do you want to solve the card ? ";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                message = "Do you want to solve the card (if you do you will lose part of your crew) ? ";
                 playerMessenger.printMessage(message);
 
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
-                        solved = true;
                         //player decides to solve the card
-
                         inflictLoss(player, lossType, lossNumber, gameInformation);
                         giveCredits(player, gainedCredits);
-                        changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
+                        changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
-                        message = player.getNickName() + "has solved the card!";
+                        message = player.getNickName() + " has solved the card!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
+                        solved = true;
                         break;
+
                     } else {
-                        message = player.getNickName() + "hasn't solved the card.\n";
+
+                        message = player.getNickName() + " hasn't solved the card.\n";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                        gameInformation.getFlightBoard().updateFlightBoard();
+
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
+                } catch (NoHumanCrewLeftException e) {
+
+                    message = e.getMessage();
+                    playerMessenger.printMessage(message);
+
+                    gameInformation.getFlightBoard().eliminatePlayer(player);
+                    i--;
+
                 }
+            } else {
+
+                message = "Not enough crew members to solve the card.\n";
+                playerMessenger.printMessage(message);
+
             }
 
             if (playerMessenger != null) {
+
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
+
             }
 
         }
 
         if (!solved) {
+
             message = "Nobody solved the card!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
             gameInformation.getFlightBoard().updateFlightBoard();
+
         }
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        gameInformation.getFlightBoard().updateFlightBoard();
+
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
     }

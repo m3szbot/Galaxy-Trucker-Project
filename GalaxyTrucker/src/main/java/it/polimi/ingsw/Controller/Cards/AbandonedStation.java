@@ -7,7 +7,7 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card abbandonedStation
+ * class that represent the card abandonedStation
  *
  * @author carlo
  */
@@ -45,16 +45,19 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
     public void resolve(GameInformation gameInformation) {
 
         boolean solved = false;
-
+        Player player;
         PlayerMessenger playerMessenger;
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
+        for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
+
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             if (isCrewSatisfying(player, requirementNumber)) {
                 //player has the possibility to solve the card
 
                 message = "Do you want to solve the card ?";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
                 try {
@@ -62,35 +65,46 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                         //player decides to solve the card
 
                         giveGoods(player, goods, gameInformation);
-                        changePlayerPosition(player, daysLost, gameInformation.getFlightBoard());
+                        changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                         message = player.getNickName() + "has solved the card!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                        solved = true;
                         break;
+
                     } else {
+
                         message = player.getNickName() + "hasn't solved the card.\n";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                        gameInformation.getFlightBoard().updateFlightBoard();
+
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
                 }
+            } else {
+
+                message = "Not enough crew members.\n";
+                playerMessenger.printMessage(message);
+
             }
 
-            message = "You finished your turn, wait for the other players.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "You finished your turn, wait for the other players.\n";
+                playerMessenger.printMessage(message);
+            }
 
         }
 
         if (!solved) {
             message = "Nobody solved the card!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-            gameInformation.getFlightBoard().updateFlightBoard();
         }
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        gameInformation.getFlightBoard().updateFlightBoard();
+
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 
