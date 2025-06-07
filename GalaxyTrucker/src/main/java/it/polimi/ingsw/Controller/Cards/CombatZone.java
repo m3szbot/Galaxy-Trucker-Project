@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -61,34 +63,48 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         //letting the players choose their firePower, from the leader backwards
 
-        numberOfPlayers = gameInformation.getFlightBoard().getPlayerOrderList().size();
-        for (int i = 0; i < numberOfPlayers; i++) {
+        for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
-            firePowers[i] = chooseFirePower(player, gameInformation);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+            try {
+                firePowers[i] = chooseFirePower(player, gameInformation);
+
+            } catch (PlayerDisconnectedException e) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                i--;
+                continue;
+            }
 
             message = "The other players are choosing their fire power.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
         }
 
         //letting the players choose their enginePower, from the leader backwards
 
-        numberOfPlayers = gameInformation.getFlightBoard().getPlayerOrderList().size();
-        for (int i = 0; i < numberOfPlayers; i++) {
+        for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
-            enginePowers[i] = chooseEnginePower(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+            try {
+                enginePowers[i] = chooseEnginePower(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);
+
+            } catch (PlayerDisconnectedException e) {
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                i--;
+                continue;
+            }
 
             message = "The other players are choosing their engine power.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
         }
 
-        weakestFirePowerPlayer = findWeakestFirePowerPlayer(firePowers, numberOfPlayers, gameInformation.getFlightBoard());
-        weakestEnginePowerPlayer = findWeakestEnginePowerPlayer(enginePowers, numberOfPlayers, gameInformation.getFlightBoard());
+        weakestFirePowerPlayer = findWeakestFirePowerPlayer(firePowers, gameInformation.getFlightBoard());
+        weakestEnginePowerPlayer = findWeakestEnginePowerPlayer(enginePowers, gameInformation.getFlightBoard());
 
         //giving the various penalties to players
 
@@ -96,15 +112,29 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         changePlayerPosition(lowestInhabitantNumberPlayer, -daysLost, gameInformation.getFlightBoard());
 
         message = "Player " + lowestInhabitantNumberPlayer.getNickName() + " lost " + daysLost +
-                " flight days as he is has the lowest number of inhabitants!";
+                " flight days as he has the lowest number of inhabitants!";
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         //lowest engine power
-        inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
 
-        message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
-                " crew members as he has the weakest engine power!";
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+        try {
+            inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
+
+            message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
+                    " crew members as he has the weakest engine power!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        } catch (NoHumanCrewLeftException e) {
+
+            message = e.getMessage();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
+            playerMessenger.printMessage(message);
+
+            gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
+
+        } catch (PlayerDisconnectedException e) {
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestEnginePowerPlayer);
+        }
 
         //rolling the dice for each shot and then hitting
         for (int i = 0; i < blows.length; i++) {
@@ -115,18 +145,35 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         //lowest firepower
-        hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
+
+        try {
+            hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
+
+        } catch (NoHumanCrewLeftException e) {
+            message = e.getMessage();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
+            playerMessenger.printMessage(message);
+
+            gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
+
+        } catch (PlayerDisconnectedException e) {
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestEnginePowerPlayer);
+        }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
+            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
+        }
 
     }
 
-    private Player findWeakestFirePowerPlayer(float[] firePowers, int numberOfPlayers, FlightBoard flightBoard) {
+    private Player findWeakestFirePowerPlayer(float[] firePowers, FlightBoard flightBoard) {
 
         int minIndex = 0;
 
-        for (int i = 0; i < numberOfPlayers; i++) {
+        for (int i = 0; i < flightBoard.getPlayerOrderList().size(); i++) {
 
             if (firePowers[i] < firePowers[minIndex]) {
                 minIndex = i;
@@ -138,11 +185,11 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     }
 
-    private Player findWeakestEnginePowerPlayer(int[] enginePowers, int numberOfPlayers, FlightBoard flightBoard) {
+    private Player findWeakestEnginePowerPlayer(int[] enginePowers, FlightBoard flightBoard) {
 
         int minIndex = 0;
 
-        for (int i = 0; i < numberOfPlayers; i++) {
+        for (int i = 0; i < flightBoard.getPlayerOrderList().size(); i++) {
 
             if (enginePowers[i] < enginePowers[minIndex]) {
                 minIndex = i;
