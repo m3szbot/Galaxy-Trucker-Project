@@ -63,7 +63,6 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             Player player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
-
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             if (results[i] == AttackStates.EnemyDefeated) {
@@ -72,7 +71,6 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                 changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
                 try {
@@ -111,6 +109,9 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
 
+                } catch (PlayerDisconnectedException e) {
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
                 }
 
             }
@@ -122,6 +123,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
+
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());

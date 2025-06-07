@@ -76,6 +76,8 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 message = "Would you like to collect the reward for defeating the enemies ?";
                 playerMessenger.printMessage(message);
 
+                changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
+
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
@@ -86,7 +88,6 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredits);
-                        changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
 
                     } else {
 

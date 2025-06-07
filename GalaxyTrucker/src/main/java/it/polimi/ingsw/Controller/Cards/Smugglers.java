@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -51,59 +52,81 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
     public void resolve(GameInformation gameInformation) {
 
-        int numberOfPlayers = gameInformation.getFlightBoard().getPlayerOrderList().size(), i;
+        int i;
         String message;
         PlayerMessenger playerMessenger;
         AttackStates[] results;
+        Player player;
 
+        //Cycles through the player list so doesn't need any catches
         results = setAttackStates(requirementNumber, gameInformation);
 
-        for (i = 0; i < numberOfPlayers; i++) {
+        for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
-            Player player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             if (results[i] == AttackStates.EnemyDefeated) {
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
+
+                changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
 
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
-                                "has collected the reward!";
+                                " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         giveGoods(gameInformation.getFlightBoard().getPlayerOrderList().get(i), goods, gameInformation);
-                        changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), daysLost, gameInformation.getFlightBoard());
 
                     } else {
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
-                                "hasn't collected the reward!";
+                                " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
                 }
 
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
-                inflictLoss(player, lossType, lossNumber, gameInformation);
+                try {
+
+                    inflictLoss(gameInformation.getFlightBoard().getPlayerOrderList().get(i), lossType, lossNumber, gameInformation);
+
+                } catch (NoHumanCrewLeftException e) {
+
+                    message = e.getMessage();
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                    playerMessenger.printMessage(message);
+
+                    gameInformation.getFlightBoard().eliminatePlayer(player);
+                    i--;
+
+                } catch (PlayerDisconnectedException e) {
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                    i--;
+                }
 
             }
 
-            message = "You finished your turn, wait for the other players.\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "You finished your turn, wait for the other players.\n";
+                playerMessenger.printMessage(message);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 
