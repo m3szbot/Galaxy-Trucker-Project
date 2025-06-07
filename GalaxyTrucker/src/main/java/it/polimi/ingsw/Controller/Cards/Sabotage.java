@@ -2,9 +2,11 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -33,7 +35,7 @@ public class Sabotage extends Card implements SmallestCrew {
         boolean isEliminated = false;
 
         try {
-            if (destroyRandomComponent(smallestCrewPlayer, gameInformation.getFlightBoard())) {
+            if (destroyRandomComponent(smallestCrewPlayer, gameInformation)) {
 
                 message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
@@ -53,6 +55,16 @@ public class Sabotage extends Card implements SmallestCrew {
 
             gameInformation.getFlightBoard().eliminatePlayer(smallestCrewPlayer);
             isEliminated = true;
+
+        } catch (FracturedShipBoardException e) {
+
+            message = e.getMessage();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
+            playerMessenger.printMessage(message);
+
+            FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
+            handler.start();
+
         }
 
         if (isEliminated) {
@@ -82,8 +94,10 @@ public class Sabotage extends Card implements SmallestCrew {
      * @return true if the player was hit, false otherwise
      */
 
-    private boolean destroyRandomComponent(Player player, FlightBoard flightBoard) {
+    private boolean destroyRandomComponent(Player player, GameInformation gameInformation) {
 
+        String message;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
         int i, x, y;
 
         for (i = 0; i < 3; i++) {
@@ -91,20 +105,35 @@ public class Sabotage extends Card implements SmallestCrew {
             x = (int) ((Math.random() * 11) + 1);
             y = (int) ((Math.random() * 11) + 1);
 
-            if (player.getShipBoard().getComponent(x, y) != null) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println("Error while sleeping");
+            }
 
-                if (player.getShipBoard().getComponent(x, y) instanceof Storage) {
+            if (player.getShipBoard().getRealComponent(x, y) != null) {
 
-                    int[] goodsToRemove = ((Storage) player.getShipBoard().getComponent(x, y)).getGoods();
+                try {
+                    player.getShipBoard().removeComponent(x + 1, y + 1, true);
 
-                    flightBoard.addGoods(goodsToRemove);
+                    message = "A shot hit player " + player.getNickName() + " at coordinates [ " + (x + 1) + " , " + (y + 1) + " ]!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                    return true;
+
+                } catch (FracturedShipBoardException e) {
+
+                    message = e.getMessage();
+                    playerMessenger.printMessage(message);
+
+                    FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
+                    handler.start();
 
                 }
 
-                player.getShipBoard().removeComponent(x + 1, y + 1, true);
-                return true;
-
             }
+
+            message = "Shot number " + (i + 1) + " missed player " + player.getNickName() + "!\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }
 

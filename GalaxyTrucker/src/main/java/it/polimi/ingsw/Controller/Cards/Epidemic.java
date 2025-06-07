@@ -2,7 +2,9 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -78,6 +80,14 @@ public class Epidemic extends Card {
                         gameInformation.getFlightBoard().eliminatePlayer(player);
                         isEliminated = true;
                         break;
+
+                    } catch (FracturedShipBoardException e) {
+
+                        message = e.getMessage();
+                        playerMessenger.printMessage(message);
+
+                        FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
+                        handler.start();
 
                     }
 
