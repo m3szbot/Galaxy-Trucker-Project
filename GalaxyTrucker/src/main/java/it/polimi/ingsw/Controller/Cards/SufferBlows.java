@@ -3,9 +3,11 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
@@ -89,6 +91,7 @@ public interface SufferBlows {
 
                         gameInformation.getFlightBoard().eliminatePlayer(player);
                         isEliminated = true;
+
                     }
                 }
 
@@ -360,7 +363,22 @@ public interface SufferBlows {
 
     private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) {
 
-        player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+        String message;
+        PlayerMessenger playerMessenger;
+
+        try {
+            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+            
+        } catch (FracturedShipBoardException e) {
+
+            message = e.getMessage();
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
+            FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
+            handler.start();
+
+        }
         return true;
 
     }

@@ -3,7 +3,6 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -92,17 +91,22 @@ public interface TokenLoss {
             try {
                 player.getShipBoard().removeCrewMember(coordinates[0], coordinates[1]);
                 numberOfCrewToRemove--;
+
             } catch (IllegalArgumentException e) {
+
                 message = e.getMessage();
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
+
             } catch (NoHumanCrewLeftException e) {
+
                 message = e.getMessage();
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
                 gameInformation.getFlightBoard().eliminatePlayer(player);
                 numberOfCrewToRemove = 0;
+
             }
         }
     }

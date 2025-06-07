@@ -92,7 +92,7 @@ public class GameInformation implements Serializable {
         CardBuilder cardBuilder = new CardBuilder();
 
         ElementType blowType, requirementType, lossType;
-        int daysLost, gainedCredit, requirementNumber, cardLevel, lossNumber;
+        int daysLost, gainedCredits, requirementNumber, cardLevel, lossNumber;
         int[] goods = new int[0], planet1 = new int[0], planet2 = new int[0], planet3 = new int[0], planet4 = new int[0];
         Blow[] blows = new Blow[0];
         Blow blow;
@@ -109,7 +109,7 @@ public class GameInformation implements Serializable {
                 cardName = node.get("cardName").asText();
                 // optional (can be null)
                 daysLost = getSafeInt(node, "daysLost");
-                gainedCredit = getSafeInt(node, "gainedCredit");
+                gainedCredits = getSafeInt(node, "gainedCredits");
                 requirementNumber = getSafeInt(node, "requirementNumber");
                 lossNumber = getSafeInt(node, "lossNumber");
                 blowType = getSafeElementType(node, "blowType");
@@ -210,7 +210,7 @@ public class GameInformation implements Serializable {
 
                 }
 
-                tmpList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredit(gainedCredit).buildRequirementNumber(requirementNumber).buildLossNumber(lossNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).getBuiltCard());
+                tmpList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredits(gainedCredits).buildRequirementNumber(requirementNumber).buildLossNumber(lossNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).getBuiltCard());
 
             }
 
