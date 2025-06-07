@@ -117,6 +117,8 @@ public class TUIView extends GeneralView {
                 System.out.println();
             }
         }
+        // end of components
+        System.out.println(String.format("Destroyed components: %d\n", shipBoard.getShipBoardAttributes().getDoubleEnginePower()));
 
     }
 
