@@ -7,7 +7,7 @@ import it.polimi.ingsw.Model.Components.*;
  *
  * @author Boti
  */
-public class SBAttributesUpdaterVisitor implements ComponentVisitor {
+public class SBAttributesUpdaterVisitor implements ComponentVisitor<Void> {
     ShipBoard shipBoard;
 
     public SBAttributesUpdaterVisitor(ShipBoard shipBoard) {
