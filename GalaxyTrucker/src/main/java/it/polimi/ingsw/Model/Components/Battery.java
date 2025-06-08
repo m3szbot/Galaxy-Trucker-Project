@@ -43,7 +43,7 @@ public class Battery extends Component {
     }
 
     @Override
-    public <T> T accept(ComponentVisitor<T> componentVisitor) {
+    public <T, E extends Exception> T accept(ComponentVisitor<T, E> componentVisitor) throws E {
         return componentVisitor.visitBattery(this);
     }
 

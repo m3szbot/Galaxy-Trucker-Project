@@ -6,9 +6,7 @@ import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ShipBoard.Color;
-import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
-import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.Model.ShipBoard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -120,7 +118,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void LostOneComponentScores() throws NotPermittedPlacementException {
+    void LostOneComponentScores() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add and remove 1 component
         // 8 order + 4 least links - 1 component
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());

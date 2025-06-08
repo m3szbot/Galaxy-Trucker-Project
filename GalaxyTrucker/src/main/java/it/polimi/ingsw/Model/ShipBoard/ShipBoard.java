@@ -155,7 +155,11 @@ public class ShipBoard implements Serializable {
         // set center
         centerCabinCol = getRealIndex(SB_CENTER_COL);
         centerCabinRow = getRealIndex(SB_CENTER_ROW);
-        starterCabin.accept(new SBAttributesUpdaterVisitor(this));
+        try {
+            starterCabin.accept(new SBAttributesUpdaterVisitor(this));
+        } catch (NoHumanCrewLeftException e) {
+            throw new IllegalStateException("Error: no human crew after adding starter cabin.");
+        }
     }
 
     /**
@@ -187,7 +191,11 @@ public class ShipBoard implements Serializable {
             // add component to shipBoard
             componentMatrix[col][row] = component;
             // update shipboard attributes
-            component.accept(new SBAttributesUpdaterVisitor(this));
+            try {
+                component.accept(new SBAttributesUpdaterVisitor(this));
+            } catch (NoHumanCrewLeftException e) {
+                throw new IllegalStateException("Error: no human crew after adding component.");
+            }
             // add component to connected components list
         }
     }
@@ -325,7 +333,11 @@ public class ShipBoard implements Serializable {
         // no problems, add goods to component
         ((Storage) component).addGoods(goods);
         // update shipboard attributes
-        component.accept(new SBAttributesUpdaterVisitor(this));
+        try {
+            component.accept(new SBAttributesUpdaterVisitor(this));
+        } catch (NoHumanCrewLeftException e) {
+            throw new IllegalStateException("Error: no human crew left after adding goods.");
+        }
     }
 
     public boolean[][] getValidityMatrix() {
@@ -921,7 +933,11 @@ public class ShipBoard implements Serializable {
         if (component.getBatteryPower() - 1 >= 0) {
             ((Battery) component).removeBattery();
             // update shipboard attributes
-            component.accept(new SBAttributesUpdaterVisitor(this));
+            try {
+                component.accept(new SBAttributesUpdaterVisitor(this));
+            } catch (NoHumanCrewLeftException e) {
+                throw new IllegalStateException("Error: no human crew left after removing battery.");
+            }
         } else
             throw new IllegalArgumentException("Not enough batteries at the selected component.");
     }
@@ -999,7 +1015,11 @@ public class ShipBoard implements Serializable {
 
             // all conditions met to change crew type
             ((Cabin) component).setCrewType(crewType);
-            component.accept(new SBAttributesUpdaterVisitor(this));
+            try {
+                component.accept(new SBAttributesUpdaterVisitor(this));
+            } catch (NoHumanCrewLeftException e) {
+                throw new IllegalStateException("Error: no human crew left after setting crew type.");
+            }
 
         }
     }
@@ -1129,7 +1149,11 @@ public class ShipBoard implements Serializable {
         // no problems, remove goods from component
         ((Storage) component).removeGoods(goods);
         // update shipboard attributes
-        component.accept(new SBAttributesUpdaterVisitor(this));
+        try {
+            component.accept(new SBAttributesUpdaterVisitor(this));
+        } catch (NoHumanCrewLeftException e) {
+            throw new IllegalStateException("Error: no human crew left after removing goods.");
+        }
     }
 
     /**

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Visits a component and returns the list of its attributes.
  */
-public class ComponentAttributesVisitor implements ComponentVisitor<List<Object>> {
+public class ComponentAttributesVisitor implements ComponentVisitor<List<Object>, RuntimeException> {
     @Override
     public List<Object> visitAlienSupport(AlienSupport alienSupport) {
         return alienSupport.getAllIndexes();

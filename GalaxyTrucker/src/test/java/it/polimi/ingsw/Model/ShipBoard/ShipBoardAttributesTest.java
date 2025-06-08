@@ -76,7 +76,7 @@ public class ShipBoardAttributesTest {
 
     // Test addComponent attribute changes
     @Test
-    void addRemovePurpleAlienCabin() throws NotPermittedPlacementException {
+    void addRemovePurpleAlienCabin() throws NotPermittedPlacementException, FracturedShipBoardException {
         // 1 cabin(2humans) 1 Cabin(purple alien) 1 Alien support(purple)
         // add
         shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
@@ -102,7 +102,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemovePurpleAlienSupport() throws NotPermittedPlacementException {
+    void addRemovePurpleAlienSupport() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // 1 Cabin(2humans) 1 Cabin(purple) 1 Alien support(purple)
         // add
         shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
@@ -124,7 +124,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveBrownAlienCabin() throws NotPermittedPlacementException {
+    void addRemoveBrownAlienCabin() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // 1 Cabin(2 humans) 1 Cabin(brown) 1 Alien support(brown)
         // add
         shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
@@ -146,7 +146,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveBrownAlienSupport() throws NotPermittedPlacementException {
+    void addRemoveBrownAlienSupport() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // 1 Cabin(2 humans) 1 Cabin(Brown alien) 1 Alien support (brown)
         // must add cabin so there are enough humans
         shipBoard.addComponent(6, 7, new Cabin(singleSides, CrewType.Human, 2));
@@ -168,7 +168,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveShields() throws NotPermittedPlacementException {
+    void addRemoveShields() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // side protected only if batteries are available
         // add shield
         shipBoard.addComponent(8, 7, new Shield(singleSides, 0, 0));
@@ -188,7 +188,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void coverAllSidesWithShields() throws NotPermittedPlacementException {
+    void coverAllSidesWithShields() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         assertArrayEquals(new boolean[]{false, false, false, false}, shipBoardAttributes.getCoveredSides());
         // add shields
         shipBoard.addComponent(7, 6, new Shield(singleSides, 2, 3));
@@ -206,7 +206,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveSingleEngine() throws NotPermittedPlacementException {
+    void addRemoveSingleEngine() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, true));
         assertEquals(1, shipBoardAttributes.getSingleEnginePower());
@@ -220,7 +220,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveDoubleEngine() throws NotPermittedPlacementException {
+    void addRemoveDoubleEngine() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, false));
         assertEquals(2, shipBoardAttributes.getDoubleEnginePower());
@@ -234,7 +234,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveSingleForwardCannon() throws NotPermittedPlacementException {
+    void addRemoveSingleForwardCannon() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialFront, true));
         assertEquals(1, shipBoardAttributes.getSingleCannonPower());
@@ -245,7 +245,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveSingleLateralCannon() throws NotPermittedPlacementException {
+    void addRemoveSingleLateralCannon() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, true));
         assertEquals(0.5, shipBoardAttributes.getSingleCannonPower());
@@ -256,7 +256,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveDoubleForwardCannon() throws NotPermittedPlacementException {
+    void addRemoveDoubleForwardCannon() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialFront, false));
         assertEquals(1, shipBoardAttributes.getNumberForwardDoubleCannons());
@@ -268,7 +268,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveDoubleLateralCannon() throws NotPermittedPlacementException {
+    void addRemoveDoubleLateralCannon() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Cannon(singleSidesSpecialBack, false));
         assertEquals(0, shipBoardAttributes.getNumberForwardDoubleCannons());
@@ -301,7 +301,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveBatteries() throws NotPermittedPlacementException {
+    void addRemoveBatteries() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Battery(singleSides, 3));
         assertEquals(3, shipBoardAttributes.getRemainingBatteries());
@@ -312,7 +312,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveHumanCrew() throws NotPermittedPlacementException {
+    void addRemoveHumanCrew() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Cabin(singleSides, CrewType.Human, 2));
         assertEquals(4, shipBoardAttributes.getCrewMembers());
@@ -323,7 +323,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveBlueStorage() throws NotPermittedPlacementException {
+    void addRemoveBlueStorage() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Storage(singleSides, false, 1));
         assertEquals(1, shipBoardAttributes.getRemainingBlueSlots());
@@ -335,7 +335,7 @@ public class ShipBoardAttributesTest {
     }
 
     @Test
-    void addRemoveRedStorage() throws NotPermittedPlacementException {
+    void addRemoveRedStorage() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add
         shipBoard.addComponent(8, 7, new Storage(singleSides, true, 1));
         assertEquals(0, shipBoardAttributes.getRemainingBlueSlots());

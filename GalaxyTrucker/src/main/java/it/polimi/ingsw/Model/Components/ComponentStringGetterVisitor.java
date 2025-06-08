@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.Components;
 
 import static it.polimi.ingsw.View.TUI.TUIView.*;
 
-public class ComponentStringGetterVisitor implements ComponentVisitor<String> {
+public class ComponentStringGetterVisitor implements ComponentVisitor<String, RuntimeException> {
     @Override
     public String visitAlienSupport(AlienSupport alienSupport) {
         return String.format("""

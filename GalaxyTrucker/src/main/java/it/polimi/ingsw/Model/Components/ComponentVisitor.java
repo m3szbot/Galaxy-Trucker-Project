@@ -1,21 +1,25 @@
 package it.polimi.ingsw.Model.Components;
 
-public interface ComponentVisitor<T> {
-    T visitAlienSupport(AlienSupport alienSupport);
+/**
+ * @param <T> return type
+ * @param <E> thrown exception type. Extend dummy RuntimeException for unchecked exception (no handling enforced).
+ */
+public interface ComponentVisitor<T, E extends Exception> {
+    T visitAlienSupport(AlienSupport alienSupport) throws E;
 
-    T visitBattery(Battery battery);
+    T visitBattery(Battery battery) throws E;
 
-    T visitCabin(Cabin cabin);
+    T visitCabin(Cabin cabin) throws E;
 
-    T visitCannon(Cannon cannon);
+    T visitCannon(Cannon cannon) throws E;
 
-    T visitComponent(Component component);
+    T visitComponent(Component component) throws E;
 
-    T visitEngine(Engine engine);
-
-
-    T visitShield(Shield shield);
+    T visitEngine(Engine engine) throws E;
 
 
-    T visitStorage(Storage storage);
+    T visitShield(Shield shield) throws E;
+
+
+    T visitStorage(Storage storage) throws E;
 }

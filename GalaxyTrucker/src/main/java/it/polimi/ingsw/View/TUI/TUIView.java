@@ -31,8 +31,6 @@ public class TUIView extends GeneralView {
 
 
     public static final int COMPONENT_LINES = 5;
-    // includes \n at the end of line
-    public static final int COMPONENT_CHARACTERS_PER_LINE = 10;
 
     /**
      * Returns a number identifying the given side's type
@@ -70,8 +68,8 @@ public class TUIView extends GeneralView {
      * Print a component passed as parameter.
      */
     public void printComponent(Component component) {
-        ComponentVisitor<String> visitor = new ComponentStringGetterVisitor();
-        String componentString = (String) component.accept(visitor);
+        ComponentVisitor<String, RuntimeException> visitor = new ComponentStringGetterVisitor();
+        String componentString = component.accept(visitor);
         System.out.printf(componentString);
     }
 
@@ -273,8 +271,8 @@ public class TUIView extends GeneralView {
      * Return String list of the 5 component lines, excluding the \n at the end of the lines.
      */
     private List<String> getComponentLines(Component component) {
-        ComponentVisitor visitor = new ComponentStringGetterVisitor();
-        String componentString = (String) component.accept(visitor);
+        ComponentVisitor<String, RuntimeException> visitor = new ComponentStringGetterVisitor();
+        String componentString = component.accept(visitor);
         // split rows based on newline \n
         String[] lines = componentString.split("\n");
         return new ArrayList<>(Arrays.asList(lines));
