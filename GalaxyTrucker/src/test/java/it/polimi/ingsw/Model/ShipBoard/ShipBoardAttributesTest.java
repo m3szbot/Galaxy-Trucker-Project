@@ -199,10 +199,12 @@ public class ShipBoardAttributesTest {
         shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, true));
         assertEquals(1, shipBoardAttributes.getSingleEnginePower());
         assertEquals(0, shipBoardAttributes.getDoubleEnginePower());
+        assertEquals(0, shipBoardAttributes.getDestroyedComponents());
 
         // remove
         shipBoard.removeComponent(8, 7, false);
         assertEquals(0, shipBoardAttributes.getSingleEnginePower());
+        assertEquals(1, shipBoardAttributes.getDestroyedComponents());
     }
 
     @Test
@@ -211,10 +213,12 @@ public class ShipBoardAttributesTest {
         shipBoard.addComponent(8, 7, new Engine(singleSidesSpecialBack, false));
         assertEquals(2, shipBoardAttributes.getDoubleEnginePower());
         assertEquals(0, shipBoardAttributes.getSingleEnginePower());
+        assertEquals(0, shipBoardAttributes.getDestroyedComponents());
 
         // remove
         shipBoard.removeComponent(8, 7, false);
         assertEquals(0, shipBoardAttributes.getDoubleEnginePower());
+        assertEquals(1, shipBoardAttributes.getDestroyedComponents());
     }
 
     @Test
