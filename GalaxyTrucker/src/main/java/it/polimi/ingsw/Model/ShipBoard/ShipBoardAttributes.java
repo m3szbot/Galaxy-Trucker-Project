@@ -155,7 +155,7 @@ public class ShipBoardAttributes implements Serializable {
      * To use when shipBoard is fractured.
      * For normal updates use ComponentVisitor.
      */
-    void updateShipBoardAttributes(ShipBoard shipBoard) {
+    void updateShipBoardAttributes(ShipBoard shipBoard) throws NoHumanCrewLeftException {
         updateCoveredSides(shipBoard);
         updateCannons(shipBoard);
         updateEngines(shipBoard);
