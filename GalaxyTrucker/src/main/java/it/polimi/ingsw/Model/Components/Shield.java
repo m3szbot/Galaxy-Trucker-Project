@@ -11,54 +11,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Shield extends Component {
 
-    private int coveredSide1, coveredSide2;
+    // front right back left
+    private boolean[] coveredSides;
 
     public Shield() {
+        coveredSides = new boolean[]{false, false, false, false};
     }
 
     @JsonCreator
-    public Shield(@JsonProperty("sides") SideType[] sides) {
+    public Shield(@JsonProperty("sides") SideType[] sides, @JsonProperty("coveredSide1") int coveredSide1,
+                  @JsonProperty("coveredSide2") int coveredSide2) {
         super(sides);
-        setCoveredSides();
+        coveredSides = new boolean[]{false, false, false, false};
+        setCoveredSides(coveredSide1, coveredSide2);
     }
 
     /**
      * private method that sets the two private attributes
      */
 
-    private void setCoveredSides() {
-
-        if (getFront() == SideType.Special) {
-            coveredSide1 = 0;
-
-            if (getRight() == SideType.Special) {
-                coveredSide2 = 1;
-            } else if (getBack() == SideType.Special) {
-                coveredSide2 = 2;
-            } else if (getLeft() == SideType.Special) {
-                coveredSide2 = 3;
-            }
-        } else if (getRight() == SideType.Special) {
-            coveredSide1 = 1;
-
-            if (getBack() == SideType.Special) {
-                coveredSide2 = 2;
-            } else if (getLeft() == SideType.Special) {
-                coveredSide2 = 3;
-            }
-        } else if (getBack() == SideType.Special) {
-            coveredSide1 = 2;
-            coveredSide2 = 3;
-        }
-
-    }
-
-    public int getCoveredSide1() {
-        return coveredSide1;
-    }
-
-    public int getCoveredSide2() {
-        return coveredSide2;
+    private void setCoveredSides(int coveredSide1, int coveredSide2) {
+        coveredSides[coveredSide1] = true;
+        coveredSides[coveredSide2] = true;
     }
 
     @Override
@@ -68,16 +42,7 @@ public class Shield extends Component {
 
     @Override
     public boolean[] getCoveredSides() {
-        boolean[] sides = new boolean[4];
-        int i;
-        for (i = 0; i < sides.length; i++) {
-            if (i == coveredSide1 || i == coveredSide2) {
-                sides[i] = true;
-            } else {
-                sides[i] = false;
-            }
-        }
-        return sides;
+        return coveredSides;
     }
 
     @Override

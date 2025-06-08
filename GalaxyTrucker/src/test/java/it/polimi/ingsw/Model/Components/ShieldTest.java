@@ -39,11 +39,13 @@ class ShieldTest {
     @Test
     void constructor_shouldInitializeFieldsCorrectly() {
         // Arrange & Act
-        Shield shield = new Shield(FRONT_RIGHT_SPECIAL_SIDES);
+        Shield shield = new Shield(FRONT_RIGHT_SPECIAL_SIDES, 0, 1);
 
         // Assert
-        assertEquals(0, shield.getCoveredSide1());
-        assertEquals(1, shield.getCoveredSide2());
+        assertTrue(shield.getCoveredSides()[0]);
+        assertTrue(shield.getCoveredSides()[1]);
+        assertFalse(shield.getCoveredSides()[2]);
+        assertFalse(shield.getCoveredSides()[3]);
         assertEquals("Shield", shield.getComponentName());
     }
 
@@ -54,64 +56,60 @@ class ShieldTest {
 
         // Assert
         assertNotNull(shield);
-        assertEquals(0, shield.getCoveredSide1()); // Default int is 0
-        assertEquals(0, shield.getCoveredSide2()); // Default int is 0
+        assertFalse(shield.getCoveredSides()[0]);
+        assertFalse(shield.getCoveredSides()[1]);
+        assertFalse(shield.getCoveredSides()[2]);
+        assertFalse(shield.getCoveredSides()[3]);
     }
 
     @Test
     void setCoveredSides_withFrontAndRightSpecial_shouldSetCorrectSides() {
         // Arrange & Act
-        Shield shield = new Shield(FRONT_RIGHT_SPECIAL_SIDES);
+        Shield shield = new Shield(FRONT_RIGHT_SPECIAL_SIDES, 0, 1);
 
         // Assert
-        assertEquals(0, shield.getCoveredSide1());
-        assertEquals(1, shield.getCoveredSide2());
+        assertTrue(shield.getCoveredSides()[0]);
+        assertTrue(shield.getCoveredSides()[1]);
+        assertFalse(shield.getCoveredSides()[2]);
+        assertFalse(shield.getCoveredSides()[3]);
     }
 
     @Test
     void setCoveredSides_withFrontAndBackSpecial_shouldSetCorrectSides() {
         // Arrange & Act
-        Shield shield = new Shield(FRONT_BACK_SPECIAL_SIDES);
+        Shield shield = new Shield(FRONT_BACK_SPECIAL_SIDES, 0, 2);
 
         // Assert
-        assertEquals(0, shield.getCoveredSide1());
-        assertEquals(2, shield.getCoveredSide2());
+        assertTrue(shield.getCoveredSides()[0]);
+        assertFalse(shield.getCoveredSides()[1]);
+        assertTrue(shield.getCoveredSides()[2]);
+        assertFalse(shield.getCoveredSides()[3]);
     }
 
     @Test
     void setCoveredSides_withRightAndLeftSpecial_shouldSetCorrectSides() {
         // Arrange & Act
-        Shield shield = new Shield(RIGHT_LEFT_SPECIAL_SIDES);
+        Shield shield = new Shield(RIGHT_LEFT_SPECIAL_SIDES, 1, 3);
 
         // Assert
-        assertEquals(1, shield.getCoveredSide1());
-        assertEquals(3, shield.getCoveredSide2());
+        assertFalse(shield.getCoveredSides()[0]);
+        assertTrue(shield.getCoveredSides()[1]);
+        assertFalse(shield.getCoveredSides()[2]);
+        assertTrue(shield.getCoveredSides()[3]);
     }
 
     @Test
     void setCoveredSides_withBackAndLeftSpecial_shouldSetCorrectSides() {
         // Arrange & Act
-        Shield shield = new Shield(BACK_LEFT_SPECIAL_SIDES);
+        Shield shield = new Shield(BACK_LEFT_SPECIAL_SIDES, 2, 3);
 
         // Assert
-        assertEquals(2, shield.getCoveredSide1());
-        assertEquals(3, shield.getCoveredSide2());
+        assertFalse(shield.getCoveredSides()[0]);
+        assertFalse(shield.getCoveredSides()[1]);
+        assertTrue(shield.getCoveredSides()[2]);
+        assertTrue(shield.getCoveredSides()[3]);
     }
 
-    @Test
-    void getCoveredSides_shouldReturnCorrectBooleanArray() {
-        // Arrange
-        Shield shield = new Shield(FRONT_RIGHT_SPECIAL_SIDES);
-
-        // Act
-        boolean[] coveredSides = shield.getCoveredSides();
-
-        // Assert
-        assertTrue(coveredSides[0]);  // front covered
-        assertTrue(coveredSides[1]);  // right covered
-        assertFalse(coveredSides[2]); // back not covered
-        assertFalse(coveredSides[3]); // left not covered
-    }
 
     @Test
     void jsonDeserialization_shouldWorkCorrectly() throws Exception {
@@ -128,8 +126,8 @@ class ShieldTest {
         Shield shield = mapper.readValue(json, Shield.class);
 
         // Assert
-        assertEquals(0, shield.getCoveredSide1());
-        assertEquals(1, shield.getCoveredSide2());
+
+
         assertArrayEquals(FRONT_RIGHT_SPECIAL_SIDES, new SideType[]{
                 shield.getFront(),
                 shield.getRight(),
