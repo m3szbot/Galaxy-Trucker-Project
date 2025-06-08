@@ -32,7 +32,7 @@ public abstract class Phase {
     /**
      * Forces the player to give up during the flight.
      * Used by controllers and controller methods, threads.
-     * For example: NoHumanCrewLeftException, etc...
+     * For example: to handle exceptions: NoHumanCrewLeftException, etc...
      *
      * @author Boti
      */

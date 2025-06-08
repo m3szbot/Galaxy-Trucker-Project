@@ -2,7 +2,6 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
@@ -10,23 +9,22 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import java.util.List;
 
 /**
- * Controller class to handle FracturedShipBoardException.
+ * Controller class used to handle FracturedShipBoardException.
+ * Utility/helper class, cannot have instances:
+ * final class, private constructor, static methods.
+ *
+ * @author Boti
  */
-public class FracturedShipBoardHandler extends Phase {
-    PlayerMessenger playerMessenger;
-    Player player;
-    List<ShipBoard> shipBoardsList;
+public final class FracturedShipBoardHandler {
 
-
-    public FracturedShipBoardHandler(GameInformation gameInformation, PlayerMessenger playerMessenger, FracturedShipBoardException exception) {
-        super(gameInformation);
-        this.playerMessenger = playerMessenger;
-        this.player = playerMessenger.getPlayer();
-        this.shipBoardsList = exception.getShipBoardsList();
+    private FracturedShipBoardHandler() {
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void start() {
+    public static void handleFracture(PlayerMessenger playerMessenger, FracturedShipBoardException exception) throws PlayerDisconnectedException {
+        Player player = playerMessenger.getPlayer();
+        List<ShipBoard> shipBoardsList = exception.getShipBoardsList();
+
         playerMessenger.printMessage("Your shipboard has broken into multiple parts:");
 
         // print shipboards
@@ -44,16 +42,10 @@ public class FracturedShipBoardHandler extends Phase {
         while (!selectionSuccess && trials > 0) {
             playerMessenger.printMessage("Please select the part to keep (enter number):");
             // get player input
-            try {
-                selected = playerMessenger.getPlayerInt();
-            } catch (PlayerDisconnectedException e) {
-                // TODO handle disconnection in caller controller
-                // disconnect player
-                gameMessenger.disconnectPlayer(gameInformation, player);
-                // end thread
-                return;
-            }
+            selected = playerMessenger.getPlayerInt();
+            // if PlayerDisconnectedException is thrown, propagate it to the caller Controller
 
+            // TODO
             // select shipboard
             try {
                 // erase all other possible shipboard
@@ -62,6 +54,7 @@ public class FracturedShipBoardHandler extends Phase {
                         player.getShipBoard().eraseShipboard(shipBoard);
                     }
                 }
+
                 // set new center
                 player.getShipBoard().findNewCenterCabin();
 

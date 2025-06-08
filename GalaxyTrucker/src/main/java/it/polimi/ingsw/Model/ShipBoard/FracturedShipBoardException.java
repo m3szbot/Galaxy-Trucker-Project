@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Thrown when the shipboard is broken into separate parts.
  * Must be handled by caller,
- * by calling FracturedShipboardHandler.start().
+ * by calling FracturedShipboardHandler.handleFracture().
  */
 public class FracturedShipBoardException extends Exception {
     List<ShipBoard> shipBoardsList;

@@ -996,16 +996,9 @@ public class ShipBoard implements Serializable {
             }
 
             // all conditions met to change crew type
-            try {
-                ((Cabin) component).setCrewType(crewType);
-                component.accept(new SBAttributesUpdaterVisitor(this));
-            } catch (NoHumanCrewLeftException e) {
-                // revert changes if no human crew would be left (not done by try)
-                ((Cabin) component).setCrewType(originalCrewType);
-                ((Cabin) component).setNumberOfCurrentInhabitants(originalCrewCount);
-                component.accept(new SBAttributesUpdaterVisitor(this));
-                throw new IllegalArgumentException("Cannot change crew to alien: no human crew would be left.");
-            }
+            ((Cabin) component).setCrewType(crewType);
+            component.accept(new SBAttributesUpdaterVisitor(this));
+
         }
     }
 

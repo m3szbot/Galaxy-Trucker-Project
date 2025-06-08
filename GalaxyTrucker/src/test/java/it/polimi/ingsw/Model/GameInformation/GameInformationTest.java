@@ -125,11 +125,11 @@ class GameInformationTest {
         gameInformation.addPlayers(player1);
         gameInformation.addPlayers(player2);
 
-        gameInformation.removePlayers(player1);
+        gameInformation.eliminatePlayerFromFlight(player1);
         assertNotNull(gameInformation.getPlayerList());
         assertNotNull(gameInformation.getPlayerList().get(0));
         assertEquals(player2, gameInformation.getPlayerList().get(0));
-        gameInformation.removePlayers(player2);
+        gameInformation.eliminatePlayerFromFlight(player2);
         assertEquals(0, gameInformation.getPlayerList().size());
     }
 

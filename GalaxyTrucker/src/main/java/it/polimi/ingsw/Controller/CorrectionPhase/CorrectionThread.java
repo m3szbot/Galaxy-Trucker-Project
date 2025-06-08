@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
+import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.CrewType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -31,18 +32,29 @@ public class CorrectionThread implements Runnable {
     @Override
     public void run() {
         // correct errors
-        if (errorCorrector()) {
-            // end thread
+        try {
+            errorCorrector();
+        } catch (PlayerDisconnectedException e) {
+            // disconnect player and end player thread
+            gameMessenger.disconnectPlayer(gameInformation, player);
+            return;
+        } catch (NoHumanCrewLeftException e) {
+            // force player to give up and end player thread
+            String message = String.format("%s has no human crew left.", player.getNickName());
+            Phase.forcePlayerToGiveUp(gameInformation, player, gameMessenger, message);
             return;
         }
+
         // errors corrected
         playerMessenger.printMessage("There are no errors in your shipboard.\n");
 
         // select crew types
-        if (selectCrewTypes()) {
-            // end thread
+        try {
+            selectCrewTypes();
+        } catch (PlayerDisconnectedException e) {
             return;
         }
+
         // crew selection finished
         playerMessenger.printShipboard(player.getShipBoard());
         playerMessenger.printMessage("Your ship is all set, please wait for other players.");
@@ -50,12 +62,11 @@ public class CorrectionThread implements Runnable {
     }
 
     /**
-     * Handle the error correction of the player's shipboard. Returns true if the player's thread should be ended.
+     * Handle the error correction of the player's shipboard.
      *
-     * @return true if the player's thread should be ended, false if not.
      * @author Boti
      */
-    private boolean errorCorrector() {
+    private void errorCorrector() throws PlayerDisconnectedException, NoHumanCrewLeftException {
         ShipBoard shipBoard = player.getShipBoard();
         int[] coordinates;
 
@@ -77,20 +88,15 @@ public class CorrectionThread implements Runnable {
             // elaborate player input: removal loop
             while (!removeComponentSuccess && removeTrials > 0) {
                 // get player input
-                try {
-                    coordinates = playerMessenger.getPlayerCoordinates();
-                } catch (PlayerDisconnectedException e) {
-                    // handle disconnected player
-                    gameMessenger.disconnectPlayer(gameInformation, player);
-                    // end thread
-                    return true;
-                }
+                coordinates = playerMessenger.getPlayerCoordinates();
+                // throws PlayerDisconnectedException
 
                 // remove component
                 try {
                     // flag used to exit/repeat removal loop
                     removeComponentSuccess = true;
                     shipBoard.removeComponent(coordinates[0], coordinates[1], true);
+                    // throws PlayerDisconnectedException, NoHumanCrewLeftException
 
                 } catch (IllegalArgumentException e) {
                     // repeat removal loop
@@ -98,17 +104,10 @@ public class CorrectionThread implements Runnable {
                     // print exception message to player
                     playerMessenger.printMessage(e.getMessage());
 
-                } catch (NoHumanCrewLeftException e) {
-                    // eliminate player
-                    playerMessenger.printMessage(e.getMessage());
-                    gameInformation.removePlayers(player);
-                    // end thread
-                    return true;
-
                 } catch (FracturedShipBoardException e) {
                     // handle fractured shipboard
-                    FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
-                    handler.start();
+                    FracturedShipBoardHandler.handleFracture(playerMessenger, e);
+                    // throws PlayerDisconnectedException
                 }
 
                 // try again if couldn't remove selected component
@@ -120,8 +119,6 @@ public class CorrectionThread implements Runnable {
             errorTrials--;
         }
         // error correction finished
-        // do not end thread
-        return false;
     }
 
     /**
@@ -147,7 +144,7 @@ public class CorrectionThread implements Runnable {
      * @return true if the player's thread should be ended, false if not.
      * @author Boti
      */
-    private boolean selectCrewTypes() {
+    private boolean selectCrewTypes() throws PlayerDisconnectedException {
         ShipBoard shipBoard = player.getShipBoard();
         ShipBoardAttributes shipBoardAttributes = shipBoard.getShipBoardAttributes();
         String message;
@@ -174,15 +171,8 @@ public class CorrectionThread implements Runnable {
                         // get player input string
                         message = String.format("Select the crew type for the cabin at %d %d (Human/Purple/Brown): ", i + 1, j + 1);
                         playerMessenger.printMessage(message);
-
-                        try {
-                            inputString = playerMessenger.getPlayerString();
-                        } catch (PlayerDisconnectedException e) {
-                            // handle disconnected player
-                            gameMessenger.disconnectPlayer(gameInformation, player);
-                            // end player thread
-                            return true;
-                        }
+                        inputString = playerMessenger.getPlayerString();
+                        // throws PlayerDisconnectedException
 
                         // cast player input
                         switch (inputString.toLowerCase()) {
