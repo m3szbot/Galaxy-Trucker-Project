@@ -14,7 +14,7 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
                         """,
                 componentSideTranslator(alienSupport.getFront()),
                 alienSupport.getComponentName().substring(0, 5),
-                componentSideTranslator(alienSupport.getLeft()), alienSupport.isPurple() ? "Pur" : "Bro", componentSideTranslator(alienSupport.getRight()),
+                componentSideTranslator(alienSupport.getLeft()), alienSupport.isPurple() ? PURPLE + "Pur" + RESET : YELLOW + "Bro" + RESET, componentSideTranslator(alienSupport.getRight()),
                 componentSideTranslator(alienSupport.getBack()));
     }
 
@@ -23,13 +23,13 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
         return String.format("""
                         +---%d---+
                         | %s |
-                        %d   %d   %d
+                        %d   %s%d%s   %d
                         |       |
                         +---%d---+
                         """,
                 componentSideTranslator(battery.getFront()),
                 battery.getComponentName().substring(0, 5),
-                componentSideTranslator(battery.getLeft()), battery.getBatteryPower(), componentSideTranslator(battery.getRight()),
+                componentSideTranslator(battery.getLeft()), GREEN, battery.getBatteryPower(), RESET, componentSideTranslator(battery.getRight()),
                 componentSideTranslator(battery.getBack()));
     }
 
@@ -38,8 +38,8 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
         String crew = "   ";
         if (cabin.getCrewType() != null) {
             crew = switch (cabin.getCrewType()) {
-                case CrewType.Purple -> "Pur";
-                case CrewType.Brown -> "Bro";
+                case CrewType.Purple -> PURPLE + "Pur" + RESET;
+                case CrewType.Brown -> YELLOW + "Bro" + RESET;
                 case CrewType.Human -> "Hum";
             };
         }
@@ -62,13 +62,13 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
         return String.format("""
                         +---%d---+
                         | %s |
-                        %d   %d   %d
+                        %d   %s%d%s   %d
                         |       |
                         +---%d---+
                         """,
                 componentSideTranslator(cannon.getFront()),
                 cannon.getComponentName().substring(0, 5),
-                componentSideTranslator(cannon.getLeft()), cannon.isSingle() ? 1 : 2, componentSideTranslator(cannon.getRight()),
+                componentSideTranslator(cannon.getLeft()), YELLOW, cannon.isSingle() ? 1 : 2, RESET, componentSideTranslator(cannon.getRight()),
                 componentSideTranslator(cannon.getBack()));
     }
 
@@ -92,29 +92,82 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
         return String.format("""
                         +---%d---+
                         | %s |
-                        %d   %d   %d
+                        %d   %s%d%s   %d
                         |       |
                         +---%d---+
                         """,
                 componentSideTranslator(engine.getFront()),
                 engine.getComponentName().substring(0, 5),
-                componentSideTranslator(engine.getLeft()), engine.isSingle() ? 1 : 2, componentSideTranslator(engine.getRight()),
+                componentSideTranslator(engine.getLeft()), PURPLE, engine.isSingle() ? 1 : 2, RESET, componentSideTranslator(engine.getRight()),
                 componentSideTranslator(engine.getBack()));
     }
 
     @Override
     public String visitShield(Shield shield) {
-        return String.format("""
-                        +---%d---+
-                        | %s |
-                        %d       %d
-                        |       |
-                        +---%d---+
-                        """,
-                componentSideTranslator(shield.getFront()),
-                shield.getComponentName().substring(0, 5),
-                componentSideTranslator(shield.getLeft()), componentSideTranslator(shield.getRight()),
-                componentSideTranslator(shield.getBack()));
+        StringBuilder builder = new StringBuilder();
+
+        // row 1
+        // front covered
+        if (shield.getCoveredSides()[0])
+            builder.append(String.format("+%s###%s%d%s###%s+\n", GREEN, RESET, componentSideTranslator(shield.getFront()), GREEN, RESET));
+        else
+            builder.append(String.format("+---%d---+\n", componentSideTranslator(shield.getFront())));
+
+        // row 2-4
+        // left and right uncovered
+        if (!shield.getCoveredSides()[1] && !shield.getCoveredSides()[3]) {
+            builder.append(String.format("""
+                            | %s |
+                            %d       %d
+                            |       |
+                            """,
+                    shield.getComponentName().substring(0, 5),
+                    componentSideTranslator(shield.getLeft()), componentSideTranslator(shield.getRight())));
+        }
+
+        // only left covered
+        else if (!shield.getCoveredSides()[1] && shield.getCoveredSides()[3]) {
+            builder.append(String.format("""
+                            %s#%s %s |
+                            %d       %d
+                            %s#%s       |
+                            """,
+                    GREEN, RESET, shield.getComponentName().substring(0, 5),
+                    componentSideTranslator(shield.getLeft()), componentSideTranslator(shield.getRight()),
+                    GREEN, RESET));
+        }
+        // only right covered
+        else if (shield.getCoveredSides()[1] && !shield.getCoveredSides()[3]) {
+            builder.append(String.format("""
+                            | %s %s#%s
+                            %d       %d
+                            |       %s#%s
+                            """,
+                    shield.getComponentName().substring(0, 5), GREEN, RESET,
+                    componentSideTranslator(shield.getLeft()), componentSideTranslator(shield.getRight()),
+                    GREEN, RESET));
+        }
+        // right and left covered
+        else if (shield.getCoveredSides()[1] && shield.getCoveredSides()[3]) {
+            builder.append(String.format("""
+                            %s#%s %s %s#%s
+                            %d       %d
+                            %s#%s       %s#%s
+                            """,
+                    GREEN, RESET, shield.getComponentName().substring(0, 5), GREEN, RESET,
+                    componentSideTranslator(shield.getLeft()), componentSideTranslator(shield.getRight()),
+                    GREEN, RESET, GREEN, RESET));
+        }
+
+        // row 5
+        // back covered
+        if (shield.getCoveredSides()[2])
+            builder.append(String.format("+%s###%s%d%s###%s+\n", GREEN, RESET, componentSideTranslator(shield.getFront()), GREEN, RESET));
+        else
+            builder.append(String.format("+---%d---+\n", componentSideTranslator(shield.getFront())));
+
+        // component string constructed
+        return builder.toString();
     }
 
     @Override
@@ -130,7 +183,7 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
                         """,
                 componentSideTranslator(storage.getFront()),
                 storage.getComponentName().substring(0, 5),
-                componentSideTranslator(storage.getLeft()), storage.isRed() ? "Red" : "Blu", slots, componentSideTranslator(storage.getRight()),
+                componentSideTranslator(storage.getLeft()), storage.isRed() ? RED + "Red" + RESET : BLUE + "Blu" + RESET, slots, componentSideTranslator(storage.getRight()),
                 RED, storage.getGoods()[0], RESET, YELLOW, storage.getGoods()[1], RESET, GREEN, storage.getGoods()[2], RESET, BLUE, storage.getGoods()[3], RESET,
                 componentSideTranslator(storage.getBack()));
     }

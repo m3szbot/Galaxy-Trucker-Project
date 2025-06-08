@@ -1,8 +1,7 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
-import it.polimi.ingsw.Model.Components.SideType;
-import it.polimi.ingsw.Model.Components.Storage;
+import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -40,7 +39,7 @@ class GeneralViewTUITest {
     }
 
     @Test
-    public void printComponent() {
+    public void printManyComponents() {
         int randIndex;
         // print random components from component list
         for (int i = 0; i < 15; i++) {
@@ -107,10 +106,80 @@ class GeneralViewTUITest {
     }
 
     @Test
-    public void printStorage() {
-        Storage storage = new Storage(universalSides, true, 4);
-        
-        generalViewTUI.printComponent(storage);
+    public void printAlienSupports() {
+        AlienSupport brown = new AlienSupport(universalSides, false);
+        AlienSupport purple = new AlienSupport(universalSides, true);
+        generalViewTUI.printComponent(brown);
+        generalViewTUI.printComponent(purple);
+    }
+
+    @Test
+    public void printBattery() {
+        Battery battery = new Battery(universalSides, 3);
+        generalViewTUI.printComponent(battery);
+    }
+
+    @Test
+    public void printCabins() {
+        Cabin human = new Cabin(universalSides, CrewType.Human, 2);
+        Cabin purple = new Cabin(universalSides, CrewType.Purple, 2);
+        Cabin brown = new Cabin(universalSides, CrewType.Brown, 2);
+
+        generalViewTUI.printComponent(human);
+        generalViewTUI.printComponent(purple);
+        generalViewTUI.printComponent(brown);
+    }
+
+    @Test
+    public void printCannon() {
+        Cannon cannon = new Cannon(universalSides, true);
+        generalViewTUI.printComponent(cannon);
+    }
+
+    @Test
+    public void printEngine() {
+        Engine engine = new Engine(universalSides, true);
+        generalViewTUI.printComponent(engine);
+    }
+
+    @Test
+    public void printShields() {
+        Shield front = new Shield(universalSides, 0, 0);
+        Shield left = new Shield(universalSides, 3, 3);
+        Shield right = new Shield(universalSides, 1, 1);
+        Shield back = new Shield(universalSides, 2, 2);
+
+        Shield frontRight = new Shield(universalSides, 0, 1);
+        Shield frontBack = new Shield(universalSides, 0, 2);
+        Shield frontLeft = new Shield(universalSides, 0, 3);
+
+        Shield rightBack = new Shield(universalSides, 1, 2);
+        Shield rightLeft = new Shield(universalSides, 1, 3);
+
+        Shield backLeft = new Shield(universalSides, 2, 3);
+
+        System.out.println("single");
+        generalViewTUI.printComponent(front);
+        generalViewTUI.printComponent(left);
+        generalViewTUI.printComponent(right);
+        generalViewTUI.printComponent(back);
+        System.out.println("front");
+        generalViewTUI.printComponent(frontRight);
+        generalViewTUI.printComponent(frontBack);
+        generalViewTUI.printComponent(frontLeft);
+        System.out.println("right");
+        generalViewTUI.printComponent(rightBack);
+        generalViewTUI.printComponent(rightLeft);
+        System.out.println("back");
+        generalViewTUI.printComponent(backLeft);
+    }
+
+    @Test
+    public void printStorages() {
+        Storage red = new Storage(universalSides, true, 4);
+        Storage blue = new Storage(universalSides, false, 4);
+        generalViewTUI.printComponent(red);
+        generalViewTUI.printComponent(blue);
     }
 
 }
