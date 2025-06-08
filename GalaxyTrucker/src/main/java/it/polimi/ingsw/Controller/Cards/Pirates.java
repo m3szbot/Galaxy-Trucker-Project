@@ -3,7 +3,9 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -111,12 +113,16 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 try {
+
                     hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
 
                 } catch (NoHumanCrewLeftException e) {
 
                     message = e.getMessage();
                     playerMessenger.printMessage(message);
+
+                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
@@ -129,6 +135,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 }
 
             }
+
 
             if (playerMessenger != null) {
                 message = "You finished your turn, please wait for the other players.\n";

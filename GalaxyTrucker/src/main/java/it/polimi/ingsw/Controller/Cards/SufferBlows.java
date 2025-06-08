@@ -31,12 +31,10 @@ public interface SufferBlows {
      * @author Carlo
      */
 
-    default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
+    default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
-        String message;
-        PlayerMessenger playerMessenger;
         int[] componentCoordinates = new int[2];
-        boolean hitFlag, isEliminated = false;
+        boolean hitFlag;
 
         for (Blow blow : blows) {
 
@@ -60,7 +58,7 @@ public interface SufferBlows {
 
                         if (blow.isBig()) {
 
-                            hitFlag = bigCannonBlowHit(player, gameInformation, componentCoordinates[0], componentCoordinates[1]);
+                            hitFlag = bigCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], gameInformation);
 
                         } else {
 
@@ -88,12 +86,6 @@ public interface SufferBlows {
                 //notifying everybody of the blow effect on the player.
                 notifyAll(player, blow.getDirection(), hitFlag, componentCoordinates[0], componentCoordinates[1], blowType, gameInformation);
 
-                if (isEliminated) {
-
-                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-                }
             }
         }
     }
@@ -168,13 +160,13 @@ public interface SufferBlows {
 
     }
 
-    private boolean bigCannonBlowHit(Player player, GameInformation gameInformation, int xCoord, int yCoord) throws NoHumanCrewLeftException, FracturedShipBoardException {
+    private boolean bigCannonBlowHit(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
 
         return removeComponent(player, xCoord, yCoord, gameInformation);
 
     }
 
-    private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
+    private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         String message;
         PlayerMessenger playerMessenger;
@@ -212,7 +204,7 @@ public interface SufferBlows {
         return hitFlag;
     }
 
-    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
+    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         String message;
         PlayerMessenger playerMessenger;
@@ -264,7 +256,7 @@ public interface SufferBlows {
 
     }
 
-    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
+    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         String message;
         PlayerMessenger playerMessenger;
@@ -341,9 +333,16 @@ public interface SufferBlows {
         }
     }
 
-    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, FracturedShipBoardException {
+    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
 
-        player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+        try {
+            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+
+        } catch (FracturedShipBoardException e) {
+            FracturedShipBoardHandler.handleFracture(playerMessenger, e);
+        }
 
         return true;
 
@@ -370,7 +369,7 @@ public interface SufferBlows {
 
         String message;
         PlayerMessenger playerMessenger;
-        int[] coordinates = new int[2];
+        int[] coordinates;
 
         message = "Enter the coordinates of the battery you want to use: ";
         playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);

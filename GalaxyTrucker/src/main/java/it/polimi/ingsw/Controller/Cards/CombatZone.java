@@ -130,6 +130,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
             playerMessenger.printMessage(message);
 
+            message = "Player " + weakestEnginePowerPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
             gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
 
         } catch (PlayerDisconnectedException e) {
@@ -151,13 +154,16 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         } catch (NoHumanCrewLeftException e) {
             message = e.getMessage();
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
             playerMessenger.printMessage(message);
 
-            gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
+            message = "Player " + weakestFirePowerPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            gameInformation.getFlightBoard().eliminatePlayer(weakestFirePowerPlayer);
 
         } catch (PlayerDisconnectedException e) {
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestEnginePowerPlayer);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestFirePowerPlayer);
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();

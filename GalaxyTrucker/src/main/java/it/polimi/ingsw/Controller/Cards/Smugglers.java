@@ -106,6 +106,9 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
 
+                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
 

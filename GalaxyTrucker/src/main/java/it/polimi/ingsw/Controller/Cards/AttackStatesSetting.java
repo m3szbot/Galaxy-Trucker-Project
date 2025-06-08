@@ -73,8 +73,10 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
             }
 
-            message = "Please wait for the other players.\n";
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "Please wait for the other players.\n";
+                playerMessenger.printMessage(message);
+            }
 
         }
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
@@ -31,7 +32,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
         Player smallestCrewPlayer = calculateSmallestCrew(gameInformation.getFlightBoard());
         String message;
-        PlayerMessenger playerMessenger;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
         boolean isEliminated = false;
 
         try {
@@ -56,15 +57,8 @@ public class Sabotage extends Card implements SmallestCrew {
             gameInformation.getFlightBoard().eliminatePlayer(smallestCrewPlayer);
             isEliminated = true;
 
-        } catch (FracturedShipBoardException e) {
-
-            message = e.getMessage();
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
-            playerMessenger.printMessage(message);
-
-            FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
-            handler.start();
-
+        } catch (PlayerDisconnectedException e) {
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, smallestCrewPlayer);
         }
 
         if (isEliminated) {
@@ -94,7 +88,7 @@ public class Sabotage extends Card implements SmallestCrew {
      * @return true if the player was hit, false otherwise
      */
 
-    private boolean destroyRandomComponent(Player player, GameInformation gameInformation) {
+    private boolean destroyRandomComponent(Player player, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
 
         String message;
         PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
@@ -121,13 +115,7 @@ public class Sabotage extends Card implements SmallestCrew {
                     return true;
 
                 } catch (FracturedShipBoardException e) {
-
-                    message = e.getMessage();
-                    playerMessenger.printMessage(message);
-
-                    FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
-                    handler.start();
-
+                    FracturedShipBoardHandler.handleFracture(playerMessenger, e);
                 }
 
             }

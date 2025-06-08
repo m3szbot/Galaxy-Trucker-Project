@@ -24,11 +24,12 @@ public interface EnginePowerChoice {
      * @author Carlo
      */
 
-    default int chooseEnginePower(Player player, GameInformation gameInformation) {
+    default int chooseEnginePower(Player player, GameInformation gameInformation) throws PlayerDisconnectedException {
 
         String message;
-        PlayerMessenger playerMessenger;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
         int defaultEnginePower = player.getShipBoard().getShipBoardAttributes().getSingleEnginePower();
+        int doubleEnginePower = player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower();
         int doubleEnginesToActivate;
 
         //Checking if the brown alien is present
@@ -36,80 +37,77 @@ public interface EnginePowerChoice {
             defaultEnginePower += 2;
         }
 
-        if (player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower() > 0 && player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() > 0) {
+        if (doubleEnginePower > 0 && player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() > 0) {
             //player has the possibility to increase his engine power with batteries
 
             message = "Your engine power is " + defaultEnginePower +
-                    ", but you still have " + player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower() + " double engine.\n" +
-                    " Would you like to use double engines to increase you're engine power ?";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                    ", but you still have " + doubleEnginePower + " double engine power to activate.\n" +
+                    " Would you like to use double engines to increase your engine power ?";
             playerMessenger.printMessage(message);
             /*
             With the new clientMessenger tool, the client answers yes or no.
              */
 
-            try {
-                if (playerMessenger.getPlayerBoolean()) {
-                    //player decide to activate some double engines
 
-                    message = "How many double engines would you like to activate ? ";
-                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            if (playerMessenger.getPlayerBoolean()) {
+                //player decide to activate some double engines
+
+                message = "How many double engines would you like to activate ? ";
+                playerMessenger.printMessage(message);
+
+                while (true) {
+
+                    doubleEnginesToActivate = playerMessenger.getPlayerInt();
+
+                    if (doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() && doubleEnginesToActivate > 0
+                            && doubleEnginesToActivate <= doubleEnginePower) {
+                        break;
+                    }
+
+                    message = "The value you entered is incorrect, please enter a valid one: ";
+                    playerMessenger.printMessage(message);
+
+                }
+
+                int[] coordinates;
+                int temp = doubleEnginesToActivate;
+
+                while (temp > 0) {
+
+                    message = "Enter coordinates of the battery you want to use: ";
                     playerMessenger.printMessage(message);
 
                     while (true) {
 
-                        doubleEnginesToActivate = playerMessenger.getPlayerInt();
+                        coordinates = playerMessenger.getPlayerCoordinates();
 
-                        if (doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() && doubleEnginesToActivate > 0
-                                && doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getDoubleEnginePower()) {
+                        try {
+                            player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
                             break;
-                        }
 
-                        message = "The value you entered is incorrect, please enter a valid one: ";
-                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                        playerMessenger.printMessage(message);
+                        } catch (IllegalArgumentException e) {
 
-                    }
-
-                    int[] coordinates;
-                    int temp = doubleEnginesToActivate;
-
-                    while (temp > 0) {
-
-                        message = "Enter coordinates of the battery you want to use: ";
-                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                        playerMessenger.printMessage(message);
-
-                        while (true) {
-
-                            coordinates = playerMessenger.getPlayerCoordinates();
-
-                            try {
-                                player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
-
-                                break;
-                            } catch (IllegalArgumentException e) {
-                                message = e.getMessage();
-                                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                                playerMessenger.printMessage(message);
-                            }
-
-
-                            message = "Invalid coordinates, reenter coordinates: ";
-                            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                            message = e.getMessage();
                             playerMessenger.printMessage(message);
 
                         }
-                        temp--;
+
+
+                        message = "Invalid coordinates, reenter coordinates: ";
+                        playerMessenger.printMessage(message);
+
                     }
 
-                    return defaultEnginePower + doubleEnginesToActivate * 2;
+                    temp--;
 
-                } else {
-                    return defaultEnginePower;
                 }
-            } catch (PlayerDisconnectedException e) {
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+
+                return defaultEnginePower + doubleEnginesToActivate * 2;
+
+            } else {
+
+                return defaultEnginePower;
+
             }
 
         }

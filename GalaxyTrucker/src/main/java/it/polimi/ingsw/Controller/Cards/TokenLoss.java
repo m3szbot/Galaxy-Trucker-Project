@@ -7,8 +7,6 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.Arrays;
-
 /**
  * Interface that define a default method which handles a player being
  * inflicted a loss in terms of crew members or goods.
@@ -28,7 +26,7 @@ public interface TokenLoss {
      * @author Carlo
      */
 
-    default void inflictLoss(Player player, ElementType lossType, int quantity, GameInformation gameInformation) {
+    default void inflictLoss(Player player, ElementType lossType, int quantity, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
 
 
         if (lossType == ElementType.CrewMember) {
@@ -41,8 +39,6 @@ public interface TokenLoss {
 
             //Checking if there's goods on the ship to be removed
             if (goodsOnShip[0] + goodsOnShip[1] + goodsOnShip[2] + goodsOnShip[3] > 0) {
-
-                System.out.println("There are " + Arrays.toString(goodsOnShip) + " goods to be removed on your ship.\n");
 
                 //there are some goods that can be removed
                 quantity = removeGoods(player, quantity, goodsOnShip, gameInformation);
@@ -59,11 +55,11 @@ public interface TokenLoss {
 
     }
 
-    private void removeCrewMembers(Player player, int quantity, GameInformation gameInformation) {
+    private void removeCrewMembers(Player player, int quantity, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         String message;
         PlayerMessenger playerMessenger;
-        int[] coordinates = new int[2];
+        int[] coordinates;
 
         //removing crew members or aliens
         int availableCrew = player.getShipBoard().getShipBoardAttributes().getCrewMembers();
@@ -82,11 +78,7 @@ public interface TokenLoss {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
-            try {
-                coordinates = playerMessenger.getPlayerCoordinates();
-            } catch (PlayerDisconnectedException e) {
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-            }
+            coordinates = playerMessenger.getPlayerCoordinates();
 
             try {
                 player.getShipBoard().removeCrewMember(coordinates[0], coordinates[1]);
@@ -102,12 +94,12 @@ public interface TokenLoss {
         }
     }
 
-    private int removeGoods(Player player, int quantity, int[] goodsOnShip, GameInformation gameInformation) {
+    private int removeGoods(Player player, int quantity, int[] goodsOnShip, GameInformation gameInformation) throws PlayerDisconnectedException {
         String message;
         PlayerMessenger playerMessenger;
         int numberOfColourGoodsToRemove;
         boolean errorFlag;
-        int[] coordinates = new int[2], tempNumberToRemove = new int[]{0, 0, 0, 0};
+        int[] coordinates, tempNumberToRemove = new int[]{0, 0, 0, 0};
 
         //Cycles through the different types of goods on the ship, from the most valuable to the least
         for (int i = 0; i <= 3; i++) {
@@ -116,10 +108,12 @@ public interface TokenLoss {
                 //Part of them if the total left to remove is lower than the number of goods of that color left
                 numberOfColourGoodsToRemove = quantity;
                 quantity = 0;
+
             } else {
                 //All of them if the total left to remove is lower than the number of goods of that color left
                 numberOfColourGoodsToRemove = goodsOnShip[i];
                 quantity = quantity - numberOfColourGoodsToRemove;
+
             }
 
             errorFlag = true;
@@ -133,38 +127,34 @@ public interface TokenLoss {
                 playerMessenger.printMessage(message);
 
                 //Asks the coordinates
-                try {
-                    coordinates = playerMessenger.getPlayerCoordinates();
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                }
+
+                coordinates = playerMessenger.getPlayerCoordinates();
 
                 message = "Enter the number of " + colorSolver(i) + " goods you want to remove from this storage:";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
-                try {
-                    tempNumberToRemove[i] = playerMessenger.getPlayerInt();
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                }
+                tempNumberToRemove[i] = playerMessenger.getPlayerInt();
 
                 try {
                     player.getShipBoard().removeGoods(coordinates[0], coordinates[1], tempNumberToRemove);
                     numberOfColourGoodsToRemove -= tempNumberToRemove[i];
 
                 } catch (IllegalArgumentException e) {
+
                     //This makes sure the cycle asking to remove a certain number of goods is repeated until the player puts in the right information
                     errorFlag = true;
                     message = e.getMessage();
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
+
                 }
 
                 //resets the array for the next cycle
                 for (int j = 0; j <= 3; j++) {
                     tempNumberToRemove[j] = 0;
                 }
+
             }
         }
 
@@ -172,13 +162,13 @@ public interface TokenLoss {
         return quantity;
     }
 
-    private void removeBatteries(Player player, int quantity, GameInformation gameInformation) {
+    private void removeBatteries(Player player, int quantity, GameInformation gameInformation) throws PlayerDisconnectedException {
 
         int batteriesAvailable = player.getShipBoard().getShipBoardAttributes().getRemainingBatteries();
         String message;
         PlayerMessenger playerMessenger;
         int numberOfBatteriesToRemove;
-        int[] coordinates = new int[2];
+        int[] coordinates;
 
         if (batteriesAvailable > 0) {
 
@@ -195,11 +185,7 @@ public interface TokenLoss {
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
-                try {
-                    coordinates = playerMessenger.getPlayerCoordinates();
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                }
+                coordinates = playerMessenger.getPlayerCoordinates();
 
                 try {
                     player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
