@@ -42,6 +42,18 @@ public class GameMessageSender implements Runnable {
             } catch (TimeoutException e) {
 
                 viewCommunicator.showData("Timeout reached, you are considered inactive, disconnection will soon happen", false);
+
+                try {
+
+                    dataExchanger.sendString("inactivity");
+
+
+                } catch (IOException e1) {
+
+                    viewCommunicator.showData("Error while writing data to the server, you have been disconnected", true);
+                    running.set(false);
+                }
+
                 running.set(false);
                 break;
             }
