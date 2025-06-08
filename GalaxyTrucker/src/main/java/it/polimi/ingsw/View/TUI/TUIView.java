@@ -12,6 +12,7 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.GeneralView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -274,13 +275,9 @@ public class TUIView extends GeneralView {
     private List<String> getComponentLines(Component component) {
         ComponentVisitor visitor = new ComponentStringGetterVisitor();
         String componentString = (String) component.accept(visitor);
-        List<String> returnList = new ArrayList<>();
-        // construct return string array
-        for (int i = 0; i < COMPONENT_LINES; i++) {
-            // -1: exclude newline at end of line
-            returnList.add(componentString.substring(i * COMPONENT_CHARACTERS_PER_LINE, (i + 1) * COMPONENT_CHARACTERS_PER_LINE - 1));
-        }
-        return returnList;
+        // split rows based on newline \n
+        String[] lines = componentString.split("\n");
+        return new ArrayList<>(Arrays.asList(lines));
     }
 
     public void printComponent(DataContainer dataContainer) {
