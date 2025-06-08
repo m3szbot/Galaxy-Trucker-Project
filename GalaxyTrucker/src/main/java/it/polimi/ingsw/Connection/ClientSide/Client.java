@@ -8,7 +8,7 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ClientWelcomer;
 import it.polimi.ingsw.Connection.ClientSide.utils.InputDaemon;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ViewType;
-import it.polimi.ingsw.View.GUILoader;
+import it.polimi.ingsw.View.GUI.GUILoader;
 import javafx.application.Application;
 
 /**
@@ -42,6 +42,8 @@ public class Client {
         else{
             Application.launch(GUILoader.class, args);
         }
+
+
 
         ClientInputManager.setTimeOut(60000);
         SocketGameHandler socketHandler = new SocketGameHandler(clientInfo);

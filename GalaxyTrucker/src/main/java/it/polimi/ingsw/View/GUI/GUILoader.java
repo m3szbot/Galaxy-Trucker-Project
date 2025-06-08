@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View;
+package it.polimi.ingsw.View.GUI;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +27,7 @@ public class GUILoader extends Application {
 
 
         }catch (IOException e){
+            e.printStackTrace();
            System.err.println("Error while loading gui");
         }
 

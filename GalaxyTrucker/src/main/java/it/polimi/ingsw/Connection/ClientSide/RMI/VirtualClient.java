@@ -119,6 +119,8 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
             case Evaluation -> currentView = viewCommunicator.getView(3);
         }
 
+        viewCommunicator.setGamePhase(gamePhase);
+
     }
 
     public void endGame() throws RemoteException{

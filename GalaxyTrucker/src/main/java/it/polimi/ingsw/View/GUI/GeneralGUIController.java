@@ -26,7 +26,7 @@ public class GeneralGUIController {
 
         //the first phase is lobby phase
 
-        loadPhaseGUI("/fxml/LobbyView/LobbyView.fxml");
+        loadPhaseGUI("/fxml/LobbyView/Lobby.fxml");
 
     }
 

@@ -87,6 +87,8 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             case Evaluation -> viewIndex = 3;
         }
 
+        viewCommunicator.setGamePhase(gamePhase);
+
     }
 
     public void endGame() {

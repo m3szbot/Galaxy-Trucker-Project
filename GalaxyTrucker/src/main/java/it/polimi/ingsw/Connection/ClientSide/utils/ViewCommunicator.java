@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import it.polimi.ingsw.Connection.ViewType;
+import it.polimi.ingsw.Model.GameInformation.GamePhase;
+import it.polimi.ingsw.View.GUI.GeneralGUIController;
 import it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController;
 import it.polimi.ingsw.View.GeneralView;
 import it.polimi.ingsw.View.TUI.TUIView;
@@ -8,13 +10,16 @@ import it.polimi.ingsw.View.TUI.TUIView;
 public class ViewCommunicator {
 
     private ViewType viewType;
-    private LobbyGUIController lobbyGUIController = new LobbyGUIController();
+    private LobbyGUIController lobbyGUIController;
     private GeneralView[] views;
+    private GeneralGUIController generalGUIController;
 
     public ViewCommunicator(ViewType viewType){
 
         this.viewType = viewType;
         this.views = new GeneralView[4];
+        this.generalGUIController = new GeneralGUIController();
+        this.lobbyGUIController = new LobbyGUIController();
 
         if(viewType == ViewType.TUI){
 
@@ -39,6 +44,14 @@ public class ViewCommunicator {
 
     }
 
+    public void setGamePhase(GamePhase gamePhase){
+
+        if(viewType == ViewType.GUI) {
+
+            generalGUIController.setPhaseGUI(gamePhase);
+        }
+    }
+
     public GeneralView getView(int index){
         return views[index];
     }
@@ -55,7 +68,7 @@ public class ViewCommunicator {
         }
         else{
 
-            lobbyGUIController.sendData(message, isError);
+            lobbyGUIController.showData(message, isError);
 
         }
 
