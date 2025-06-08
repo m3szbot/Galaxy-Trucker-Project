@@ -3,10 +3,11 @@ package it.polimi.ingsw.Model.ShipBoard;
 import java.util.List;
 
 /**
- * Thrown when the shipboard is broken into separate units.
- * To be handled by FracturedShipBoardHandler.
+ * Thrown when the shipboard is broken into separate parts.
+ * Must be handled by caller,
+ * by calling FracturedShipboardHandler.start().
  */
-public class FracturedShipBoardException extends RuntimeException {
+public class FracturedShipBoardException extends Exception {
     List<ShipBoard> shipBoardsList;
 
     public FracturedShipBoardException(List<ShipBoard> shipBoardsList) {
