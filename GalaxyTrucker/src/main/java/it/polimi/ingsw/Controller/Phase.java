@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
+import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
  * Abstract Phase class defining the contract for the specific phase classes.
@@ -26,6 +27,19 @@ public abstract class Phase {
     public Phase(GameInformation gameInformation) {
         this.gameInformation = gameInformation;
         this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
+    }
+
+    /**
+     * Forces the player to give up during the flight.
+     * Used by controllers and controller methods, threads.
+     * For example: NoHumanCrewLeftException, etc...
+     *
+     * @author Boti
+     */
+    public static void forcePlayerToGiveUp(GameInformation gameInformation, Player player, GameMessenger gameMessenger, String messageToAll) {
+        gameMessenger.sendMessageToAll(java.lang.String.format("Player %s has been forced to give up.", player.getNickName()));
+        gameMessenger.sendMessageToAll(messageToAll);
+        gameInformation.getFlightBoard().eliminatePlayer(player);
     }
 
     public abstract void start();

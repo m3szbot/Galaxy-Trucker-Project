@@ -5,7 +5,6 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,9 +28,8 @@ public class CorrectionPhase extends Phase {
      * or times out (player shipboard incorrect, player gets removed).
      */
     public void start() {
-
-
         setGamePhaseToClientServer(GamePhase.Correction);
+
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(gameInformation.getPlayerList().size());
         // launch player threads
         for (Player player : gameInformation.getPlayerList()) {
@@ -46,10 +44,12 @@ public class CorrectionPhase extends Phase {
         try {
             scheduler.awaitTermination(10, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
+            System.out.println("Error: correction phase ended abruptly.");
             e.printStackTrace();
         }
         scheduler.shutdownNow();
 
+        // remove players with erroneous shipboards at the end of correction
         removeErroneousShipboardPlayers(gameInformation);
 
         // end of correction phase, advance to next phase
@@ -61,32 +61,29 @@ public class CorrectionPhase extends Phase {
      */
     private void removeErroneousShipboardPlayers(GameInformation gameInformation) {
         String message;
-        // remove players who timed out with invalid shipboard
-        ArrayList<Player> toRemove = new ArrayList<>();
-        // find connected players to remove
-        for (Player player : gameInformation.getPlayerList()) {
+
+        // connected players
+        for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
+            Player player = gameInformation.getPlayerList().get(i);
+            // remove erroneous shipboard
             if (player.getShipBoard().isErroneous()) {
-                toRemove.add(player);
                 message = String.format("Player %s didn't correct his shipboard in time and got removed\n",
                         player.getNickName());
-                gameMessenger.sendMessageToAll(message);
+                forcePlayerToGiveUp(gameInformation, player, gameMessenger, message);
             }
         }
-        // find disconnected players to remove
-        for (Player player : gameInformation.getDisconnectedPlayerList()) {
+
+        // disconnected players
+        for (int i = 0; i < gameInformation.getDisconnectedPlayerList().size(); i++) {
+            Player player = gameInformation.getDisconnectedPlayerList().get(i);
+            // remove erroneous shipboard
             if (player.getShipBoard().isErroneous()) {
-                toRemove.add(player);
-                for (Player target : gameInformation.getPlayerList()) {
-                    message = String.format("Player %s didn't correct his shipboard in time and got removed\n",
-                            player.getNickName());
-                    gameMessenger.sendMessageToAll(message);
-                }
+                message = String.format("Player %s didn't correct his shipboard in time and got removed\n",
+                        player.getNickName());
+                forcePlayerToGiveUp(gameInformation, player, gameMessenger, message);
             }
         }
-        // actual removal of players (avoids conflicts)
-        for (Player player : toRemove) {
-            gameInformation.removePlayers(player);
-        }
+
     }
 
 }
