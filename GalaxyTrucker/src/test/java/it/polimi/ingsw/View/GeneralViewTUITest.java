@@ -42,22 +42,8 @@ class GeneralViewTUITest {
     }
 
     @Test
-    public void printShipboardWithComponentsAdded() throws NotPermittedPlacementException {
-        SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
-        SideType[] universalSidesSpecialFront = new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal};
-        SideType[] universalSidesSpecialBack = new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal};
-        // prints a shipboard with many components added
-        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
-        shipBoard.addComponent(new Cannon(universalSidesSpecialFront, true), 7, 6);
-        shipBoard.addComponent(new Battery(universalSides, 3), 8, 6);
-        shipBoard.addComponent(new Engine(universalSidesSpecialBack, true), 7, 8);
-        shipBoard.addComponent(new Storage(universalSidesSpecialBack, true, 4), 6, 8);
-        shipBoard.addComponent(new AlienSupport(universalSides, true), 6, 7);
-        shipBoard.addComponent(new Cabin(universalSides, CrewType.Purple, 1), 5, 7);
-        shipBoard.addComponent(new Shield(universalSides, 0, 3), 6, 6);
-        shipBoard.addComponent(new Component(universalSides), 8, 7);
-        shipBoard.addComponent(new Storage(universalSides, false, 3), 9, 7);
-
+    public void printPrefilledShipboard() throws NotPermittedPlacementException {
+        ShipBoard shipBoard = ShipBoard.getNewPreFilledShipBoard();
         generalViewTUI.printShipboard(shipBoard);
     }
 

@@ -254,6 +254,80 @@ public class ShipBoard implements Serializable {
                 componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
     }
 
+    /**
+     * Returns a shipboard prefilled with many components. Used for testing.
+     *
+     * @return new prefilled shipboard.
+     * @author Boti
+     */
+    public static ShipBoard getNewPreFilledShipBoard() {
+        ShipBoard tmpShipboard = new ShipBoard(GameType.NORMALGAME);
+        SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
+        SideType[] universalSidesSpecialFront = new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal};
+        SideType[] universalSidesSpecialBack = new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal};
+
+        // add components
+        try {
+            tmpShipboard.addComponent(new Cannon(universalSidesSpecialFront, true), 7, 6);
+            tmpShipboard.addComponent(new Battery(universalSides, 3), 8, 6);
+            tmpShipboard.addComponent(new Engine(universalSidesSpecialBack, true), 7, 8);
+            tmpShipboard.addComponent(new Storage(universalSidesSpecialBack, true, 4), 6, 8);
+            tmpShipboard.addComponent(new AlienSupport(universalSides, true), 6, 7);
+            tmpShipboard.addComponent(new Cabin(universalSides, CrewType.Purple, 1), 5, 7);
+            tmpShipboard.addComponent(new Shield(universalSides, 0, 3), 6, 6);
+            tmpShipboard.addComponent(new Component(universalSides), 8, 7);
+            tmpShipboard.addComponent(new Storage(universalSides, false, 3), 9, 7);
+            tmpShipboard.addComponent(new Engine(universalSidesSpecialBack, false), 8, 8);
+            tmpShipboard.addComponent(new Cannon(universalSidesSpecialBack, false), 9, 8);
+        } catch (NotPermittedPlacementException e) {
+        }
+
+        // modify attributes
+        tmpShipboard.addGoods(9, 7, new int[]{0, 1, 1, 1});
+        tmpShipboard.addGoods(6, 8, new int[]{2, 0, 1, 1});
+
+        return tmpShipboard;
+    }
+
+    /**
+     * Add goods to the storage at the given coordinates, if possible.
+     * Updates shipBoardAttributes.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Storage))
+            throw new IllegalArgumentException("The selected component is not a storage");
+
+        // negative goods - malicious intent
+        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
+            throw new IllegalArgumentException("Cannot add negative number of goods");
+
+        // check red goods slots
+        if (goods[0] > component.getAvailableRedSlots())
+            throw new IllegalArgumentException("Not enough red goods storage available");
+
+        // check red + normal goods slots
+        int totalGoods = 0;
+        for (int good : goods)
+            totalGoods += good;
+        if (totalGoods > (component.getAvailableRedSlots() + component.getAvailableBlueSlots()))
+            throw new IllegalArgumentException("Not enough goods storage available");
+
+        // no problems, add goods to component
+        ((Storage) component).addGoods(goods);
+        // update shipboard attributes
+        component.accept(new SBAttributesUpdaterVisitor(this));
+    }
+
     public boolean[][] getValidityMatrix() {
         return validityMatrix;
     }
@@ -1040,45 +1114,6 @@ public class ShipBoard implements Serializable {
 
         // no problems, remove goods from component
         ((Storage) component).removeGoods(goods);
-        // update shipboard attributes
-        component.accept(new SBAttributesUpdaterVisitor(this));
-    }
-
-    /**
-     * Add goods to the storage at the given coordinates, if possible.
-     * Updates shipBoardAttributes.
-     *
-     * @throws IllegalArgumentException if operation not possible.
-     * @author Boti
-     */
-    public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
-        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
-
-        int col = getRealIndex(visibleCol);
-        int row = getRealIndex(visibleRow);
-        Component component = componentMatrix[col][row];
-
-        if (!(component instanceof Storage))
-            throw new IllegalArgumentException("The selected component is not a storage");
-
-        // negative goods - malicious intent
-        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
-            throw new IllegalArgumentException("Cannot add negative number of goods");
-
-        // check red goods slots
-        if (goods[0] > component.getAvailableRedSlots())
-            throw new IllegalArgumentException("Not enough red goods storage available");
-
-        // check red + normal goods slots
-        int totalGoods = 0;
-        for (int good : goods)
-            totalGoods += good;
-        if (totalGoods > (component.getAvailableRedSlots() + component.getAvailableBlueSlots()))
-            throw new IllegalArgumentException("Not enough goods storage available");
-
-        // no problems, add goods to component
-        ((Storage) component).addGoods(goods);
         // update shipboard attributes
         component.accept(new SBAttributesUpdaterVisitor(this));
     }
