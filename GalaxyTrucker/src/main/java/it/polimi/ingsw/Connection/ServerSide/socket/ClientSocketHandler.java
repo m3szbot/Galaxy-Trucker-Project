@@ -308,7 +308,7 @@ public class ClientSocketHandler extends Thread {
         dataExchanger.sendString(message);
         dataExchanger.sendString("added");
         //setting a 5-minute timeout
-        dataExchanger.setSocketTimeOut(300000);
+        dataExchanger.setSocketTimeOut(-1);
 
         if (centralServer.getCurrentStartingGame().isFull()) {
             notifyAllPlayers("start", true);

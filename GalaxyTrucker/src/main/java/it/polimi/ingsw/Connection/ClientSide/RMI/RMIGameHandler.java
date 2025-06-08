@@ -28,7 +28,7 @@ public class RMIGameHandler {
 
         try {
 
-        virtualServer = (ServerRemoteInterface) Naming.lookup("rmi://localhost/virtualServer");
+        virtualServer = (ServerRemoteInterface) Naming.lookup("rmi://" + clientInfo.getServerIp() + "/virtualServer");
         rmiServerPinger = new RMIServerPinger(virtualServer, serverConnected);
 
         }catch (RemoteException e){

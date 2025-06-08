@@ -15,7 +15,6 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.ViewServerInvokableMethods;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 
 /**
@@ -220,17 +219,22 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         if (connectionType == ConnectionType.SOCKET) {
 
             try {
-                return socketDataExchanger.getString();
+                String input = socketDataExchanger.getString();
+
+                if(input.equals("inactivity")){
+
+                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                    throw new PlayerDisconnectedException(player);
+
+                }
+                else{
+                    return input;
+                }
+
             } catch (IOException e) {
 
-                if(e instanceof SocketTimeoutException){
-                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                }
-                else {
-
-                    System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
-                            "a disconnection probably occurred");
-                }
+                      System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                                         "a disconnection probably occurred");
 
                 throw new PlayerDisconnectedException(player);
             }
@@ -238,6 +242,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
             try {
                 return virtualClient.getString();
+
             } catch (RemoteException e) {
 
                 if(e.getMessage().equals("inactivity")){
