@@ -31,7 +31,7 @@ public interface SufferBlows {
      * @author Carlo
      */
 
-    default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) {
+    default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
 
         String message;
         PlayerMessenger playerMessenger;
@@ -55,44 +55,34 @@ public interface SufferBlows {
 
                 if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
 
-                    try {
-                        //a component was hit
-                        if (blowType == ElementType.CannonBlow) {
+                    //a component was hit
+                    if (blowType == ElementType.CannonBlow) {
 
-                            if (blow.isBig()) {
+                        if (blow.isBig()) {
 
-                                hitFlag = bigCannonBlowHit(player, gameInformation, componentCoordinates[0], componentCoordinates[1]);
+                            hitFlag = bigCannonBlowHit(player, gameInformation, componentCoordinates[0], componentCoordinates[1]);
 
-                            } else {
-
-                                //player can defend itself
-                                hitFlag = smallCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], blow.getDirection(), gameInformation);
-                            }
                         } else {
 
-                            //BlowType is Meteorite
-                            if (blow.isBig()) {
-
-                                // player can defend itself only with cannon
-                                hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
-
-                            } else {
-
-                                //blow is small
-                                hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
-
-                            }
+                            //player can defend itself
+                            hitFlag = smallCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], blow.getDirection(), gameInformation);
                         }
-                    } catch (NoHumanCrewLeftException e) {
+                    } else {
 
-                        message = e.getMessage();
-                        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                        playerMessenger.printMessage(message);
+                        //BlowType is Meteorite
+                        if (blow.isBig()) {
 
-                        gameInformation.getFlightBoard().eliminatePlayer(player);
-                        isEliminated = true;
+                            // player can defend itself only with cannon
+                            hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
 
+                        } else {
+
+                            //blow is small
+                            hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                        }
                     }
+
                 }
 
                 //notifying everybody of the blow effect on the player.
@@ -178,17 +168,17 @@ public interface SufferBlows {
 
     }
 
-    private boolean bigCannonBlowHit(Player player, GameInformation gameInformation, int xCoord, int yCoord) {
+    private boolean bigCannonBlowHit(Player player, GameInformation gameInformation, int xCoord, int yCoord) throws NoHumanCrewLeftException, FracturedShipBoardException {
 
         return removeComponent(player, xCoord, yCoord, gameInformation);
 
     }
 
-    private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) {
+    private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
 
         String message;
         PlayerMessenger playerMessenger;
-        boolean hitFlag = false;
+        boolean hitFlag;
         ShipBoard playerShipBoard = player.getShipBoard();
 
         if (playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction) && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
@@ -200,37 +190,34 @@ public interface SufferBlows {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
-            try {
-                if (playerMessenger.getPlayerBoolean()) {
+            if (playerMessenger.getPlayerBoolean()) {
 
-                    //player decides to defend themselves with shields
-                    hitFlag = useBattery(player, gameInformation);
+                //player decides to defend themselves with shields
+                hitFlag = useBattery(player, gameInformation);
 
-                } else { //player decides to not defend themselves
+            } else { //player decides to not defend themselves
 
-                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+                hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
 
-                }
-            } catch (PlayerDisconnectedException e) {
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
 
         } else {
 
             //Removes the component if there's no shield
             hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
         }
 
         //False if not hit
         return hitFlag;
     }
 
-    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) {
+    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
 
         String message;
         PlayerMessenger playerMessenger;
         ShipBoard playerShipBoard = player.getShipBoard();
-        boolean hitFlag = false;
+        boolean hitFlag;
 
         int[] cannonCoords = hasCannon(direction, xCoord, yCoord, player);
 
@@ -247,17 +234,13 @@ public interface SufferBlows {
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
 
-                    try {
-                        if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
+                    if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
 
-                            hitFlag = useBattery(player, gameInformation);
+                        hitFlag = useBattery(player, gameInformation);
 
-                        } else { //player decide to not defend itself
+                    } else { //player decide to not defend itself
 
-                            hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
-                        }
-                    } catch (PlayerDisconnectedException e) {
-                        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                        hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
                     }
 
                 } else { //player doesn't have batteries
@@ -281,7 +264,7 @@ public interface SufferBlows {
 
     }
 
-    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) {
+    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException, FracturedShipBoardException {
 
         String message;
         PlayerMessenger playerMessenger;
@@ -307,19 +290,16 @@ public interface SufferBlows {
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
-                try {
-                    if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
+                if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
 
-                        hitFlag = useBattery(player, gameInformation);
+                    hitFlag = useBattery(player, gameInformation);
 
-                    } else {
+                } else {
 
-                        hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
 
-                    }
-                } catch (PlayerDisconnectedException e) {
-                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 }
+
             } else {
 
                 hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
@@ -361,24 +341,10 @@ public interface SufferBlows {
         }
     }
 
-    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) {
+    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, FracturedShipBoardException {
 
-        String message;
-        PlayerMessenger playerMessenger;
+        player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
 
-        try {
-            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
-            
-        } catch (FracturedShipBoardException e) {
-
-            message = e.getMessage();
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
-
-            FracturedShipBoardHandler handler = new FracturedShipBoardHandler(gameInformation, playerMessenger, e);
-            handler.start();
-
-        }
         return true;
 
     }
@@ -400,7 +366,7 @@ public interface SufferBlows {
 
 
     //Returns
-    private boolean useBattery(Player player, GameInformation gameInformation) {
+    private boolean useBattery(Player player, GameInformation gameInformation) throws PlayerDisconnectedException {
 
         String message;
         PlayerMessenger playerMessenger;
@@ -412,16 +378,12 @@ public interface SufferBlows {
 
         while (true) {
 
-            try {
-                coordinates = playerMessenger.getPlayerCoordinates();
-
-            } catch (PlayerDisconnectedException e) {
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-            }
+            coordinates = playerMessenger.getPlayerCoordinates();
 
             try {
                 player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
                 break;
+
             } catch (IllegalArgumentException e) {
                 message = e.getMessage();
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
