@@ -1,6 +1,8 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
+import it.polimi.ingsw.Model.Components.SideType;
+import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -23,6 +25,8 @@ class GeneralViewTUITest {
     DataContainer dataContainer;
     GeneralView generalViewTUI;
     Random randomizer;
+
+    SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
 
 
     @BeforeEach
@@ -100,6 +104,13 @@ class GeneralViewTUITest {
         dataContainer.setFlightBoard(flightBoard);
         assertNotNull(dataContainer);
         generalViewTUI.printFlightBoard(dataContainer);
+    }
+
+    @Test
+    public void printStorage() {
+        Storage storage = new Storage(universalSides, true, 4);
+        
+        generalViewTUI.printComponent(storage);
     }
 
 }

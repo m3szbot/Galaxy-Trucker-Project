@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Model.Components;
 
-import static it.polimi.ingsw.View.TUI.TUIView.componentSideTranslator;
+import static it.polimi.ingsw.View.TUI.TUIView.*;
 
 public class ComponentStringGetterVisitor implements ComponentVisitor {
     @Override
@@ -119,18 +119,19 @@ public class ComponentStringGetterVisitor implements ComponentVisitor {
 
     @Override
     public String visitStorage(Storage storage) {
+        // RED YELLOW GREEN BLUE
         int slots = storage.getAvailableRedSlots() + storage.getAvailableBlueSlots();
         return String.format("""
                         +---%d---+
                         | %s |
                         %d %s %d %d
-                        |%d %d %d %d|
+                        |%s%d%s %s%d%s %s%d%s %s%d%s|
                         +---%d---+
                         """,
                 componentSideTranslator(storage.getFront()),
                 storage.getComponentName().substring(0, 5),
                 componentSideTranslator(storage.getLeft()), storage.isRed() ? "Red" : "Blu", slots, componentSideTranslator(storage.getRight()),
-                storage.getGoods()[0], storage.getGoods()[1], storage.getGoods()[2], storage.getGoods()[3],
+                RED, storage.getGoods()[0], RESET, YELLOW, storage.getGoods()[1], RESET, GREEN, storage.getGoods()[2], RESET, BLUE, storage.getGoods()[3], RESET,
                 componentSideTranslator(storage.getBack()));
     }
 }
