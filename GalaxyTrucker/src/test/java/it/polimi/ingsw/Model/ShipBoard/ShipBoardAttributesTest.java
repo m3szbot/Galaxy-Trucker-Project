@@ -32,10 +32,7 @@ public class ShipBoardAttributesTest {
     void testSetup() {
         assertEquals(2, shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW).getCrewMembers());
         assertEquals(2, shipBoardAttributes.getCrewMembers());
-        assertFalse(shipBoardAttributes.getCoveredSides()[0]);
-        assertFalse(shipBoardAttributes.getCoveredSides()[1]);
-        assertFalse(shipBoardAttributes.getCoveredSides()[2]);
-        assertFalse(shipBoardAttributes.getCoveredSides()[3]);
+        assertArrayEquals(new boolean[]{false, false, false, false}, shipBoardAttributes.getCoveredSides());
         assertEquals(0, shipBoardAttributes.getSingleEnginePower());
         assertEquals(0, shipBoardAttributes.getSingleCannonPower());
         assertEquals(0, shipBoardAttributes.getRemainingBatteries());
@@ -44,10 +41,7 @@ public class ShipBoardAttributesTest {
         assertEquals(0, shipBoardAttributes.getNumberLateralDoubleCannons());
         assertFalse(shipBoardAttributes.getPurpleAlien());
         assertFalse(shipBoardAttributes.getBrownAlien());
-        assertEquals(0, shipBoardAttributes.getGoods()[0]);
-        assertEquals(0, shipBoardAttributes.getGoods()[1]);
-        assertEquals(0, shipBoardAttributes.getGoods()[2]);
-        assertEquals(0, shipBoardAttributes.getGoods()[3]);
+        assertArrayEquals(new int[]{0, 0, 0, 0}, shipBoardAttributes.getGoods());
         assertEquals(0, shipBoardAttributes.getRemainingRedSlots());
         assertEquals(0, shipBoardAttributes.getRemainingBlueSlots());
         assertEquals(0, shipBoardAttributes.getDestroyedComponents());
@@ -177,7 +171,7 @@ public class ShipBoardAttributesTest {
     void addRemoveShields() throws NotPermittedPlacementException {
         // side protected only if batteries are available
         // add shield
-        shipBoard.addComponent(8, 7, new Shield(singleSidesSpecialFront));
+        shipBoard.addComponent(8, 7, new Shield(singleSides, 0, 0));
         assertFalse(shipBoardAttributes.checkSideShieldProtected(0));
         // add batteries
         shipBoard.addComponent(7, 8, new Battery(singleSides, 2));
@@ -191,6 +185,24 @@ public class ShipBoardAttributesTest {
         // remove shield
         shipBoard.removeComponent(8, 7, false);
         assertFalse(shipBoardAttributes.checkSideShieldProtected(0));
+    }
+
+    @Test
+    void coverAllSidesWithShields() throws NotPermittedPlacementException {
+        assertArrayEquals(new boolean[]{false, false, false, false}, shipBoardAttributes.getCoveredSides());
+        // add shields
+        shipBoard.addComponent(7, 6, new Shield(singleSides, 2, 3));
+        assertArrayEquals(new boolean[]{false, false, true, true}, shipBoardAttributes.getCoveredSides());
+
+        shipBoard.addComponent(7, 8, new Shield(singleSides, 0, 1));
+        assertArrayEquals(new boolean[]{true, true, true, true}, shipBoardAttributes.getCoveredSides());
+
+        // remove shields
+        shipBoard.removeComponent(7, 6, false);
+        assertArrayEquals(new boolean[]{true, true, false, false}, shipBoardAttributes.getCoveredSides());
+
+        shipBoard.removeComponent(7, 8, false);
+        assertArrayEquals(new boolean[]{false, false, false, false}, shipBoardAttributes.getCoveredSides());
     }
 
     @Test

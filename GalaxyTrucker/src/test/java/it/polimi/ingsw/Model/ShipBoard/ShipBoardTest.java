@@ -767,7 +767,7 @@ public class ShipBoardTest {
 
     @Test
     void addComponent3() throws NotPermittedPlacementException {
-        shipBoard.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Special, SideType.Special, SideType.Universal}), 7, 8);
+        shipBoard.addComponent(new Shield(singleSides, 1, 2), 7, 8);
         shipBoard.addComponent(8, 7, new Battery(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, 2));
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(0), false);
         assertEquals(shipBoard.getShipBoardAttributes().checkSideShieldProtected(1), true);

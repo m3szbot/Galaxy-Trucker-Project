@@ -176,7 +176,9 @@ public class ShipBoardAttributes implements Serializable {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Shield) {
-                    coveredSides = component.getCoveredSides();
+                    // do OR on each covered side (add)
+                    for (int k = 0; k < coveredSides.length; k++)
+                        coveredSides[k] = coveredSides[k] || component.getCoveredSides()[k];
                 }
             }
         }
@@ -309,6 +311,14 @@ public class ShipBoardAttributes implements Serializable {
     }
 
     /**
+     * @return the number of human crew members on the shipboard.
+     * @author Boti
+     */
+    public int getHumanCrewMembers() {
+        return (crewMembers - (purpleAlien ? 1 : 0) - (brownAlien ? 1 : 0));
+    }
+
+    /**
      * Scan the shipboard for goods in storages and update goods, remainingRedSlots, remainingBlueSlots.
      * Order: RED YELLOW GREEN BLUE.
      * remainingRedSlots: only RED slots.
@@ -335,14 +345,6 @@ public class ShipBoardAttributes implements Serializable {
                 }
             }
         }
-    }
-
-    /**
-     * @return the number of human crew members on the shipboard.
-     * @author Boti
-     */
-    public int getHumanCrewMembers() {
-        return (crewMembers - (purpleAlien ? 1 : 0) - (brownAlien ? 1 : 0));
     }
 
     /**
