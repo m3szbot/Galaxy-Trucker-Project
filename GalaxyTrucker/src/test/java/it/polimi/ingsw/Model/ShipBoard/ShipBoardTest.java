@@ -13,12 +13,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-//already tested: addComponent, removeComponent, goDownChecking, isCompatible, countExternalJunctions, setCrewType, checkNotReachable
-//remaining methods: checkErrors, addGoods, checkSlots
-
-// use Shipboard graphic to construct test shipboards!
-
 public class ShipBoardTest {
     GameInformation gameInformation;
     ShipBoard shipBoard;
