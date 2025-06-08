@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
@@ -21,7 +22,7 @@ public final class FracturedShipBoardHandler {
         throw new UnsupportedOperationException();
     }
 
-    public static void handleFracture(PlayerMessenger playerMessenger, FracturedShipBoardException exception) throws PlayerDisconnectedException {
+    public static void handleFracture(PlayerMessenger playerMessenger, FracturedShipBoardException exception) throws PlayerDisconnectedException, NoHumanCrewLeftException {
         Player player = playerMessenger.getPlayer();
         List<ShipBoard> shipBoardsList = exception.getShipBoardsList();
 
@@ -51,7 +52,7 @@ public final class FracturedShipBoardHandler {
                 // erase all other possible shipboard
                 for (ShipBoard shipBoard : shipBoardsList) {
                     if (!shipBoard.equals(shipBoardsList.get(selected))) {
-                        player.getShipBoard().eraseShipboard(shipBoard);
+                        player.getShipBoard().eraseShipboardFromRealShipboard(shipBoard);
                     }
                 }
 

@@ -562,7 +562,7 @@ public class ShipBoard implements Serializable {
 
     /**
      * Removes a component from the specified position.
-     * Updates the shipBoard and shipBoardAttributes
+     * Updates shipBoard, shipBoardAttributes, destroyedComponents counter.
      *
      * @throws IllegalArgumentException    if operation not possible.
      * @throws NoHumanCrewLeftException    if no human crew left and player forced to give up.
@@ -586,6 +586,7 @@ public class ShipBoard implements Serializable {
         // remove given component
         componentMatrix[realCol][realRow] = null;
         shipBoardAttributes.destroyComponents(1);
+        // update shipboard attributes
         component.accept(new SBAttributesUpdaterVisitor(this));
 
         // check for fracture, throw exceptions if needed
@@ -605,33 +606,40 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     private void checkFracturedShipBoard() throws FracturedShipBoardException, NoHumanCrewLeftException {
-        // map possible shipboards
-        List<ShipBoard> shipBoardsList = connectionMapper();
+        // map possible valid shipboards
+        List<ShipBoard> validShipBoardsList = possibleShipBoardsMapper();
 
         // if >1 possible shipboards: fracture
-        if (shipBoardsList.size() > 1)
-            throw new FracturedShipBoardException(shipBoardsList);
+        if (validShipBoardsList.size() > 1)
+            throw new FracturedShipBoardException(validShipBoardsList);
 
         // if 0 possible shipboards: no human crew left
-        if (shipBoardsList.isEmpty())
+        if (validShipBoardsList.isEmpty())
             throw new NoHumanCrewLeftException();
 
         // if 1 possible shipboard, ok
     }
 
     /**
-     * Map all the different connected parts of the shipboard and return them as a list of shipboards to choose from.
+     * Map all the different connected parts of the shipboard and return them as a list of the valid shipboards to choose from.
+     * Invalid (no human crew) shipboards are automatically erased from the real shipboard.
      * Used when shipboard is fractured.
      *
-     * @return list of possible shipboards to choose from.
+     * @return list of possible valid shipboards to choose from.
      * @author Boti
      */
-    private List<ShipBoard> connectionMapper() {
-        // list of all new shipboards (without crew too)
-        List<ShipBoard> shipBoardsList = new ArrayList<>();
+    private List<ShipBoard> possibleShipBoardsMapper() {
+        // list of possible valid shipboards (only those with human crew)
+        List<ShipBoard> validShipboardsList = new ArrayList<>();
+        ShipBoard tmp;
 
         // add shipboard reachable from current center cabin
-        shipBoardsList.add(bfsMapper(centerCabinCol, centerCabinRow));
+        tmp = bfsShipBoardMapper(centerCabinCol, centerCabinRow);
+        if (tmp != null) {
+            validShipboardsList.add(tmp);
+        } else {
+            // TODO new center should be chosen
+        }
 
         // indicates if the component has already been mapped
         boolean mapped;
@@ -643,50 +651,41 @@ public class ShipBoard implements Serializable {
                 if (componentMatrix[realCol][realRow] != null) {
                     mapped = false;
                     // check if component is mapped already
-                    for (ShipBoard shipBoard : shipBoardsList) {
+                    for (ShipBoard shipBoard : validShipboardsList) {
                         if (shipBoard.getRealComponent(realCol, realRow) != null) {
                             mapped = true;
                             break;
                         }
                     }
-                    // component not yet mapped
-                    if (!mapped)
-                        shipBoardsList.add(bfsMapper(realCol, realRow));
+                    // component not yet mapped, map it
+                    if (!mapped) {
+                        tmp = bfsShipBoardMapper(realCol, realRow);
+                        // only add if it is a valid possible shipboard
+                        if (tmp != null) {
+                            validShipboardsList.add(tmp);
+                        }
+                    }
+                    // component mapped
                 }
             }
         }
         // all components mapped
 
-        // remove shipboards without human crew
-        List<ShipBoard> toRemove = new ArrayList<>();
-        for (ShipBoard shipBoard : shipBoardsList) {
-            if (shipBoard.getShipBoardAttributes().getHumanCrewMembers() == 0)
-                toRemove.add(shipBoard);
-        }
-
-        // remove shipboard and its components from the real shipboard
-        // (necessary to maintain and update the real shipboard's attributes)
-        for (ShipBoard shipBoard : toRemove) {
-            // remove shipboard components from actual shipboard
-            eraseShipboard(shipBoard);
-            // remove shipboard from the removal list
-            shipBoardsList.remove(shipBoard);
-        }
-
-        // return remaining possible shipboards to choose from
-        return shipBoardsList;
+        // return possible valid shipboards to choose from
+        return validShipboardsList;
     }
 
     /**
-     * Create a new shipboard from the components reachable from the given starting coordinates and return it.
-     * That is, map the current reachable shipboard using Breadth First Search starting from the given coordinates.
+     * Create a new shipboard from the components reachable from the given starting coordinates and return it,
+     * if it has human crew (possible choice).
+     * Return null and erase the mapped shipboard from the real shipboard if it has no human crew.
      *
-     * @return the shipboard of reachable components.
+     * @return the shipboard of reachable components, or null if mapped shipboard invalid (no human crew).
      * @author Boti
      */
-    private ShipBoard bfsMapper(int realCol, int realRow) {
+    private ShipBoard bfsShipBoardMapper(int realCol, int realRow) {
         if (componentMatrix[realCol][realRow] == null)
-            throw new IllegalArgumentException("bfsMapper cannot take empty cell.");
+            throw new IllegalArgumentException("bfsShipBoardMapper cannot start from empty cell.");
 
         // create new shipboard
         // center cabin is automatically added - to remove!
@@ -770,11 +769,26 @@ public class ShipBoard implements Serializable {
                 queue.offer(neighborCoord);
             }
         }
-
-
         // all reachable components visited
-        // update attributes (for human crew and others)
-        tmpShipboard.getShipBoardAttributes().updateShipBoardAttributes(tmpShipboard);
+
+        // update mapped shipboard attributes (for human crew and others)
+        // (not using addComponent to avoid placement conflicts, attributes must be updated manually)
+        try {
+            tmpShipboard.getShipBoardAttributes().updateShipBoardAttributes(tmpShipboard);
+
+        } catch (NoHumanCrewLeftException e) {
+            // if no crew on mapped shipboard, it falls off:
+            // erase from real shipboard and return null
+            try {
+                eraseShipboardFromRealShipboard(tmpShipboard);
+            } catch (NoHumanCrewLeftException ex) {
+                // shouldn't be thrown: only parts without crew are automatically erased
+                throw new IllegalStateException("Error: automatically erased last part with human crew from shipboard.");
+            }
+            return null;
+        }
+
+        // crew present on mapped shipboard, valid shipboard option
         return tmpShipboard;
     }
 
@@ -785,44 +799,32 @@ public class ShipBoard implements Serializable {
         return componentMatrix[realCol][realRow];
     }
 
-    /**
-     * Check if the 2 provided junctions are compatible.
-     *
-     * @return true if junctions are compatible, false if incompatible.
-     * @author Boti
-     */
-    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
-        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
-            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
-        } else if (sideA.equals(SideType.Single)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Double)) {
-            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        } else if (sideA.equals(SideType.Universal)) {
-            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
-        }
-        return false;
-    }
-
     public ShipBoardAttributes getShipBoardAttributes() {
         return shipBoardAttributes;
     }
 
     /**
-     * Remove the passed shipboard components from the actual shipboard.
+     * Remove the passed shipboard's components from the real shipboard.
+     * Updates the real shipBoard, shipBoardAttributes and destroyComponent counter.
+     * Used to remove parts fallen off from the real shipboard.
+     *
+     * @author Boti
      */
-    public void eraseShipboard(ShipBoard toErase) {
-        // remove elements from the real shipboard
+    public void eraseShipboardFromRealShipboard(ShipBoard toErase) throws NoHumanCrewLeftException {
+        // find components of the shipboard to erase
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
             for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 if (toErase.getRealComponent(realCol, realRow) != null) {
-                    this.componentMatrix[realCol][realRow] = null;
-                    this.shipBoardAttributes.destroyComponents(1);
+                    // remove element without checking for fracture (to avoid infinite loop)
+                    // remove updates attributes
+                    try {
+                        this.removeComponent(getVisibleIndex(realCol), getVisibleIndex(realRow), false);
+                    } catch (FracturedShipBoardException e) {
+                        throw new IllegalStateException("Error: entering infinite checkFracture loop.");
+                    }
                 }
             }
         }
-        // update attributes
-        this.shipBoardAttributes.updateShipBoardAttributes(this);
     }
 
     /**
@@ -1052,6 +1054,25 @@ public class ShipBoard implements Serializable {
                 return true;
         }
         // no matching support found
+        return false;
+    }
+
+    /**
+     * Check if the 2 provided junctions are compatible.
+     *
+     * @return true if junctions are compatible, false if incompatible.
+     * @author Boti
+     */
+    private boolean checkCompatibleJunction(SideType sideA, SideType sideB) {
+        if (sideA.equals(SideType.Smooth) || sideA.equals(SideType.Special)) {
+            return (sideB.equals(SideType.Smooth) || sideB.equals(SideType.Special));
+        } else if (sideA.equals(SideType.Single)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Double)) {
+            return (sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        } else if (sideA.equals(SideType.Universal)) {
+            return (sideB.equals(SideType.Single) || sideB.equals(SideType.Double) || sideB.equals(SideType.Universal));
+        }
         return false;
     }
 
