@@ -574,7 +574,7 @@ public class ShipBoard implements Serializable {
 
     /**
      * Removes a component from the specified position.
-     * Updates shipBoard, shipBoardAttributes, destroyedComponents counter.
+     * Updates shipBoard, shipBoardAttributes, destroyedComponents, centerCabinCoordinates (if center cabin is removed).
      *
      * @throws IllegalArgumentException    if operation not possible.
      * @throws NoHumanCrewLeftException    if no human crew left and player forced to give up.
@@ -598,6 +598,12 @@ public class ShipBoard implements Serializable {
         // remove given component
         componentMatrix[realCol][realRow] = null;
         shipBoardAttributes.destroyComponents(1);
+
+        // if center cabin is removed, find new center
+        if (componentMatrix[centerCabinCol][centerCabinRow] == null) {
+            findNewCenterCabin();
+        }
+
         // update shipboard attributes
         component.accept(new SBAttributesUpdaterVisitor(this));
 
@@ -630,6 +636,29 @@ public class ShipBoard implements Serializable {
             throw new NoHumanCrewLeftException();
 
         // if 1 possible shipboard, ok
+    }
+
+    /**
+     * Finds a new center cabin (human crew >0) for the shipboard, and sets the centerCabin coordinates.
+     * To call if the previous center cabin has been removed.
+     *
+     * @author Boti
+     */
+    private void findNewCenterCabin() {
+        Component component;
+        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+                component = componentMatrix[realCol][realRow];
+                // if current component is a cabin with human crew > 0
+                if (component instanceof Cabin && ((Cabin) component).getCrewType().equals(CrewType.Human)
+                        && component.getCrewMembers() > 0) {
+                    // elect as new center cabin
+                    centerCabinCol = realCol;
+                    centerCabinRow = realRow;
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -864,11 +893,6 @@ public class ShipBoard implements Serializable {
             count++;
 
         return count;
-    }
-
-    // TODO
-    public void findNewCenterCabin() {
-        return;
     }
 
     public Component[][] getComponentMatrix() {

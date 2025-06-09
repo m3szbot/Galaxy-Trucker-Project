@@ -56,9 +56,6 @@ public final class FracturedShipBoardHandler {
                     }
                 }
 
-                // set new center
-                player.getShipBoard().findNewCenterCabin();
-
                 // set only if no exception thrown
                 selectionSuccess = true;
             } catch (IndexOutOfBoundsException e) {
