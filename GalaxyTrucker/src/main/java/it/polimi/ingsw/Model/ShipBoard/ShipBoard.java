@@ -736,6 +736,7 @@ public class ShipBoard implements Serializable {
         if (realCol != getRealIndex(SB_CENTER_COL) || realRow != getRealIndex(SB_CENTER_ROW)) {
             tmpShipboard.componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = null;
         }
+        
 
         // store coordinates, not components - search based on coordinates
         Set<Coordinate> visited = new HashSet<>();

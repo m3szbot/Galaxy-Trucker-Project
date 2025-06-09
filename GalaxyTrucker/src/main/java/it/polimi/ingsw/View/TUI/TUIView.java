@@ -78,7 +78,6 @@ public class TUIView extends GeneralView {
      */
     public void printShipboard(ShipBoard shipBoard) {
         // row and column to print indexes in
-        // TODO adjust
         int indexRow = 3;
         int indexColumn = 2;
         // Print shipboard in:
@@ -126,7 +125,7 @@ public class TUIView extends GeneralView {
             }
         }
         // end of components
-        System.out.println(String.format("Destroyed components: %d\n", shipBoard.getShipBoardAttributes().getDoubleEnginePower()));
+        System.out.println(String.format("Destroyed components: %d\n", shipBoard.getShipBoardAttributes().getDestroyedComponents()));
 
     }
 

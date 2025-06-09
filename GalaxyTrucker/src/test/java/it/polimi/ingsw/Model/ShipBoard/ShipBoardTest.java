@@ -173,8 +173,8 @@ public class ShipBoardTest {
         });
         shipBoard.removeComponent(7, 7, true);
         assertEquals(2, shipBoard.getShipBoardAttributes().getCrewMembers());
+        assertEquals(2, shipBoard.getShipBoardAttributes().getDestroyedComponents());
         // cabin: 8 6
-        generalViewTUI.printShipboard(shipBoard);
 
         // block to repeat:
         shipBoard.addComponent(7, 6, new Component(universalSides));
@@ -184,6 +184,7 @@ public class ShipBoardTest {
         });
         shipBoard.removeComponent(8, 6, true);
         assertEquals(2, shipBoard.getShipBoardAttributes().getCrewMembers());
+        assertEquals(4, shipBoard.getShipBoardAttributes().getDestroyedComponents());
         // cabin: 7 7
 
         // block to repeat:
@@ -194,7 +195,10 @@ public class ShipBoardTest {
         });
         shipBoard.removeComponent(7, 7, true);
         assertEquals(2, shipBoard.getShipBoardAttributes().getCrewMembers());
+        assertEquals(6, shipBoard.getShipBoardAttributes().getDestroyedComponents());
         // cabin: 6 8
+
+        generalViewTUI.printShipboard(shipBoard);
     }
 
     @Test
@@ -210,7 +214,29 @@ public class ShipBoardTest {
         assertThrows(FracturedShipBoardException.class, () -> {
             shipBoard.removeComponent(5, 7, true);
         });
+        assertEquals(2, shipBoard.getShipBoardAttributes().getDestroyedComponents());
         generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void testFractureComponentsFallOff() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
+        // tests if parts without crew fall off
+        shipBoard.addComponent(8, 7, new Component(universalSides));
+        shipBoard.addComponent(9, 7, new Cabin(universalSides, CrewType.Human, 2));
+        // add connectors that fall off
+        shipBoard.addComponent(6, 7, new Component(universalSides));
+        shipBoard.addComponent(6, 6, new Component(universalSides));
+        shipBoard.addComponent(6, 5, new Component(universalSides));
+        shipBoard.addComponent(6, 8, new Component(universalSides));
+        shipBoard.addComponent(6, 9, new Component(universalSides));
+        shipBoard.addComponent(7, 6, new Component(universalSides));
+        shipBoard.addComponent(7, 8, new Component(universalSides));
+
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.removeComponent(8, 7, true);
+        });
+        shipBoard.removeComponent(7, 7, true);
+        assertEquals(9, shipBoard.getShipBoardAttributes().getDestroyedComponents());
 
     }
 

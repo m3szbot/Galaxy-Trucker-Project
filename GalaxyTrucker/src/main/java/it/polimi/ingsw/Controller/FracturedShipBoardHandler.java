@@ -17,58 +17,63 @@ import java.util.List;
  * @author Boti
  */
 public final class FracturedShipBoardHandler {
-
+    // Utility class, cannot be instantiated
     private FracturedShipBoardHandler() {
         throw new UnsupportedOperationException();
     }
 
     public static void handleFracture(PlayerMessenger playerMessenger, FracturedShipBoardException exception) throws PlayerDisconnectedException, NoHumanCrewLeftException {
         Player player = playerMessenger.getPlayer();
-        List<ShipBoard> shipBoardsList = exception.getShipBoardsList();
+        List<ShipBoard> validShipBoardsList = exception.getValidShipBoardsList();
 
         playerMessenger.printMessage("Your shipboard has broken into multiple parts:");
 
-        // print shipboards
-        for (int i = 0; i < shipBoardsList.size(); i++) {
+        // print possible shipboards
+        for (int i = 0; i < validShipBoardsList.size(); i++) {
             playerMessenger.printMessage("\n###############################################################################");
-            playerMessenger.printMessage(String.format("Possible shipboard %d:", i));
-            playerMessenger.printShipboard(shipBoardsList.get(i));
+            playerMessenger.printMessage(String.format("Possible shipboard #%d:", i));
+            playerMessenger.printShipboard(validShipBoardsList.get(i));
         }
 
-        // select shipboard
+        // select shipboard variables
         boolean selectionSuccess = false;
         int trials = 5;
-        int selected;
+        int selected = 0;
 
+        // select shipboard
         while (!selectionSuccess && trials > 0) {
             playerMessenger.printMessage("Please select the part to keep (enter number):");
             // get player input
             selected = playerMessenger.getPlayerInt();
             // if PlayerDisconnectedException is thrown, propagate it to the caller Controller
 
-            // TODO
-            // select shipboard
-            try {
-                // erase all other possible shipboard
-                for (ShipBoard shipBoard : shipBoardsList) {
-                    if (!shipBoard.equals(shipBoardsList.get(selected))) {
-                        player.getShipBoard().eraseShipboardFromRealShipboard(shipBoard);
-                    }
-                }
-
-                // set only if no exception thrown
+            // successful selection
+            if (selected >= 0 && selected < validShipBoardsList.size()) {
                 selectionSuccess = true;
-            } catch (IndexOutOfBoundsException e) {
-                // invalid selection
+            } else {
                 playerMessenger.printMessage("Please enter a valid shipboard number!");
             }
-
-            // loop again if selection not successful
+            // repeat if selection not successful
             trials--;
         }
 
+        // if selection not successful, keep shipboard number 0 automatically
+        if (!selectionSuccess) {
+            selected = 0;
+            playerMessenger.printMessage("Failed to select shipboard, shipboard #0 has been automatically selected.");
+        }
+
+        // erase not selected shipboards
+        for (int i = 0; i < validShipBoardsList.size(); i++) {
+            if (i != selected) {
+                player.getShipBoard().eraseShipboardFromRealShipboard(validShipBoardsList.get(i));
+            }
+        }
+
+        // shipboard to keep successfully selected (others erased)
         playerMessenger.printMessage("You have successfully selected your new shipboard:");
         playerMessenger.printShipboard(player.getShipBoard());
 
+        // end of fracture handling
     }
 }

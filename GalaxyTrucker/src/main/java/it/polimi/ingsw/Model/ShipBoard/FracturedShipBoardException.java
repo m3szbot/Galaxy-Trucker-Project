@@ -8,13 +8,13 @@ import java.util.List;
  * by calling FracturedShipboardHandler.handleFracture().
  */
 public class FracturedShipBoardException extends Exception {
-    List<ShipBoard> shipBoardsList;
+    List<ShipBoard> validShipBoardsList;
 
-    public FracturedShipBoardException(List<ShipBoard> shipBoardsList) {
-        this.shipBoardsList = shipBoardsList;
+    public FracturedShipBoardException(List<ShipBoard> validShipBoardsList) {
+        this.validShipBoardsList = validShipBoardsList;
     }
 
-    public List<ShipBoard> getShipBoardsList() {
-        return shipBoardsList;
+    public List<ShipBoard> getValidShipBoardsList() {
+        return validShipBoardsList;
     }
 }
