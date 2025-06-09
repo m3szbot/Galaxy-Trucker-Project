@@ -80,7 +80,7 @@ public class FlightBoard implements Serializable {
     /**
      * Check for gameType specific requirements.
      */
-    private void checkGameTypeRequirements(GameType gameType) {
+    private void checkGameTypeRequirements(GameType gameType) throws IllegalStateException {
         // NORMAL GAME
         int levelOneCardCount = Deck.NORMAL_LEVEL_ONE_CARD_COUNT * 4;
         int levelTwoCardCount = Deck.NORMAL_LEVEL_TWO_CARD_COUNT * 4;
@@ -160,7 +160,7 @@ public class FlightBoard implements Serializable {
      * @param player Player to examine
      * @return player's order in playerOrder List (1-4)
      */
-    public int getPlayerOrder(Player player) {
+    public int getPlayerOrder(Player player) throws NoSuchElementException {
         if (isInGame(player)) {
             return (playerOrderList.indexOf(player) + 1);
         } else {
@@ -176,7 +176,7 @@ public class FlightBoard implements Serializable {
      * @param player Player to examine
      * @return true if player is in game, false if not in game
      */
-    public boolean isInGame(Player player) {
+    public boolean isInGame(Player player) throws IllegalStateException {
         if (playerTilesMap.containsKey(player) && !playerOrderList.contains(player)) {
             throw new IllegalStateException("Player is present in playerTilesMap but not in playerOrderList ");
         }
@@ -209,7 +209,7 @@ public class FlightBoard implements Serializable {
      * @param player Player to add
      * @param tile   Player's starting tile
      */
-    public synchronized void addPlayer(Player player, int tile) {
+    public synchronized void addPlayer(Player player, int tile) throws IndexOutOfBoundsException, IllegalArgumentException {
         if (!isInGame(player)) {
             if (startingTiles.contains(tile)) {
                 // add player
@@ -278,7 +278,7 @@ public class FlightBoard implements Serializable {
      *
      * @param player Player to remove
      */
-    public void eliminatePlayer(Player player) {
+    public void eliminatePlayer(Player player) throws NoSuchElementException {
         if (isInGame(player)) {
             playerTilesMap.remove(player);
             playerOrderList.remove(player);
@@ -295,7 +295,7 @@ public class FlightBoard implements Serializable {
      *
      * @param player player who gives up
      */
-    public void giveUpPlayer(Player player) {
+    public void giveUpPlayer(Player player) throws NoSuchElementException {
         if (isInGame(player)) {
             playerTilesMap.remove(player);
             playerOrderList.remove(player);
@@ -312,7 +312,7 @@ public class FlightBoard implements Serializable {
      *
      * @param tiles Value of increment of tiles
      */
-    public void incrementPlayerTile(Player player, int tiles) {
+    public void incrementPlayerTile(Player player, int tiles) throws NoSuchElementException {
         if (isInGame(player)) {
             int nextTile = this.getPlayerTile(player) + tiles;
             // if tile to move to is occupied, jump before/behind
@@ -345,7 +345,7 @@ public class FlightBoard implements Serializable {
      * @param player Player to examine
      * @return player's tile on FlightBoard
      */
-    public int getPlayerTile(Player player) {
+    public int getPlayerTile(Player player) throws NoSuchElementException {
         if (isInGame(player))
             return this.playerTilesMap.get(player);
         else {
@@ -358,7 +358,7 @@ public class FlightBoard implements Serializable {
      *
      * @param goods Array of quantities to remove of each color of goods (red, yellow, green, blue)
      */
-    public void removeGoods(int[] goods) {
+    public void removeGoods(int[] goods) throws IllegalArgumentException {
         // first check for depletion
         for (int i = 0; i < 4; i++) {
             if (this.goodsNumber[i] - goods[i] < 0)
