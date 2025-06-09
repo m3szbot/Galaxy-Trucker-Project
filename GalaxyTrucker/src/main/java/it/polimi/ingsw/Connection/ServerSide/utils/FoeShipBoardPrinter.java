@@ -1,0 +1,77 @@
+package it.polimi.ingsw.Connection.ServerSide.utils;
+
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Model.ShipBoard.Player;
+
+import java.util.Set;
+
+/**
+ * Class which is has the sole purpose of printing the shipboard of another
+ * player.
+ *
+ * @author carlo
+ */
+
+public class FoeShipBoardPrinter{
+
+    private int gameCode;
+    private PlayerMessenger playerMessenger;
+
+    public FoeShipBoardPrinter(PlayerMessenger playerMessenger){
+
+        this.playerMessenger = playerMessenger;
+        this.gameCode = playerMessenger.getGameCode();
+
+    }
+
+    public void start() throws PlayerDisconnectedException{
+
+        Player foe = null;
+        boolean playerPresentFlag = false;
+        Set<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
+
+        if(connectedPlayers.isEmpty()){
+            playerMessenger.printMessage("Nobody is in game!");
+            return;
+        }
+
+        playerMessenger.printMessage("Which player's ship board do you want to spy ?");
+
+        for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()){
+
+            if(!player.getNickName().equals(playerMessenger.getPlayer().getNickName())) {
+
+                playerMessenger.printMessage(player.getNickName());
+
+            }
+
+        }
+
+        String input = playerMessenger.getPlayerString();
+
+        for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
+
+            if (input.equals(player.getNickName())) {
+                foe = player;
+                playerPresentFlag = true;
+                break;
+            }
+        }
+
+        if(playerPresentFlag){
+
+           playerMessenger.printMessage(foe.getNickName() + " shipboard");
+           playerMessenger.printShipboard(foe.getShipBoard());
+
+       }
+       else{
+
+           playerMessenger.printMessage("The player you entered is currently not in game!");
+
+       }
+
+    }
+
+}

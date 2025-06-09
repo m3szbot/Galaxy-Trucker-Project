@@ -6,5 +6,5 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:id="rootPane"
             fx:controller="it.polimi.ingsw.View.GUI.GeneralGUIController"
-            prefHeight="400.0" prefWidth="600.0">
+            >
 </AnchorPane>
