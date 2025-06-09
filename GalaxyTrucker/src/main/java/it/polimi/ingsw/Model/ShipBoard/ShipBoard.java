@@ -704,7 +704,7 @@ public class ShipBoard implements Serializable {
         ShipBoard tmpShipboard = new ShipBoard(gameType);
 
         // remove center cabin added by shipboard constructor, if current mapping is not starting from center cabin
-        if (realCol != getRealIndex(SB_CENTER_COL) && realRow != getRealIndex(SB_CENTER_ROW)) {
+        if (realCol != getRealIndex(SB_CENTER_COL) || realRow != getRealIndex(SB_CENTER_ROW)) {
             tmpShipboard.componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = null;
         }
 
@@ -789,14 +789,16 @@ public class ShipBoard implements Serializable {
             tmpShipboard.getShipBoardAttributes().updateShipBoardAttributes(tmpShipboard);
 
         } catch (NoHumanCrewLeftException e) {
-            // if no crew on mapped shipboard, it falls off:
-            // erase from real shipboard and return null
+            // tmp shipboard has no crew left:
+            // fall off: erase from real shipboard and return null
             try {
                 eraseShipboardFromRealShipboard(tmpShipboard);
             } catch (NoHumanCrewLeftException ex) {
-                // shouldn't be thrown: only parts without crew are automatically erased
+                // real shipboard has no crew left
+                // shouldn't be thrown: only parts without crew are automatically erased from the real shipboard
                 throw new IllegalStateException("Error: automatically erased last part with human crew from shipboard.");
             }
+            // mapped shipboard discarded
             return null;
         }
 

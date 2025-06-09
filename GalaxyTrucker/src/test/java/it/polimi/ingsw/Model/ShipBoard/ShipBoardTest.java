@@ -93,17 +93,34 @@ public class ShipBoardTest {
     }
 
     @Test
+    void testFractureConnectorFallsOffNoException() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
+        shipBoard.addComponent(8, 7, new Component(universalSides));
+        shipBoard.addComponent(9, 7, new Component(universalSides));
+
+        // no exception should be thrown
+        shipBoard.removeComponent(8, 7, true);
+        assertNull(shipBoard.getComponent(8, 7));
+        assertNull(shipBoard.getComponent(9, 7));
+    }
+
+    @Test
     void testFractureAlienFallsOffNoException() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
         // add alien cabin then remove connector so only center cabin is kept
         // no exception launched, alien automatically erased
 
-        // 77Cabin 78connector 79Cabin 710AlienSupport
-        shipBoard.addComponent(7, 8, new Component(universalSides));
-        shipBoard.addComponent(7, 9, new Cabin(universalSides, CrewType.Purple, 1));
-        shipBoard.addComponent(7, 10, new AlienSupport(universalSides, true));
+        // 77Cabin 87connector 97Cabin 107AlienSupport
+        shipBoard.addComponent(8, 7, new Component(universalSides));
+        shipBoard.addComponent(9, 7, new Cabin(universalSides, CrewType.Human, 2));
+        shipBoard.addComponent(10, 7, new AlienSupport(universalSides, true));
+        shipBoard.setCrewType(9, 7, CrewType.Purple);
+
+        generalViewTUI.printShipboard(shipBoard);
 
         assertEquals(3, shipBoard.getShipBoardAttributes().getCrewMembers());
-        shipBoard.removeComponent(7, 8, true);
+        // shouldn't launch fracture
+        shipBoard.removeComponent(8, 7, true);
+
+        // fall off successful
         assertEquals(2, shipBoard.getShipBoardAttributes().getCrewMembers());
 
     }
