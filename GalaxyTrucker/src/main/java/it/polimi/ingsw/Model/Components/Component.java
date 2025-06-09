@@ -39,6 +39,7 @@ public class Component implements Visitable, Serializable {
     private SideType back;
     private SideType left;
 
+    // rotate using visitor
 
     public Component() {
     }
@@ -58,25 +59,6 @@ public class Component implements Visitable, Serializable {
         this.left = sides[3];
     }
 
-    /**
-     * Rotates the component clockwise
-     */
-
-    public void rotate() {
-
-        SideType temp1, temp2;
-
-        temp1 = front;
-        temp2 = right;
-
-        front = left;
-        right = temp1;
-
-        temp1 = back;
-        back = temp2;
-        left = temp1;
-    }
-
     public SideType getRight() {
         return right;
     }
@@ -91,6 +73,15 @@ public class Component implements Visitable, Serializable {
 
     public SideType getBack() {
         return back;
+    }
+
+    /**
+     * @return an array containing a copy of each side in the order: FRONT RIGHT BACK LEFT (safe getter).
+     * @author Boti
+     */
+    public SideType[] getAllSides() {
+        // return copy
+        return new SideType[]{front, right, back, left};
     }
 
     public String getComponentName() {

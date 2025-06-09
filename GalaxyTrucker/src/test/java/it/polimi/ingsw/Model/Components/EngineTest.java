@@ -89,7 +89,7 @@ class EngineTest {
         assertEquals(originalLeft, engine.getLeft());
 
         // Act
-        engine.rotate();
+        engine.accept(new ComponentRotatorVisitor());
 
         // Assert - Should rotate normally
         assertEquals(originalLeft, engine.getFront());

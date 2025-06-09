@@ -21,7 +21,7 @@ public class Engine extends Component {
         super(sides);
         this.single = single;
         while (this.getBack() != SideType.Special) {
-            this.rotate();
+            this.accept(new ComponentRotatorVisitor());
         }
     }
 

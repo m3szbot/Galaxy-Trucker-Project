@@ -3,6 +3,8 @@ package it.polimi.ingsw.Model.Components;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+
 /**
  * Class that represent the shield component
  *
@@ -43,6 +45,14 @@ public class Shield extends Component {
     @Override
     public boolean[] getCoveredSides() {
         return coveredSides;
+    }
+
+    /**
+     * @param allSides the 4 sides and their coverage (FRONT RIGHT BACK LEFT).
+     * @author Boti.
+     */
+    public void setCoveredSides(boolean[] allSides) {
+        coveredSides = Arrays.copyOf(allSides, coveredSides.length);
     }
 
     @Override

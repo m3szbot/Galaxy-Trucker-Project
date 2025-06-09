@@ -86,7 +86,7 @@ class ComponentTest {
         Component component = new Component(TEST_SIDES);
 
         // Act
-        component.rotate();
+        component.accept(new ComponentRotatorVisitor());
 
         // Assert
         assertEquals(SideType.Universal, component.getFront()); // Original left
