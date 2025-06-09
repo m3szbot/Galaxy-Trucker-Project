@@ -13,7 +13,6 @@ import it.polimi.ingsw.View.GeneralView;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VirtualClient extends UnicastRemoteObject implements ClientRemoteInterface{
 
@@ -24,6 +23,8 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
     public VirtualClient(ClientInfo clientInfo) throws RemoteException {
 
         viewCommunicator = clientInfo.getViewCommunicator();
+        currentView = viewCommunicator.getView();
+        this.inGame = false;
 
     }
 
@@ -37,28 +38,6 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         return inGame;
     }
 
-    /**
-     * The method avoid busy waiting avoiding useless cpu usage. If the
-     * client does not insert an input for 5 min, an exception if thrown
-     * @return string entered by the client
-     * @throws RemoteException
-     */
-
-    public String getString(AtomicBoolean clientConnected) throws RemoteException{
-
-        try {
-
-            String input = ClientInputManager.getUserInput();
-
-            return input;
-
-        } catch (TimeoutException e) {
-            String message = "Timeout reached, you are considered inactive, disconnection will soon happen";
-            viewCommunicator.showData(message, false);
-            throw new RemoteException("inactivity");
-        }
-
-    }
 
     //not in use for now. May be necessary for future versions for correcting problems
 
@@ -74,16 +53,20 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
         } catch (TimeoutException e) {
             String message = "Timeout reached, you are considered inactive, disconnection will soon happen";
-            viewCommunicator.showData(message, false);
+            viewCommunicator.getView().printMessage(message);
             setInGame(false);
             throw new RemoteException("inactivity");
         }
 
     }
 
+    public void printPreJoinMessage(String message) throws RemoteException{
+        System.out.println(message);
+    }
+
     @Override
     public void printMessage(String message) throws RemoteException {
-        System.out.println(message);
+        currentView.printMessage(message);
     }
 
     public void printComponent(Component component) throws RemoteException {
@@ -112,14 +95,8 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
     public void setGamePhase(GamePhase gamePhase) throws RemoteException{
 
-        switch (gamePhase) {
-            case Assembly -> currentView = viewCommunicator.getView(0);
-            case Correction -> currentView = viewCommunicator.getView(1);
-            case Flight -> currentView = viewCommunicator.getView(2);
-            case Evaluation -> currentView = viewCommunicator.getView(3);
-        }
-
         viewCommunicator.setGamePhase(gamePhase);
+        currentView = viewCommunicator.getView();
 
     }
 
@@ -134,4 +111,7 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         this.inGame = inGame;
     }
 
+    public void sendCommand(String command) throws RemoteException{
+       //nothing for now
+    }
 }

@@ -39,6 +39,7 @@ public class Server {
     private Color currentColor;
     private int portNumber;
     private List<String> nicknameList;
+    private List<String> bannedIPs;
 
     public Server() {
         this.gameCode = 0;

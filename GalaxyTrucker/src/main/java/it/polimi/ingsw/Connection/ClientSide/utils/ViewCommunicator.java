@@ -7,12 +7,20 @@ import it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController;
 import it.polimi.ingsw.View.GeneralView;
 import it.polimi.ingsw.View.TUI.TUIView;
 
+/**
+ * Class which contains the information about the player's view.
+ *
+ * @author carlo
+ */
+
 public class ViewCommunicator {
 
     private ViewType viewType;
     private LobbyGUIController lobbyGUIController;
     private GeneralView[] views;
     private GeneralGUIController generalGUIController;
+    private GeneralView lobbyView;
+    private int index = -1;
 
     public ViewCommunicator(ViewType viewType){
 
@@ -23,6 +31,7 @@ public class ViewCommunicator {
 
         if(viewType == ViewType.TUI){
 
+            this.lobbyView = new TUIView();
             this.views[0] = new TUIView();
             this.views[1] = new TUIView();
             this.views[2] = new TUIView();
@@ -32,6 +41,7 @@ public class ViewCommunicator {
         else{
 
            /*
+            this.lobbyView = new ...
             this.views[0] = new AssemblyGUIController();
             this.views[1] = new CorrectionGUIController();
             this.views[2] = new FlightGUIController();
@@ -46,13 +56,25 @@ public class ViewCommunicator {
 
     public void setGamePhase(GamePhase gamePhase){
 
+        switch (gamePhase) {
+            case Assembly -> index = 0;
+            case Correction -> index = 1;
+            case Flight -> index = 2;
+            case Evaluation -> index = 3;
+        }
+
         if(viewType == ViewType.GUI) {
 
             generalGUIController.setPhaseGUI(gamePhase);
         }
     }
 
-    public GeneralView getView(int index){
+    public GeneralView getView(){
+
+        if(index == -1){
+            return lobbyView;
+        }
+
         return views[index];
     }
 

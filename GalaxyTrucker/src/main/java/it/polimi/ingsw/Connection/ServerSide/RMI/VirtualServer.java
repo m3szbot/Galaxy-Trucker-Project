@@ -3,6 +3,7 @@ package it.polimi.ingsw.Connection.ServerSide.RMI;
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.Server;
+import it.polimi.ingsw.Connection.ServerSide.utils.GameJoinerThread;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -32,19 +33,18 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
     @Override
     public void makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException {
 
-        Joiner joiner = new Joiner(clientInfo, centralServer, virtualClient);
+        if(centralServer.checkNickname(clientInfo.getNickname())){
 
-        try {
+            virtualClient.printPreJoinMessage("A player connected to the server already has your nickname, please reconnect using a new one");
+            return;
 
-            joiner.start();
-            virtualClient.setInGame(true);
-
-        } catch (RemoteException e) {
-
-            centralServer.removeNickName(clientInfo.getNickname());
-            System.out.println(e.getMessage());
-            System.out.println("Client " + clientInfo.getNickname() + " disconnected!");
+        }
+        else{
+            (new GameJoinerThread(centralServer, virtualClient, clientInfo.getNickname())).start();
         }
 
+        virtualClient.setInGame(true);
+
     }
+
 }

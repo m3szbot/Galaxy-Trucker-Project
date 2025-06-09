@@ -12,4 +12,7 @@ public class PlayerDisconnectedException extends Exception {
     public PlayerDisconnectedException(Player player) {
         super("Player " + player.getNickName() + " disconnected!");
     }
+    public PlayerDisconnectedException(String nickname){
+        super("Player " + nickname + " disconnected!");
+    }
 }

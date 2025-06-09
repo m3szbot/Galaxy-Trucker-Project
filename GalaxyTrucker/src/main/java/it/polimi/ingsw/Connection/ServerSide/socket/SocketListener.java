@@ -1,8 +1,11 @@
 package it.polimi.ingsw.Connection.ServerSide.socket;
 
 import it.polimi.ingsw.Connection.ServerSide.Server;
+import it.polimi.ingsw.Connection.ServerSide.utils.GameJoinerThread;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -35,18 +38,77 @@ public class SocketListener implements Runnable {
             return;
         }
 
-        try {
-            while (true) {
+        while (true) {
+
+            try {
 
                 clientSocket = serverSocket.accept();
                 System.out.println(clientSocket.getInetAddress() + " is connected through socket protocol");
-                clientSocket.setSoTimeout(60000);
 
-                new ClientSocketHandler(clientSocket, centralServer).start();
+            } catch (IOException e) {
+                System.err.println("Error while accepting client through socket protocol");
             }
 
-        } catch (IOException e) {
-            System.err.println("Error while accepting the client through socket");
+            SocketDataExchanger socketDataExchanger;
+
+            try {
+
+                socketDataExchanger = setUpStreams(clientSocket);
+
+            }catch (IOException e){
+                System.err.println("Error while setting up streams");
+                continue;
+            }
+
+            String nickname = getPlayerNickname(socketDataExchanger);
+
+            try {
+
+                if (centralServer.checkNickname(nickname)) {
+
+                    try {
+                        socketDataExchanger.sendString("A player connected to the server already has your nickname, please reconnect using a new one");
+                    } catch (IOException e) {
+                        System.out.println("Error while sending OK message to " + clientSocket.getInetAddress().getHostAddress().toString());
+                    }
+
+                } else {
+                    socketDataExchanger.sendString("OK");
+
+                    (new GameJoinerThread(centralServer, nickname, socketDataExchanger)).start();
+                }
+
+            }catch (IOException e){
+                e.printStackTrace();
+                System.err.println("Error while checking the client nickname");
+            }
+
         }
+
+
+    }
+
+    private SocketDataExchanger setUpStreams(Socket clientSocket) throws IOException{
+
+
+        ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
+        ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+        outputStream.flush();
+
+
+        return new SocketDataExchanger(clientSocket, inputStream, outputStream);
+
+    }
+
+    private String getPlayerNickname(SocketDataExchanger socketDataExchanger){
+
+        try {
+
+            return socketDataExchanger.getString();
+
+        } catch (IOException e) {
+            System.err.println("Error while getting " + clientSocket.getInetAddress().getHostAddress().toString() + " nickname");
+        }
+       return null;
     }
 }
