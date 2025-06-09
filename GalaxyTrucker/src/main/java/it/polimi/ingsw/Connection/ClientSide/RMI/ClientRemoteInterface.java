@@ -8,13 +8,10 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface ClientRemoteInterface extends Remote{
 
     public void printMessage(String message) throws RemoteException;
-
-    public String getString(AtomicBoolean clientConnected) throws RemoteException;
 
     public String getString() throws RemoteException;
 
@@ -38,4 +35,7 @@ public interface ClientRemoteInterface extends Remote{
 
     public void unblockUserInput() throws RemoteException;
 
+    public void printPreJoinMessage(String message) throws RemoteException;
+
+    public void sendCommand(String command) throws RemoteException;
 }

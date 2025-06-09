@@ -26,8 +26,6 @@ public class GameStarter {
 
         this.clientInfo = clientInfo;
 
-        System.out.println("The game is starting!");
-
         SocketDataExchanger dataExchanger = clientInfo.getDataExchanger();
 
         AtomicBoolean running = new AtomicBoolean(true);

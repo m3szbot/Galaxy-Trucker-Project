@@ -1,0 +1,141 @@
+package it.polimi.ingsw.Connection.ServerSide.messengers;
+
+import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
+import it.polimi.ingsw.Connection.ConnectionType;
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
+import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.concurrent.TimeoutException;
+
+public class PlayerLobbyMessenger {
+
+    private ConnectionType connectionType;
+    private DataContainer dataContainer;
+    private SocketDataExchanger socketDataExchanger;
+    private ClientRemoteInterface virtualClient;
+    private String nickName;
+
+    public PlayerLobbyMessenger(ClientRemoteInterface virtualClient, String nickName){
+        this.connectionType = ConnectionType.RMI;
+        this.virtualClient = virtualClient;
+        this.nickName = nickName;
+    }
+
+    public PlayerLobbyMessenger(SocketDataExchanger socketDataExchanger, String nickName){
+        this.connectionType = ConnectionType.SOCKET;
+        this.socketDataExchanger = socketDataExchanger;
+        this.nickName = nickName;
+        this.dataContainer = new DataContainer();
+    }
+
+    public SocketDataExchanger getDataExchanger() {
+        return socketDataExchanger;
+    }
+
+    public ConnectionType getConnectionType() {
+        return connectionType;
+    }
+
+    public ClientRemoteInterface getVirtualClient() {
+        return virtualClient;
+    }
+
+    public String getPlayerString() throws PlayerDisconnectedException, TimeoutException {
+
+       if(connectionType == ConnectionType.SOCKET){
+
+           try{
+
+               String input = socketDataExchanger.getString();
+               if(input.equals("inactivity")){
+                   throw new TimeoutException();
+               }
+               return input;
+
+           } catch (IOException e) {
+
+               System.err.println("Error while obtaining data from " + nickName + ": " +
+                       "a disconnection probably occurred");
+               throw new PlayerDisconnectedException(nickName);
+
+           }
+
+       }
+       else{
+
+           try{
+               String input = virtualClient.getString();
+               if(input.equals("inactivity")){
+                   throw new TimeoutException();
+               }
+               return input;
+           }
+           catch (RemoteException e){
+
+               System.err.println("Error while obtaining data from " + nickName + ": " +
+                       "a disconnection probably occurred");
+               throw new PlayerDisconnectedException(nickName);
+
+           }
+
+       }
+
+    }
+
+    public void sendCommand(String command){
+        if(connectionType == ConnectionType.SOCKET){
+
+            dataContainer.clearContainer();
+            dataContainer.setCommand(command);
+
+            try{
+                socketDataExchanger.sendContainer(dataContainer);
+            } catch (IOException e) {
+
+                System.err.println("Error while sending data to " + nickName);
+            }
+
+        }
+    }
+
+    public void printMessage(String message){
+
+        if(connectionType == ConnectionType.SOCKET){
+
+            dataContainer.clearContainer();
+            dataContainer.setCommand("printMessage");
+            dataContainer.setMessage(message);
+
+            try{
+                socketDataExchanger.sendContainer(dataContainer);
+            } catch (IOException e) {
+
+                System.err.println("Error while sending data to " + nickName);
+            }
+
+        }
+        else{
+
+            try {
+
+                virtualClient.printMessage(message);
+
+            } catch (RemoteException e) {
+                System.err.println("Error while sending data to " + nickName);
+            }
+
+        }
+
+    }
+
+    public void cleanResources(){
+        try{
+            socketDataExchanger.closeResources();
+        } catch (IOException e) {
+            System.out.println("Error while closing " + nickName + " resources");
+        }
+    }
+}

@@ -41,7 +41,7 @@ public class GameMessageSender implements Runnable {
 
             } catch (TimeoutException e) {
 
-                viewCommunicator.showData("Timeout reached, you are considered inactive, disconnection will soon happen", false);
+                viewCommunicator.getView().printMessage("Timeout reached, you are considered inactive, disconnection will soon happen");
 
                 try {
 
@@ -50,7 +50,7 @@ public class GameMessageSender implements Runnable {
 
                 } catch (IOException e1) {
 
-                    viewCommunicator.showData("Error while writing data to the server, you have been disconnected", true);
+                    viewCommunicator.getView().printMessage("Error while writing data to the server, you have been disconnected");
                     running.set(false);
                 }
 
@@ -65,7 +65,7 @@ public class GameMessageSender implements Runnable {
 
             } catch (IOException e) {
 
-                viewCommunicator.showData("Error while writing data to the server, you have been disconnected", true);
+                viewCommunicator.getView().printMessage("Error while writing data to the server, you have been disconnected");
                 running.set(false);
             }
 
@@ -73,7 +73,7 @@ public class GameMessageSender implements Runnable {
                 Thread.sleep(100);
 
             } catch (InterruptedException e) {
-                viewCommunicator.showData("Sender thread was abnormally interrupted", true);
+                viewCommunicator.getView().printMessage("Sender thread was abnormally interrupted");
             }
 
 

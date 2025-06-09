@@ -23,7 +23,6 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
 
     private ViewCommunicator viewCommunicator;
     private AtomicBoolean running;
-    private int viewIndex;
     private SocketDataExchanger dataExchanger;
 
     public GameMessageReceiver(ViewCommunicator viewCommunicator, SocketDataExchanger dataExchanger, AtomicBoolean running) {
@@ -66,12 +65,8 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
         } else if (command.equals("endGame")) {
             endGame();
         }
-        else if(command.equals("inactivity")){
-            System.out.println("Timeout reached, you are considered inactive, disconnection will soon happen");
-            running.set(false);
-        }
-        else if(command.equals("unblock")){
-            ClientInputManager.unblockInput();
+        else if(command.equals("joined")){
+            ClientInputManager.setTimeOut(300000);
         }
         else {
             callView(dataContainer);
@@ -79,13 +74,6 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
     }
 
     public void setGamePhase(GamePhase gamePhase) {
-
-        switch (gamePhase) {
-            case Assembly -> viewIndex = 0;
-            case Correction -> viewIndex = 1;
-            case Flight -> viewIndex = 2;
-            case Evaluation -> viewIndex = 3;
-        }
 
         viewCommunicator.setGamePhase(gamePhase);
 
@@ -98,7 +86,7 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
 
     private void callView(DataContainer container) {
 
-        GeneralView currentView = viewCommunicator.getView(viewIndex);
+        GeneralView currentView = viewCommunicator.getView();
         String methodName = container.getCommand();
 
         if (currentView == null) {

@@ -46,15 +46,15 @@ public class Client {
 
 
         ClientInputManager.setTimeOut(60000);
-        SocketGameHandler socketHandler = new SocketGameHandler(clientInfo);
-        RMIGameHandler rmiHandler = new RMIGameHandler(clientInfo);
 
         if(clientInfo.getConnectionType() == ConnectionType.SOCKET){
+            SocketGameHandler socketHandler = new SocketGameHandler(clientInfo);
 
             socketHandler.start();
 
         }
         else{
+            RMIGameHandler rmiHandler = new RMIGameHandler(clientInfo);
 
             rmiHandler.start();
 
