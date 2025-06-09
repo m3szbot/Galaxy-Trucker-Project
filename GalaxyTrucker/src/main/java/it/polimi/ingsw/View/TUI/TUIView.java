@@ -146,7 +146,7 @@ public class TUIView extends GeneralView {
         String nickname;
         int diff, temp1, temp2;
 
-        System.out.println("FlightBoard:\n");
+        System.out.println("FlightBoard:");
 
         // flightboard empty
         if (flightBoard.getPlayerOrderList().isEmpty()) {
