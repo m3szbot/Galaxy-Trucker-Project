@@ -995,12 +995,20 @@ public class ShipBoard implements Serializable {
         if (!(component instanceof Cabin))
             throw new IllegalArgumentException("The selected component is not a cabin");
 
-        // save original data
-        int originalCrewCount = component.getCrewMembers();
-        CrewType originalCrewType = ((Cabin) component).getCrewType();
+        // save original data if component is a cabin
+        Cabin cabin = (Cabin) component;
+        int originalCrewCount = cabin.getCrewMembers();
+        CrewType originalCrewType = cabin.getCrewType();
 
+        // no crew in cabin
         if (originalCrewCount <= 0)
             throw new IllegalArgumentException("The selected cabin has no crew members.");
+
+        // no crew would be left after changing crewType from Human
+        if (cabin.getCrewType().equals(CrewType.Human) && !crewType.equals(CrewType.Human) &&
+                (shipBoardAttributes.getHumanCrewMembers() - cabin.getCrewMembers() <= 0)) {
+            throw new IllegalArgumentException("Cannot change crew type from human: no humans would be left.");
+        }
 
         // change only if needed
         if (!originalCrewType.equals(crewType)) {
