@@ -157,7 +157,60 @@ public class ShipBoardTest {
     }
 
     @Test
-    void testCenterRemovedThenNewCenterRemoved() {
+    void testCenterCabinRepeatedlyRemoved() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
+        /*
+        set up shipboard and always remove center cabin to see if it gets relocated automatically
+        1: add new connector and cabin
+        2: remove connector and catch FracturedException
+        3: remove old center cabin
+        4: repeat
+         */
+        // block to repeat:
+        shipBoard.addComponent(8, 7, new Component(universalSides));
+        shipBoard.addComponent(8, 6, new Cabin(universalSides, CrewType.Human, 2));
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.removeComponent(8, 7, true);
+        });
+        shipBoard.removeComponent(7, 7, true);
+        assertEquals(2, shipBoard.getShipBoardAttributes().getCrewMembers());
+        // cabin: 8 6
+        generalViewTUI.printShipboard(shipBoard);
+
+        // block to repeat:
+        shipBoard.addComponent(7, 6, new Component(universalSides));
+        shipBoard.addComponent(7, 7, new Cabin(universalSides, CrewType.Human, 2));
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.removeComponent(7, 6, true);
+        });
+        shipBoard.removeComponent(8, 6, true);
+        assertEquals(2, shipBoard.getShipBoardAttributes().getCrewMembers());
+        // cabin: 7 7
+
+        // block to repeat:
+        shipBoard.addComponent(6, 7, new Component(universalSides));
+        shipBoard.addComponent(6, 8, new Cabin(universalSides, CrewType.Human, 2));
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.removeComponent(6, 7, true);
+        });
+        shipBoard.removeComponent(7, 7, true);
+        assertEquals(2, shipBoard.getShipBoardAttributes().getCrewMembers());
+        // cabin: 6 8
+    }
+
+    @Test
+    void testCenterCabinRemovedBeforeFracture() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
+        // remove center cabin, and then fracture - check if new center cabin is elected before fracture checking (mapping)
+        shipBoard.addComponent(6, 7, new Cabin(universalSides, CrewType.Human, 2));
+        shipBoard.removeComponent(7, 7, true);
+        shipBoard.addComponent(5, 7, new Component(universalSides));
+        shipBoard.addComponent(5, 8, new Cabin(universalSides, CrewType.Human, 2));
+        // setup finished
+
+        // fracture
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.removeComponent(5, 7, true);
+        });
+        generalViewTUI.printShipboard(shipBoard);
 
     }
 
