@@ -575,6 +575,7 @@ public class ShipBoard implements Serializable {
     /**
      * Removes a component from the specified position.
      * Updates shipBoard, shipBoardAttributes, destroyedComponents, centerCabinCoordinates (if center cabin is removed).
+     * Calls check for fracture if flag is set.
      *
      * @throws IllegalArgumentException    if operation not possible.
      * @throws NoHumanCrewLeftException    if no human crew left and player forced to give up.
@@ -618,12 +619,13 @@ public class ShipBoard implements Serializable {
 
     /**
      * Check if the shipboard is fractured after removing components.
+     * The shipboard is fractured if there are >1 disconnected parts with human crew >0, so the part to keep must be chosen
+     * using the FracturedShipBoardHandler utility class.
      *
-     * @throws FracturedShipBoardException
-     * @throws NoHumanCrewLeftException
+     * @throws FracturedShipBoardException if the shipboard is fractured.
      * @author Boti
      */
-    private void checkFracturedShipBoard() throws FracturedShipBoardException, NoHumanCrewLeftException {
+    private void checkFracturedShipBoard() throws FracturedShipBoardException {
         // map possible valid shipboards
         List<ShipBoard> validShipBoardsList = possibleShipBoardsMapper();
 
@@ -631,9 +633,9 @@ public class ShipBoard implements Serializable {
         if (validShipBoardsList.size() > 1)
             throw new FracturedShipBoardException(validShipBoardsList);
 
-        // if 0 possible shipboards: no human crew left
+        // signal error in fracture logic
         if (validShipBoardsList.isEmpty())
-            throw new NoHumanCrewLeftException();
+            throw new IllegalStateException("Error: last part with human crew has been removed during fracture.");
 
         // if 1 possible shipboard, ok
     }
@@ -676,16 +678,15 @@ public class ShipBoard implements Serializable {
 
         // add shipboard reachable from current center cabin
         tmp = bfsShipBoardMapper(centerCabinCol, centerCabinRow);
-        if (tmp != null) {
-            validShipboardsList.add(tmp);
-        } else {
-            // TODO new center should be chosen
-        }
+        // current center cannot be null (always updated by remove before calling checkFracture)
+        if (tmp == null)
+            throw new IllegalStateException("Error: center cabin is null while calling checkFracture.");
+        validShipboardsList.add(tmp);
 
         // indicates if the component has already been mapped
         boolean mapped;
 
-        // check remaining components
+        // check if remaining components have all been mapped
         for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
             for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
                 // if component of real shipboard not null
@@ -729,7 +730,6 @@ public class ShipBoard implements Serializable {
             throw new IllegalArgumentException("bfsShipBoardMapper cannot start from empty cell.");
 
         // create new shipboard
-        // center cabin is automatically added - to remove!
         ShipBoard tmpShipboard = new ShipBoard(gameType);
 
         // remove center cabin added by shipboard constructor, if current mapping is not starting from center cabin
@@ -812,16 +812,17 @@ public class ShipBoard implements Serializable {
         }
         // all reachable components visited
 
-        // update mapped shipboard attributes (for human crew and others)
+        // update mapped shipboard cabins attributes (for human crew)
         // (not using addComponent to avoid placement conflicts, attributes must be updated manually)
         try {
-            tmpShipboard.getShipBoardAttributes().updateShipBoardAttributes(tmpShipboard);
+            tmpShipboard.getShipBoardAttributes().updateCabinsAlienSupports(tmpShipboard);
 
         } catch (NoHumanCrewLeftException e) {
             // tmp shipboard has no crew left:
-            // fall off: erase from real shipboard and return null
+            // tmp falls off: erase from real shipboard and return null
             try {
                 eraseShipboardFromRealShipboard(tmpShipboard);
+
             } catch (NoHumanCrewLeftException ex) {
                 // real shipboard has no crew left
                 // shouldn't be thrown: only parts without crew are automatically erased from the real shipboard
@@ -848,8 +849,9 @@ public class ShipBoard implements Serializable {
 
     /**
      * Remove the passed shipboard's components from the real shipboard.
-     * Updates the real shipBoard, shipBoardAttributes and destroyComponent counter.
-     * Used to remove parts fallen off from the real shipboard.
+     * Uses removeComponent, which updates the real shipBoard, shipBoardAttributes, destroyComponent,
+     * centerCabin coordinates automatically.
+     * Used to remove parts that fell off from the real shipboard.
      *
      * @author Boti
      */
