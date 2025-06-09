@@ -74,6 +74,13 @@ public final class FracturedShipBoardHandler {
         playerMessenger.printMessage("You have successfully selected your new shipboard:");
         playerMessenger.printShipboard(player.getShipBoard());
 
+        // sleep for 5 seconds
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            System.out.println("Thread was interrupted.");
+        }
+
         // end of fracture handling
     }
 }

@@ -58,6 +58,13 @@ public class CorrectionThread implements Runnable {
         // crew selection finished
         playerMessenger.printShipboard(player.getShipBoard());
         playerMessenger.printMessage("Your ship is all set, please wait for other players.");
+
+        // sleep for 5 seconds
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            System.out.println("Thread was interrupted.");
+        }
         // end of thread
     }
 
@@ -139,34 +146,36 @@ public class CorrectionThread implements Runnable {
     }
 
     /**
-     * Handle the crew selection of the player's shipboard. Returns true if the player's thread should be ended.
+     * Handle the crew selection of the player's shipboard.
      *
-     * @return true if the player's thread should be ended, false if not.
      * @author Boti
      */
-    private boolean selectCrewTypes() throws PlayerDisconnectedException {
+    private void selectCrewTypes() throws PlayerDisconnectedException {
         ShipBoard shipBoard = player.getShipBoard();
         ShipBoardAttributes shipBoardAttributes = shipBoard.getShipBoardAttributes();
         String message;
         String inputString;
         CrewType crewType = CrewType.Human;
-        boolean selectCrewSuccess = false;
 
         // scan shipboard (only valid cells)
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
             for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
 
+                // select crew type for current component:
                 // only ask player if alien could be set on the given component
                 if ((shipBoardAttributes.getHumanCrewMembers() > 2) && (shipBoard.getComponentMatrix()[i][j] instanceof Cabin) &&
                         (// check for purple or brown alien conditions (alien not present + support nearby)
                                 (!shipBoardAttributes.getAlien(CrewType.Purple) && shipBoard.checkForAlienSupport(i, j, CrewType.Purple)) ||
                                         (!shipBoardAttributes.getAlien(CrewType.Brown) && shipBoard.checkForAlienSupport(i, j, CrewType.Brown))
                         )) {
-                    // alien could be selected
+                    // alien can be selected
                     playerMessenger.printShipboard(shipBoard);
 
-                    // elaborate player input
+                    // selection flags
+                    boolean selectCrewSuccess = false;
                     int selectTrials = 5;
+
+                    // selection loop for current component
                     while (!selectCrewSuccess && selectTrials > 0) {
                         // get player input string
                         message = String.format("Select the crew type for the cabin at %d %d (Human/Purple/Brown): ", i + 1, j + 1);
@@ -194,26 +203,31 @@ public class CorrectionThread implements Runnable {
                             }
                         }
 
-                        // set crew type if successfully cast
+                        // try to set crew type if successful selection
                         if (selectCrewSuccess) {
                             try {
                                 shipBoard.setCrewType(i + 1, j + 1, crewType);
                             } catch (IllegalArgumentException e) {
-                                // failed to set crew
+                                // failed to set crew (alien not supported etc.)
                                 playerMessenger.printMessage(e.getMessage());
                                 selectCrewSuccess = false;
                             }
                         }
-                        // loop until crew is correctly set for the current cabin
+
+                        // loop until crew is correctly set for the current cabin or trials exhausted
                         selectTrials--;
                     }
+
+                    // selection loop ended for current component
+                    if (!selectCrewSuccess) {
+                        playerMessenger.printMessage("Crew couldn't be changed for current component.");
+                    }
+
                 }
                 // iterate to next component
             }
         }
         // crew selection finished
-        // do not end player thread
-        return false;
     }
 
 

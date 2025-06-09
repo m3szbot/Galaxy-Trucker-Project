@@ -630,8 +630,14 @@ public class ShipBoard implements Serializable {
         List<ShipBoard> validShipBoardsList = possibleShipBoardsMapper();
 
         // if >1 possible shipboards: fracture
-        if (validShipBoardsList.size() > 1)
+        if (validShipBoardsList.size() > 1) {
+            // update destroyedComponents for possible shipboards
+            for (ShipBoard tmp : validShipBoardsList) {
+                tmp.getShipBoardAttributes().setDestroyedComponents(this.getShipBoardAttributes().getDestroyedComponents());
+            }
+
             throw new FracturedShipBoardException(validShipBoardsList);
+        }
 
         // signal error in fracture logic
         if (validShipBoardsList.isEmpty())
@@ -736,7 +742,7 @@ public class ShipBoard implements Serializable {
         if (realCol != getRealIndex(SB_CENTER_COL) || realRow != getRealIndex(SB_CENTER_ROW)) {
             tmpShipboard.componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = null;
         }
-        
+
 
         // store coordinates, not components - search based on coordinates
         Set<Coordinate> visited = new HashSet<>();

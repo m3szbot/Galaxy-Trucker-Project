@@ -146,6 +146,12 @@ public class ShipBoardAttributes implements Serializable {
         return destroyedComponents;
     }
 
+    void setDestroyedComponents(int count) {
+        if (count < 0)
+            throw new IllegalArgumentException("Cannot destroy negative number of components");
+        destroyedComponents = count;
+    }
+
     public int getCredits() {
         return credits;
     }
