@@ -11,8 +11,8 @@
    <children>
       <Button fx:id="button" layoutX="270.0" layoutY="152.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text" />
       <Label layoutX="147.0" layoutY="125.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text" />
-      <TextField fx:id="playerInputField" layoutX="270.0" layoutY="120.0" style="-fx-background-color: #4b0082;" />
+      <TextField fx:id="playerInputField" layoutX="270.0" layoutY="120.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d" />
       <Text layoutX="165.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #ffd93d; -fx-font-weight: bold; -fx-font-size: 36px;" text="Galaxy Trucker" />
-      <TextArea fx:id="logTextArea" editable="false" layoutX="223.0" layoutY="186.0" prefHeight="200.0" prefWidth="200.0"  style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;" />
+      <TextArea fx:id="logTextArea" editable="false" layoutX="223.0" layoutY="186.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;"/>
    </children>
 </AnchorPane>

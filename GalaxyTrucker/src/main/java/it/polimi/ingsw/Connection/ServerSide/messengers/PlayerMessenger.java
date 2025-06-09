@@ -6,6 +6,7 @@ import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ServerSide.utils.FoeShipBoardPrinter;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -36,6 +37,8 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     private DataContainer dataContainer;
     private SocketDataExchanger socketDataExchanger;
     private ClientRemoteInterface virtualClient;
+    private String lastMessage;
+    private int gameCode;
 
     // RMI
     // TODO
@@ -43,20 +46,26 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     /**
      * Add socket player.
      */
-    public PlayerMessenger(Player player, SocketDataExchanger socketDataExchanger) {
+    public PlayerMessenger(Player player, SocketDataExchanger socketDataExchanger, int gameCode) {
         this.player = player;
         this.connectionType = ConnectionType.SOCKET;
         this.dataContainer = new DataContainer();
         this.socketDataExchanger = socketDataExchanger;
+        this.gameCode = gameCode;
     }
 
     /**
      * Add RMI player.
      */
-    public PlayerMessenger(Player player, ClientRemoteInterface virtualClient) {
+    public PlayerMessenger(Player player, ClientRemoteInterface virtualClient, int gameCode) {
         this.player = player;
         this.connectionType = ConnectionType.RMI;
         this.virtualClient = virtualClient;
+        this.gameCode = gameCode;
+    }
+
+    public int getGameCode(){
+        return gameCode;
     }
 
     public Player getPlayer() {
@@ -216,10 +225,21 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     private synchronized String getPlayerInput() throws PlayerDisconnectedException {
 
+        String messageBeforeShipPrint = lastMessage;
+
         if (connectionType == ConnectionType.SOCKET) {
 
             try {
                 String input = socketDataExchanger.getString();
+
+                while(input.equals("show-shipboard")){
+                    FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
+                    foeShipBoardPrinter.start();
+
+                    printMessage(messageBeforeShipPrint);
+                    input = socketDataExchanger.getString();
+
+                }
 
                 if(input.equals("inactivity")){
 
@@ -241,7 +261,19 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         } else {
 
             try {
-                return virtualClient.getString();
+                String input = virtualClient.getString();
+
+                while(input.equals("show-shipboard")){
+
+                    FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
+                    foeShipBoardPrinter.start();
+
+                    printMessage(messageBeforeShipPrint);
+                    input = virtualClient.getString();
+
+                }
+
+                return input;
 
             } catch (RemoteException e) {
 
@@ -283,6 +315,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printMessage(String message) {
+        lastMessage = message;
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();

@@ -9,6 +9,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class used to communicate with players during the game.
@@ -20,20 +21,35 @@ import java.util.Map;
 
 public class GameMessenger {
     private Map<Player, PlayerMessenger> playerMessengerMap = new HashMap<>();
+    private int gameCode;
+
+    public GameMessenger(int gameCode){
+        this.gameCode = gameCode;
+    }
 
     /**
      * Add socket player to GameMessenger and create its associated PlayerMessenger.
      */
     public void addPlayer(Player player, SocketDataExchanger dataExchanger) {
-        PlayerMessenger playerMessenger = new PlayerMessenger(player, dataExchanger);
+        PlayerMessenger playerMessenger = new PlayerMessenger(player, dataExchanger, gameCode);
         playerMessengerMap.put(player, playerMessenger);
+    }
+
+    /**
+     * @return the players that are connected to the game
+     */
+
+    public Set<Player> getConnectedPlayers(){
+
+        return playerMessengerMap.keySet();
+
     }
 
     /**
      * Add RMI player to GameMessenger and create its associated PlayerMessenger.
      */
     public void addPlayer(Player player, ClientRemoteInterface virtualClient) {
-        PlayerMessenger playerMessenger = new PlayerMessenger(player, virtualClient);
+        PlayerMessenger playerMessenger = new PlayerMessenger(player, virtualClient, gameCode);
         playerMessengerMap.put(player, playerMessenger);
     }
 

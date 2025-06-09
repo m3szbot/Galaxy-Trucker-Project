@@ -26,7 +26,7 @@ public class ClientMessenger {
 
     public static void addGame(int gameCode){
 
-        gameMessengerMap.put(gameCode, new GameMessenger());
+        gameMessengerMap.put(gameCode, new GameMessenger(gameCode));
 
     }
 
