@@ -55,68 +55,73 @@ public class ComponentPlacingState extends GameState {
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {
-        if(booked){
-            if(input.trim().toLowerCase().equals("rotate")){
+        if(input.trim().toLowerCase().equals("rotate")){
+            if(booked){
                 assemblyProtocol.getInHandMap().get(player).accept(new ComponentRotatorVisitor());
                 playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
                 assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, booked));
-            }
-        }
-        input.replaceAll("[^\\d]", " ");
-        String[] parts = input.trim().split("[ ,]+"); //trim eliminates white spaces at the beginning and at the end
-
-        if (parts.length != 2) {
-            String message = "Not valid format!";
-            playerMessenger.printMessage(message);
-            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-        }
-        try {
-            int num1 = Integer.parseInt(parts[0]);
-            int num2 = Integer.parseInt(parts[1]);
-            if (num1 < 4 || num2 < 4 || num1 > 10 || num2 > 10) {
-                String message = "Placing position out of bounds!";
+            }else{
+                String message = "Not valid format!";
                 playerMessenger.printMessage(message);
-                if (booked) {
-                    assemblyProtocol.bookComponent(player);
-                }
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-            } else {
-                if (assemblyProtocol.getInHandMap().get(player) != null) {
-                    // TODO delete checks, NotPermittedPlacement checked by shipboard
-                    if (assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 2, num2 - 1) != null ||
-                            assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1, num2 - 1) != null ||
-                            assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2 - 2) != null ||
-                            assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2) != null) {
-                        try {
-                            assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getInHandMap().get(player), num1, num2);
-                            synchronized (assemblyProtocol.lockCoveredList) {
-                                assemblyProtocol.newComponent(player);
+            }
+        }else{
+            input.replaceAll("[^\\d]", " ");
+            String[] parts = input.trim().split("[ ,]+"); //trim eliminates white spaces at the beginning and at the end
+
+            if (parts.length != 2) {
+                String message = "Not valid format!";
+                playerMessenger.printMessage(message);
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+            }
+            try {
+                int num1 = Integer.parseInt(parts[0]);
+                int num2 = Integer.parseInt(parts[1]);
+                if (num1 < 4 || num2 < 4 || num1 > 10 || num2 > 10) {
+                    String message = "Placing position out of bounds!";
+                    playerMessenger.printMessage(message);
+                    if (booked) {
+                        assemblyProtocol.bookComponent(player);
+                    }
+                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                } else {
+                    if (assemblyProtocol.getInHandMap().get(player) != null) {
+                        // TODO delete checks, NotPermittedPlacement checked by shipboard
+                        if (assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 2, num2 - 1) != null ||
+                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1, num2 - 1) != null ||
+                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2 - 2) != null ||
+                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2) != null) {
+                            try {
+                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getInHandMap().get(player), num1, num2);
+                                synchronized (assemblyProtocol.lockCoveredList) {
+                                    assemblyProtocol.newComponent(player);
+                                }
+                            } catch (NotPermittedPlacementException e) {
+                                String message = "Your are not allowed to place your component here";
+                                playerMessenger.printMessage(message);
+                                if (booked) {
+                                    assemblyProtocol.bookComponent(player);
+                                }
                             }
-                        } catch (NotPermittedPlacementException e) {
-                            String message = "Your are not allowed to place your component here";
+                        } else {
+                            String message = "You can't place your component here, it would float in the air";
                             playerMessenger.printMessage(message);
                             if (booked) {
                                 assemblyProtocol.bookComponent(player);
                             }
                         }
+                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     } else {
-                        String message = "You can't place your component here, it would float in the air";
+                        String message = "Your hand is empty";
                         playerMessenger.printMessage(message);
-                        if (booked) {
-                            assemblyProtocol.bookComponent(player);
-                        }
+                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     }
-                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-                } else {
-                    String message = "Your hand is empty";
-                    playerMessenger.printMessage(message);
-                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 }
+            } catch (NumberFormatException e) {
+                String message = "Not valid format!";
+                playerMessenger.printMessage(message);
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
-        } catch (NumberFormatException e) {
-            String message = "Not valid format!";
-            playerMessenger.printMessage(message);
-            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }
 }
