@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -26,17 +26,6 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         this.daysLost = cardBuilder.getDaysLost();
         this.goods = cardBuilder.getGoods();
         this.requirementNumber = cardBuilder.getRequirementNumber();
-
-    }
-
-    public void showCard() {
-
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Days lost: " + daysLost);
-        System.out.println("Crew members required:" + requirementNumber);
-
-        printGoods(goods);
 
     }
 
@@ -107,6 +96,17 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+
+    }
+
+    public void showCard() {
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Crew members required:" + requirementNumber);
+        printGoods(goods);
+        System.out.println();
 
     }
 

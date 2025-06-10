@@ -6,8 +6,6 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.List;
-
 /**
  * class that represent the card openspace
  *
@@ -20,13 +18,6 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
-
-    }
-
-    public void showCard() {
-
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
 
     }
 
@@ -90,5 +81,13 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+    }
+
+    public void showCard() {
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println();
+
     }
 }

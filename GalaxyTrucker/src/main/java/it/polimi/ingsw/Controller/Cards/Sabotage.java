@@ -4,8 +4,6 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
-import it.polimi.ingsw.Model.Components.Storage;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
@@ -80,6 +78,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
+        System.out.println();
 
     }
 

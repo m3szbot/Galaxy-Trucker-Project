@@ -34,18 +34,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
     }
 
-    public void showCard() {
-
-        System.out.println("Card name: " + getCardName());
-        System.out.println("Card level: " + getCardLevel());
-        System.out.println("Days lost: " + daysLost);
-        System.out.println("Loss type: " + lossType.toString());
-        System.out.println("Blow type: " + blowType.toString());
-
-        printBlows(blows);
-
-    }
-
     @Override
 
     public void resolve(GameInformation gameInformation) {
@@ -172,6 +160,18 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
+
+    }
+
+    public void showCard() {
+
+        System.out.println("Card name: " + getCardName());
+        System.out.println("Card level: " + getCardLevel());
+        System.out.println("Days lost: " + daysLost);
+        System.out.println("Loss type: " + lossType.toString());
+        System.out.println("Blow type: " + blowType.toString());
+        printBlows(blows);
+        System.out.println();
 
     }
 
