@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -14,55 +14,45 @@ import java.util.List;
  *
  * @author Giacomo
  */
-public class ComponentChoiceState implements GameState {
-    private AssemblyProtocol assemblyProtocol;
-    private Player player;
+public class ComponentChoiceState extends GameState {
+    // inherited attributes: assemblyProtocol, playerMessenger, player
     private String message;
     private List<Component> components;
 
     /**
-     * Constructs a ComponentChoice state.
-     *
-     * @param protocol the game logic handler
-     * @param player   the current player
+     * Constructor inherited from GameState.
      */
-    public ComponentChoiceState( AssemblyProtocol protocol, Player player) {
-        this.assemblyProtocol = protocol;
-        this.player = player;
-    }
-
-    @Override
-    public void update(AssemblyThread assemblyPhase) {
-        GameState.super.update(assemblyPhase);
+    public ComponentChoiceState(AssemblyProtocol assemblyProtocol, PlayerMessenger playerMessenger, Player player) {
+        super(assemblyProtocol, playerMessenger, player);
     }
 
     /**
      * Displays the message prompting the player to choose a component.
      *
-     * @param assemblyPhase the current game instance
+     * @param assemblyThread the current game instance
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase) {
-        components = new ArrayList<>(assemblyPhase.getAssemblyProtocol().getUncoveredList());
+    public void enter(AssemblyThread assemblyThread) {
+        components = new ArrayList<>(assemblyProtocol.getUncoveredList());
         int i = 0;
-        for(Component component : components) {
-            message = i + ": " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack()  + " Left: " + component.getLeft();
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+        for (Component component : components) {
+            message = i + ": " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
+            playerMessenger.printMessage(message);
             i++;
         }
         message = "Enter the number of the component you would like:";
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+        playerMessenger.printMessage(message);
     }
 
     /**
      * Handles the input used to choose a component from the uncovered list.
      * If the choice is valid, the component is assigned to the player.
      *
-     * @param input         the index of the component
-     * @param assemblyPhase the current game instance
+     * @param input          the index of the component
+     * @param assemblyThread the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyThread assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyThread) {
         Component component;
         String imput = input.toLowerCase();
         int caseManagement = -1;
@@ -71,7 +61,7 @@ public class ComponentChoiceState implements GameState {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        if (caseManagement >= 0 && caseManagement < assemblyPhase.getAssemblyProtocol().getUncoveredList().size()) {
+        if (caseManagement >= 0 && caseManagement < assemblyProtocol.getUncoveredList().size()) {
             caseManagement = 1;
         } else {
             caseManagement = 0;
@@ -79,25 +69,30 @@ public class ComponentChoiceState implements GameState {
         switch (caseManagement) {
             case 1:
                 synchronized (assemblyProtocol.lockUncoveredList) {
-                    if(components.get(Integer.parseInt(input.toLowerCase())) == assemblyPhase.getAssemblyProtocol().getUncoveredList().get(Integer.parseInt(input.toLowerCase()))) {
-                        assemblyPhase.getAssemblyProtocol().chooseUncoveredComponent(player, Integer.parseInt(imput));
-                        component = assemblyPhase.getAssemblyProtocol().getInHandMap().get(player);
-                        message ="New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack()  + "Left:" + component.getLeft();
-                    }
-                    else {
+                    if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyProtocol.getUncoveredList().get(Integer.parseInt(input.toLowerCase()))) {
+                        assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));
+                        component = assemblyProtocol.getInHandMap().get(player);
+                        message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
+                    } else {
                         message = "Component has been already taken";
                     }
                 }
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                playerMessenger.printMessage(message);
                 break;
+            // TODO case 2 unreachable
             case 2:
                 message = "Error in component choice";
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                playerMessenger.printMessage(message);
                 break;
 
 
         }
-        assemblyPhase.setState(new AssemblyState( assemblyProtocol, player));
+        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+    }
+
+    @Override
+    public void update(AssemblyThread assemblyThread) {
+        super.update(assemblyThread);
     }
 
 }

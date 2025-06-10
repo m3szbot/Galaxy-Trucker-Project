@@ -19,9 +19,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Giacomo
  */
 public class AssemblyPhase extends Phase {
+    private final AssemblyProtocol assemblyProtocol;
     private AtomicBoolean running = new AtomicBoolean(true);
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
-    private AssemblyProtocol assemblyProtocol;
     private String message;
 
 
@@ -37,12 +37,14 @@ public class AssemblyPhase extends Phase {
         return gameMessenger;
     }
 
+
     /**
      * Sets the current state of the game and triggers its enter logic.
      *
      * @param newState the new state to switch to
      */
     public void setState(GameState newState) {
+        // TODO delete / uncomment?
         /*
         this.currentState = newState;
         currentState.enter(this, assemblyView);*/

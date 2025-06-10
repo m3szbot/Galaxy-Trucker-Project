@@ -1,7 +1,9 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -12,9 +14,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AssemblyThread implements Runnable {
-    private GameInformation gameInformation;
-    private Player associatedPlayer;
-    private AssemblyProtocol assemblyProtocol;
+    private final GameInformation gameInformation;
+    private final Player associatedPlayer;
+    private final AssemblyProtocol assemblyProtocol;
+    // messengers
+    private final GameMessenger gameMessenger;
+    private final PlayerMessenger playerMessenger;
+    // non final attributes
     private GameState currentState;
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private AtomicBoolean running;
@@ -32,31 +38,8 @@ public class AssemblyThread implements Runnable {
         this.assemblyProtocol = assemblyProtocol;
         this.running = running;
         this.latch = latch;
-    }
-
-    /**
-     * Sets the current state of the game and triggers its enter logic.
-     *
-     * @param newState the new state to switch to
-     */
-    public void setState(GameState newState) {
-        this.currentState = newState;
-        currentState.enter(this);
-    }
-
-    /**
-     * Updates the running flag that controls the game loop.
-     */
-    public void setRunning(boolean value) {
-        running.set(value);
-    }
-
-    public void setEnd(){
-        end.set(true);
-    }
-
-    public AssemblyProtocol getAssemblyProtocol() {
-        return assemblyProtocol;
+        this.gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
+        this.playerMessenger = gameMessenger.getPlayerMessenger(player);
     }
 
     public GameInformation getGameInformation() {
@@ -79,6 +62,13 @@ public class AssemblyThread implements Runnable {
         return running;
     }
 
+    /**
+     * Updates the running flag that controls the game loop.
+     */
+    public void setRunning(boolean value) {
+        running.set(value);
+    }
+
     public CountDownLatch getLatch() {
         return latch;
     }
@@ -98,7 +88,7 @@ public class AssemblyThread implements Runnable {
     @Override
     public void run() {
         try {
-            setState(new AssemblyState(assemblyProtocol, associatedPlayer));
+            setState(new AssemblyState(assemblyProtocol, playerMessenger, associatedPlayer));
             assemblyProtocol.getHourGlass().twist(assemblyProtocol, gameInformation.getPlayerList());
 
             // Separate thread for reading user input from the console
@@ -109,19 +99,19 @@ public class AssemblyThread implements Runnable {
                         try {
 
                             blocked.set(true);
-                            String input = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).getPlayerString();
+                            String input = playerMessenger.getPlayerString();
                             blocked.set(false);
 
                             inputQueue.offer(input);
 
-                            try{
+                            try {
                                 Thread.sleep(100);
-                            }catch (InterruptedException e){
+                            } catch (InterruptedException e) {
 
                                 break;
                             }
                         } catch (PlayerDisconnectedException e) {
-                            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, associatedPlayer);
+                            gameMessenger.disconnectPlayer(gameInformation, associatedPlayer);
                             disconnected.set(true);
                         }
                     } else {
@@ -132,10 +122,10 @@ public class AssemblyThread implements Runnable {
                             break;
                         }
 
-                        if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).isPlayerConnected(associatedPlayer, gameInformation)) {
+                        if (gameMessenger.isPlayerConnected(associatedPlayer, gameInformation)) {
                             disconnected.set(false);
                             String message = "Welcome back! You have been reconnected.";
-                            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(associatedPlayer).printMessage(message);
+                            playerMessenger.printMessage(message);
 
                         }
                     }
@@ -170,7 +160,7 @@ public class AssemblyThread implements Runnable {
             }
 
             if (!amIChoosing.get()) {
-                setState(new ChooseStartingPositionState(assemblyProtocol, associatedPlayer));
+                setState(new ChooseStartingPositionState(assemblyProtocol, playerMessenger, associatedPlayer));
                 while (!isfinished.get()) {
                     String input = inputQueue.poll();
                     if (input != null) {
@@ -193,15 +183,33 @@ public class AssemblyThread implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
 
             setEnd();
-            if(blocked.get()) {
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(associatedPlayer).unblockUserInputGetterCall();
+            if (blocked.get()) {
+                playerMessenger.unblockUserInputGetterCall();
             }
             latch.countDown();
 
         }
+    }
+
+    /**
+     * Sets the current state of the game and triggers its enter logic.
+     *
+     * @param newState the new state to switch to
+     */
+    public void setState(GameState newState) {
+        this.currentState = newState;
+        currentState.enter(this);
+    }
+
+    public void setEnd() {
+        end.set(true);
+    }
+
+    public AssemblyProtocol getAssemblyProtocol() {
+        return assemblyProtocol;
     }
 
 }

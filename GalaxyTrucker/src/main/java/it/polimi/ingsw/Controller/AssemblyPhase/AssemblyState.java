@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.ComponentRotatorVisitor;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -12,128 +12,135 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  *
  * @author Giacomo
  */
-public class AssemblyState implements GameState {
+public class AssemblyState extends GameState {
     private long startTime;
     private boolean actionTaken = false;
-    private AssemblyProtocol protocol;
-    private Player player;
 
-    public AssemblyState(AssemblyProtocol protocol, Player player) {
-        this.protocol = protocol;
-        this.player = player;
+    public AssemblyState(AssemblyProtocol assemblyProtocol, PlayerMessenger playerMessenger, Player player) {
+        super(assemblyProtocol, playerMessenger, player);
     }
 
     /**
      * Called when this state becomes active. Initializes the timer and resets the action flag.
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase) {
+    public void enter(AssemblyThread assemblyThread) {
 
         startTime = System.currentTimeMillis();
         actionTaken = false;
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printShipboard(player.getShipBoard());
-        if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printComponent(assemblyPhase.getAssemblyProtocol().getInHandMap().get(player));
+        playerMessenger.printShipboard(player.getShipBoard());
+        if (assemblyProtocol.getInHandMap().get(player) != null) {
+            playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
         }
         String message = "👾AssemblyPhase (Place (current component) / Draw (a new component) / Choose (a component) / Show (a deck) / Rotate (current component) / Turn (the hourglass) / Book (current component and have a new one) / Place booked (component) / End (finish your assembling phase)";
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+        playerMessenger.printMessage(message);
     }
 
     /**
      * Handles user input commands during the assembly phase.
      */
     @Override
-    public void handleInput(String input, AssemblyThread assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyThread) {
         String message;
 
         if (actionTaken) return; // Ignore input after an action is taken
 
         switch (input.toLowerCase()) {
+
             case "place":
                 actionTaken = true;
-                assemblyPhase.setState(new ComponentPlacingState(protocol, player, false));
+                assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, false));
                 break;
+
             case "draw":
                 actionTaken = true;
-                synchronized (assemblyPhase.getAssemblyProtocol().lockCoveredList) {
-                    assemblyPhase.getAssemblyProtocol().newComponent(player);
+                synchronized (assemblyProtocol.lockCoveredList) {
+                    assemblyProtocol.newComponent(player);
                 }
-                assemblyPhase.setState(new AssemblyState(protocol, player));
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 break;
+
             case "choose":
                 actionTaken = true;
-                assemblyPhase.setState(new ComponentChoiceState(protocol, player));
+                assemblyThread.setState(new ComponentChoiceState(assemblyProtocol, playerMessenger, player));
                 break;
+
             case "rotate":
-                if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-                    assemblyPhase.getAssemblyProtocol().getInHandMap().get(player).accept(new ComponentRotatorVisitor());
+                if (assemblyProtocol.getInHandMap().get(player) != null) {
+                    assemblyProtocol.getInHandMap().get(player).accept(new ComponentRotatorVisitor());
                     message = "Component successfully rotated:";
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                    playerMessenger.printMessage(message);
                 } else {
                     message = "Your hand is empty";
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                    playerMessenger.printMessage(message);
                 }
-                assemblyPhase.setState(new AssemblyState(protocol, player));
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 break;
+
             case "turn":
                 actionTaken = true;
-                if (assemblyPhase.getAssemblyProtocol().getHourGlass().isFinished() == true) {
-                    if (assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
-                        if (assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 2) {
+                if (assemblyProtocol.getHourGlass().isFinished() == true) {
+                    if (assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
+                        if (assemblyProtocol.getHourGlass().getState() == 2) {
                             message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
-                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                            playerMessenger.printMessage(message);
                         } else {
                             message = "Turn the hourglass";
-                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.getGameInformation().getPlayerList());
+                            playerMessenger.printMessage(message);
+                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyThread.getGameInformation().getPlayerList());
                         }
                     } else {
-                        if (assemblyPhase.getAssemblyProtocol().getHourGlass().getState() == 1) {
+                        if (assemblyProtocol.getHourGlass().getState() == 1) {
                             message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
-                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                            playerMessenger.printMessage(message);
                         } else {
                             message = "Turn the hourglass";
-                            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                            assemblyPhase.getAssemblyProtocol().getHourGlass().twist(assemblyPhase.getAssemblyProtocol(), assemblyPhase.getGameInformation().getPlayerList());
+                            playerMessenger.printMessage(message);
+                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyThread.getGameInformation().getPlayerList());
                         }
                     }
                 } else {
                     message = "HourGlass is already running";
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                    playerMessenger.printMessage(message);
                 }
-                assemblyPhase.setState(new AssemblyState(protocol, player));
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 break;
+
             case "show":
                 actionTaken = true;
-                assemblyPhase.setState(new ShowDeckState(protocol, player));
+                assemblyThread.setState(new ShowDeckState(assemblyProtocol, playerMessenger, player));
                 break;
+
             case "book":
                 actionTaken = true;
-                if (assemblyPhase.getAssemblyProtocol().getBookedMap().get(player).size() < 2) {
-                    if (assemblyPhase.getAssemblyProtocol().getInHandMap().get(player) != null) {
-                        assemblyPhase.getAssemblyProtocol().bookComponent(player);
+                if (assemblyProtocol.getBookedMap().get(player).size() < 2) {
+                    if (assemblyProtocol.getInHandMap().get(player) != null) {
+                        assemblyProtocol.bookComponent(player);
                     } else {
                         message = "Your hand is empty";
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                        playerMessenger.printMessage(message);
                     }
                 } else {
                     message = "You don't have any remaining space for booking components, place them in order to gain new space";
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                    playerMessenger.printMessage(message);
                 }
-                assemblyPhase.setState(new AssemblyState(protocol, player));
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 break;
+
             case "place booked":
                 actionTaken = true;
-                assemblyPhase.setState(new PlaceBookedComponentState(protocol, player));
+                assemblyThread.setState(new PlaceBookedComponentState(assemblyProtocol, playerMessenger, player));
                 break;
+
             case "end":
                 actionTaken = true;
-                assemblyPhase.setState(new ChooseStartingPositionState(protocol, player));
+                assemblyThread.setState(new ChooseStartingPositionState(assemblyProtocol, playerMessenger, player));
                 break;
+
             default:
                 message = "Invalid command";
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                assemblyPhase.setState(new AssemblyState(protocol, player));
+                playerMessenger.printMessage(message);
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
 
 
@@ -142,15 +149,16 @@ public class AssemblyState implements GameState {
     /**
      * Periodically called to check if the player has timed out.
      */
+    // TODO method never used
     public void update(AssemblyPhase assemblyPhase) {
         if (!actionTaken) {
             long now = System.currentTimeMillis();
             if (now - startTime >= 50000) {
                 String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)"; // 50 seconds timeout
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                playerMessenger.printMessage(message);
 
                 actionTaken = true;
-                assemblyPhase.setState(new AssemblyState(protocol, player));
+                assemblyPhase.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
         }
     }

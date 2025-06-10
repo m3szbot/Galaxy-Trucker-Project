@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.AssemblyModel.Deck;
@@ -12,61 +12,57 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  *
  * @author Giacomo
  */
-public class ShowDeckState implements GameState {
-    private AssemblyProtocol assemblyProtocol;
-    private Player player;
+public class ShowDeckState extends GameState {
+    // inherited attributes: assemblyProtocol, playerMessenger, player
 
     /**
-     * Constructs a ShowDeckState with the necessary protocol, view, and player.
-     *
-     * @param protocol the game logic handler
-     * @param player   the current player
+     * Constructor inherited from GameState.
      */
-    public ShowDeckState(AssemblyProtocol protocol, Player player) {
-        this.assemblyProtocol = protocol;
-        this.player = player;
+    public ShowDeckState(AssemblyProtocol assemblyProtocol, PlayerMessenger playerMessenger, Player player) {
+        super(assemblyProtocol, playerMessenger, player);
     }
+
 
     /**
      * Displays the message asking the player to choose a deck.
      *
-     * @param assemblyPhase the current game instance
+     * @param assemblyThread the current game instance
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase) {
+    public void enter(AssemblyThread assemblyThread) {
         String message = "Choose a deck from 1 to 3 writing the number:";
-        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);}
+        playerMessenger.printMessage(message);
+    }
 
     /**
      * Handles the user's input to select a deck, validates the index,
      * and triggers the protocol logic to show the deck.
      *
-     * @param input         the user's typed input
-     * @param assemblyPhase the current game instance
+     * @param input          the user's typed input
+     * @param assemblyThread the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyThread assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyThread) {
         int index = Integer.parseInt(input);
 
         if (index > 0 && index <= 3) {
-            if(assemblyProtocol.getDeck(index-1).getInUse() == false) {
+            if (assemblyProtocol.getDeck(index - 1).getInUse() == false) {
                 synchronized (assemblyProtocol.lockDecksList) {
-                    Deck deck = assemblyPhase.getAssemblyProtocol().showDeck(index);
+                    Deck deck = assemblyProtocol.showDeck(index);
                     for (Card card : deck.getCards()) {
-                        ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printCard(card);
+                        playerMessenger.printCard(card);
                     }
                 }
-                assemblyPhase.setState(new DeckInUseState(assemblyProtocol, player, index));
-            }
-            else{
+                assemblyThread.setState(new DeckInUseState(assemblyProtocol, playerMessenger, player, index));
+            } else {
                 String message = "Deck already in use!";
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+                playerMessenger.printMessage(message);
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
         } else {
             String message = "Invalid deck number";
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-            assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+            playerMessenger.printMessage(message);
+            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }
 }

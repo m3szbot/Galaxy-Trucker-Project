@@ -1,69 +1,75 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.AssemblyModel.HourGlass;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-public class AssemblingEndState implements GameState {
-    private AssemblyProtocol assemblyProtocol;
-    private Player player;
+import java.util.List;
 
-    public AssemblingEndState(AssemblyProtocol protocol, Player player) {
-        this.assemblyProtocol = protocol;
-        this.player = player;
+public class AssemblingEndState extends GameState {
+    // inherited attributes: assemblyProtocol, playerMessenger, player
+
+    /**
+     * Constructor inherited from GameState.
+     */
+    public AssemblingEndState(AssemblyProtocol assemblyProtocol, PlayerMessenger playerMessenger, Player player) {
+        super(assemblyProtocol, playerMessenger, player);
     }
 
     @Override
-    public void enter(AssemblyThread assemblyPhase) {
-        assemblyPhase.getIsfinished().set(true);
-        if(assemblyProtocol.getFlightBoard().getPlayerOrderList().size() == assemblyPhase.getGameInformation().getPlayerList().size()){
-            assemblyPhase.setRunning(false);
+    public void enter(AssemblyThread assemblyThread) {
+        assemblyThread.getIsfinished().set(true);
+        if (assemblyProtocol.getFlightBoard().getPlayerOrderList().size() == assemblyThread.getGameInformation().getPlayerList().size()) {
+            assemblyThread.setRunning(false);
             return;
         }
-        if(!assemblyPhase.getRunning().get()){
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
+        if (!assemblyThread.getRunning().get()) {
+            playerMessenger.printMessage("Waiting for other players position choice");
+            // TODO delete commented code?
             //assemblyPhase.end.set(true);
             //return;
-        }else{
+        } else {
             String message = "Do you want to turn the hourglass? (write ---> yes <---, or wait for other players to complete their shipboard)";
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+            playerMessenger.printMessage(message);
         }
     }
 
     @Override
-    public void handleInput(String input, AssemblyThread assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyThread) {
+        HourGlass hourGlass = assemblyProtocol.getHourGlass();
+        List<Player> playerList = assemblyThread.getGameInformation().getPlayerList();
 
-       switch (input.toLowerCase()) {
-           case "yes":
-               if(assemblyProtocol.getHourGlass().isFinished() == true) {
-                   if (assemblyPhase.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
-                       if (assemblyProtocol.getHourGlass().getState() == 2) {
-                           ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
-                       } else {
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
-                       }
-                   }else{
-                       if (assemblyProtocol.getHourGlass().getState() == 1){
-                           ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("Waiting for other players position choice");
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
-                       }else{
-                           assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyPhase.getGameInformation().getPlayerList());
-                       }
-                   }
-               }
-               else{
-                   String message = "HourGlass is already running";
-                   ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-               }
-               assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
-               break;
-           default:
-               String message = "Invalid input";
-               ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-               assemblyPhase.setState(new AssemblingEndState(assemblyProtocol, player));
-               break;
-       }
+        if (input.equalsIgnoreCase("yes")) {
+            // "yes" input
+            if (hourGlass.isFinished() == true) {
+                if (assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
+                    if (hourGlass.getState() == 2) {
+                        playerMessenger.printMessage("Waiting for other players position choice");
+                        hourGlass.twist(assemblyProtocol, playerList);
+                    } else {
+                        hourGlass.twist(assemblyProtocol, playerList);
+                    }
+                } else {
+                    if (hourGlass.getState() == 1) {
+                        playerMessenger.printMessage("Waiting for other players position choice");
+                        hourGlass.twist(assemblyProtocol, playerList);
+                    } else {
+                        hourGlass.twist(assemblyProtocol, playerList);
+                    }
+                }
+            } else {
+                String message = "HourGlass is already running";
+                playerMessenger.printMessage(message);
+            }
+            assemblyThread.setState(new AssemblingEndState(assemblyProtocol, playerMessenger, player));
+
+        } else {
+            // invalid input
+            String message = "Invalid input";
+            playerMessenger.printMessage(message);
+            assemblyThread.setState(new AssemblingEndState(assemblyProtocol, playerMessenger, player));
+        }
     }
 }

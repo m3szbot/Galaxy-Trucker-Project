@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -11,38 +11,33 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  *
  * @author Giacomo
  */
-public class PlaceBookedComponentState implements GameState {
-    private AssemblyProtocol assemblyProtocol;
-    private Player player;
+public class PlaceBookedComponentState extends GameState {
+    // inherited attributes: assemblyProtocol, playerMessenger, player
 
     /**
-     * Constructs a new state for allowing the player to place one of their
-     * previously booked components.
-     *
-     * @param protocol the logic handler that manages components and booking
-     * @param player   the player currently placing a booked component
+     * Constructor inherited from GameState.
      */
-    public PlaceBookedComponentState(AssemblyProtocol protocol, Player player) {
-        this.assemblyProtocol = protocol;
-        this.player = player;
+    public PlaceBookedComponentState(AssemblyProtocol assemblyProtocol, PlayerMessenger playerMessenger, Player player) {
+        super(assemblyProtocol, playerMessenger, player);
     }
+
 
     /**
      * Displays the prompt asking the player to choose a booked component.
      *
-     * @param assemblyPhase the current game instance
+     * @param assemblyThread the current game instance
      */
     @Override
-    public void enter(AssemblyThread assemblyPhase) {
-        if(assemblyProtocol.getBookedMap().get(player).size() > 0) {
+    public void enter(AssemblyThread assemblyThread) {
+        if (assemblyProtocol.getBookedMap().get(player).size() > 0) {
             for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
                 Component component = assemblyProtocol.getBookedMap().get(player).get(i);
                 String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
+                playerMessenger.printMessage(message);
             }
-        }else{
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage("You don't have any booked component");
-            assemblyPhase.setState(new AssemblyState(assemblyPhase.getAssemblyProtocol(), player));
+        } else {
+            playerMessenger.printMessage("You don't have any booked component");
+            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }
 
@@ -51,33 +46,33 @@ public class PlaceBookedComponentState implements GameState {
      * booked component (if valid), places the current component in the uncovered list,
      * and moves the selected one to the active slot.
      *
-     * @param input         the player's input (should be 1 or 2)
-     * @param assemblyPhase the current game instance
+     * @param input          the player's input (should be 1 or 2)
+     * @param assemblyThread the current game instance
      */
     @Override
-    public void handleInput(String input, AssemblyThread assemblyPhase) {
+    public void handleInput(String input, AssemblyThread assemblyThread) {
         try {
             int index = Integer.parseInt(input);
             if (index == 0 || index == 1) {
                 if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
                     synchronized (assemblyProtocol.lockUncoveredList) {
-                        assemblyPhase.getAssemblyProtocol().chooseBookedComponent(player, index);
+                        assemblyProtocol.chooseBookedComponent(player, index);
                     }
-                    assemblyPhase.setState(new ComponentPlacingState(assemblyProtocol, player, true));
+                    assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, true));
                 } else {
                     String message = "The Booked Component chose doesn't exist";
-                    ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                    assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+                    playerMessenger.printMessage(message);
+                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 }
             } else {
                 String message = "Wrong input";
-                ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-                assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+                playerMessenger.printMessage(message);
+                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             String message = "Wrong input";
-            ClientMessenger.getGameMessenger(assemblyPhase.getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-            assemblyPhase.setState(new AssemblyState(assemblyProtocol, player));
+            playerMessenger.printMessage(message);
+            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }
 }
