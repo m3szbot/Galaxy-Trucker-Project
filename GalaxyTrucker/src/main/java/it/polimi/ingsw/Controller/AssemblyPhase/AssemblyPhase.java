@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
@@ -103,9 +102,7 @@ public class AssemblyPhase extends Phase {
         assemblyProtocol.getHourGlass().stopHourglass();
 
         message = "Assembly phase has ended";
-        for (Player player : gameInformation.getPlayerList()) {
-            ClientMessenger.getGameMessenger(getAssemblyProtocol().getGameCode()).getPlayerMessenger(player).printMessage(message);
-        }
+        gameMessenger.sendMessageToAll(message);
 
     }
 
