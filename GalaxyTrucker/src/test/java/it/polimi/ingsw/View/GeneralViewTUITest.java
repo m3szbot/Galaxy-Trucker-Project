@@ -141,7 +141,7 @@ class GeneralViewTUITest {
 
     @Test
     public void printCannon() {
-        Cannon cannon = new Cannon(universalSides, true);
+        Cannon cannon = new Cannon(universalSidesSpecialFront, true);
         generalViewTUI.printComponent(cannon);
     }
 

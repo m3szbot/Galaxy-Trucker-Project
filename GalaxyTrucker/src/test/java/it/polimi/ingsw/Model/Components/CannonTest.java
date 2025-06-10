@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -124,9 +125,9 @@ class CannonTest {
                 """;
 
         // Act
-        Cannon cannon = mapper.readValue(json, Cannon.class);
+        assertThrows(ValueInstantiationException.class, () -> {
+            final Cannon cannon = mapper.readValue(json, Cannon.class);
+        });
 
-        // Assert
-        assertFalse(cannon.isSingle());
     }
 }
