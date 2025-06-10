@@ -23,7 +23,7 @@ public class GameMessenger {
     private Map<Player, PlayerMessenger> playerMessengerMap = new HashMap<>();
     private int gameCode;
 
-    public GameMessenger(int gameCode){
+    public GameMessenger(int gameCode) {
         this.gameCode = gameCode;
     }
 
@@ -39,7 +39,7 @@ public class GameMessenger {
      * @return the players that are connected to the game
      */
 
-    public Set<Player> getConnectedPlayers(){
+    public Set<Player> getConnectedPlayers() {
 
         return playerMessengerMap.keySet();
 
@@ -88,10 +88,9 @@ public class GameMessenger {
      */
     public void disconnectPlayer(GameInformation gameInformation, Player player) {
 
-        gameInformation.getPlayerList().remove(player);
-        gameInformation.getDisconnectedPlayerList().add(player);
+        gameInformation.disconnectPlayerInGameInformation(player);
 
-        if(gameInformation.getFlightBoard().getPlayerOrderList().contains(player)){
+        if (gameInformation.getFlightBoard().getPlayerOrderList().contains(player)) {
             gameInformation.getFlightBoard().eliminatePlayer(player);
         }
         playerMessengerMap.get(player).clearPlayerResources();

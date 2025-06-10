@@ -7,10 +7,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class FlightPhaseTest {
     GameInformation gameInformation;
     Player playerA, playerB, playerC, playerD;
@@ -32,10 +28,10 @@ class FlightPhaseTest {
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
         gameInformation.setMaxNumberOfPlayers(4);
-        gameInformation.addPlayers(playerA);
-        gameInformation.addPlayers(playerB);
-        gameInformation.addPlayers(playerC);
-        gameInformation.addPlayers(playerD);
+        gameInformation.addPlayer(playerA);
+        gameInformation.addPlayer(playerB);
+        gameInformation.addPlayer(playerC);
+        gameInformation.addPlayer(playerD);
 
     }
 

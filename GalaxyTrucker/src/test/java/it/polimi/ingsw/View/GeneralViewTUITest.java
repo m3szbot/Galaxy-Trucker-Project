@@ -99,10 +99,10 @@ class GeneralViewTUITest {
         Player player3 = new Player("Player3", Color.GREEN, gameInformation);
         Player player4 = new Player("Player4", Color.YELLOW, gameInformation);
 
-        gameInformation.addPlayers(player1);
-        gameInformation.addPlayers(player2);
-        gameInformation.addPlayers(player3);
-        gameInformation.addPlayers(player4);
+        gameInformation.addPlayer(player1);
+        gameInformation.addPlayer(player2);
+        gameInformation.addPlayer(player3);
+        gameInformation.addPlayer(player4);
 
         flightBoard.addPlayer(player1, 7);
         flightBoard.addPlayer(player2, 4);

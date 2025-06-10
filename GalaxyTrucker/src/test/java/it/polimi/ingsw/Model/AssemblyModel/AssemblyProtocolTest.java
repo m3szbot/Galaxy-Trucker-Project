@@ -29,10 +29,10 @@ class AssemblyProtocolTest {
         playerD = new Player("D", Color.GREEN, gameInformation);
 
         gameInformation.setMaxNumberOfPlayers(4);
-        gameInformation.addPlayers(playerA);
-        gameInformation.addPlayers(playerB);
-        gameInformation.addPlayers(playerC);
-        gameInformation.addPlayers(playerD);
+        gameInformation.addPlayer(playerA);
+        gameInformation.addPlayer(playerB);
+        gameInformation.addPlayer(playerC);
+        gameInformation.addPlayer(playerD);
 
         // set up assemblyProtocol
         assemblyProtocol = new AssemblyProtocol(gameInformation);

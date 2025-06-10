@@ -30,7 +30,7 @@ class GameMessengerTest {
         // add player
         Player playerA;
         playerA = new Player("A", Color.BLUE, gameInformation);
-        gameInformation.addPlayers(playerA);
+        gameInformation.addPlayer(playerA);
     }
 
     @Test

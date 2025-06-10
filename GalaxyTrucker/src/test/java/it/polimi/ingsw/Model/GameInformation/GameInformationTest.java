@@ -31,7 +31,7 @@ class GameInformationTest {
     void testSetUpPlayers() {
         Player player = new Player("Ludo", Color.RED, gameInformation);
         gameInformation.setMaxNumberOfPlayers(3);
-        gameInformation.addPlayers(player);
+        gameInformation.addPlayer(player);
 
         assertEquals(3, gameInformation.getMaxNumberOfPlayers());
         assertEquals(player, gameInformation.getPlayerList().getFirst());
@@ -104,11 +104,11 @@ class GameInformationTest {
         Player player3 = new Player("Carlo", Color.YELLOW, gameInformation);
         Player player4 = new Player("Gecky", Color.GREEN, gameInformation);
         gameInformation.setMaxNumberOfPlayers(3);
-        gameInformation.addPlayers(player1);
+        gameInformation.addPlayer(player1);
 
-        gameInformation.addPlayers(player2);
-        gameInformation.addPlayers(player3);
-        gameInformation.addPlayers(player4);
+        gameInformation.addPlayer(player2);
+        gameInformation.addPlayer(player3);
+        gameInformation.addPlayer(player4);
         assertNotNull(gameInformation.getPlayerList());
         assertEquals(3, gameInformation.getPlayerList().size());
         assertEquals(player1, gameInformation.getPlayerList().getFirst());
@@ -117,19 +117,19 @@ class GameInformationTest {
     }
 
     @Test
-    void testRemovePlayers() {
+    void testDisconnectPlayers() {
         Player player1 = new Player("Ludo", Color.RED, gameInformation);
         Player player2 = new Player("Boti", Color.BLUE, gameInformation);
         gameInformation.setGameType(GameType.NORMALGAME);
         gameInformation.setMaxNumberOfPlayers(3);
-        gameInformation.addPlayers(player1);
-        gameInformation.addPlayers(player2);
+        gameInformation.addPlayer(player1);
+        gameInformation.addPlayer(player2);
 
-        // gameInformation.eliminatePlayerFromFlight(player1);
+        gameInformation.disconnectPlayerInGameInformation(player1);
         assertNotNull(gameInformation.getPlayerList());
         assertNotNull(gameInformation.getPlayerList().get(0));
         assertEquals(player2, gameInformation.getPlayerList().get(0));
-        // gameInformation.eliminatePlayerFromFlight(player2);
+        gameInformation.disconnectPlayerInGameInformation(player2);
         assertEquals(0, gameInformation.getPlayerList().size());
     }
 

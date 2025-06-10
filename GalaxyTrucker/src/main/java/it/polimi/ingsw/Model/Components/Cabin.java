@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 public class Cabin extends Component {
-
+    // default values
     private CrewType crewType = CrewType.Human;
-    private int numberOfCurrentInhabitants = 2;
+    private int numberOfCurrentInhabitants = 0;
 
     public Cabin() {
     }

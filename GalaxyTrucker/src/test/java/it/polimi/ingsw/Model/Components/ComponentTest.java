@@ -21,8 +21,8 @@ class ComponentTest {
 
     @Test
     void testSingleEnginePower() {
-        assertTrue(doubleEngine.isSingle());
-        assertTrue(doubleEngine.isSingle(visitor));
+        assertTrue(singleEngine.isSingle());
+        assertTrue(singleEngine.isSingle(visitor));
         assertEquals(1, singleEngine.getDrivingPower());
         assertEquals(1, singleEngine.getDrivingPower(visitor));
     }

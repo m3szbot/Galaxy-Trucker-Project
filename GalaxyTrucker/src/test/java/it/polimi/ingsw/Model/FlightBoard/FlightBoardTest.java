@@ -42,10 +42,10 @@ class FlightBoardTest {
         playerB = new Player("B", Color.RED, gameInformation);
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
-        gameInformation.addPlayers(playerA);
-        gameInformation.addPlayers(playerB);
-        gameInformation.addPlayers(playerC);
-        gameInformation.addPlayers(playerD);
+        gameInformation.addPlayer(playerA);
+        gameInformation.addPlayer(playerB);
+        gameInformation.addPlayer(playerC);
+        gameInformation.addPlayer(playerD);
 
         flightBoard = gameInformation.getFlightBoard();
 
@@ -73,10 +73,10 @@ class FlightBoardTest {
         // test new gameInformation
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
-        gameInformation.addPlayers(playerA);
-        gameInformation.addPlayers(playerB);
-        gameInformation.addPlayers(playerC);
-        gameInformation.addPlayers(playerD);
+        gameInformation.addPlayer(playerA);
+        gameInformation.addPlayer(playerB);
+        gameInformation.addPlayer(playerC);
+        gameInformation.addPlayer(playerD);
         assertEquals(GameType.TESTGAME, gameInformation.getGameType());
         assertEquals(4, gameInformation.getPlayerList().size());
 

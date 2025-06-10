@@ -370,7 +370,7 @@ public class GameInformation implements Serializable {
      *
      * @param player
      */
-    public void addPlayers(Player player) {
+    public void addPlayer(Player player) {
 
         if (connectedPlayerList.size() < maxNumberOfPlayers) {
             connectedPlayerList.add(player);
@@ -378,5 +378,10 @@ public class GameInformation implements Serializable {
         } else {
             System.out.println("Cannot join match, max number of players reached");
         }
+    }
+
+    public void disconnectPlayerInGameInformation(Player player) {
+        connectedPlayerList.remove(player);
+        disconnectedPlayerList.add(player);
     }
 }

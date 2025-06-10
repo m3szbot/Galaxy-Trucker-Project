@@ -68,7 +68,7 @@ public class Game implements Runnable, Serializable {
 
     public void addPlayer(Player player, boolean first) {
 
-        gameInformation.addPlayers(player);
+        gameInformation.addPlayer(player);
         numberOfJoinedPlayers++;
 
         if (first) {
@@ -100,7 +100,7 @@ public class Game implements Runnable, Serializable {
         assemblyPhase.start();
         System.out.println("Starting correction phase of game" + gameCode + "...");
         correctionPhase.start();
-        System.out.println("Starting flight phase of game" + gameCode + "..." );
+        System.out.println("Starting flight phase of game" + gameCode + "...");
         flightPhase.start();
         System.out.println("Starting evaluation phase of game" + gameCode + "...");
         evaluationPhase.start();

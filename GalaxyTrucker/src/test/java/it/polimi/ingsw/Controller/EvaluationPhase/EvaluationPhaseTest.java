@@ -30,10 +30,10 @@ class EvaluationPhaseTest {
         playerB = new Player("B", Color.RED, gameInformation);
         playerC = new Player("C", Color.YELLOW, gameInformation);
         playerD = new Player("D", Color.GREEN, gameInformation);
-        gameInformation.addPlayers(playerA);
-        gameInformation.addPlayers(playerB);
-        gameInformation.addPlayers(playerC);
-        gameInformation.addPlayers(playerD);
+        gameInformation.addPlayer(playerA);
+        gameInformation.addPlayer(playerB);
+        gameInformation.addPlayer(playerC);
+        gameInformation.addPlayer(playerD);
 
         // set up flightBoard
         flightBoard = gameInformation.getFlightBoard();
@@ -54,6 +54,6 @@ class EvaluationPhaseTest {
      */
     @Test
     public void start() {
-        
+
     }
 }

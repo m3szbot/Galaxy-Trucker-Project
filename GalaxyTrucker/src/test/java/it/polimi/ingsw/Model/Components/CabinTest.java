@@ -30,7 +30,7 @@ class CabinTest {
         assertEquals(2, cabin.getCrewMembers()); // Default value
         assertEquals("Cabin", cabin.getComponentName());
         assertEquals(2, cabin.getCrewMembers());
-        assertNull(cabin.getCrewType()); // Not set initially
+        assertEquals(CrewType.Human, cabin.getCrewType()); // Not set initially
     }
 
     @Test
@@ -40,8 +40,8 @@ class CabinTest {
 
         // Assert
         assertNotNull(cabin);
-        assertEquals(2, cabin.getCrewMembers());
-        assertNull(cabin.getCrewType());
+        assertEquals(0, cabin.getCrewMembers());
+        assertEquals(CrewType.Human, cabin.getCrewType());
     }
 
     @Test
@@ -79,7 +79,8 @@ class CabinTest {
                 {
                     "name": "Cabin",
                     "crewType": "Human",
-                    "sides": ["Smooth", "Double", "Single", "Universal"]
+                    "sides": ["Smooth", "Double", "Single", "Universal"],
+                    "numberOfCurrentInhabitants": 2
                 }
                 """;
 
@@ -113,7 +114,7 @@ class CabinTest {
 
         // Assert
         assertNull(cabin.getCrewType());
-        assertEquals(2, cabin.getCrewMembers());
+        assertEquals(0, cabin.getCrewMembers());
     }
 
 }

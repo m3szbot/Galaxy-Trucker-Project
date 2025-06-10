@@ -86,6 +86,8 @@ class ScoreCounterTest {
 
     @Test
     void testGameOnePlayerEmptyShip() {
+        // create new TestGame gameInformation
+        gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
         scoreCounter = new ScoreCounter(gameInformation.getGameType());
         flightBoard = gameInformation.getFlightBoard();
@@ -142,7 +144,7 @@ class ScoreCounterTest {
         playerA.getShipBoard().addComponent(component, 9, 7);
         // playerB 12
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getFirst());
-        playerA.getShipBoard().addComponent(component, 8, 7);
+        playerB.getShipBoard().addComponent(component, 8, 7);
         // check correct ships
         assertFalse(playerA.getShipBoard().isErroneous());
         assertFalse(playerB.getShipBoard().isErroneous());
