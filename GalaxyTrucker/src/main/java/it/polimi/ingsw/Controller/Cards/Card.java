@@ -35,7 +35,7 @@ public abstract class Card implements Serializable {
         for (int i = 0; i < blows.length; i++) {
 
             if (blows[i] != null) {
-                System.out.println("Blow " + (i + 1) + " coming from the " + solveDirection(blows[i].getDirection()) + ".\n");
+                System.out.println("Blow " + (i + 1) + " coming from the " + solveDirection(blows[i].getDirection()) + ".");
             }
 
         }
@@ -55,6 +55,13 @@ public abstract class Card implements Serializable {
 
     }
 
+    protected void printGoods(int[] goods) {
+
+        for (int i = 0; i < goods.length; i++) {
+            System.out.println(solveGoodsColor(i) + " goods quantity: " + goods[i]);
+        }
+    }
+
     private String solveGoodsColor(int goodIndex) {
         if (goodIndex == 0) {
             return "red";
@@ -64,13 +71,6 @@ public abstract class Card implements Serializable {
             return "green";
         } else {
             return "blue";
-        }
-    }
-
-    protected void printGoods(int[] goods) {
-
-        for (int i = 0; i < goods.length; i++) {
-            System.out.println(solveGoodsColor(i) + " goods quantity: " + goods[i]);
         }
     }
 
