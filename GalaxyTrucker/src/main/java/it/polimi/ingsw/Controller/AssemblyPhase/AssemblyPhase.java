@@ -79,11 +79,6 @@ public class AssemblyPhase extends Phase {
                         setRunning(false);
                         break;
                     }
-                } else {
-                    if (assemblyProtocol.getHourGlass().getState() == 2) {
-                        setRunning(false);
-                        break;
-                    }
                 }
                 try {
                     Thread.sleep(100);

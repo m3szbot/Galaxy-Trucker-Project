@@ -64,7 +64,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                     if (playerMessenger.getPlayerBoolean()) {
 
                         message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
-                                "has collected the reward!";
+                                " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                         giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredits);

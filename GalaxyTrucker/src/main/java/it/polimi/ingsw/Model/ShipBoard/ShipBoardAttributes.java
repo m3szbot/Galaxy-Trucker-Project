@@ -356,7 +356,7 @@ public class ShipBoardAttributes implements Serializable {
     /**
      * Adds the given number of destroyed components to the destroyed component counter.
      */
-    void destroyComponents(int count) {
+    public void destroyComponents(int count) {
         if (count < 0)
             throw new IllegalArgumentException("Cannot destroy negative number of components");
         destroyedComponents += count;
