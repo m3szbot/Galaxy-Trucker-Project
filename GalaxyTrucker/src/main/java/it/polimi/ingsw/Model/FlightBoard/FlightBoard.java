@@ -106,7 +106,9 @@ public class FlightBoard implements Serializable {
      * @return copy of adventure cards on the flightboard (safe get).
      */
     public Stack<Card> getCardsStack() {
-        return (Stack<Card>) cardsStack.clone();
+        Stack<Card> copy = new Stack<>();
+        copy.addAll(cardsStack);
+        return copy;
     }
 
     /**
