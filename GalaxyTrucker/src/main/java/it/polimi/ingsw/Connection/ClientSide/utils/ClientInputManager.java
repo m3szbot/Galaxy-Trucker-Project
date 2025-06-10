@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author carlo
  */
 
-public class ClientInputManager {
+public final class ClientInputManager {
 
     private static AtomicReference<String> userInput = new AtomicReference<>(null);
     private static long timeOut;
@@ -23,7 +23,7 @@ public class ClientInputManager {
 
 
     public static void unblockInput(){
-        userInput.set("unblocked");
+        userInput.set("unblock");
     }
 
     public static void setTimeOut(long playerInputTimeOut){
