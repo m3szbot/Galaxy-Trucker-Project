@@ -2,6 +2,9 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.ComponentRotatorVisitor;
+import it.polimi.ingsw.Model.Components.ComponentVisitor;
 import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -33,7 +36,12 @@ public class ComponentPlacingState extends GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyThread) {
-        String message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
+        String message;
+        if(!booked){
+            message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
+        } else{
+            message = "Where do you want to place your booked component? Indicate coordinates Cols and Rows or write Rotate";
+        }
         playerMessenger.printMessage(message);
     }
 
@@ -47,6 +55,13 @@ public class ComponentPlacingState extends GameState {
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {
+        if(booked){
+            if(input.trim().toLowerCase().equals("rotate")){
+                assemblyProtocol.getInHandMap().get(player).accept(new ComponentRotatorVisitor());
+                playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
+                assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, booked));
+            }
+        }
         input.replaceAll("[^\\d]", " ");
         String[] parts = input.trim().split("[ ,]+"); //trim eliminates white spaces at the beginning and at the end
 

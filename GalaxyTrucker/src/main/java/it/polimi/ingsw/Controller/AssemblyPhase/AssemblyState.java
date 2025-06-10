@@ -113,6 +113,12 @@ public class AssemblyState extends GameState {
 
             case "book":
                 actionTaken = true;
+                if(!assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
+                    message="You can't book components at this level";
+                    playerMessenger.printMessage(message);
+                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                    break;
+                }
                 if (assemblyProtocol.getBookedMap().get(player).size() < 2) {
                     if (assemblyProtocol.getInHandMap().get(player) != null) {
                         assemblyProtocol.bookComponent(player);

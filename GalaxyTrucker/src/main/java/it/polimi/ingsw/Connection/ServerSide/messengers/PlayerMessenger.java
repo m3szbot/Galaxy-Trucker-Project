@@ -40,6 +40,8 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     private String lastMessage;
     private int gameCode;
 
+    Object readerLock = new Object();
+
     // RMI
     // TODO
 
@@ -223,74 +225,76 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * source --> critical error
      * @author carlo
      */
-    private synchronized String getPlayerInput() throws PlayerDisconnectedException {
+    private String getPlayerInput() throws PlayerDisconnectedException {
 
-        String messageBeforeShipPrint = lastMessage;
+        synchronized (readerLock) {
+            String messageBeforeShipPrint = lastMessage;
 
-        if (connectionType == ConnectionType.SOCKET) {
+            if (connectionType == ConnectionType.SOCKET) {
 
-            try {
-                String input = socketDataExchanger.getString();
+                try {
+                    String input = socketDataExchanger.getString();
 
-                while(input.equals("show-shipboard")){
-                    FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
-                    foeShipBoardPrinter.start();
+                    while(input.equals("show-shipboard")){
+                        FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
+                        foeShipBoardPrinter.start();
 
-                    printMessage(messageBeforeShipPrint);
-                    input = socketDataExchanger.getString();
+                        printMessage(messageBeforeShipPrint);
+                        input = socketDataExchanger.getString();
 
+                    }
+
+                    if(input.equals("inactivity")){
+
+                        System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                        throw new PlayerDisconnectedException(player);
+
+                    }
+                    else{
+                        return input;
+                    }
+
+                } catch (IOException e) {
+
+                          System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                                             "a disconnection probably occurred");
+
+                    throw new PlayerDisconnectedException(player);
                 }
+            } else {
 
-                if(input.equals("inactivity")){
+                try {
+                    String input = virtualClient.getString();
 
-                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                    while(input.equals("show-shipboard")){
+
+                        FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
+                        foeShipBoardPrinter.start();
+
+                        printMessage(messageBeforeShipPrint);
+                        input = virtualClient.getString();
+
+                    }
+
+                    return input;
+
+                } catch (RemoteException e) {
+
+                    if(e.getMessage().equals("inactivity")){
+
+                        System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                    }
+                    else {
+
+                        System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                                "a disconnection probably occurred");
+                    }
+
                     throw new PlayerDisconnectedException(player);
 
                 }
-                else{
-                    return input;
-                }
-
-            } catch (IOException e) {
-
-                      System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
-                                         "a disconnection probably occurred");
-
-                throw new PlayerDisconnectedException(player);
-            }
-        } else {
-
-            try {
-                String input = virtualClient.getString();
-
-                while(input.equals("show-shipboard")){
-
-                    FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
-                    foeShipBoardPrinter.start();
-
-                    printMessage(messageBeforeShipPrint);
-                    input = virtualClient.getString();
-
-                }
-
-                return input;
-
-            } catch (RemoteException e) {
-
-                if(e.getMessage().equals("inactivity")){
-
-                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                }
-                else {
-
-                    System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
-                            "a disconnection probably occurred");
-                }
-
-                throw new PlayerDisconnectedException(player);
 
             }
-
         }
     }
 

@@ -57,6 +57,7 @@ public class PlaceBookedComponentState extends GameState {
                 if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
                     synchronized (assemblyProtocol.lockUncoveredList) {
                         assemblyProtocol.chooseBookedComponent(player, index);
+                        playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
                     }
                     assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, true));
                 } else {
