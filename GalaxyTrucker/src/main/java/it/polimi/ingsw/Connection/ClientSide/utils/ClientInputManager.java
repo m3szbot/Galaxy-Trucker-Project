@@ -23,7 +23,7 @@ public class ClientInputManager {
 
 
     public static void unblockInput(){
-        userInput.set("unblocked");
+        userInput.set("unblock");
     }
 
     public static void setTimeOut(long playerInputTimeOut){

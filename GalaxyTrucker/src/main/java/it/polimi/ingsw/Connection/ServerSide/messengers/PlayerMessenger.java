@@ -6,7 +6,7 @@ import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
-import it.polimi.ingsw.Connection.ServerSide.utils.FoeShipBoardPrinter;
+import it.polimi.ingsw.Connection.ServerSide.utils.CommandHandler;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -225,30 +225,24 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     private synchronized String getPlayerInput() throws PlayerDisconnectedException {
 
-        String messageBeforeShipPrint = lastMessage;
+        String messageBeforeCommand = lastMessage;
 
         if (connectionType == ConnectionType.SOCKET) {
 
             try {
-                String input = socketDataExchanger.getString();
+                while(true) {
+                    String input = socketDataExchanger.getString();
 
-                while(input.equals("show-shipboard")){
-                    FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
-                    foeShipBoardPrinter.start();
+                    if (CommandHandler.executeCommand(input, this)) {
+                        printMessage(messageBeforeCommand);
+                    } else if (input.equals("inactivity")) {
 
-                    printMessage(messageBeforeShipPrint);
-                    input = socketDataExchanger.getString();
+                        System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                        throw new PlayerDisconnectedException(player);
 
-                }
-
-                if(input.equals("inactivity")){
-
-                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                    throw new PlayerDisconnectedException(player);
-
-                }
-                else{
-                    return input;
+                    } else {
+                        return input;
+                    }
                 }
 
             } catch (IOException e) {
@@ -261,19 +255,16 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         } else {
 
             try {
-                String input = virtualClient.getString();
 
-                while(input.equals("show-shipboard")){
+                while(true) {
+                    String input = virtualClient.getString();
 
-                    FoeShipBoardPrinter foeShipBoardPrinter = new FoeShipBoardPrinter(this);
-                    foeShipBoardPrinter.start();
-
-                    printMessage(messageBeforeShipPrint);
-                    input = virtualClient.getString();
-
+                    if (CommandHandler.executeCommand(input, this)) {
+                        printMessage(messageBeforeCommand);
+                    } else {
+                        return input;
+                    }
                 }
-
-                return input;
 
             } catch (RemoteException e) {
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Controller.Phase;
@@ -24,7 +23,7 @@ public class FlightPhase extends Phase {
 
         FlightBoard flightBoard = gameInformation.getFlightBoard();
 
-        // send initial flightBoard to players
+        // send initial flightBoard to players and starting the threads
         for (Player player : flightBoard.getPlayerOrderList()) {
 
             playerMessenger = gameMessenger.getPlayerMessenger(player);
@@ -33,6 +32,8 @@ public class FlightPhase extends Phase {
             playerMessenger.printMessage("Your shipboard:\n");
 
             playerMessenger.printShipboard(player.getShipBoard());
+
+            PlayerFlightInputHandler.addPlayer(player, gameInformation);
 
         }
 
@@ -65,6 +66,11 @@ public class FlightPhase extends Phase {
                 playerMessenger.printShipboard(player.getShipBoard());
 
             }
+        }
+
+        //ending input thread
+        for(Player player: flightBoard.getPlayerOrderList()){
+            PlayerFlightInputHandler.removePlayer(player);
         }
 
         gameMessenger.sendMessageToAll("Flight phase has ended.\n");

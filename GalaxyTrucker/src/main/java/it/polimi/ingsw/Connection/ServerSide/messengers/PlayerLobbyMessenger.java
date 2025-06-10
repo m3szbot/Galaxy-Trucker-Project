@@ -10,6 +10,12 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Class which is used to communicate with the player during the lobby time.
+ *
+ * @author carlo
+ */
+
 public class PlayerLobbyMessenger {
 
     private ConnectionType connectionType;
