@@ -147,7 +147,7 @@ class GeneralViewTUITest {
 
     @Test
     public void printEngine() {
-        Engine engine = new Engine(universalSides, true);
+        Engine engine = new Engine(universalSidesSpecialFront, true);
         generalViewTUI.printComponent(engine);
     }
 

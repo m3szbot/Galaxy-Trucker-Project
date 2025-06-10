@@ -3,6 +3,8 @@ package it.polimi.ingsw.Model.Components;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+
 /**
  * Class that represent a cannon
  *
@@ -18,10 +20,12 @@ public class Cannon extends Component {
 
     @JsonCreator
     public Cannon(@JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
-
         super(sides);
         this.single = single;
 
+        // check special sides
+        if (Arrays.stream(sides).filter(sideType -> sideType.equals(SideType.Special)).count() != 1)
+            throw new IllegalArgumentException("Cannons must have exactly 1 special side.");
     }
 
     @Override

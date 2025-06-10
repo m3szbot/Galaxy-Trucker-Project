@@ -122,6 +122,18 @@ class EngineTest {
     }
 
     @Test
+    void specialSidesExceptions() {
+        // an engine must have exactly 1 special side
+        Engine engine = new Engine(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, true);
+        assertThrows(IllegalArgumentException.class, () -> {
+            final Engine engine1 = new Engine(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}, true);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            final Engine engine2 = new Engine(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, true);
+        });
+    }
+
+    @Test
     void jsonDeserialization_withMissingSingle_shouldDefaultToFalse() throws Exception {
         // Arrange
         ObjectMapper mapper = new ObjectMapper();

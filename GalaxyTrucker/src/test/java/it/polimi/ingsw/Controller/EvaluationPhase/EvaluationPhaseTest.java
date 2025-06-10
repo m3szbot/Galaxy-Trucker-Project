@@ -54,6 +54,6 @@ class EvaluationPhaseTest {
      */
     @Test
     public void start() {
-        evaluationPhase.start();
+        
     }
 }

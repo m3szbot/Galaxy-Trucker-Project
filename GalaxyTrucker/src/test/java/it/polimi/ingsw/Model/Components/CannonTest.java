@@ -39,6 +39,18 @@ class CannonTest {
     }
 
     @Test
+    void specialSidesExceptions() {
+        // a cannon must have exactly 1 special side
+        Cannon cannon = new Cannon(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, true);
+        assertThrows(IllegalArgumentException.class, () -> {
+            final Cannon cannon1 = new Cannon(new SideType[]{SideType.Special, SideType.Special, SideType.Single, SideType.Single}, true);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            final Cannon cannon2 = new Cannon(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single}, true);
+        });
+    }
+
+    @Test
     void defaultConstructor_shouldInitializeWithDefaultValues() {
         // Arrange & Act
         Cannon cannon = new Cannon();
