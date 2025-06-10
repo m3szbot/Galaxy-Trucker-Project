@@ -9,7 +9,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
  * @author carlo
  */
 
-public class CommandHandler {
+public final class CommandHandler {
 
     /**
      *

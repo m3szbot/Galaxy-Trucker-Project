@@ -13,7 +13,7 @@ import java.util.List;
  *
  */
 
-public class IndexChecker {
+public final class IndexChecker {
 
     /**
      *
@@ -37,7 +37,6 @@ public class IndexChecker {
         }
 
         return updatedIndex;
-
 
     }
 

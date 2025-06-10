@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author carlo
  */
 
-public class ClientInputManager {
+public final class ClientInputManager {
 
     private static AtomicReference<String> userInput = new AtomicReference<>(null);
     private static long timeOut;
