@@ -7,6 +7,12 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.Set;
 
+/**
+ * Class which handles the chat
+ *
+ * @author carlo
+ */
+
 public class ChatUtil {
     private int gameCode;
     private PlayerMessenger playerMessenger;
