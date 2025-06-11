@@ -59,7 +59,9 @@ public class ComponentChoiceState extends GameState {
         try {
             caseManagement = Integer.parseInt(imput);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            playerMessenger.printMessage("Not valid input");
+            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+            return;
         }
         if (caseManagement >= 0 && caseManagement < assemblyProtocol.getUncoveredList().size()) {
             caseManagement = 1;
