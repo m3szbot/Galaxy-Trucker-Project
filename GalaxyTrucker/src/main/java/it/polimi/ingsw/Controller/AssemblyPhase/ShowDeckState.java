@@ -43,25 +43,29 @@ public class ShowDeckState extends GameState {
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {
-        int index = Integer.parseInt(input);
-
-        if (index > 0 && index <= 3) {
-            if (assemblyProtocol.getDeck(index - 1).getInUse() == false) {
-                synchronized (assemblyProtocol.lockDecksList) {
-                    Deck deck = assemblyProtocol.showDeck(index);
-                    for (Card card : deck.getCards()) {
-                        playerMessenger.printCard(card);
+        try {
+            int index = Integer.parseInt(input);
+            if (index > 0 && index <= 3) {
+                if (assemblyProtocol.getDeck(index - 1).getInUse() == false) {
+                    synchronized (assemblyProtocol.lockDecksList) {
+                        Deck deck = assemblyProtocol.showDeck(index);
+                        for (Card card : deck.getCards()) {
+                            playerMessenger.printCard(card);
+                        }
                     }
+                    assemblyThread.setState(new DeckInUseState(assemblyProtocol, playerMessenger, player, index));
+                } else {
+                    String message = "Deck already in use!";
+                    playerMessenger.printMessage(message);
+                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 }
-                assemblyThread.setState(new DeckInUseState(assemblyProtocol, playerMessenger, player, index));
             } else {
-                String message = "Deck already in use!";
+                String message = "Invalid deck number";
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
-        } else {
-            String message = "Invalid deck number";
-            playerMessenger.printMessage(message);
+        }catch (NumberFormatException e){
+            playerMessenger.printMessage("Invalid Input, please write a number");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }
