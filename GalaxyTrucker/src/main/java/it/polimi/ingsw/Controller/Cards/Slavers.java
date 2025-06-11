@@ -104,6 +104,8 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                     message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
+                    PlayerFlightInputHandler.removePlayer(player);
+
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
 

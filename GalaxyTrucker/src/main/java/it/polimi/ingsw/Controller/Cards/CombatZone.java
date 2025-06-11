@@ -49,7 +49,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         //calculating player with the lowest inhabitant number
 
-        lowestInhabitantNumberPlayer = calculateSmallestCrew(gameInformation.getFlightBoard());
+        lowestInhabitantNumberPlayer = calculateSmallestCrew(gameInformation);
 
         //letting the players choose their firePower, from the leader backwards
 
@@ -137,6 +137,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             message = "Player " + weakestEnginePowerPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
+            PlayerFlightInputHandler.removePlayer(weakestEnginePowerPlayer);
+
             gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
 
         } catch (PlayerDisconnectedException e) {
@@ -163,6 +165,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             message = "Player " + weakestFirePowerPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            PlayerFlightInputHandler.removePlayer(weakestFirePowerPlayer);
 
             gameInformation.getFlightBoard().eliminatePlayer(weakestFirePowerPlayer);
 
