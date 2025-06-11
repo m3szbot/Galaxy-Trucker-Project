@@ -39,9 +39,12 @@ public abstract class Phase {
     public static void forcePlayerToGiveUp(GameInformation gameInformation, Player player, GameMessenger gameMessenger, String messageToAll) {
         gameMessenger.sendMessageToAll(messageToAll);
         gameMessenger.sendMessageToAll(java.lang.String.format("Player %s has been eliminated from the flight, and is now spectating.\n(all shipboards will be evaluated after the flight finishes)\n", player.getNickName()));
-
         gameMessenger.getPlayerMessenger(player).printMessage("Your flight ends here, from now on you are a spectator.\nYour shipboard will be evaluated after the flight finishes.\n");
+
         gameInformation.getFlightBoard().eliminatePlayer(player);
+
+        // sleep for 2 seconds
+        Sleeper.sleepXSeconds(2);
     }
 
     public abstract void start();
@@ -57,5 +60,9 @@ public abstract class Phase {
         // clients
         gameMessenger.setGamePhaseToAll(gamePhase);
         gameMessenger.sendMessageToAll(String.format("%s phase is starting...\n", gamePhase));
+
+        Sleeper.sleepXSeconds(2);
+
+
     }
 }

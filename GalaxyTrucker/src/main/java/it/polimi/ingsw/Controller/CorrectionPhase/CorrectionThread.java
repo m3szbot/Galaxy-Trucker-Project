@@ -6,6 +6,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Controller.Phase;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.CrewType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -59,12 +60,7 @@ public class CorrectionThread implements Runnable {
         playerMessenger.printShipboard(player.getShipBoard());
         playerMessenger.printMessage("Your ship is all set, please wait for other players.");
 
-        // sleep for 5 seconds
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            System.out.println("Thread was interrupted.");
-        }
+        Sleeper.sleepXSeconds(2);
         // end of thread
     }
 
@@ -156,6 +152,8 @@ public class CorrectionThread implements Runnable {
         String message;
         String inputString;
         CrewType crewType = CrewType.Human;
+
+        Sleeper.sleepXSeconds(2);
 
         // scan shipboard (only valid cells)
         for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
