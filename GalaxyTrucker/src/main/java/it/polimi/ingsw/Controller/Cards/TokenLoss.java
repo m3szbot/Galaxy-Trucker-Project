@@ -47,7 +47,7 @@ public interface TokenLoss {
 
             if (quantity > 0) {
 
-                //need to remove batteries
+                //needs to remove batteries
                 removeBatteries(player, quantity, gameInformation);
 
             }

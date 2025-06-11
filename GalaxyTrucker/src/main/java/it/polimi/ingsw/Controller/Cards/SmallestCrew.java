@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Controller.Cards;
 
+import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
+import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -15,19 +18,22 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public interface SmallestCrew {
 
     /**
-     * @param flightBoard flight board of the current game
+     * @param gameInformation flight board of the current game
      * @return the player with the smallest number of inhabitants on the ship
      * @author Carlo
      */
 
-    default Player calculateSmallestCrew(FlightBoard flightBoard) {
+    default Player calculateSmallestCrew(GameInformation gameInformation) {
 
-        int smallestCrew = flightBoard.getPlayerOrderList().getLast().getShipBoard().getShipBoardAttributes().getCrewMembers();
+        int smallestCrew = gameInformation.getFlightBoard().getPlayerOrderList().getLast().getShipBoard().getShipBoardAttributes().getCrewMembers();
         Player smallestCrewPlayer = null, player;
 
-        for (int i = flightBoard.getPlayerOrderList().size() - 1; i >= 0; i--) {
+        for (int i = gameInformation.getFlightBoard().getPlayerOrderList().size() - 1; i >= 0; i--) {
 
-            player = flightBoard.getPlayerOrderList().get(i);
+            //Checks the validity of the current index (precaution for disconnection)
+            i = IndexChecker.checkIndex(gameInformation, i);
+
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
 
             //Searches for the player with the smallest crew, if there's more than one it selects the first on the list
             if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() <= smallestCrew) {

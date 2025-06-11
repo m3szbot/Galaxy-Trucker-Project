@@ -2,6 +2,8 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
+import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -39,7 +41,12 @@ public class Epidemic extends Card {
 
             isEliminated = false;
 
+            //Checks the validity of the current index (precaution for disconnection)
+            IndexChecker.checkIndex(gameInformation, i);
+
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            PlayerFlightInputHandler.startPlayerTurn(player);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             message = "An epidemic is spreading in your ship!  You may lose many crew members to the disease!\n";
@@ -67,6 +74,8 @@ public class Epidemic extends Card {
 
                         message = e.getMessage();
                         playerMessenger.printMessage(message);
+
+                        PlayerFlightInputHandler.removePlayer(player);
 
                         gameInformation.getFlightBoard().eliminatePlayer(player);
                         isEliminated = true;
@@ -101,6 +110,8 @@ public class Epidemic extends Card {
             } catch (InterruptedException e) {
                 System.out.println("Error while sleeping");
             }
+
+            PlayerFlightInputHandler.endPlayerTurn(player);
 
         }
 

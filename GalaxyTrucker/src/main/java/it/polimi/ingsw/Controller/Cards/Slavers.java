@@ -3,6 +3,8 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
+import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -42,6 +44,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         String message;
         PlayerMessenger playerMessenger;
         AttackStates[] results;
+        Player player;
 
         //Resolves the attack (win or defeat) of each in-game player
         results = setAttackStates(requirementNumber, gameInformation);
@@ -49,13 +52,18 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         //Cycles through the in-game players to give the reward or to inflict the losses
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
-            Player player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            //Checks the validity of the current index (precaution for disconnection)
+            IndexChecker.checkIndex(gameInformation, i);
+
+            player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            PlayerFlightInputHandler.startPlayerTurn(player);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             if (results[i] == AttackStates.EnemyDefeated) {
 
                 //If the player defeats the enemy they lost a certain number of days to do so
-                changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
+                changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                 message = "Would you like to collect the reward for defeating the enemies ?";
                 playerMessenger.printMessage(message);
@@ -63,7 +71,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + player.getNickName() +
                                 " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -71,12 +79,14 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
                     } else {
 
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + player.getNickName() +
                                 " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     }
                 } catch (PlayerDisconnectedException e) {
+                    PlayerFlightInputHandler.removePlayer(player);
+
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 }
                 break;
@@ -96,10 +106,14 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                     message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
+                    PlayerFlightInputHandler.removePlayer(player);
+
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
 
                 } catch (PlayerDisconnectedException e) {
+                    PlayerFlightInputHandler.removePlayer(player);
+
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     i--;
                 }
@@ -110,12 +124,15 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }
+
+            PlayerFlightInputHandler.endPlayerTurn(player);
+
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
         }
 

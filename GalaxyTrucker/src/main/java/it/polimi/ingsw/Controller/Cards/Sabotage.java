@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
@@ -28,7 +29,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
     public void resolve(GameInformation gameInformation) {
 
-        Player smallestCrewPlayer = calculateSmallestCrew(gameInformation.getFlightBoard());
+        Player smallestCrewPlayer = calculateSmallestCrew(gameInformation);
         String message;
         PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
         boolean isEliminated = false;
@@ -52,10 +53,14 @@ public class Sabotage extends Card implements SmallestCrew {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
             playerMessenger.printMessage(message);
 
+            PlayerFlightInputHandler.removePlayer(smallestCrewPlayer);
+
             gameInformation.getFlightBoard().eliminatePlayer(smallestCrewPlayer);
             isEliminated = true;
 
         } catch (PlayerDisconnectedException e) {
+            PlayerFlightInputHandler.removePlayer(smallestCrewPlayer);
+
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, smallestCrewPlayer);
         }
 
@@ -67,6 +72,7 @@ public class Sabotage extends Card implements SmallestCrew {
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
+
         for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
