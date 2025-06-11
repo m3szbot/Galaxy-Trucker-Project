@@ -3,6 +3,8 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
+import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
@@ -53,7 +55,12 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
+            //Checks the validity of the current index (precaution for disconnection)
+            IndexChecker.checkIndex(gameInformation, i);
+
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            PlayerFlightInputHandler.startPlayerTurn(player);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             try {
@@ -68,13 +75,20 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             message = "The other players are choosing their fire power.\n";
             playerMessenger.printMessage(message);
 
+            PlayerFlightInputHandler.endPlayerTurn(player);
+
         }
 
         //letting the players choose their enginePower, from the leader backwards
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
+            //Checks the validity of the current index (precaution for disconnection)
+            IndexChecker.checkIndex(gameInformation, i);
+
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            PlayerFlightInputHandler.startPlayerTurn(player);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             try {
@@ -88,6 +102,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             message = "The other players are choosing their engine power.\n";
             playerMessenger.printMessage(message);
+
+            PlayerFlightInputHandler.endPlayerTurn(player);
 
         }
 

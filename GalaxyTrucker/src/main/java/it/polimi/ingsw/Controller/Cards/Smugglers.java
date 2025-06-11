@@ -3,6 +3,8 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
+import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -49,7 +51,12 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
+            //Checks the validity of the current index (precaution for disconnection)
+            IndexChecker.checkIndex(gameInformation, i);
+
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            PlayerFlightInputHandler.startPlayerTurn(player);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             if (results[i] == AttackStates.EnemyDefeated) {
@@ -77,8 +84,8 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                     }
                 } catch (PlayerDisconnectedException e) {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    i--;
                 }
+                break;
 
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
@@ -109,6 +116,8 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }
+
+            PlayerFlightInputHandler.endPlayerTurn(player);
 
         }
 
