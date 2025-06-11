@@ -32,8 +32,9 @@ public class AssemblyState extends GameState {
         if (assemblyProtocol.getInHandMap().get(player) != null) {
             playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
         }
-        String message = "👾AssemblyPhase (Place (current component) / Draw (a new component) / Choose (a component) / Show (a deck) / Rotate (current component) / Turn (the hourglass) / Book (current component and have a new one) / Place booked (component) / End (finish your assembling phase)";
-        playerMessenger.printMessage(message);
+        playerMessenger.printMessage("👾AssemblyPhase: enter command:");
+        playerMessenger.printMessage("(Place (current component) / Draw (a new component) / Choose (an uncovered component) / Show (a deck) / Rotate (current component)");
+        playerMessenger.printMessage("/ Turn (the hourglass) / Book (current component and have a new one) / Place booked (component) / End (finish your assembling phase))");
     }
 
     /**
@@ -113,8 +114,8 @@ public class AssemblyState extends GameState {
 
             case "book":
                 actionTaken = true;
-                if(!assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
-                    message="You can't book components at this level";
+                if (!assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
+                    message = "You can't book components at this level";
                     playerMessenger.printMessage(message);
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     break;

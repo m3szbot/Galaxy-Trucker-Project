@@ -8,6 +8,7 @@ import java.util.*;
 
 /**
  * ScoreCounter class to evaluate player score at end of flight.
+ * Calculates scores for both finishing and DNF players.
  * <p>
  * Finishing players: normal pointing
  * Did not finish (gave up/eliminated): special pointing:
@@ -56,7 +57,8 @@ public class ScoreCounter {
     }
 
     /**
-     * Calculates the scores for each player based on flightBoard.
+     * Calculates the scores for each player based on flightBoard
+     * (finished and DNF included).
      */
     public void calculatePlayerScores(FlightBoard flightBoard) {
         // only finishing players count for leastExposedLinks points
@@ -116,19 +118,6 @@ public class ScoreCounter {
     }
 
     /**
-     * Calculate score of a not finishing/DNF player.
-     * Credits assigned by controller.
-     *
-     * @return Score of the given player.
-     */
-    private int calculateDNFPlayerScore(Player player) {
-        int playerPoints = 0;
-        playerPoints += calculateGoodsPoints(player) / 2;
-        playerPoints += calculateLostComponentsPoints(player);
-        return playerPoints;
-    }
-
-    /**
      * Calculate player score based on finish position. Called only for finishing players.
      *
      * @param player          Player to examine
@@ -177,6 +166,19 @@ public class ScoreCounter {
         int lostPoints = 0;
         lostPoints += lostComponentsPoints * player.getShipBoard().getShipBoardAttributes().getDestroyedComponents();
         return lostPoints;
+    }
+
+    /**
+     * Calculate score of a not finishing/DNF player.
+     * Credits assigned by controller.
+     *
+     * @return Score of the given player.
+     */
+    private int calculateDNFPlayerScore(Player player) {
+        int playerPoints = 0;
+        playerPoints += calculateGoodsPoints(player) / 2;
+        playerPoints += calculateLostComponentsPoints(player);
+        return playerPoints;
     }
 
     /**

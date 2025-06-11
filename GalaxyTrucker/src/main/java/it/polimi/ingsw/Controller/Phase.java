@@ -37,8 +37,10 @@ public abstract class Phase {
      * @author Boti
      */
     public static void forcePlayerToGiveUp(GameInformation gameInformation, Player player, GameMessenger gameMessenger, String messageToAll) {
-        gameMessenger.sendMessageToAll(java.lang.String.format("Player %s has been forced to give up.", player.getNickName()));
         gameMessenger.sendMessageToAll(messageToAll);
+        gameMessenger.sendMessageToAll(java.lang.String.format("Player %s has been eliminated from the flight, and is now spectating.\n(all shipboards will be evaluated after the flight finishes)\n", player.getNickName()));
+
+        gameMessenger.getPlayerMessenger(player).printMessage("Your flight ends here, from now on you are a spectator.\nYour shipboard will be evaluated after the flight finishes.\n");
         gameInformation.getFlightBoard().eliminatePlayer(player);
     }
 
