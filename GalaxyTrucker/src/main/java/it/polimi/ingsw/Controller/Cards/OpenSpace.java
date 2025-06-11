@@ -74,6 +74,8 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 } catch (PlayerDisconnectedException e) {
+                    PlayerFlightInputHandler.removePlayer(player);
+
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     i--;
                 }

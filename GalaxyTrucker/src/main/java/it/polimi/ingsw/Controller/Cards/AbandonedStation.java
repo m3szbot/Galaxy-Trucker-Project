@@ -74,6 +74,8 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
                     }
                 } catch (PlayerDisconnectedException e) {
+                    PlayerFlightInputHandler.removePlayer(player);
+
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     i--;
                 }

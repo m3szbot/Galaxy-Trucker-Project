@@ -67,6 +67,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                 firePowers[i] = chooseFirePower(player, gameInformation);
 
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
                 continue;
@@ -95,6 +97,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                 enginePowers[i] = chooseEnginePower(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gameInformation);
 
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
                 continue;
@@ -142,6 +146,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
 
         } catch (PlayerDisconnectedException e) {
+            PlayerFlightInputHandler.removePlayer(weakestEnginePowerPlayer);
+
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestEnginePowerPlayer);
         }
 
@@ -171,6 +177,8 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             gameInformation.getFlightBoard().eliminatePlayer(weakestFirePowerPlayer);
 
         } catch (PlayerDisconnectedException e) {
+            PlayerFlightInputHandler.removePlayer(weakestFirePowerPlayer);
+
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestFirePowerPlayer);
         }
 

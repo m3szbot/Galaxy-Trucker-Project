@@ -48,6 +48,8 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
                 chosenFirePower = chooseFirePower(player, gameInformation);
 
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
                 continue;

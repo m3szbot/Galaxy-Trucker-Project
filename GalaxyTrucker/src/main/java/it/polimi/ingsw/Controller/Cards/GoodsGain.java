@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -41,7 +42,10 @@ public interface GoodsGain {
 
         try {
             discardingPhaseFlag = playerMessenger.getPlayerBoolean();
+
         } catch (PlayerDisconnectedException e) {
+            PlayerFlightInputHandler.removePlayer(player);
+
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
         }
 
@@ -53,7 +57,10 @@ public interface GoodsGain {
 
             try {
                 coordinates = playerMessenger.getPlayerCoordinates();
+
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
 
@@ -79,7 +86,10 @@ public interface GoodsGain {
 
             try {
                 discardingPhaseFlag = playerMessenger.getPlayerBoolean();
+
             } catch (PlayerDisconnectedException error) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
         }
@@ -97,7 +107,10 @@ public interface GoodsGain {
 
         try {
             rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
+
         } catch (PlayerDisconnectedException e) {
+            PlayerFlightInputHandler.removePlayer(player);
+
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
         }
 
@@ -112,7 +125,10 @@ public interface GoodsGain {
 
             try {
                 sourceCoordinates = playerMessenger.getPlayerCoordinates();
+
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
 
@@ -121,7 +137,10 @@ public interface GoodsGain {
 
             try {
                 destCoordinates = playerMessenger.getPlayerCoordinates();
+
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
 
@@ -147,6 +166,8 @@ public interface GoodsGain {
                 rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
 
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
         }
@@ -174,7 +195,10 @@ public interface GoodsGain {
 
                 try {
                     placementPhaseFlag = playerMessenger.getPlayerBoolean();
+
                 } catch (PlayerDisconnectedException e) {
+                    PlayerFlightInputHandler.removePlayer(player);
+
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 }
 
@@ -186,7 +210,10 @@ public interface GoodsGain {
 
                     try {
                         coordinates = playerMessenger.getPlayerCoordinates();
+
                     } catch (PlayerDisconnectedException e) {
+                        PlayerFlightInputHandler.removePlayer(player);
+
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     }
 
@@ -217,7 +244,10 @@ public interface GoodsGain {
 
                         try {
                             placementPhaseFlag = playerMessenger.getPlayerBoolean();
+
                         } catch (PlayerDisconnectedException e) {
+                            PlayerFlightInputHandler.removePlayer(player);
+
                             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                         }
 
@@ -236,7 +266,7 @@ public interface GoodsGain {
             playerMessenger.printMessage(message);
         }
     }
-    
+
 
     private int[] askForGoods(Player player, String messageType, int start, int end, GameInformation gameInformation) {
 
@@ -252,7 +282,10 @@ public interface GoodsGain {
 
             try {
                 goods[i] = playerMessenger.getPlayerInt();
+
             } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(player);
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
             }
 
