@@ -55,6 +55,14 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
+            if (gameInformation.getFlightBoard().getPlayerOrderList().size() <= 1) {
+
+                message = "This card cannot be played with less than 2 players.\n";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                break;
+
+            }
+
             //Checks the validity of the current index (precaution for disconnection)
             IndexChecker.checkIndex(gameInformation, i);
 
