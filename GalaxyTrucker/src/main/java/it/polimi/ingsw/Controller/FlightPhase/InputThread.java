@@ -56,6 +56,7 @@ public class InputThread extends Thread{
                } catch (PlayerDisconnectedException e) {
 
                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                   this.running = false;
 
                }
 
