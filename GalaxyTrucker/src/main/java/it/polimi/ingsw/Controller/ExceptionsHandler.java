@@ -1,7 +1,10 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -10,19 +13,57 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import java.util.List;
 
 /**
- * Controller class used to handle FracturedShipBoardException.
+ * Controller class used to handle Exceptions.
  * Utility/helper class, cannot have instances:
  * final class, private constructor, static methods.
  *
  * @author Boti
  */
-public final class FracturedShipBoardHandler {
+public final class ExceptionsHandler {
     // Utility class, cannot be instantiated
-    private FracturedShipBoardHandler() {
+    private ExceptionsHandler() {
         throw new UnsupportedOperationException();
     }
 
-    public static void handleFracture(PlayerMessenger playerMessenger, FracturedShipBoardException exception) throws PlayerDisconnectedException, NoHumanCrewLeftException {
+
+    /**
+     * Handle LappedPlayersException.
+     *
+     * @param gameMessenger
+     * @param exception
+     * @author Boti
+     */
+    public static void handleLappedPlayersException(GameMessenger gameMessenger, LappedPlayersException exception) {
+        // remove lapped players
+        FlightBoard flightBoard = exception.getFlightBoard();
+        List<Player> playerList = exception.getPlayerList();
+
+        // eliminate players
+        for (Player player : playerList) {
+            gameMessenger.getPlayerMessenger(player).printMessage("\nYou have been lapped and eliminated from the flight, from now on you are a spectator.\n");
+            flightBoard.eliminatePlayer(player);
+        }
+
+        // construct message
+        StringBuilder builder = new StringBuilder();
+        for (Player player : playerList)
+            builder.append(String.format("%s has been lapped and eliminated from the FlightBoard.\n", player.getNickName()));
+
+        // notify all
+        gameMessenger.sendMessageToAll(builder.toString());
+    }
+
+
+    /**
+     * Handle FracturedShipboardException.
+     *
+     * @param playerMessenger
+     * @param exception
+     * @throws PlayerDisconnectedException
+     * @throws NoHumanCrewLeftException
+     * @author Boti
+     */
+    public static void handleFracturedShipBoardException(PlayerMessenger playerMessenger, FracturedShipBoardException exception) throws PlayerDisconnectedException, NoHumanCrewLeftException {
         Player player = playerMessenger.getPlayer();
         List<ShipBoard> validShipBoardsList = exception.getValidShipBoardsList();
 
