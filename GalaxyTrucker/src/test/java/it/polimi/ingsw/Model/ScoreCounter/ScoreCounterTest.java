@@ -71,7 +71,7 @@ class ScoreCounterTest {
     @Test
     void OneGaveUpPlayerEmptyShip() {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
-        flightBoard.giveUpPlayer(playerA);
+        flightBoard.voluntarilyGiveUpPlayer(playerA);
         scoreCounter.calculatePlayerScores(flightBoard);
         assertEquals(0, scoreCounter.getPlayerScore(playerA));
     }

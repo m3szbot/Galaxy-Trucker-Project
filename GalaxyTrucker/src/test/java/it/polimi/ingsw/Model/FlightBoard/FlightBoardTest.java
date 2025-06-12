@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.FlightBoard;
 
+import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -31,6 +32,8 @@ class FlightBoardTest {
     GameInformation gameInformation;
     Player playerA, playerB, playerC, playerD;
     TUIView flightViewTUI;
+
+    GameMessenger gameMessenger;
 
     @BeforeEach
     void setUp() {
@@ -106,7 +109,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void nextIncrementTileOccupied() {
+    void nextIncrementTileOccupied() throws LappedPlayersException {
         // next tile occupied
         // 1 2 4 7
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
@@ -120,7 +123,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void nextIncrementTilesOccupied() {
+    void nextIncrementTilesOccupied() throws LappedPlayersException {
         // next 2 tiles occupied
         // 1 2 4 7
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
@@ -138,7 +141,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void nextDecrementTileOccupied() {
+    void nextDecrementTileOccupied() throws LappedPlayersException {
         // next tile occupied
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
@@ -173,13 +176,8 @@ class FlightBoardTest {
         assertEquals(29, flightBoard.getPlayerTile(playerA));
         assertEquals(2, flightBoard.getPlayerOrderList().size());
         // playerB gets removed
-        flightBoard.updateFlightBoard();
-        assertEquals(1, flightBoard.getPlayerOrderList().size());
-        assertThrows(NoSuchElementException.class, () -> {
-            flightBoard.getPlayerTile(playerB);
-        });
-        assertThrows(NoSuchElementException.class, () -> {
-            flightBoard.getPlayerOrder(playerB);
+        assertThrows(LappedPlayersException.class, () -> {
+            flightBoard.updateFlightBoard();
         });
     }
 
@@ -234,7 +232,7 @@ class FlightBoardTest {
     @Test
     public void incrementGaveUpPlayer() {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
-        flightBoard.giveUpPlayer(playerA);
+        flightBoard.voluntarilyGiveUpPlayer(playerA);
         assertThrows(NoSuchElementException.class, () -> {
             flightBoard.incrementPlayerTile(playerA, 1);
         });
