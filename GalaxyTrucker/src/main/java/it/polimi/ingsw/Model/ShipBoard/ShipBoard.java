@@ -263,81 +263,54 @@ public class ShipBoard implements Serializable {
     }
 
     /**
-     * Returns a shipboard prefilled with many components. Used for testing.
+     * Fills the shipboard with all kinds of prewritten components.
+     * Adds: engines, cabins, cannons, batteries, storages, shields,
+     * Used for testing, to skip AssemblyPhase.
      *
-     * @return new prefilled shipboard.
      * @author Boti
      */
-    public static ShipBoard getNewPreFilledShipBoard() {
-        ShipBoard tmpShipboard = new ShipBoard(GameType.NORMALGAME);
+    public void preBuildShipBoard() {
         SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
-        SideType[] universalSidesSpecialFront = new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal};
-        SideType[] universalSidesSpecialBack = new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal};
 
-        // add components
         try {
-            tmpShipboard.addComponent(new Cannon(universalSidesSpecialFront, true), 7, 6);
-            tmpShipboard.addComponent(new Battery(universalSides, 3), 8, 6);
-            tmpShipboard.addComponent(new Engine(universalSidesSpecialBack, true), 7, 8);
-            tmpShipboard.addComponent(new Storage(universalSidesSpecialBack, true, 4), 6, 8);
-            tmpShipboard.addComponent(new AlienSupport(universalSides, true), 6, 7);
-            tmpShipboard.addComponent(new Cabin(universalSides, CrewType.Purple, 1), 5, 7);
-            tmpShipboard.addComponent(new Shield(universalSides, 0, 3), 6, 6);
-            tmpShipboard.addComponent(new Component(universalSides), 8, 7);
-            tmpShipboard.addComponent(new Storage(universalSides, false, 3), 9, 7);
-            tmpShipboard.addComponent(new Engine(universalSidesSpecialBack, false), 8, 8);
-            tmpShipboard.addComponent(new Cannon(universalSidesSpecialBack, false), 9, 8);
+            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
+            this.addComponent(new AlienSupport(universalSides, false), 6, 8);
+
+
+            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 7, 6);
+            this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 8, 6);
+            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 8, 5);
+
+            this.addComponent(new Cabin(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 6, 7);
+            this.addComponent(new Cabin(universalSides, CrewType.Brown, 1), 5, 7);
+            this.addComponent(new AlienSupport(universalSides, true), 4, 7);
+            this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 8);
+            this.addComponent(new Cabin(universalSides, CrewType.Purple, 1), 4, 8);
+
+            this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 8, 7);
+            this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 9, 7);
+
+            this.addComponent(new Storage(universalSides, false, 3), 8, 8);
+            this.addComponent(new Storage(universalSides, false, 3), 9, 8);
+            this.addComponent(new Storage(universalSides, true, 2), 10, 8);
+            this.addComponent(new Storage(universalSides, true, 1), 8, 9);
+            this.addComponent(new Storage(universalSides, true, 2), 9, 9);
+            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 4, 9);
+            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 5, 9);
+            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 9, 6);
+            this.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, 0, 1), 6, 6);
+            this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 10, 7);
+
+            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 6, 5);
+            this.addComponent(new Shield(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Smooth}, 2, 3), 5, 6);
+            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 9);
+            addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Smooth, SideType.Universal}, false), 10, 9);
+
         } catch (NotPermittedPlacementException e) {
+            throw new IllegalArgumentException("The perbuilt shipboard has illegal placements.");
         }
-
-        // modify attributes
-        tmpShipboard.addGoods(9, 7, new int[]{0, 1, 1, 1});
-        tmpShipboard.addGoods(6, 8, new int[]{2, 0, 1, 1});
-
-        return tmpShipboard;
-    }
-
-    /**
-     * Add goods to the storage at the given coordinates, if possible.
-     * Updates shipBoardAttributes.
-     *
-     * @throws IllegalArgumentException if operation not possible.
-     * @author Boti
-     */
-    public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
-        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
-
-        int col = getRealIndex(visibleCol);
-        int row = getRealIndex(visibleRow);
-        Component component = componentMatrix[col][row];
-
-        if (!(component instanceof Storage))
-            throw new IllegalArgumentException("The selected component is not a storage");
-
-        // negative goods - malicious intent
-        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
-            throw new IllegalArgumentException("Cannot add negative number of goods");
-
-        // check red goods slots
-        if (goods[0] > component.getAvailableRedSlots())
-            throw new IllegalArgumentException("Not enough red goods storage available");
-
-        // check red + normal goods slots
-        int totalGoods = 0;
-        for (int good : goods)
-            totalGoods += good;
-        if (totalGoods > (component.getAvailableRedSlots() + component.getAvailableBlueSlots()))
-            throw new IllegalArgumentException("Not enough goods storage available");
-
-        // no problems, add goods to component
-        ((Storage) component).addGoods(goods);
-        // update shipboard attributes
-        try {
-            component.accept(new SBAttributesUpdaterVisitor(this));
-        } catch (NoHumanCrewLeftException e) {
-            throw new IllegalStateException("Error: no human crew left after adding goods.");
-        }
+        if (this.isErroneous())
+            throw new IllegalArgumentException("The prebuilt shipboard has errors.");
     }
 
     public boolean[][] getValidityMatrix() {
@@ -1040,7 +1013,7 @@ public class ShipBoard implements Serializable {
             throw new IllegalArgumentException("The selected cabin has no crew members.");
 
         // no crew would be left after changing crewType from Human
-        if (cabin.getCrewType().equals(CrewType.Human) && !crewType.equals(CrewType.Human) &&
+        if (cabin.getCrewType().equals(CrewType.Human) && !crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Human) &&
                 (shipBoardAttributes.getHumanCrewMembers() - cabin.getCrewMembers() <= 0)) {
             throw new IllegalArgumentException("Cannot change crew type from human: no humans would be left.");
         }
@@ -1157,6 +1130,49 @@ public class ShipBoard implements Serializable {
             // revert changes
             addGoods(visibleColStarter, visibleRowStarter, goods);
             throw e;
+        }
+    }
+
+    /**
+     * Add goods to the storage at the given coordinates, if possible.
+     * Updates shipBoardAttributes.
+     *
+     * @throws IllegalArgumentException if operation not possible.
+     * @author Boti
+     */
+    public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            throw new IllegalArgumentException("Coordinates out of bounds.");
+
+        int col = getRealIndex(visibleCol);
+        int row = getRealIndex(visibleRow);
+        Component component = componentMatrix[col][row];
+
+        if (!(component instanceof Storage))
+            throw new IllegalArgumentException("The selected component is not a storage");
+
+        // negative goods - malicious intent
+        if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
+            throw new IllegalArgumentException("Cannot add negative number of goods");
+
+        // check red goods slots
+        if (goods[0] > component.getAvailableRedSlots())
+            throw new IllegalArgumentException("Not enough red goods storage available");
+
+        // check red + normal goods slots
+        int totalGoods = 0;
+        for (int good : goods)
+            totalGoods += good;
+        if (totalGoods > (component.getAvailableRedSlots() + component.getAvailableBlueSlots()))
+            throw new IllegalArgumentException("Not enough goods storage available");
+
+        // no problems, add goods to component
+        ((Storage) component).addGoods(goods);
+        // update shipboard attributes
+        try {
+            component.accept(new SBAttributesUpdaterVisitor(this));
+        } catch (NoHumanCrewLeftException e) {
+            throw new IllegalStateException("Error: no human crew left after adding goods.");
         }
     }
 

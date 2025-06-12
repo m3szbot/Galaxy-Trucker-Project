@@ -43,7 +43,8 @@ class GeneralViewTUITest {
 
     @Test
     public void printPrefilledShipboard() throws NotPermittedPlacementException {
-        ShipBoard shipBoard = ShipBoard.getNewPreFilledShipBoard();
+        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
+        shipBoard.preBuildShipBoard();
         generalViewTUI.printShipboard(shipBoard);
     }
 

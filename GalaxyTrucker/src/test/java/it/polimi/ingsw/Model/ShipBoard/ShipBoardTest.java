@@ -439,6 +439,12 @@ public class ShipBoardTest {
     }
 
     @Test
+    void preBuildShipBoard() {
+        shipBoard.preBuildShipBoard();
+        generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
     void fillShipBoardWithSingleConnectors() throws NotPermittedPlacementException {
         // check if shipboard borders are set correctly
 
