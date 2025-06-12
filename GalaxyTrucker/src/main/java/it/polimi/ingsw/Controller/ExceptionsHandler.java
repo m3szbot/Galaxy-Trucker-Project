@@ -25,9 +25,31 @@ public final class ExceptionsHandler {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Handle NoHumanCrewLeftException.
+     * Print messages and remove player from the flightBoard.
+     *
+     * @param gameMessenger
+     */
+    public static void handleNoHumanCrewLeftException(GameMessenger gameMessenger, Player player, FlightBoard flightBoard) {
+        // print player messages
+        gameMessenger.getPlayerMessenger(player).printMessage("\nYou have lost all human crew and have been eliminated from the flight.");
+        gameMessenger.getPlayerMessenger(player).printMessage("You are now spectating.");
+        gameMessenger.getPlayerMessenger(player).printMessage("(your shipboard will be evaluated after the flight ends)");
+
+        // notify all
+        gameMessenger.sendMessageToAll(String.format("\n%s has lost all human crew and have been eliminated from the flight.", player.getNickName()));
+        gameMessenger.sendMessageToAll("(all shipboards will be evaluated after the flight ends)");
+
+        // remove player from flightboard
+        flightBoard.eliminatePlayer(player);
+
+        Sleeper.sleepXSeconds(4);
+    }
 
     /**
      * Handle LappedPlayersException.
+     * Print messages and remove lapped players from the flightBoard.
      *
      * @param gameMessenger
      * @param exception
@@ -40,17 +62,18 @@ public final class ExceptionsHandler {
 
         // eliminate players
         for (Player player : playerList) {
-            gameMessenger.getPlayerMessenger(player).printMessage("\nYou have been lapped and eliminated from the flight, from now on you are a spectator.\n");
+            gameMessenger.getPlayerMessenger(player).printMessage("\nYou have been lapped and eliminated from the flight.");
+            gameMessenger.getPlayerMessenger(player).printMessage("You are now spectating.");
+            gameMessenger.getPlayerMessenger(player).printMessage("(your shipboard will be evaluated after the flight ends)");
             flightBoard.eliminatePlayer(player);
         }
 
-        // construct message
-        StringBuilder builder = new StringBuilder();
-        for (Player player : playerList)
-            builder.append(String.format("%s has been lapped and eliminated from the FlightBoard.\n", player.getNickName()));
-
         // notify all
-        gameMessenger.sendMessageToAll(builder.toString());
+        gameMessenger.sendMessageToAll("");
+        for (Player player : playerList)
+            gameMessenger.sendMessageToAll(String.format("%s has been lapped and eliminated from the flight.\n", player.getNickName()));
+        gameMessenger.sendMessageToAll("(all shipboards will be evaluated after the flight ends)\n");
+        Sleeper.sleepXSeconds(4);
     }
 
 
@@ -114,13 +137,7 @@ public final class ExceptionsHandler {
         // shipboard to keep successfully selected (others erased)
         playerMessenger.printMessage("You have successfully selected your new shipboard:");
         playerMessenger.printShipboard(player.getShipBoard());
-
-        // sleep for 5 seconds
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            System.out.println("Thread was interrupted.");
-        }
+        Sleeper.sleepXSeconds(4);
 
         // end of fracture handling
     }

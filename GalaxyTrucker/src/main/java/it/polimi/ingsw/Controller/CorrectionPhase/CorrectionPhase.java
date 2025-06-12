@@ -1,16 +1,20 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
 import it.polimi.ingsw.Controller.Phase;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * players correct their shipboards after assembly
+ * Players correct their shipboards after assembly.
+ *
+ * @author Boti
  */
 public class CorrectionPhase extends Phase {
     // gameInformation, gameMessenger attributes inherited from Phase
@@ -21,6 +25,7 @@ public class CorrectionPhase extends Phase {
     public CorrectionPhase(GameInformation gameInformation) {
         super(gameInformation);
     }
+
 
     /**
      * Start correction phase.
@@ -50,40 +55,42 @@ public class CorrectionPhase extends Phase {
         scheduler.shutdownNow();
 
         // remove players with erroneous shipboards at the end of correction
-        removeErroneousShipboardPlayers(gameInformation);
+        removeErroneousShipboardPlayers(gameInformation.getPlayerList());
+        removeErroneousShipboardPlayers(gameInformation.getDisconnectedPlayerList());
 
         // end of correction phase, advance to next phase
         System.out.println("Correction phase ended");
     }
 
     /**
-     * Remove players with invalid shipboards and send message of it to all players.
+     * Remove players with invalid shipboards from the flightBoard and send messages to all players.
+     * To call for connected and disconnected? players.
      */
-    private void removeErroneousShipboardPlayers(GameInformation gameInformation) {
-        String message;
+    private void removeErroneousShipboardPlayers(List<Player> playerList) {
+        // if playerList is empty, do nothing
+        if (playerList.isEmpty())
+            return;
 
-        // connected players
-        for (int i = 0; i < gameInformation.getPlayerList().size(); i++) {
-            Player player = gameInformation.getPlayerList().get(i);
+        // find erroneous shipboard players
+        for (int i = 0; i < playerList.size(); i++) {
+            Player player = playerList.get(i);
             // remove erroneous shipboard
             if (player.getShipBoard().isErroneous()) {
-                message = String.format("Player %s didn't correct his shipboard in time and got removed\n",
-                        player.getNickName());
-                forcePlayerToGiveUp(gameInformation, player, gameMessenger, message);
+                // print player messages
+                gameMessenger.getPlayerMessenger(player).printMessage("\nYou didn't correct the errors in your shipboard and have been eliminated from the flight.");
+                gameMessenger.getPlayerMessenger(player).printMessage("You are now spectating.");
+
+                // notify all
+                gameMessenger.sendMessageToAll(String.format("\n%s didn't correct the errors in his/her shipboard and have been eliminated from the flight.", player.getNickName()));
+
+                // remove player from flightboard if already added
+                if (gameInformation.getFlightBoard().isInGame(player))
+                    gameInformation.getFlightBoard().eliminatePlayer(player);
             }
         }
 
-        // disconnected players
-        for (int i = 0; i < gameInformation.getDisconnectedPlayerList().size(); i++) {
-            Player player = gameInformation.getDisconnectedPlayerList().get(i);
-            // remove erroneous shipboard
-            if (player.getShipBoard().isErroneous()) {
-                message = String.format("Player %s didn't correct his shipboard in time and got removed\n",
-                        player.getNickName());
-                forcePlayerToGiveUp(gameInformation, player, gameMessenger, message);
-            }
-        }
-
+        // all erroneous shipboard players removed
+        Sleeper.sleepXSeconds(4);
     }
 
 }

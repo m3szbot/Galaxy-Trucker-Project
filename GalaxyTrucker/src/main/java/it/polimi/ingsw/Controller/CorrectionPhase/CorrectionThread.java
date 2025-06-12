@@ -4,8 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
-import it.polimi.ingsw.Controller.Phase;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.CrewType;
@@ -41,8 +40,7 @@ public class CorrectionThread implements Runnable {
             return;
         } catch (NoHumanCrewLeftException e) {
             // force player to give up and end player thread
-            String message = String.format("%s has no human crew left.", player.getNickName());
-            Phase.forcePlayerToGiveUp(gameInformation, player, gameMessenger, message);
+            ExceptionsHandler.handleNoHumanCrewLeftException(gameMessenger, player, gameInformation.getFlightBoard());
             return;
         }
 
@@ -109,7 +107,7 @@ public class CorrectionThread implements Runnable {
 
                 } catch (FracturedShipBoardException e) {
                     // handle fractured shipboard
-                    FracturedShipBoardHandler.handleFracture(playerMessenger, e);
+                    ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
                     // throws PlayerDisconnectedException
                 }
 
