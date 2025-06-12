@@ -8,6 +8,5 @@ package it.polimi.ingsw.Model.ShipBoard;
  */
 public class NoHumanCrewLeftException extends Exception {
     public NoHumanCrewLeftException() {
-        super("No human crew left on shipboard, player forced to give up.");
     }
 }
