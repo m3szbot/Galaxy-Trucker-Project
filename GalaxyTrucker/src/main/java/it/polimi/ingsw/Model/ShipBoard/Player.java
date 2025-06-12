@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.View.TUI.TUIView;
 
 import java.io.Serializable;
 
@@ -27,13 +28,42 @@ public class Player implements Serializable {
     }
 
     /**
-     * Returns the player's nickname.
+     * Returns the player's nickname coloured with the player's colors.
      *
      * @return The player's nickname.
      * @author Giacomo
      */
     public String getNickName() {
-        return nickName;
+        // color the nickname
+        return getColorCode(color) + nickName + TUIView.RESET;
+    }
+
+    /**
+     * Return the ascii color coder string of the given player color, or RESET (default color)
+     * if color couldn't be translated.
+     *
+     * @param color
+     * @return
+     */
+    private String getColorCode(Color color) {
+        if (color == null)
+            return TUIView.RESET;
+
+        switch (color) {
+            case Color.RED -> {
+                return TUIView.RED;
+            }
+            case BLUE -> {
+                return TUIView.BLUE;
+            }
+            case GREEN -> {
+                return TUIView.GREEN;
+            }
+            case YELLOW -> {
+                return TUIView.YELLOW;
+            }
+        }
+        return TUIView.RESET;
     }
 
     /**
