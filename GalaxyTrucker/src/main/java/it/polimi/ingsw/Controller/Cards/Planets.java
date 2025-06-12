@@ -165,6 +165,10 @@ public class Planets extends Card implements GoodsGain, Movable {
 
         } catch (LappedPlayersException e) {
             ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
         }
 
 

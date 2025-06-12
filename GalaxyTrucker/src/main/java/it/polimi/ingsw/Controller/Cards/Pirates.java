@@ -149,6 +149,10 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
         } catch (LappedPlayersException e) {
             ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
         }
 
 
