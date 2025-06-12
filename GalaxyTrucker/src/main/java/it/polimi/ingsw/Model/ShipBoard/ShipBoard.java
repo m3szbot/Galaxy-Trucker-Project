@@ -620,7 +620,7 @@ public class ShipBoard implements Serializable {
     /**
      * Check if the shipboard is fractured after removing components.
      * The shipboard is fractured if there are >1 disconnected parts with human crew >0, so the part to keep must be chosen
-     * using the FracturedShipBoardHandler utility class.
+     * using the ExceptionsHandler utility class.
      *
      * @throws FracturedShipBoardException if the shipboard is fractured.
      * @author Boti
