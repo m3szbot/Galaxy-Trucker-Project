@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
@@ -73,10 +74,6 @@ public class Sabotage extends Card implements SmallestCrew {
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 
@@ -104,11 +101,7 @@ public class Sabotage extends Card implements SmallestCrew {
             x = (int) ((Math.random() * 11) + 1);
             y = (int) ((Math.random() * 11) + 1);
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println("Error while sleeping");
-            }
+            Sleeper.sleepXSeconds(3);
 
             if (player.getShipBoard().getRealComponent(x, y) != null) {
 

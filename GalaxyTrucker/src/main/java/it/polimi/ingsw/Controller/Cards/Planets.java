@@ -62,7 +62,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
-            message = "Would you like to land on a planet ?";
+            message = "\nWould you like to land on a planet ?";
             playerMessenger.printMessage(message);
 
             try {
@@ -80,7 +80,7 @@ public class Planets extends Card implements GoodsGain, Movable {
                             if (!planetOccupation[planetChosen - 1]) {
 
                                 message = "Player " + player.getNickName() +
-                                        " has landed on planet " + planetChosen + " !";
+                                        " has landed on planet " + planetChosen + " !\n";
                                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                                 freePlanet--;
 
@@ -143,7 +143,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
-                continue;
+
             }
 
             if (playerMessenger != null) {
@@ -152,16 +152,14 @@ public class Planets extends Card implements GoodsGain, Movable {
                 playerMessenger.printMessage(message);
             }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

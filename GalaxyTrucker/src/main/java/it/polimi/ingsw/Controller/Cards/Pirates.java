@@ -70,24 +70,22 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 message = "Would you like to collect the reward for defeating the enemies ?";
                 playerMessenger.printMessage(message);
 
-                changePlayerPosition(gameInformation.getFlightBoard().getPlayerOrderList().get(i), -daysLost, gameInformation.getFlightBoard());
+                changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
                         //player decides to collect the reward
-
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + player.getNickName() +
                                 " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                        giveCredits(gameInformation.getFlightBoard().getPlayerOrderList().get(i), gainedCredits);
+                        giveCredits(player, gainedCredits);
 
                     } else {
 
                         //player decides not to collect the reward
-
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + player.getNickName() +
                                 " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -96,8 +94,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                     PlayerFlightInputHandler.removePlayer(player);
 
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                    i--;
-                    continue;
+
                 }
                 break;
 
@@ -108,7 +105,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
                 try {
 
-                    hit(gameInformation.getFlightBoard().getPlayerOrderList().get(i), blows, blowType, gameInformation);
+                    hit(player, blows, blowType, gameInformation);
 
                 } catch (NoHumanCrewLeftException e) {
 
@@ -122,14 +119,13 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
-                    continue;
 
                 } catch (PlayerDisconnectedException e) {
                     PlayerFlightInputHandler.removePlayer(player);
 
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     i--;
-                    continue;
+
                 }
 
             }
@@ -140,16 +136,14 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 playerMessenger.printMessage(message);
             }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -42,36 +43,35 @@ public class StarDust extends Card implements Movable {
             i = IndexChecker.checkIndex(gameInformation, i);
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
+            PlayerFlightInputHandler.startPlayerTurn(player);
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             externalJunctions = player.getShipBoard().countExternalJunctions();
 
             changePlayerPosition(player, -externalJunctions, gameInformation.getFlightBoard());
 
-            if (externalJunctions > 0) {
-                message = "Player " + player.getNickName() + " has receded of " + externalJunctions + " positions!\n";
-                playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                if (externalJunctions > 0) {
+                    message = "Player " + player.getNickName() + " has receded of " + externalJunctions + " positions!\n";
+                    playerMessenger.printMessage(message);
 
-            } else {
-                message = "Player " + player.getNickName() + " has not receded!\n";
-                playerMessenger.printMessage(message);
+                } else {
+                    message = "Player " + player.getNickName() + " has not receded!\n";
+                    playerMessenger.printMessage(message);
 
+                }
             }
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println("Error while sleeping");
+
+            Sleeper.sleepXSeconds(3);
+
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

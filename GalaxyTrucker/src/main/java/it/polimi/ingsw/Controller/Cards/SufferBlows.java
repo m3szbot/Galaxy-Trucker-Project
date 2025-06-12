@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -43,11 +44,7 @@ public interface SufferBlows {
             if (blow != null) {
 
                 //Pause before each blow
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    System.out.println("Error while sleeping");
-                }
+                Sleeper.sleepXSeconds(3);
 
                 componentCoordinates = findHitComponent(player, blow, componentCoordinates);
 

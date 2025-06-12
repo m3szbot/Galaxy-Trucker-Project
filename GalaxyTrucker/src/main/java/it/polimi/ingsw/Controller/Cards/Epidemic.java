@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -52,11 +53,7 @@ public class Epidemic extends Card {
             message = "An epidemic is spreading in your ship!  You may lose many crew members to the disease!\n";
             playerMessenger.printMessage(message);
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println("Error while sleeping");
-            }
+            Sleeper.sleepXSeconds(3);
 
             cabinsToInfect = player.getShipBoard().getJoinedCabinsVisibleCoordinates();
 
@@ -105,22 +102,15 @@ public class Epidemic extends Card {
 
             }
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println("Error while sleeping");
-            }
+            Sleeper.sleepXSeconds(3);
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

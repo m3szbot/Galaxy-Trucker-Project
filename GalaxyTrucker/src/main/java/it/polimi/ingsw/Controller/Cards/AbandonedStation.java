@@ -79,6 +79,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     i--;
+
                 }
             } else {
 
@@ -92,7 +93,9 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                 playerMessenger.printMessage(message);
             }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
@@ -102,11 +105,6 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

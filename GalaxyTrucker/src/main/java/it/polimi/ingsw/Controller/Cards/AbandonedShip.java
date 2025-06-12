@@ -98,7 +98,6 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
 
-                    continue;
                 }
             } else {
 
@@ -114,7 +113,9 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
             }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
@@ -128,10 +129,6 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
     }
 
     public void showCard() {
@@ -143,7 +140,6 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         System.out.println("Loss type: " + lossType.toString());
         System.out.println("Loss number: " + lossNumber);
         System.out.println("Gained credit: " + gainedCredits);
-        System.out.println();
 
     }
 }
