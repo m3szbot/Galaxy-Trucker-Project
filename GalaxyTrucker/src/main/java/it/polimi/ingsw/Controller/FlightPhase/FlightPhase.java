@@ -57,6 +57,7 @@ public class FlightPhase extends Phase {
 
             card.resolve(gameInformation);
 
+
             for (Player player : flightBoard.getPlayerOrderList()) {
 
                 playerMessenger = gameMessenger.getPlayerMessenger(player);
