@@ -3,7 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
@@ -338,7 +338,7 @@ public interface SufferBlows {
             player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
 
         } catch (FracturedShipBoardException e) {
-            FracturedShipBoardHandler.handleFracture(playerMessenger, e);
+            ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
         }
 
         return true;

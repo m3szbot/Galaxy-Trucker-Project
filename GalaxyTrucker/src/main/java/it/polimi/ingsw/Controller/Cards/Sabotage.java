@@ -5,7 +5,6 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
-import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -120,7 +119,7 @@ public class Sabotage extends Card implements SmallestCrew {
                     return true;
 
                 } catch (FracturedShipBoardException e) {
-                    FracturedShipBoardHandler.handleFracture(playerMessenger, e);
+                    ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
                 }
 
             }
