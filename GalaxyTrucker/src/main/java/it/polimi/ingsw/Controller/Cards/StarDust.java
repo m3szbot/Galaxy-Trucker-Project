@@ -48,14 +48,19 @@ public class StarDust extends Card implements Movable {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             externalJunctions = player.getShipBoard().countExternalJunctions();
 
-            changePlayerPosition(player, -externalJunctions, gameInformation.getFlightBoard());
+            if (externalJunctions > 0) {
+                changePlayerPosition(player, -externalJunctions, gameInformation.getFlightBoard());
+            }
 
             if (playerMessenger != null) {
+
                 if (externalJunctions > 0) {
+
                     message = "Player " + player.getNickName() + " has receded of " + externalJunctions + " positions!\n";
                     playerMessenger.printMessage(message);
 
                 } else {
+
                     message = "Player " + player.getNickName() + " has not receded!\n";
                     playerMessenger.printMessage(message);
 
