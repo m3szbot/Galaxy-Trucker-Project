@@ -238,40 +238,50 @@ public class FlightBoard implements Serializable {
     }
 
     /**
-     * Remove lapped players and update playerOrderList.
+     * Update playerOrderList and signal lapped players on the flightBoard.
      * Called at the end of every adventure card.
+     *
+     * @throws LappedPlayersException if there are lapped players after updating the flightBoard
+     * @author Boti
      */
-    public void updateFlightBoard() {
+    public void updateFlightBoard() throws LappedPlayersException {
         // sort playerOrderList - necessary for removal
         sortPlayerOrderList();
+
         // check for lapped players
-        removeLappedPlayers();
+        // throws LappedPlayersException
+        checkLappedPlayers();
     }
 
     /**
-     * Removes lapped players from flightBoard. PlayerOrderList must be sorted before calling.
+     * Collects lapped players from flightBoard and throws exception.
+     * PlayerOrderList must be sorted before calling.
+     *
+     * @throws LappedPlayersException if there are lapped players after updating the flightBoard
+     * @author Boti
      */
-    private void removeLappedPlayers() {
-        // toRemove list to avoid concurrent modification issues
-        List<Player> toRemove = new ArrayList<>();
+    private void checkLappedPlayers() throws LappedPlayersException {
+        List<Player> lapped = new ArrayList<>();
         Player low, high;
         // start from lowest as it gets removed first
+        // iterate low
         for (int i = playerOrderList.size() - 1; i > 0; i--) {
             low = playerOrderList.get(i);
+
+            // iterate high
             for (int j = 0; j < i; j++) {
                 high = playerOrderList.get(j);
                 if (playerTilesMap.get(high) - playerTilesMap.get(low) > this.numberOfTiles) {
-                    toRemove.add(low);
+                    lapped.add(low);
                     // skip to next low
                     break;
                 }
             }
         }
-        // remove lapped players
-        // eliminatePlayer updates playerOrderList
-        for (Player player : toRemove) {
-            eliminatePlayer(player);
-        }
+
+        // throw exception if players are lapped
+        if (!lapped.isEmpty())
+            throw new LappedPlayersException(this, lapped);
     }
 
     /**
@@ -287,7 +297,7 @@ public class FlightBoard implements Serializable {
             sortPlayerOrderList();
             eliminatedList.add(player);
         } else {
-            throw new NoSuchElementException("Player not in game");
+            throw new NoSuchElementException("Player not in game.");
         }
     }
 
@@ -297,7 +307,7 @@ public class FlightBoard implements Serializable {
      *
      * @param player player who gives up
      */
-    public void giveUpPlayer(Player player) throws NoSuchElementException {
+    public void voluntarilyGiveUpPlayer(Player player) throws NoSuchElementException {
         if (isInGame(player)) {
             playerTilesMap.remove(player);
             playerOrderList.remove(player);
@@ -373,11 +383,17 @@ public class FlightBoard implements Serializable {
     }
 
     /**
-     * Add goods to inventory
+     * Add goods to flightBoard inventory.
      *
      * @param goods Array of quantities to add of each color of goods (red, yellow, green, blue)
      */
     public void addGoods(int[] goods) {
+        for (int i = 0; i < goods.length; i++) {
+            if (goodsNumber[i] + goods[i] < 0) {
+                throw new IllegalArgumentException("Negative goods inventory in flightBoard.");
+            }
+        }
+
         for (int i = 0; i < 4; i++) {
             this.goodsNumber[i] += goods[i];
         }
