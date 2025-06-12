@@ -30,6 +30,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     // dataContainer must be coherent
     // (synchronized is reentrant - the thread holding it can acquire it again)
     private final Object dataContainerLock = new Object();
+    private final Object readerLock = new Object();
 
     private Player player;
     private ConnectionType connectionType;
@@ -223,67 +224,69 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      * source --> critical error
      * @author carlo
      */
-    private synchronized String getPlayerInput() throws PlayerDisconnectedException {
+    private String getPlayerInput() throws PlayerDisconnectedException {
 
         String messageBeforeCommand = lastMessage;
 
-        if (connectionType == ConnectionType.SOCKET) {
+        synchronized (readerLock) {
 
-            try {
-                while(true) {
-                    String input = socketDataExchanger.getString();
+            if (connectionType == ConnectionType.SOCKET) {
 
-                    if (CommandHandler.executeCommand(input, this)) {
+                try {
+                    while (true) {
+                        String input = socketDataExchanger.getString();
 
-                        printMessage(messageBeforeCommand);
+                        if (CommandHandler.executeCommand(input, this)) {
 
-                    } else if (input.equals("inactivity")) {
+                            printMessage(messageBeforeCommand);
 
-                        System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                        throw new PlayerDisconnectedException(player);
+                        } else if (input.equals("inactivity")) {
 
-                    } else {
-                        return input;
+                            System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                            throw new PlayerDisconnectedException(player);
+
+                        } else {
+                            return input;
+                        }
                     }
-                }
 
-            } catch (IOException e) {
-
-                      System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
-                                         "a disconnection probably occurred");
-
-                throw new PlayerDisconnectedException(player);
-            }
-        } else {
-
-            try {
-
-                while(true) {
-                    String input = virtualClient.getString();
-
-                    if (CommandHandler.executeCommand(input, this)) {
-                        printMessage(messageBeforeCommand);
-                    } else {
-                        return input;
-                    }
-                }
-
-            } catch (RemoteException e) {
-
-                if(e.getMessage().equals("inactivity")){
-
-                    System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
-                }
-                else {
+                } catch (IOException e) {
 
                     System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
                             "a disconnection probably occurred");
+
+                    throw new PlayerDisconnectedException(player);
+                }
+            } else {
+
+                try {
+
+                    while (true) {
+                        String input = virtualClient.getString();
+
+                        if (CommandHandler.executeCommand(input, this)) {
+                            printMessage(messageBeforeCommand);
+                        } else {
+                            return input;
+                        }
+                    }
+
+                } catch (RemoteException e) {
+
+                    if (e.getMessage().equals("inactivity")) {
+
+                        System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                    } else {
+
+                        System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                                "a disconnection probably occurred");
+                    }
+
+                    throw new PlayerDisconnectedException(player);
+
                 }
 
-                throw new PlayerDisconnectedException(player);
-
             }
-
         }
     }
 

@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Connection.ServerSide.utils.CommandHandler;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -45,11 +46,7 @@ public class InputThread extends Thread{
 
                    //It's the player turn
                    while (isPlayerTurn){
-                       try {
-                           Thread.sleep(1000);
-                       } catch (InterruptedException e) {
-                           System.err.println("Input thread of flight phase was interrupted abnormally");
-                       }
+                       Sleeper.sleepXSeconds(1);
                    }
 
 

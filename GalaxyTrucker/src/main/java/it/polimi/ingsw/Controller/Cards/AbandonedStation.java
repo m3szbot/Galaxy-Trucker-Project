@@ -42,7 +42,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             //Checks the validity of the current index (precaution for disconnection)
-            IndexChecker.checkIndex(gameInformation, i);
+            i = IndexChecker.checkIndex(gameInformation, i);
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
@@ -65,6 +65,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                         message = player.getNickName() + " has solved the card!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         solved = true;
+                        PlayerFlightInputHandler.endPlayerTurn(player);
                         break;
 
                     } else {
@@ -78,6 +79,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                     i--;
+
                 }
             } else {
 
@@ -91,7 +93,9 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                 playerMessenger.printMessage(message);
             }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
@@ -101,11 +105,6 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

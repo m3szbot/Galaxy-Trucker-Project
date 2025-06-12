@@ -37,7 +37,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             //Checks the validity of the current index (precaution for disconnection)
-            IndexChecker.checkIndex(gameInformation, i);
+            i = IndexChecker.checkIndex(gameInformation, i);
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
@@ -47,37 +47,37 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
             try {
                 chosenFirePower = chooseFirePower(player, gameInformation);
 
+                if (chosenFirePower > requirementNumber) {
+
+                    message = "Player " + player.getNickName() + " has defeated the " +
+                            "enemies!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    results[i] = AttackStates.EnemyDefeated;
+
+                } else if (chosenFirePower == requirementNumber) {
+
+                    message = "Player " + player.getNickName() + " equalized the " +
+                            "enemies!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    results[i] = AttackStates.Equalized;
+
+                } else {
+
+                    message = "Player " + player.getNickName() + " has been" +
+                            " defeated by the enemies!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    results[i] = AttackStates.PlayerDefeated;
+
+                }
+
             } catch (PlayerDisconnectedException e) {
                 PlayerFlightInputHandler.removePlayer(player);
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
-                continue;
-            }
-
-            if (chosenFirePower > requirementNumber) {
-
-                message = "Player " + player.getNickName() + " has defeated the " +
-                        "enemies!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-                results[i] = AttackStates.EnemyDefeated;
-
-            } else if (chosenFirePower == requirementNumber) {
-
-                message = "Player " + player.getNickName() + " equalized the " +
-                        "enemies!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-                results[i] = AttackStates.Equalized;
-
-            } else {
-
-                message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() + " has been" +
-                        " defeated by the enemies!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-                results[i] = AttackStates.PlayerDefeated;
 
             }
 
@@ -86,7 +86,9 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
                 playerMessenger.printMessage(message);
             }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 

@@ -52,7 +52,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
         for (i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             //Checks the validity of the current index (precaution for disconnection)
-            IndexChecker.checkIndex(gameInformation, i);
+            i = IndexChecker.checkIndex(gameInformation, i);
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
@@ -123,16 +123,14 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                 playerMessenger.printMessage(message);
             }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

@@ -55,6 +55,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
+            //If there is only one player left this card needs to be skipped
             if (gameInformation.getFlightBoard().getPlayerOrderList().size() <= 1) {
 
                 message = "This card cannot be played with less than 2 players.\n";
@@ -64,7 +65,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             }
 
             //Checks the validity of the current index (precaution for disconnection)
-            IndexChecker.checkIndex(gameInformation, i);
+            i = IndexChecker.checkIndex(gameInformation, i);
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
@@ -79,13 +80,17 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
-                continue;
+
             }
 
-            message = "The other players are choosing their fire power.\n";
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "The other players are choosing their fire power.\n";
+                playerMessenger.printMessage(message);
+            }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
@@ -94,7 +99,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             //Checks the validity of the current index (precaution for disconnection)
-            IndexChecker.checkIndex(gameInformation, i);
+            i = IndexChecker.checkIndex(gameInformation, i);
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
@@ -109,13 +114,17 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
-                continue;
+
             }
 
-            message = "The other players are choosing their engine power.\n";
-            playerMessenger.printMessage(message);
+            if (playerMessenger != null) {
+                message = "The other players are choosing their engine power.\n";
+                playerMessenger.printMessage(message);
+            }
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
@@ -191,11 +200,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
-
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
 
     }
 

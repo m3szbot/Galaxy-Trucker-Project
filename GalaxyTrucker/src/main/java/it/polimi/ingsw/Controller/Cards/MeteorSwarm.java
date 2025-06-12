@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -47,7 +48,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             //Checks the validity of the current index (precaution for disconnection)
-            IndexChecker.checkIndex(gameInformation, i);
+            i = IndexChecker.checkIndex(gameInformation, i);
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
@@ -72,14 +73,14 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
                 gameInformation.getFlightBoard().eliminatePlayer(player);
                 i--;
-                continue;
+
 
             } catch (PlayerDisconnectedException e) {
                 PlayerFlightInputHandler.removePlayer(player);
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 i--;
-                continue;
+
             }
 
             if (playerMessenger != null) {
@@ -89,22 +90,16 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
             }
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println("Error while sleeping");
-            }
+            Sleeper.sleepXSeconds(3);
 
-            PlayerFlightInputHandler.endPlayerTurn(player);
+            if (player != null) {
+                PlayerFlightInputHandler.endPlayerTurn(player);
+            }
 
         }
 
         gameInformation.getFlightBoard().updateFlightBoard();
 
-        for (Player player1 : gameInformation.getFlightBoard().getPlayerOrderList()) {
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player1);
-            playerMessenger.printFlightBoard(gameInformation.getFlightBoard());
-        }
     }
 
     public void showCard() {
