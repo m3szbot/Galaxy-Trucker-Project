@@ -144,13 +144,17 @@ public class AssemblyState extends GameState {
                 assemblyThread.setState(new ChooseStartingPositionState(assemblyProtocol, playerMessenger, player));
                 break;
 
+            case "fastshipboardbuild":
+                actionTaken = true;
+                player.getShipBoard().preBuildShipBoard();
+                assemblyThread.setState(new ChooseStartingPositionState(assemblyProtocol, playerMessenger, player));
+                break;
+
             default:
                 message = "Invalid command";
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
-
-
     }
 
     /**
