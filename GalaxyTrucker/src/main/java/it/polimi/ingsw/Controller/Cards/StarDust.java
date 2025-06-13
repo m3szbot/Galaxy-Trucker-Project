@@ -25,6 +25,7 @@ public class StarDust extends Card implements Movable {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 

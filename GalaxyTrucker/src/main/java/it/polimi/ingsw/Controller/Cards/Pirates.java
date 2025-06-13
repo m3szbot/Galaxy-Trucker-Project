@@ -34,6 +34,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
         this.requirementNumber = cardBuilder.getRequirementNumber();
         this.blowType = cardBuilder.getBlowType();
         this.blows = cardBuilder.getBlows();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 

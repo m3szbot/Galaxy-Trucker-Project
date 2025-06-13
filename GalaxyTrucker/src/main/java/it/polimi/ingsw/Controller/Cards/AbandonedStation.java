@@ -30,6 +30,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         this.daysLost = cardBuilder.getDaysLost();
         this.goods = cardBuilder.getGoods();
         this.requirementNumber = cardBuilder.getRequirementNumber();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 

@@ -34,6 +34,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
         this.lossType = cardBuilder.getLossType();
         this.requirementNumber = cardBuilder.getRequirementNumber();
         this.lossNumber = cardBuilder.getLossNumber();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 

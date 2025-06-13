@@ -64,7 +64,7 @@ public class GUIView extends GeneralView {
     @Override
     public void printCard(Card card) {
 
-        
+
 
     }
 

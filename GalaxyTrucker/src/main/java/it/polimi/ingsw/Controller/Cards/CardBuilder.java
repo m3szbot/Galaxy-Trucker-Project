@@ -17,6 +17,7 @@ public class CardBuilder {
     private int[] goods, planet1, planet2, planet3, planet4;
     private Blow[] blows;
     private String cardName;
+    private String imagePath;
 
 
     public CardBuilder buildCardLevel(int cardLevel) {
@@ -82,6 +83,11 @@ public class CardBuilder {
         this.planet2 = planet2;
         this.planet3 = planet3;
         this.planet4 = planet4;
+        return this;
+    }
+
+    public CardBuilder buildCardImage(String image){
+        this.imagePath = image;
         return this;
     }
 
@@ -175,5 +181,9 @@ public class CardBuilder {
 
     public String getCardName() {
         return cardName;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 }

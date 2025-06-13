@@ -34,6 +34,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
         this.lossNumber = cardBuilder.getLossNumber();
         this.goods = cardBuilder.getGoods();
         this.requirementNumber = cardBuilder.getRequirementNumber();
+        this.imagePath = cardBuilder.getImagePath();
 
 
     }

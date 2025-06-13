@@ -34,6 +34,7 @@ public class Planets extends Card implements GoodsGain, Movable {
         this.planet2 = cardBuilder.getPlanet2();
         this.planet3 = cardBuilder.getPlanet3();
         this.planet4 = cardBuilder.getPlanet4();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 

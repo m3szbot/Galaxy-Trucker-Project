@@ -29,6 +29,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
         this.cardName = cardBuilder.getCardName();
         this.blows = cardBuilder.getBlows();
         this.blowType = cardBuilder.getBlowType();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 
