@@ -38,7 +38,7 @@ public final class ExceptionsHandler {
         gameMessenger.getPlayerMessenger(player).printMessage("(your shipboard will be evaluated after the flight ends)");
 
         // notify all
-        gameMessenger.sendMessageToAll(String.format("\n%s has lost all human crew and have been eliminated from the flight.", player.getNickName()));
+        gameMessenger.sendMessageToAll(String.format("\n%s has lost all human crew and have been eliminated from the flight.", player.getColouredNickName()));
         gameMessenger.sendMessageToAll("(all shipboards will be evaluated after the flight ends)");
 
         // remove player from flightboard
@@ -71,7 +71,7 @@ public final class ExceptionsHandler {
         // notify all
         gameMessenger.sendMessageToAll("");
         for (Player player : playerList)
-            gameMessenger.sendMessageToAll(String.format("%s has been lapped and eliminated from the flight.\n", player.getNickName()));
+            gameMessenger.sendMessageToAll(String.format("%s has been lapped and eliminated from the flight.\n", player.getColouredNickName()));
         gameMessenger.sendMessageToAll("(all shipboards will be evaluated after the flight ends)\n");
         Sleeper.sleepXSeconds(4);
     }

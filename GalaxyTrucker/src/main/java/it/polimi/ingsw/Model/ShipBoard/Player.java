@@ -28,12 +28,18 @@ public class Player implements Serializable {
     }
 
     /**
-     * Returns the player's nickname coloured with the player's colors.
-     *
-     * @return The player's nickname.
+     * @return the player's nickname (without the color strings).
      * @author Giacomo
      */
     public String getNickName() {
+        return nickName;
+    }
+
+    /**
+     * @return The player's nickname, colored (with strings).
+     * @author Boti
+     */
+    public String getColouredNickName() {
         // color the nickname
         return getColorCode(color) + nickName + TUIView.RESET;
     }

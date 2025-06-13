@@ -80,7 +80,7 @@ public class EvaluationPhase extends Phase {
         }
         // sort players based on credits in descending order
         creditsList.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
-        
+
         // create message string
         StringBuilder result = new StringBuilder();
         int pos = 1;
@@ -93,7 +93,7 @@ public class EvaluationPhase extends Phase {
                 default -> result.append(String.format("%dth: ", pos));
             }
             // print player and credits
-            result.append(String.format("%s - %d\n", entry.getKey().getNickName(), entry.getValue()));
+            result.append(String.format("%s - %d\n", entry.getKey().getColouredNickName(), entry.getValue()));
             pos++;
         }
         return result.toString();

@@ -157,7 +157,7 @@ public class TUIView extends GeneralView {
 
                 //String used to print the nickName
                 player = flightBoard.getPlayerOrderList().get(i);
-                nickname = player.getNickName();
+                nickname = player.getColouredNickName();
 
                 // Temp1 holds the current player tile, temp2 holds the subsequent player tile
                 temp1 = flightBoard.getPlayerTile(player);

@@ -95,9 +95,9 @@ public class GameMessenger {
         }
         playerMessengerMap.get(player).clearPlayerResources();
         playerMessengerMap.remove(player);
+        System.out.println(String.format("Player %s disconnected!", player.getColouredNickName()));
+        sendMessageToAll(String.format("Player %s disconnected!", player.getColouredNickName()));
         ClientMessenger.getCentralServer().removeNickName(player.getNickName());
-        System.out.println(String.format("Player %s disconnected!", player.getNickName()));
-        sendMessageToAll(String.format("Player %s disconnected!", player.getNickName()));
     }
 
     /**
