@@ -28,6 +28,9 @@ public class Player implements Serializable {
     }
 
     /**
+     * Used by the server (nickname is an identifier, without the color code - assigned only for the game).
+     * Uncoloured nickname is the id of the client.
+     *
      * @return the player's nickname (without the color strings).
      * @author Giacomo
      */
@@ -36,6 +39,9 @@ public class Player implements Serializable {
     }
 
     /**
+     * Can be used only in print statements (TUI)!
+     * (Ruins the nickname id of the client saved in the server)
+     *
      * @return The player's nickname, colored (with strings).
      * @author Boti
      */
