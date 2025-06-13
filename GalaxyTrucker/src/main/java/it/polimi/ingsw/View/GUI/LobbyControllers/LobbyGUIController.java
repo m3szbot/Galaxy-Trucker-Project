@@ -1,12 +1,14 @@
 package it.polimi.ingsw.View.GUI.LobbyControllers;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
+import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
+import it.polimi.ingsw.View.GeneralView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class LobbyGUIController {
+public class LobbyGUIController extends GeneralView {
 
     @FXML
     private TextArea logTextArea;
@@ -21,12 +23,12 @@ public class LobbyGUIController {
 
     }
 
-    public void showData(String message, boolean isError){
-        if (isError) {
-            logTextArea.appendText("[ERROR] " + message + "\n");
-        } else {
-            logTextArea.appendText(message + "\n");
-        }
+    public void printMessage(DataContainer dataContainer){
+        logTextArea.appendText(dataContainer.getMessage() + "\n");
+    }
+
+    public void printMessage(String message){
+        logTextArea.appendText(message);
     }
 
     public void sendData(String playerInput){

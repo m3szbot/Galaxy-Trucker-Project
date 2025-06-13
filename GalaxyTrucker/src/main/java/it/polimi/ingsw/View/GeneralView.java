@@ -13,7 +13,6 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 public abstract class GeneralView implements ViewServerInvokableMethods {
 
-
     public abstract void printMessage(DataContainer dataContainer);
 
     public abstract void printMessage(String message);
