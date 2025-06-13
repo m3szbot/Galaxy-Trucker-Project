@@ -73,7 +73,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
-                        message = "Player " + player.getNickName() +
+                        message = "Player " + player.getColouredNickName() +
                                 " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -81,7 +81,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
                     } else {
 
-                        message = "Player " + player.getNickName() +
+                        message = "Player " + player.getColouredNickName() +
                                 " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -106,7 +106,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
 
-                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     PlayerFlightInputHandler.removePlayer(player);

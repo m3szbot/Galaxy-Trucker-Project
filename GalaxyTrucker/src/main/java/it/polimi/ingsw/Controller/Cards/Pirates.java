@@ -78,7 +78,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                     if (playerMessenger.getPlayerBoolean()) {
 
                         //player decides to collect the reward
-                        message = "Player " + player.getNickName() +
+                        message = "Player " + player.getColouredNickName() +
                                 " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -87,7 +87,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                     } else {
 
                         //player decides not to collect the reward
-                        message = "Player " + player.getNickName() +
+                        message = "Player " + player.getColouredNickName() +
                                 " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -102,7 +102,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
             } else if (results[i] == AttackStates.PlayerDefeated) {
 
-                message = "Player " + player.getNickName() + " is under pirate fire!!\n";
+                message = "Player " + player.getColouredNickName() + " is under pirate fire!!\n";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 try {
@@ -114,7 +114,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                     message = e.getMessage();
                     playerMessenger.printMessage(message);
 
-                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     PlayerFlightInputHandler.removePlayer(player);

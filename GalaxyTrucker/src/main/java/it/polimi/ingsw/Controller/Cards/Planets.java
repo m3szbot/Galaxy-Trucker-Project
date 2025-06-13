@@ -81,7 +81,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                             if (!planetOccupation[planetChosen - 1]) {
 
-                                message = "Player " + player.getNickName() +
+                                message = "Player " + player.getColouredNickName() +
                                         " has landed on planet " + planetChosen + " !\n";
                                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                                 freePlanet--;
@@ -135,7 +135,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                 } else {
 
-                    message = "Player " + player.getNickName() +
+                    message = "Player " + player.getColouredNickName() +
                             " decided to not land on any planet.\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 

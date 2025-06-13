@@ -71,7 +71,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getColouredNickName() +
                                 " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -79,7 +79,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
                     } else {
 
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getColouredNickName() +
                                 " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -103,7 +103,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
 
-                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     PlayerFlightInputHandler.removePlayer(player);

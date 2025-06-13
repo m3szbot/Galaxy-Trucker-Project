@@ -51,7 +51,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
             //Check if the player has any engine power to be used (if not the player is eliminated)
             if (!(playerSingleEnginePower > 0) && !(playerDoubleEngineNumber > 0 && playerRemainingBatteries > 0)) {
 
-                message = "Player " + player.getNickName() + " has no engine power and can't go through the open space.";
+                message = "Player " + player.getColouredNickName() + " has no engine power and can't go through the open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 //Notify the player
@@ -62,7 +62,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
                 i--;
 
                 //Notify everyone
-                message = "Player" + player.getNickName() + " has been lost in the open space.";
+                message = "Player" + player.getColouredNickName() + " has been lost in the open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             } else {
@@ -71,7 +71,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
                     enginePowerChosen = chooseEnginePower(player, gameInformation);
                     changePlayerPosition(player, enginePowerChosen, gameInformation.getFlightBoard());
 
-                    message = "Player " + player.getNickName() + " has moved " +
+                    message = "Player " + player.getColouredNickName() + " has moved " +
                             enginePowerChosen + " position forward!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 

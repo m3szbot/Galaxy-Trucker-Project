@@ -49,7 +49,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 if (chosenFirePower > requirementNumber) {
 
-                    message = "Player " + player.getNickName() + " has defeated the " +
+                    message = "Player " + player.getColouredNickName() + " has defeated the " +
                             "enemies!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -57,7 +57,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 } else if (chosenFirePower == requirementNumber) {
 
-                    message = "Player " + player.getNickName() + " equalized the " +
+                    message = "Player " + player.getColouredNickName() + " equalized the " +
                             "enemies!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -65,7 +65,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 } else {
 
-                    message = "Player " + player.getNickName() + " has been" +
+                    message = "Player " + player.getColouredNickName() + " has been" +
                             " defeated by the enemies!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 

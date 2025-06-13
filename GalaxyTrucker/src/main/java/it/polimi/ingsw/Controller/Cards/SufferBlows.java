@@ -309,21 +309,21 @@ public interface SufferBlows {
 
         if (hitFlag) {
 
-            message = "Player " + player.getNickName() + " has been hit by a " +
+            message = "Player " + player.getColouredNickName() + " has been hit by a " +
                     blowType.toString().toLowerCase() + " at position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else if (xCoord != -1) {
 
-            message = "Player " + player.getNickName() + " wasn't damaged by the " +
+            message = "Player " + player.getColouredNickName() + " wasn't damaged by the " +
                     blowType.toString().toLowerCase() + " that hit position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else {
 
-            message = "Player " + player.getNickName() + " dodged the " +
+            message = "Player " + player.getColouredNickName() + " dodged the " +
                     blowType.toString().toLowerCase() + " coming at him from the " + directionSolver(direction) + "!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 

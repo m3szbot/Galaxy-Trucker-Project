@@ -57,7 +57,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
-            message = "Player " + player.getNickName() + " is in a meteor swarm!\n";
+            message = "Player " + player.getColouredNickName() + " is in a meteor swarm!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             try {
@@ -68,7 +68,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
                 message = e.getMessage();
                 playerMessenger.printMessage(message);
 
-                message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 PlayerFlightInputHandler.removePlayer(player);

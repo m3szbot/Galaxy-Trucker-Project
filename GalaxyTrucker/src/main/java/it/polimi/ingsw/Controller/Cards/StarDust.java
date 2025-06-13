@@ -58,12 +58,12 @@ public class StarDust extends Card implements Movable {
 
                 if (externalJunctions > 0) {
 
-                    message = "Player " + player.getNickName() + " has receded of " + externalJunctions + " positions!\n";
+                    message = "Player " + player.getColouredNickName() + " has receded of " + externalJunctions + " positions!\n";
                     playerMessenger.printMessage(message);
 
                 } else {
 
-                    message = "Player " + player.getNickName() + " has not receded!\n";
+                    message = "Player " + player.getColouredNickName() + " has not receded!\n";
                     playerMessenger.printMessage(message);
 
                 }

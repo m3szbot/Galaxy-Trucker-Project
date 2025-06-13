@@ -69,7 +69,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                         giveCredits(player, gainedCredits);
                         changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
-                        message = player.getNickName() + " has solved the card!";
+                        message = player.getColouredNickName() + " has solved the card!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         solved = true;
                         PlayerFlightInputHandler.endPlayerTurn(player);
@@ -77,7 +77,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
                     } else {
 
-                        message = player.getNickName() + " hasn't solved the card.\n";
+                        message = player.getColouredNickName() + " hasn't solved the card.\n";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     }
@@ -92,7 +92,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                     message = e.getMessage();
                     playerMessenger.printMessage(message);
 
-                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     PlayerFlightInputHandler.removePlayer(player);

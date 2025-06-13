@@ -39,12 +39,12 @@ public class Sabotage extends Card implements SmallestCrew {
         try {
             if (destroyRandomComponent(smallestCrewPlayer, gameInformation)) {
 
-                message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
+                message = "Player " + smallestCrewPlayer.getColouredNickName() + " was hit!";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             } else {
 
-                message = "Player " + smallestCrewPlayer.getNickName() +
+                message = "Player " + smallestCrewPlayer.getColouredNickName() +
                         " was lucky enough to not get hit!";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -68,7 +68,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
         if (isEliminated) {
 
-            message = "Player " + smallestCrewPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+            message = "Player " + smallestCrewPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }
@@ -118,7 +118,7 @@ public class Sabotage extends Card implements SmallestCrew {
                 try {
                     player.getShipBoard().removeComponent(x + 1, y + 1, true);
 
-                    message = "A shot hit player " + player.getNickName() + " at coordinates [ " + (x + 1) + " , " + (y + 1) + " ]!";
+                    message = "A shot hit player " + player.getColouredNickName() + " at coordinates [ " + (x + 1) + " , " + (y + 1) + " ]!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                     return true;
 
@@ -128,7 +128,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
             }
 
-            message = "Shot number " + (i + 1) + " missed player " + player.getNickName() + "!\n";
+            message = "Shot number " + (i + 1) + " missed player " + player.getColouredNickName() + "!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }

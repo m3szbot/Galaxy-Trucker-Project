@@ -93,12 +93,12 @@ public class Epidemic extends Card {
 
             if (isEliminated) {
 
-                message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             } else {
 
-                message = "Player " + player.getNickName() + " lost " + numberOfRemovedInhabitants +
+                message = "Player " + player.getColouredNickName() + " lost " + numberOfRemovedInhabitants +
                         " inhabitants from the epidemic!";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
