@@ -10,6 +10,12 @@ import it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController;
 import it.polimi.ingsw.View.GeneralView;
 //TODO
 
+/**
+ * Class with the exact same function of TUIView but for the GUI.
+ *
+ * @author carlo
+ */
+
 public class GUIView extends GeneralView {
 
     private GUIController guiController = new LobbyGUIController();
