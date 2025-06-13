@@ -1,7 +1,7 @@
 [
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web56.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web56.jpg",
     "nRot": 0,
     "sides": [
       "Single",
@@ -12,7 +12,7 @@
   },
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web54.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web54.jpg",
     "nRot": 2,
     "sides": [
       "Smooth",
@@ -23,7 +23,7 @@
   },
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web55.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web55.jpg",
     "nRot": 0,
     "sides": [
       "Single",
@@ -34,7 +34,7 @@
   },
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web57.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web57.jpg",
     "nRot": 2,
     "sides": [
       "Smooth",
@@ -45,7 +45,7 @@
   },
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web58.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web58.jpg",
     "nRot": 1,
     "sides": [
       "Single",
@@ -56,7 +56,7 @@
   },
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web59.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web59.jpg",
     "nRot": 2,
     "sides": [
       "Smooth",
@@ -67,7 +67,7 @@
   },
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web53.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web53.jpg",
     "nRot": 2,
     "sides": [
       "Smooth",
@@ -78,7 +78,7 @@
   },
   {
     "name": "Component",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web60.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web60.jpg",
     "nRot": 1,
     "sides": [
       "Double",
@@ -89,7 +89,7 @@
   },
   {
     "name": "Engine",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web91.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web91.jpg",
     "nRot": 1,
     "single": true,
     "sides": [
@@ -101,7 +101,7 @@
   },
   {
     "name": "Engine",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web76.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web76.jpg",
     "nRot": 3,
     "single": true,
     "sides": [
@@ -113,7 +113,7 @@
   },
   {
     "name": "Engine",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web71.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web71.jpg",
     "nRot": 3,
     "single": true,
     "sides": [
@@ -125,7 +125,7 @@
   },
   {
     "name": "Engine",
-    "img": "Polytechnic/tiles/GT-new_tiles_16_for web81.jpg",
+    "imagePath": "Polytechnic/tiles/GT-new_tiles_16_for web81.jpg",
     "nRot": 3,
     "single": true,
     "sides": [
