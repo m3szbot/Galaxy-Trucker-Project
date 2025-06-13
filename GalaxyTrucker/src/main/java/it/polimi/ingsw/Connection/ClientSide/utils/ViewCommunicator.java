@@ -42,12 +42,14 @@ public class ViewCommunicator {
 
         }
         else{
-
+            /*
             this.lobbyView = new LobbyGUIController();
             this.views[0] = new AssemblyGUIController();
             this.views[1] = new CorrectionGUIController();
             this.views[2] = new FlightGUIController();
             this.views[3] = new EvaluationGUIController();
+
+             */
 
 
 

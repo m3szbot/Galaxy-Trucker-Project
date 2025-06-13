@@ -1,14 +1,14 @@
 package it.polimi.ingsw.View.GUI.LobbyControllers;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
-import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
-import it.polimi.ingsw.View.GeneralView;
+import it.polimi.ingsw.View.GUI.GUIController;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class LobbyGUIController extends GeneralView {
+public class LobbyGUIController extends GUIController {
 
     @FXML
     private TextArea logTextArea;
@@ -23,12 +23,29 @@ public class LobbyGUIController extends GeneralView {
 
     }
 
-    public void printMessage(DataContainer dataContainer){
-        logTextArea.appendText(dataContainer.getMessage() + "\n");
+
+    public void showMessage(String message){
+        logTextArea.appendText(message);
     }
 
-    public void printMessage(String message){
-        logTextArea.appendText(message);
+    @Override
+    public void showCard(Node node) {
+        //not used
+    }
+
+    @Override
+    public void showComponent(Node node) {
+       //not used
+    }
+
+    @Override
+    public void showFlightBoard(Node node) {
+       //not used
+    }
+
+    @Override
+    public void showShipBoard(Node node) {
+       //not used
     }
 
     public void sendData(String playerInput){

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 // TODO: implement
-public abstract class AssemblyViewGUI extends AssemblyView {
+public abstract class AssemblyViewGUI extends GUIController {
     private transient AtomicReference<String> userInput;
     String input;
 

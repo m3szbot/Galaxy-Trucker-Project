@@ -1,4 +1,7 @@
 package it.polimi.ingsw.View.GUI.CorrectionControllers;
 
-public class CorrectionGUIController {
+/*
+public class CorrectionGUIController extends GUIController {
 }
+
+ */
