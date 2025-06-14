@@ -52,6 +52,16 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         String message;
         PlayerMessenger playerMessenger;
 
+        //If there is only one player left this card needs to be skipped
+        if (gameInformation.getFlightBoard().getPlayerOrderList().size() <= 1) {
+
+            message = "This card cannot be played with less than 2 players.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            return;
+
+        }
+
         //calculating player with the lowest inhabitant number
 
         lowestInhabitantNumberPlayer = calculateSmallestCrew(gameInformation);
@@ -59,15 +69,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //letting the players choose their firePower, from the leader backwards
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
-
-            //If there is only one player left this card needs to be skipped
-            if (gameInformation.getFlightBoard().getPlayerOrderList().size() <= 1) {
-
-                message = "This card cannot be played with less than 2 players.\n";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                break;
-
-            }
 
             //Checks the validity of the current index (precaution for disconnection)
             i = IndexChecker.checkIndex(gameInformation, i);
