@@ -1,9 +1,10 @@
-package it.polimi.ingsw.View.GUI.AssemblyControllers;
+/*package it.polimi.ingsw.View.GUI.AssemblyControllers;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.View.GUI.GeneralGUIController;
 import it.polimi.ingsw.View.GeneralView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 // TODO: implement
-public abstract class AssemblyViewGUI extends GeneralView {
+public abstract class AssemblyGUIController extends GUIController {
     private transient AtomicReference<String> userInput;
     String input;
 
@@ -267,3 +268,4 @@ public abstract class AssemblyViewGUI extends GeneralView {
 
 
 }
+*/
