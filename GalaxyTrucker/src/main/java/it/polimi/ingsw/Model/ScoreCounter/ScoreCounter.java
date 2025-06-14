@@ -114,6 +114,9 @@ public class ScoreCounter {
         playerPoints += calculateLeastExposedLinksPoints(player);
         playerPoints += calculateGoodsPoints(player);
         playerPoints += calculateLostComponentsPoints(player);
+
+        if (playerPoints < 0)
+            playerPoints = 0;
         return playerPoints;
     }
 

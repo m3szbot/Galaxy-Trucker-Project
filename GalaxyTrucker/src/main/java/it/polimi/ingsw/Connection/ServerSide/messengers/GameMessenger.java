@@ -28,6 +28,22 @@ public class GameMessenger {
     }
 
     /**
+     *
+     * @param player
+     * @return true if the playerMessenger is present, false otherwise
+     */
+
+    public boolean checkPlayerMessengerPresence(Player player){
+       if(playerMessengerMap.containsKey(player)){
+           return true;
+       }
+       else{
+           return false;
+       }
+    }
+
+
+    /**
      * Add socket player to GameMessenger and create its associated PlayerMessenger.
      */
     public void addPlayer(Player player, SocketDataExchanger dataExchanger) {
@@ -95,9 +111,9 @@ public class GameMessenger {
         }
         playerMessengerMap.get(player).clearPlayerResources();
         playerMessengerMap.remove(player);
+        System.out.println(String.format("Player %s disconnected!", player.getColouredNickName()));
+        sendMessageToAll(String.format("Player %s disconnected!", player.getColouredNickName()));
         ClientMessenger.getCentralServer().removeNickName(player.getNickName());
-        System.out.println(String.format("Player %s disconnected!", player.getNickName()));
-        sendMessageToAll(String.format("Player %s disconnected!", player.getNickName()));
     }
 
     /**

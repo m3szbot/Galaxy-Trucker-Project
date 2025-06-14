@@ -17,6 +17,21 @@ public class PlayerFlightInputHandler {
     private static Map<Player, InputThread> playerInputThreadMap = new HashMap<>();
 
     /**
+     *
+     * @param player
+     * @return true if the input thread of the related player is present, false otherwise.
+     */
+
+    public static boolean checkInputThreadActivity(Player player){
+       if(playerInputThreadMap.containsKey(player)){
+           return true;
+       }
+       else {
+           return false;
+       }
+    }
+
+    /**
      * adds a new player to the handler memory. The player input thread is also
      * started
      * @param player

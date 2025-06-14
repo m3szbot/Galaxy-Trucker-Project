@@ -2,9 +2,11 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Controller.Sleeper;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -23,6 +25,7 @@ public class StarDust extends Card implements Movable {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 
@@ -31,7 +34,6 @@ public class StarDust extends Card implements Movable {
     public void resolve(GameInformation gameInformation) {
 
         String message;
-        PlayerMessenger playerMessenger;
         int externalJunctions;
         Player player;
 
@@ -45,38 +47,43 @@ public class StarDust extends Card implements Movable {
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
 
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             externalJunctions = player.getShipBoard().countExternalJunctions();
 
             if (externalJunctions > 0) {
                 changePlayerPosition(player, -externalJunctions, gameInformation.getFlightBoard());
             }
 
-            if (playerMessenger != null) {
+            if (externalJunctions > 0) {
 
-                if (externalJunctions > 0) {
+                message = "Player " + player.getColouredNickName() + " has receded of " + externalJunctions + " positions!\n";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                    message = "Player " + player.getNickName() + " has receded of " + externalJunctions + " positions!\n";
-                    playerMessenger.printMessage(message);
+            } else {
 
-                } else {
+                message = "Player " + player.getColouredNickName() + " has not receded!\n";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                    message = "Player " + player.getNickName() + " has not receded!\n";
-                    playerMessenger.printMessage(message);
-
-                }
             }
 
 
             Sleeper.sleepXSeconds(3);
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
         }
 
-        gameInformation.getFlightBoard().updateFlightBoard();
+        try {
+            gameInformation.getFlightBoard().updateFlightBoard();
+
+        } catch (LappedPlayersException e) {
+            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
+        }
 
     }
 

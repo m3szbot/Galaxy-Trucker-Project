@@ -3,8 +3,10 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -32,6 +34,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
         this.lossNumber = cardBuilder.getLossNumber();
         this.goods = cardBuilder.getGoods();
         this.requirementNumber = cardBuilder.getRequirementNumber();
+        this.imagePath = cardBuilder.getImagePath();
 
 
     }
@@ -69,7 +72,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
 
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getColouredNickName() +
                                 " has collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -77,7 +80,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
                     } else {
 
-                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getNickName() +
+                        message = "Player " + gameInformation.getFlightBoard().getPlayerOrderList().get(i).getColouredNickName() +
                                 " hasn't collected the reward!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -101,10 +104,10 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
 
-                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                    PlayerFlightInputHandler.removePlayer(player);
+                    PlayerFlightInputHandler.endPlayerTurn(player);
 
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
@@ -118,18 +121,27 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
         }
 
-        gameInformation.getFlightBoard().updateFlightBoard();
+        try {
+            gameInformation.getFlightBoard().updateFlightBoard();
+
+        } catch (LappedPlayersException e) {
+            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
+        }
 
 
     }

@@ -22,14 +22,14 @@ public class ViewCommunicator {
     private GeneralView lobbyView;
     private int index = -1;
 
-    public ViewCommunicator(ViewType viewType){
+    public ViewCommunicator(ViewType viewType) {
 
         this.viewType = viewType;
         this.views = new GeneralView[4];
         this.generalGUIController = new GeneralGUIController();
         this.lobbyGUIController = new LobbyGUIController();
 
-        if(viewType == ViewType.TUI){
+        if (viewType == ViewType.TUI) {
 
             this.lobbyView = new TUIView();
             this.views[0] = new TUIView();
@@ -37,24 +37,22 @@ public class ViewCommunicator {
             this.views[2] = new TUIView();
             this.views[3] = new TUIView();
 
-        }
-        else{
-
-           /*
-            this.lobbyView = new ...
+        } else {
+            /*
+            this.lobbyView = new LobbyGUIController();
             this.views[0] = new AssemblyGUIController();
             this.views[1] = new CorrectionGUIController();
             this.views[2] = new FlightGUIController();
             this.views[3] = new EvaluationGUIController();
 
-            */
+             */
 
 
         }
 
     }
 
-    public void setGamePhase(GamePhase gamePhase){
+    public void setGamePhase(GamePhase gamePhase) {
 
         switch (gamePhase) {
             case Assembly -> index = 0;
@@ -63,36 +61,37 @@ public class ViewCommunicator {
             case Evaluation -> index = 3;
         }
 
-        if(viewType == ViewType.GUI) {
+        if (viewType == ViewType.GUI) {
 
             generalGUIController.setPhaseGUI(gamePhase);
         }
     }
 
-    public GeneralView getView(){
+    public GeneralView getView() {
 
-        if(index == -1){
+        if (index == -1) {
             return lobbyView;
         }
 
         return views[index];
     }
 
-    public void showData(String message, boolean isError){
+    public void showData(String message, boolean isError) {
 
-        if(viewType == ViewType.TUI){
-            if(isError) {
+        if (viewType == ViewType.TUI) {
+            if (isError) {
                 System.err.println(message);
-            }
-            else{
+            } else {
                 System.out.println(message);
             }
         }
-        else{
+        /*else{
 
             lobbyGUIController.showData(message, isError);
 
         }
+
+         */
 
     }
 

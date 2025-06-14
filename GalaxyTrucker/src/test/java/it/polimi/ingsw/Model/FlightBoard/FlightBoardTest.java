@@ -182,6 +182,17 @@ class FlightBoardTest {
     }
 
     @Test
+    void lapPlayerByFar() {
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
+        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
+        flightBoard.incrementPlayerTile(playerA, 100);
+        assertThrows(LappedPlayersException.class, () -> {
+            flightBoard.updateFlightBoard();
+        });
+
+    }
+
+    @Test
     void addDuplicatePlayers() {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         assertThrows(IllegalArgumentException.class, () -> {

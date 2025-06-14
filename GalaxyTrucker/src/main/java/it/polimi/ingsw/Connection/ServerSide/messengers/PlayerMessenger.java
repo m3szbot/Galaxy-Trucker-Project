@@ -65,7 +65,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         this.gameCode = gameCode;
     }
 
-    public int getGameCode(){
+    public int getGameCode() {
         return gameCode;
     }
 
@@ -91,7 +91,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.setGamePhase(gamePhase);
             } catch (RemoteException e) {
 
-                System.err.println("An error occurred while setting the gamePhase of " + player.getNickName() +
+                System.err.println("An error occurred while setting the gamePhase of " + player.getColouredNickName() +
                         " through rmi protocol");
             }
         }
@@ -131,39 +131,8 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.endGame();
             } catch (RemoteException e) {
 
-                System.err.println("RMI error while terminating " + player.getNickName() + " game");
+                System.err.println("RMI error while terminating " + player.getColouredNickName() + " game");
 
-            }
-
-        }
-
-    }
-
-    /**
-     * Method which is used to unblock the getPlayerInput blocking method. It works
-     * by setting a fictitious user input, which is a space character, which is then sent
-     * to the server. This allows the server to bypass an input.
-     *
-     * @author carlo
-     */
-
-    public void unblockUserInputGetterCall(){
-
-        if(connectionType == ConnectionType.SOCKET){
-            synchronized (dataContainerLock){
-                dataContainer.clearContainer();
-                dataContainer.setCommand("unblock");
-                sendDataContainer();
-            }
-        }
-        else{
-
-            try {
-
-                virtualClient.unblockUserInput();
-
-            } catch (RemoteException e) {
-                System.err.println("Error while calling remote client method through rmi");
             }
 
         }
@@ -179,6 +148,36 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 socketDataExchanger.closeResources();
             } catch (IOException e) {
                 System.err.println("Error while closing all players resources");
+            }
+
+        }
+
+    }
+
+    /**
+     * Method which is used to unblock the getPlayerInput blocking method. It works
+     * by setting a fictitious user input, which is a space character, which is then sent
+     * to the server. This allows the server to bypass an input.
+     *
+     * @author carlo
+     */
+
+    public void unblockUserInputGetterCall() {
+
+        if (connectionType == ConnectionType.SOCKET) {
+            synchronized (dataContainerLock) {
+                dataContainer.clearContainer();
+                dataContainer.setCommand("unblock");
+                sendDataContainer();
+            }
+        } else {
+
+            try {
+
+                virtualClient.unblockUserInput();
+
+            } catch (RemoteException e) {
+                System.err.println("Error while calling remote client method through rmi");
             }
 
         }
@@ -242,7 +241,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                         } else if (input.equals("inactivity")) {
 
-                            System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                            System.out.println("Player " + player.getColouredNickName() + " was kicked because of inactivity");
                             throw new PlayerDisconnectedException(player);
 
                         } else {
@@ -252,7 +251,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 } catch (IOException e) {
 
-                    System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                    System.err.println("Error while obtaining data from " + player.getColouredNickName() + ": " +
                             "a disconnection probably occurred");
 
                     throw new PlayerDisconnectedException(player);
@@ -275,10 +274,10 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                     if (e.getMessage().equals("inactivity")) {
 
-                        System.out.println("Player " + player.getNickName() + " was kicked because of inactivity");
+                        System.out.println("Player " + player.getColouredNickName() + " was kicked because of inactivity");
                     } else {
 
-                        System.err.println("Error while obtaining data from " + player.getNickName() + ": " +
+                        System.err.println("Error while obtaining data from " + player.getColouredNickName() + ": " +
                                 "a disconnection probably occurred");
                     }
 
@@ -287,25 +286,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 }
 
             }
-        }
-    }
-
-    /**
-     * @return integer that the player sent to the server
-     * @author carlo
-     */
-    public int getPlayerInt() throws PlayerDisconnectedException {
-
-        while (true) {
-            String input = getPlayerInput();
-            try {
-
-                return Integer.parseInt(input);
-
-            } catch (NumberFormatException e) {
-                printMessage("You didn't enter an integer! Please reenter it: ");
-            }
-
         }
     }
 
@@ -326,7 +306,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printMessage(message);
 
             } catch (RemoteException e) {
-                System.err.println("An error occurred while sending a message to " + player.getNickName() +
+                System.err.println("An error occurred while sending a message to " + player.getColouredNickName() +
                         " through rmi protocol");
             }
 
@@ -349,7 +329,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printComponent(component);
             } catch (RemoteException e) {
 
-                System.err.println("An error occurred while sending a component to " + player.getNickName() +
+                System.err.println("An error occurred while sending a component to " + player.getColouredNickName() +
                         " through rmi protocol");
             }
 
@@ -372,7 +352,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printShipboard(shipBoard);
             } catch (RemoteException e) {
 
-                System.err.println("An error occurred while sending a shipboard to " + player.getNickName() +
+                System.err.println("An error occurred while sending a shipboard to " + player.getColouredNickName() +
                         " through rmi protocol");
             }
 
@@ -395,7 +375,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printCard(card);
             } catch (RemoteException e) {
 
-                System.err.println("An error occurred while sending a card to " + player.getNickName() +
+                System.err.println("An error occurred while sending a card to " + player.getColouredNickName() +
                         " through rmi protocol");
             }
 
@@ -418,12 +398,31 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printFlightBoard(flightBoard);
             } catch (RemoteException e) {
 
-                System.err.println("An error occurred while sending a flightboard to " + player.getNickName() +
+                System.err.println("An error occurred while sending a flightboard to " + player.getColouredNickName() +
                         " through rmi protocol");
             }
 
         }
 
+    }
+
+    /**
+     * @return integer that the player sent to the server
+     * @author carlo
+     */
+    public int getPlayerInt() throws PlayerDisconnectedException {
+
+        while (true) {
+            String input = getPlayerInput();
+            try {
+
+                return Integer.parseInt(input);
+
+            } catch (NumberFormatException e) {
+                printMessage("You didn't enter an integer! Please reenter it: ");
+            }
+
+        }
     }
 
     /**

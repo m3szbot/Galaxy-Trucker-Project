@@ -3,12 +3,16 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+
+import static it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler.checkInputThreadActivity;
 
 /**
  * Class that represent the card combat
@@ -33,6 +37,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         this.blows = cardBuilder.getBlows();
         this.blowType = cardBuilder.getBlowType();
         this.lossType = cardBuilder.getLossType();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 
@@ -47,6 +52,16 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         String message;
         PlayerMessenger playerMessenger;
 
+        //If there is only one player left this card needs to be skipped
+        if (gameInformation.getFlightBoard().getPlayerOrderList().size() <= 1) {
+
+            message = "This card cannot be played with less than 2 players.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            return;
+
+        }
+
         //calculating player with the lowest inhabitant number
 
         lowestInhabitantNumberPlayer = calculateSmallestCrew(gameInformation);
@@ -54,15 +69,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //letting the players choose their firePower, from the leader backwards
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
-
-            //If there is only one player left this card needs to be skipped
-            if (gameInformation.getFlightBoard().getPlayerOrderList().size() <= 1) {
-
-                message = "This card cannot be played with less than 2 players.\n";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-                break;
-
-            }
 
             //Checks the validity of the current index (precaution for disconnection)
             i = IndexChecker.checkIndex(gameInformation, i);
@@ -83,12 +89,12 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "The other players are choosing their fire power.\n";
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
@@ -117,12 +123,12 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "The other players are choosing their engine power.\n";
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
@@ -136,7 +142,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //lowest inhabitants
         changePlayerPosition(lowestInhabitantNumberPlayer, -daysLost, gameInformation.getFlightBoard());
 
-        message = "Player " + lowestInhabitantNumberPlayer.getNickName() + " lost " + daysLost +
+        message = "Player " + lowestInhabitantNumberPlayer.getColouredNickName() + " lost " + daysLost +
                 " flight days as he has the lowest number of inhabitants!";
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -145,7 +151,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         try {
             inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
 
-            message = "Player " + weakestEnginePowerPlayer.getNickName() + " lost " + lossNumber +
+            message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " lost " + lossNumber +
                     " crew members as he has the weakest engine power!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -155,10 +161,10 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
             playerMessenger.printMessage(message);
 
-            message = "Player " + weakestEnginePowerPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+            message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-            PlayerFlightInputHandler.removePlayer(weakestEnginePowerPlayer);
+            PlayerFlightInputHandler.endPlayerTurn(weakestEnginePowerPlayer);
 
             gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
 
@@ -173,7 +179,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             blows[i].rollDice();
         }
 
-        message = "Player " + weakestFirePowerPlayer.getNickName() + " is getting shot at!\n";
+        message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " is getting shot at!\n";
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         //lowest firepower
@@ -186,10 +192,10 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
             playerMessenger.printMessage(message);
 
-            message = "Player " + weakestFirePowerPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+            message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-            PlayerFlightInputHandler.removePlayer(weakestFirePowerPlayer);
+            PlayerFlightInputHandler.endPlayerTurn(weakestFirePowerPlayer);
 
             gameInformation.getFlightBoard().eliminatePlayer(weakestFirePowerPlayer);
 
@@ -199,7 +205,16 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestFirePowerPlayer);
         }
 
-        gameInformation.getFlightBoard().updateFlightBoard();
+        try {
+            gameInformation.getFlightBoard().updateFlightBoard();
+
+        } catch (LappedPlayersException e) {
+            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
+        }
 
     }
 

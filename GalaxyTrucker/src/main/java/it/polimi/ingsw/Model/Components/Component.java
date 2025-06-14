@@ -38,10 +38,15 @@ public class Component implements Visitable, Serializable {
     private SideType right;
     private SideType back;
     private SideType left;
+    protected String imagePath;
 
     // rotate using visitor
 
     public Component() {
+    }
+
+    public String getImagePath(){
+        return imagePath;
     }
 
     @JsonCreator

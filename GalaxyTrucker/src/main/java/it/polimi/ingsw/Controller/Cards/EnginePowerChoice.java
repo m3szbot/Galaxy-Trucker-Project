@@ -41,7 +41,7 @@ public interface EnginePowerChoice {
             //player has the possibility to increase his engine power with batteries
 
             message = "Your engine power is " + defaultEnginePower +
-                    ", but you still have " + doubleEnginePower + " double engine power to activate.\n" +
+                    ", but you still have " + (doubleEnginePower / 2) + " double engines to activate.\n" +
                     " Would you like to use double engines to increase your engine power ?";
             playerMessenger.printMessage(message);
             /*
@@ -60,7 +60,7 @@ public interface EnginePowerChoice {
                     doubleEnginesToActivate = playerMessenger.getPlayerInt();
 
                     if (doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() && doubleEnginesToActivate > 0
-                            && doubleEnginesToActivate <= doubleEnginePower) {
+                            && doubleEnginesToActivate <= (doubleEnginePower) / 2) {
                         break;
                     }
 

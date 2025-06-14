@@ -28,12 +28,24 @@ public class Player implements Serializable {
     }
 
     /**
-     * Returns the player's nickname coloured with the player's colors.
+     * Used by the server (nickname is an identifier, without the color code - assigned only for the game).
+     * Uncoloured nickname is the id of the client.
      *
-     * @return The player's nickname.
+     * @return the player's nickname (without the color strings).
      * @author Giacomo
      */
     public String getNickName() {
+        return nickName;
+    }
+
+    /**
+     * Can be used only in print statements (TUI)!
+     * (Ruins the nickname id of the client saved in the server)
+     *
+     * @return The player's nickname, colored (with strings).
+     * @author Boti
+     */
+    public String getColouredNickName() {
         // color the nickname
         return getColorCode(color) + nickName + TUIView.RESET;
     }

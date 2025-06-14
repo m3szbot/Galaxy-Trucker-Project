@@ -3,8 +3,10 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -30,6 +32,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
         this.lossType = cardBuilder.getLossType();
         this.lossNumber = cardBuilder.getLossNumber();
         this.gainedCredits = cardBuilder.getGainedCredits();
+        this.imagePath = cardBuilder.getImagePath();
 
 
     }
@@ -67,7 +70,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                         giveCredits(player, gainedCredits);
                         changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
-                        message = player.getNickName() + " has solved the card!";
+                        message = player.getColouredNickName() + " has solved the card!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         solved = true;
                         PlayerFlightInputHandler.endPlayerTurn(player);
@@ -75,7 +78,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
                     } else {
 
-                        message = player.getNickName() + " hasn't solved the card.\n";
+                        message = player.getColouredNickName() + " hasn't solved the card.\n";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     }
@@ -90,10 +93,10 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                     message = e.getMessage();
                     playerMessenger.printMessage(message);
 
-                    message = "Player " + player.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                    PlayerFlightInputHandler.removePlayer(player);
+                    PlayerFlightInputHandler.endPlayerTurn(player);
 
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
@@ -106,14 +109,14 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
 
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
 
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
@@ -123,11 +126,19 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
             message = "Nobody solved the card!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-            gameInformation.getFlightBoard().updateFlightBoard();
 
         }
 
-        gameInformation.getFlightBoard().updateFlightBoard();
+        try {
+            gameInformation.getFlightBoard().updateFlightBoard();
+
+        } catch (LappedPlayersException e) {
+            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
+        }
 
     }
 

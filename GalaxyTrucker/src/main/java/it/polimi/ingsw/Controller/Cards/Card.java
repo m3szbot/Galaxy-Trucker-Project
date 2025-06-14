@@ -15,6 +15,7 @@ public abstract class Card implements Serializable {
     protected int cardLevel;
     protected String cardName;
     protected String message;
+    protected String imagePath;
 
     /**
      * Abstract method that must be defined for every card class. It is
@@ -60,6 +61,10 @@ public abstract class Card implements Serializable {
         for (int i = 0; i < goods.length; i++) {
             System.out.println(solveGoodsColor(i) + " goods quantity: " + goods[i]);
         }
+    }
+
+    public String getCardImage(){
+        return imagePath;
     }
 
     private String solveGoodsColor(int goodIndex) {

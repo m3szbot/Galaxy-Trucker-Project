@@ -3,9 +3,10 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
-import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
 import it.polimi.ingsw.Controller.Sleeper;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
@@ -23,6 +24,7 @@ public class Sabotage extends Card implements SmallestCrew {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 
@@ -38,12 +40,12 @@ public class Sabotage extends Card implements SmallestCrew {
         try {
             if (destroyRandomComponent(smallestCrewPlayer, gameInformation)) {
 
-                message = "Player " + smallestCrewPlayer.getNickName() + " was hit!";
+                message = "Player " + smallestCrewPlayer.getColouredNickName() + " was hit!";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             } else {
 
-                message = "Player " + smallestCrewPlayer.getNickName() +
+                message = "Player " + smallestCrewPlayer.getColouredNickName() +
                         " was lucky enough to not get hit!";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -54,7 +56,7 @@ public class Sabotage extends Card implements SmallestCrew {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
             playerMessenger.printMessage(message);
 
-            PlayerFlightInputHandler.removePlayer(smallestCrewPlayer);
+            PlayerFlightInputHandler.endPlayerTurn(smallestCrewPlayer);
 
             gameInformation.getFlightBoard().eliminatePlayer(smallestCrewPlayer);
             isEliminated = true;
@@ -67,12 +69,21 @@ public class Sabotage extends Card implements SmallestCrew {
 
         if (isEliminated) {
 
-            message = "Player " + smallestCrewPlayer.getNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+            message = "Player " + smallestCrewPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }
 
-        gameInformation.getFlightBoard().updateFlightBoard();
+        try {
+            gameInformation.getFlightBoard().updateFlightBoard();
+
+        } catch (LappedPlayersException e) {
+            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
+        }
 
 
     }
@@ -108,17 +119,17 @@ public class Sabotage extends Card implements SmallestCrew {
                 try {
                     player.getShipBoard().removeComponent(x + 1, y + 1, true);
 
-                    message = "A shot hit player " + player.getNickName() + " at coordinates [ " + (x + 1) + " , " + (y + 1) + " ]!";
+                    message = "A shot hit player " + player.getColouredNickName() + " at coordinates [ " + (x + 1) + " , " + (y + 1) + " ]!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                     return true;
 
                 } catch (FracturedShipBoardException e) {
-                    FracturedShipBoardHandler.handleFracture(playerMessenger, e);
+                    ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
                 }
 
             }
 
-            message = "Shot number " + (i + 1) + " missed player " + player.getNickName() + "!\n";
+            message = "Shot number " + (i + 1) + " missed player " + player.getColouredNickName() + "!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         }

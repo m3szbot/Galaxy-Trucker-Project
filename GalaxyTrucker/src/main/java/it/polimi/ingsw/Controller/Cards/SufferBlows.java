@@ -3,7 +3,7 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Controller.FracturedShipBoardHandler;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
@@ -309,21 +309,21 @@ public interface SufferBlows {
 
         if (hitFlag) {
 
-            message = "Player " + player.getNickName() + " has been hit by a " +
+            message = "Player " + player.getColouredNickName() + " was hit by a " +
                     blowType.toString().toLowerCase() + " at position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else if (xCoord != -1) {
 
-            message = "Player " + player.getNickName() + " wasn't damaged by the " +
+            message = "Player " + player.getColouredNickName() + " wasn't damaged by the " +
                     blowType.toString().toLowerCase() + " that hit position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else {
 
-            message = "Player " + player.getNickName() + " dodged the " +
+            message = "Player " + player.getColouredNickName() + " dodged the " +
                     blowType.toString().toLowerCase() + " coming at him from the " + directionSolver(direction) + "!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -338,7 +338,7 @@ public interface SufferBlows {
             player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
 
         } catch (FracturedShipBoardException e) {
-            FracturedShipBoardHandler.handleFracture(playerMessenger, e);
+            ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
         }
 
         return true;

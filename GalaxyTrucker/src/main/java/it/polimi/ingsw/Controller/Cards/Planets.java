@@ -3,8 +3,10 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -28,10 +30,12 @@ public class Planets extends Card implements GoodsGain, Movable {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
         this.planet1 = cardBuilder.getPlanet1();
         this.planet2 = cardBuilder.getPlanet2();
         this.planet3 = cardBuilder.getPlanet3();
         this.planet4 = cardBuilder.getPlanet4();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 
@@ -79,7 +83,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                             if (!planetOccupation[planetChosen - 1]) {
 
-                                message = "Player " + player.getNickName() +
+                                message = "Player " + player.getColouredNickName() +
                                         " has landed on planet " + planetChosen + " !\n";
                                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                                 freePlanet--;
@@ -133,7 +137,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                 } else {
 
-                    message = "Player " + player.getNickName() +
+                    message = "Player " + player.getColouredNickName() +
                             " decided to not land on any planet.\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -146,19 +150,28 @@ public class Planets extends Card implements GoodsGain, Movable {
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
         }
 
-        gameInformation.getFlightBoard().updateFlightBoard();
+        try {
+            gameInformation.getFlightBoard().updateFlightBoard();
+
+        } catch (LappedPlayersException e) {
+            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
+        }
 
 
     }

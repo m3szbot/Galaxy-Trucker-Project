@@ -68,7 +68,7 @@ public class ComponentStringGetterVisitor implements ComponentVisitor<String, Ru
                         """,
                 componentSideTranslator(cannon.getFront()),
                 cannon.getComponentName().substring(0, 5),
-                componentSideTranslator(cannon.getLeft()), YELLOW, cannon.isSingle() ? 1 : 2, RESET, componentSideTranslator(cannon.getRight()),
+                componentSideTranslator(cannon.getLeft()), PURPLE, cannon.isSingle() ? 1 : 2, RESET, componentSideTranslator(cannon.getRight()),
                 componentSideTranslator(cannon.getBack()));
     }
 
@@ -98,7 +98,7 @@ public class ComponentStringGetterVisitor implements ComponentVisitor<String, Ru
                         """,
                 componentSideTranslator(engine.getFront()),
                 engine.getComponentName().substring(0, 5),
-                componentSideTranslator(engine.getLeft()), PURPLE, engine.isSingle() ? 1 : 2, RESET, componentSideTranslator(engine.getRight()),
+                componentSideTranslator(engine.getLeft()), YELLOW, engine.isSingle() ? 1 : 2, RESET, componentSideTranslator(engine.getRight()),
                 componentSideTranslator(engine.getBack()));
     }
 

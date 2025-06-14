@@ -49,15 +49,18 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 if (chosenFirePower > requirementNumber) {
 
-                    message = "Player " + player.getNickName() + " has defeated the " +
+                    message = "Player " + player.getColouredNickName() + " has defeated the " +
                             "enemies!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     results[i] = AttackStates.EnemyDefeated;
+                    PlayerFlightInputHandler.endPlayerTurn(player);
+
+                    break;
 
                 } else if (chosenFirePower == requirementNumber) {
 
-                    message = "Player " + player.getNickName() + " equalized the " +
+                    message = "Player " + player.getColouredNickName() + " equalized the " +
                             "enemies!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -65,7 +68,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
                 } else {
 
-                    message = "Player " + player.getNickName() + " has been" +
+                    message = "Player " + player.getColouredNickName() + " has been" +
                             " defeated by the enemies!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
@@ -81,12 +84,12 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "Please wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

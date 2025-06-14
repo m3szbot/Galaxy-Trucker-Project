@@ -3,8 +3,10 @@ package it.polimi.ingsw.Controller.Cards;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
+import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -20,6 +22,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
+        this.imagePath = cardBuilder.getImagePath();
 
     }
 
@@ -49,7 +52,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
             //Check if the player has any engine power to be used (if not the player is eliminated)
             if (!(playerSingleEnginePower > 0) && !(playerDoubleEngineNumber > 0 && playerRemainingBatteries > 0)) {
 
-                message = "Player " + player.getNickName() + " has no engine power and can't go through the open space.";
+                message = "Player " + player.getColouredNickName() + " has no engine power and can't go through the open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 //Notify the player
@@ -60,7 +63,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
                 i--;
 
                 //Notify everyone
-                message = "Player" + player.getNickName() + " has been lost in the open space.";
+                message = "Player " + player.getColouredNickName() + " has been lost in the open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             } else {
@@ -69,8 +72,8 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
                     enginePowerChosen = chooseEnginePower(player, gameInformation);
                     changePlayerPosition(player, enginePowerChosen, gameInformation.getFlightBoard());
 
-                    message = "Player " + player.getNickName() + " has moved " +
-                            enginePowerChosen + " position forward!";
+                    message = "Player " + player.getColouredNickName() + " has moved " +
+                            enginePowerChosen + " positions forward!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 } catch (PlayerDisconnectedException e) {
@@ -82,13 +85,22 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
         }
 
-        gameInformation.getFlightBoard().updateFlightBoard();
+        try {
+            gameInformation.getFlightBoard().updateFlightBoard();
+
+        } catch (LappedPlayersException e) {
+            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+
+            for (Player player1 : e.getPlayerList()) {
+                PlayerFlightInputHandler.removePlayer(player1);
+            }
+        }
 
     }
 
