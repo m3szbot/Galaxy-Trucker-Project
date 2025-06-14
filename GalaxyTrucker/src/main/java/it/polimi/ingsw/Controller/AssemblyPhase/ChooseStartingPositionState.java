@@ -54,6 +54,7 @@ public class ChooseStartingPositionState extends GameState {
 
         try {
             assemblyProtocol.getFlightBoard().addPlayer(player, selected);
+            playerMessenger.printFlightBoard(assemblyProtocol.getFlightBoard());
             assemblyThread.setState(new AssemblingEndState(assemblyProtocol, playerMessenger, player));
 
         } catch (IndexOutOfBoundsException e) {
