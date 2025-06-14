@@ -73,7 +73,7 @@ public class StarDust extends Card implements Movable {
 
             Sleeper.sleepXSeconds(3);
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

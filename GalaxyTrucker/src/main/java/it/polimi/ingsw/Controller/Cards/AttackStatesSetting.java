@@ -86,7 +86,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

@@ -96,7 +96,7 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

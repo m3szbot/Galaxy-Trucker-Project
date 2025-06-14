@@ -12,6 +12,8 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import static it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler.checkInputThreadActivity;
+
 /**
  * Class that represent the card combat
  *
@@ -91,7 +93,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
@@ -125,7 +127,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

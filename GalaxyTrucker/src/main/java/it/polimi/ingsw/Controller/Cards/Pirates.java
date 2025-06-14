@@ -139,7 +139,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

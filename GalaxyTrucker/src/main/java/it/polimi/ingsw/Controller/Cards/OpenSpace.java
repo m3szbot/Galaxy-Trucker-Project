@@ -85,7 +85,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
 
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

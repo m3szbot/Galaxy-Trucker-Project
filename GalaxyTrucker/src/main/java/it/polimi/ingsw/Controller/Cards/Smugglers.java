@@ -126,7 +126,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
                 playerMessenger.printMessage(message);
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 

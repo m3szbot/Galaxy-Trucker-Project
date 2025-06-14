@@ -116,7 +116,7 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
             }
 
-            if (player != null) {
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
             }
 
