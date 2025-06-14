@@ -134,13 +134,19 @@ public class AssemblyProtocol {
      * Moves the previous component in hand (if any) to the uncovered list.
      *
      * @param player the player drawing a component
+     * @throws IndexOutOfBoundsException if no more components are available
      */
-    public void newComponent(Player player) {
+    public void newComponent(Player player) throws IndexOutOfBoundsException {
         addComponentInHandToUncoveredList(player);
         // add new random component to player's hand
         if (!coveredList.isEmpty()) {
+            // from covered list
             int randomIndex = randomizer.nextInt(coveredList.size());
             inHandMap.put(player, coveredList.remove(randomIndex));
+        } else if (!uncoveredList.isEmpty()) {
+            // from uncovered list
+            int randomIndex = randomizer.nextInt(coveredList.size());
+            inHandMap.put(player, uncoveredList.remove(randomIndex));
         } else {
             throw new IndexOutOfBoundsException("Covered list empty");
         }
