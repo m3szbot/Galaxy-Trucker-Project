@@ -3,7 +3,6 @@ package it.polimi.ingsw.Connection.ClientSide.utils;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ViewType;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -30,9 +29,10 @@ public class ClientWelcomer {
 
         input = scanner.nextLine();
 
-        while (input.contains(" ")) {
+        while (input.contains(" ") || input.equals("unblock") || input.equals("show-shipboard") ||
+                input.equals("private-message") || input.equals("public-message")) {
 
-            System.out.println("Your nickname cannot contain spaces!");
+            System.out.println("Your nickname is invalid!");
             System.out.print("Enter a valid nickname: ");
             input = scanner.nextLine();
         }
@@ -77,42 +77,5 @@ public class ClientWelcomer {
         input = scanner.nextLine();
         clientInfo.setServerIp(input);
         System.out.println("The ip address of the server is " + input);
-
-        System.out.print("Do you want to resume an interrupted game ? (y/n)");
-
-        input = scanner.nextLine();
-        input = input.toLowerCase();
-
-        while (true) {
-
-
-            if (input.equals("y")) {
-
-                System.out.print("Enter the game code of the interrupted game: ");
-
-                try {
-
-                    int gameCode = scanner.nextInt();
-                    clientInfo.setGameCode(gameCode);
-                    break;
-
-                } catch (InputMismatchException e) {
-
-                    System.out.println("The input is incorrect, you must enter an integer.");
-                    continue;
-
-                }
-
-
-            } else if (input.equals("n")) {
-
-                break;
-
-            }
-
-            System.out.println("The string you entered is invalid, please reenter it (y/n): ");
-            input = scanner.nextLine();
-            input = input.toLowerCase();
-        }
     }
 }

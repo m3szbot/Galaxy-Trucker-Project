@@ -8,6 +8,8 @@ import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Input thread of flight phase
  *
@@ -19,33 +21,38 @@ public class InputThread extends Thread{
     private PlayerMessenger playerMessenger;
     private Player player;
     private GameInformation gameInformation;
-    private volatile boolean running;
-    private volatile boolean isPlayerTurn;
-    private boolean blocked;
+    private AtomicBoolean running;
+    private AtomicBoolean isPlayerTurn;
+    private AtomicBoolean blocked;
+    private AtomicBoolean commandExecuting;
 
     public InputThread(Player player, GameInformation gameInformation){
         this.playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        this.running = true;
-        this.isPlayerTurn = false;
+        this.running = new AtomicBoolean(true);
+        this.isPlayerTurn = new AtomicBoolean(false);
         this.player = player;
         this.gameInformation = gameInformation;
+        this.commandExecuting = new AtomicBoolean(false);
+        this.blocked = new AtomicBoolean(false);
     }
 
     @Override
     public void run() {
 
-           while(running){
+           while(running.get()){
 
                try {
 
-                   blocked = true;
+                   blocked.set(true);
                    String input = playerMessenger.getPlayerString();
-                   blocked = false;
+                   blocked.set(false);
 
+                   commandExecuting.set(true);
                    CommandHandler.executeCommand(input, playerMessenger);
+                   commandExecuting.set(false);
 
                    //It's the player turn
-                   while (isPlayerTurn){
+                   while (isPlayerTurn.get()){
                        Sleeper.sleepXSeconds(1);
                    }
 
@@ -53,7 +60,7 @@ public class InputThread extends Thread{
                } catch (PlayerDisconnectedException e) {
 
                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                   this.running = false;
+                   this.running.set(false);
 
                }
 
@@ -61,10 +68,15 @@ public class InputThread extends Thread{
     }
 
    public void setPlayerTurn(boolean val){
-        this.isPlayerTurn = val;
+        this.isPlayerTurn.set(val);
 
         if(val){
-            if(blocked) {
+
+            if(commandExecuting.get()){
+                playerMessenger.unblockUserInputGetterCall();
+            }
+
+            if(blocked.get()) {
                 playerMessenger.unblockUserInputGetterCall();
             }
 
@@ -73,14 +85,11 @@ public class InputThread extends Thread{
 
    public void endThread(){
 
-        this.running = false;
-        if(isPlayerTurn){
-            isPlayerTurn = false;
-        }
-        else{
-            if(blocked) {
-                playerMessenger.unblockUserInputGetterCall();
-            }
+        this.running.set(false);
+        isPlayerTurn.set(false);
+
+        if(blocked.get() || commandExecuting.get()){
+            playerMessenger.unblockUserInputGetterCall();
         }
 
    }

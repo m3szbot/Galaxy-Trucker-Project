@@ -50,6 +50,10 @@ public class ChatUtil {
 
         String input = playerMessenger.getPlayerString();
 
+        if(input.equals("unblock")){
+            return;
+        }
+
         for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
 
             if (input.equals(player.getNickName()) && !input.equals(playerMessenger.getPlayer().getNickName())) {
@@ -65,6 +69,10 @@ public class ChatUtil {
             playerMessenger.printMessage("Type your intergalactic message: ");
 
             String message = playerMessenger.getPlayerString();
+
+            if(message.equals("unblock")){
+                return;
+            }
             StringBuilder stringBuilder = new StringBuilder("[Private intergalactic message from " + playerMessenger.getPlayer().getNickName() + "]: ");
             stringBuilder.append(message);
             String parsedMessage = stringBuilder.toString();
@@ -84,6 +92,10 @@ public class ChatUtil {
         playerMessenger.printMessage("Type your intergalactic message: ");
 
         String message = playerMessenger.getPlayerString();
+
+        if(message.equals("unblock")){
+            return;
+        }
         StringBuilder stringBuilder = new StringBuilder("[Public intergalactic message from " + playerMessenger.getPlayer().getNickName() + "]: ");
         stringBuilder.append(message);
         String parsedMessage = stringBuilder.toString();

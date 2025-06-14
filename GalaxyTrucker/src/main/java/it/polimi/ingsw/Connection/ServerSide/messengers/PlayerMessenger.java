@@ -225,7 +225,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     private String getPlayerInput() throws PlayerDisconnectedException {
 
-        String messageBeforeCommand = lastMessage;
 
         synchronized (readerLock) {
 
@@ -236,15 +235,14 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                         String input = socketDataExchanger.getString();
 
                         if (CommandHandler.executeCommand(input, this)) {
-
-                            printMessage(messageBeforeCommand);
-
+                            //bypassing
                         } else if (input.equals("inactivity")) {
 
                             System.out.println("Player " + player.getColouredNickName() + " was kicked because of inactivity");
                             throw new PlayerDisconnectedException(player);
 
-                        } else {
+                        }
+                        else {
                             return input;
                         }
                     }
@@ -264,8 +262,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                         String input = virtualClient.getString();
 
                         if (CommandHandler.executeCommand(input, this)) {
-                            printMessage(messageBeforeCommand);
-                        } else {
+                           //bypassing
+                        }
+                        else {
                             return input;
                         }
                     }
@@ -435,7 +434,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             String input = getPlayerInput();
 
             input.replaceAll("[^\\d]", " ");
-            
+
             try {
                 /*
                 trim removes the spaces before and after the user input string. Split creates an array

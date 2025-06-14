@@ -109,6 +109,12 @@ public class GameMessenger {
         if (gameInformation.getFlightBoard().getPlayerOrderList().contains(player)) {
             gameInformation.getFlightBoard().eliminatePlayer(player);
         }
+
+        if(!playerMessengerMap.containsKey(player)){
+            System.err.println("Critical error: player " + player.getNickName() + " is not in playerMessenger map during disconnection method call");
+            return;
+        }
+
         playerMessengerMap.get(player).clearPlayerResources();
         playerMessengerMap.remove(player);
         System.out.println(String.format("Player %s disconnected!", player.getColouredNickName()));

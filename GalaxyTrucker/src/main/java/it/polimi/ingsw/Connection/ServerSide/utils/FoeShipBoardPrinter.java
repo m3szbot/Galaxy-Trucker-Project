@@ -51,6 +51,10 @@ public class FoeShipBoardPrinter{
 
         String input = playerMessenger.getPlayerString();
 
+        if(input.equals("unblock")){
+            return;
+        }
+
         for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
 
             if (input.equals(player.getNickName())) {

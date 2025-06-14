@@ -44,6 +44,10 @@ public final class ClientInputManager {
                     Thread.sleep(100);
                     temp -= 100;
 
+                    if(temp == 60000){
+                        System.out.println("Warning: 1 minute left before you are being considered inactive, please enter an input");
+                    }
+
                     if(temp < 0){
                         throw new TimeoutException();
                     }
