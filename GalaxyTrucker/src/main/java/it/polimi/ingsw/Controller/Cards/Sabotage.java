@@ -56,7 +56,7 @@ public class Sabotage extends Card implements SmallestCrew {
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(smallestCrewPlayer);
             playerMessenger.printMessage(message);
 
-            PlayerFlightInputHandler.removePlayer(smallestCrewPlayer);
+            PlayerFlightInputHandler.endPlayerTurn(smallestCrewPlayer);
 
             gameInformation.getFlightBoard().eliminatePlayer(smallestCrewPlayer);
             isEliminated = true;

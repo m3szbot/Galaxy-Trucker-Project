@@ -63,7 +63,7 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
                 i--;
 
                 //Notify everyone
-                message = "Player" + player.getColouredNickName() + " has been lost in the open space.";
+                message = "Player " + player.getColouredNickName() + " has been lost in the open space.";
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             } else {
