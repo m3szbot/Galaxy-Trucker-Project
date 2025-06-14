@@ -134,7 +134,7 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
             }
 
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "You finished your turn, please wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }

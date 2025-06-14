@@ -124,7 +124,7 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }

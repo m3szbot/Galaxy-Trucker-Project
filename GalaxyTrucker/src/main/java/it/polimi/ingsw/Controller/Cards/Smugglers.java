@@ -121,7 +121,7 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }

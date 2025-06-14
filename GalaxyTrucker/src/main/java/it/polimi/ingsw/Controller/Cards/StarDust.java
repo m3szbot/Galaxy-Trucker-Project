@@ -55,7 +55,7 @@ public class StarDust extends Card implements Movable {
                 changePlayerPosition(player, -externalJunctions, gameInformation.getFlightBoard());
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
 
                 if (externalJunctions > 0) {
 

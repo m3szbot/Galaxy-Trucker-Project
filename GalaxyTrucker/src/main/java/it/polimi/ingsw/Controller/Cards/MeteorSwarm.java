@@ -86,7 +86,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
 
                 message = "You survived the meteor storm!\n";
                 playerMessenger.printMessage(message);

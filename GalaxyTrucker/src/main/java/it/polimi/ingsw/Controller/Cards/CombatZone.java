@@ -88,7 +88,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "The other players are choosing their fire power.\n";
                 playerMessenger.printMessage(message);
             }
@@ -122,7 +122,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "The other players are choosing their engine power.\n";
                 playerMessenger.printMessage(message);
             }

@@ -81,7 +81,7 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
             }
 
-            if (playerMessenger != null) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
                 message = "Please wait for the other players.\n";
                 playerMessenger.printMessage(message);
             }
