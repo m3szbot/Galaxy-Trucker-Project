@@ -85,6 +85,14 @@ class ScoreCounterTest {
     }
 
     @Test
+    void negativeEarnedPoints() {
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
+        playerA.getShipBoard().getShipBoardAttributes().destroyComponents(100);
+        scoreCounter.calculatePlayerScores(flightBoard);
+        assertEquals(0, scoreCounter.getPlayerScore(playerA));
+    }
+
+    @Test
     void testGameOnePlayerEmptyShip() {
         // create new TestGame gameInformation
         gameInformation = new GameInformation();
