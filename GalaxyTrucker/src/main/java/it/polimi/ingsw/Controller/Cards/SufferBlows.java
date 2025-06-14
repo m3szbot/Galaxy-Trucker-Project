@@ -309,7 +309,7 @@ public interface SufferBlows {
 
         if (hitFlag) {
 
-            message = "Player " + player.getColouredNickName() + " has been hit by a " +
+            message = "Player " + player.getColouredNickName() + " was hit by a " +
                     blowType.toString().toLowerCase() + " at position " +
                     "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);

@@ -2,9 +2,6 @@ package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
-import it.polimi.ingsw.View.GUI.CorrectionControllers.CorrectionGUIController;
-import it.polimi.ingsw.View.GUI.EvaluationControllers.EvaluationGUIController;
-import it.polimi.ingsw.View.GUI.FlightControllers.FlightGUIController;
 import it.polimi.ingsw.View.GUI.GeneralGUIController;
 import it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController;
 import it.polimi.ingsw.View.GeneralView;
@@ -25,14 +22,14 @@ public class ViewCommunicator {
     private GeneralView lobbyView;
     private int index = -1;
 
-    public ViewCommunicator(ViewType viewType){
+    public ViewCommunicator(ViewType viewType) {
 
         this.viewType = viewType;
         this.views = new GeneralView[4];
         this.generalGUIController = new GeneralGUIController();
         this.lobbyGUIController = new LobbyGUIController();
 
-        if(viewType == ViewType.TUI){
+        if (viewType == ViewType.TUI) {
 
             this.lobbyView = new TUIView();
             this.views[0] = new TUIView();
@@ -40,8 +37,7 @@ public class ViewCommunicator {
             this.views[2] = new TUIView();
             this.views[3] = new TUIView();
 
-        }
-        else{
+        } else {
             /*
             this.lobbyView = new LobbyGUIController();
             this.views[0] = new AssemblyGUIController();
@@ -52,12 +48,11 @@ public class ViewCommunicator {
              */
 
 
-
         }
 
     }
 
-    public void setGamePhase(GamePhase gamePhase){
+    public void setGamePhase(GamePhase gamePhase) {
 
         switch (gamePhase) {
             case Assembly -> index = 0;
@@ -66,36 +61,37 @@ public class ViewCommunicator {
             case Evaluation -> index = 3;
         }
 
-        if(viewType == ViewType.GUI) {
+        if (viewType == ViewType.GUI) {
 
             generalGUIController.setPhaseGUI(gamePhase);
         }
     }
 
-    public GeneralView getView(){
+    public GeneralView getView() {
 
-        if(index == -1){
+        if (index == -1) {
             return lobbyView;
         }
 
         return views[index];
     }
 
-    public void showData(String message, boolean isError){
+    public void showData(String message, boolean isError) {
 
-        if(viewType == ViewType.TUI){
-            if(isError) {
+        if (viewType == ViewType.TUI) {
+            if (isError) {
                 System.err.println(message);
-            }
-            else{
+            } else {
                 System.out.println(message);
             }
         }
-        else{
+        /*else{
 
             lobbyGUIController.showData(message, isError);
 
         }
+
+         */
 
     }
 

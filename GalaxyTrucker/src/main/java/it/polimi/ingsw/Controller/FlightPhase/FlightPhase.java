@@ -33,6 +33,8 @@ public class FlightPhase extends Phase {
             playerMessenger = gameMessenger.getPlayerMessenger(player);
             playerMessenger.printFlightBoard(flightBoard);
 
+            Sleeper.sleepXSeconds(3);
+
             playerMessenger.printMessage("Your shipboard:\n");
 
             playerMessenger.printShipboard(player.getShipBoard());
@@ -265,7 +267,11 @@ public class FlightPhase extends Phase {
 
         //ending input thread
         for (Player player : flightBoard.getPlayerOrderList()) {
-            PlayerFlightInputHandler.removePlayer(player);
+
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
+                PlayerFlightInputHandler.removePlayer(player);
+            }
+
         }
 
         gameMessenger.sendMessageToAll("Flight phase has ended.\n");
