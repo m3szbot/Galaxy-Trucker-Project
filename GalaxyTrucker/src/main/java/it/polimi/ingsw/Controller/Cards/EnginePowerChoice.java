@@ -60,7 +60,7 @@ public interface EnginePowerChoice {
                     doubleEnginesToActivate = playerMessenger.getPlayerInt();
 
                     if (doubleEnginesToActivate <= player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() && doubleEnginesToActivate > 0
-                            && doubleEnginesToActivate <= doubleEnginePower) {
+                            && doubleEnginesToActivate <= (doubleEnginePower) / 2) {
                         break;
                     }
 

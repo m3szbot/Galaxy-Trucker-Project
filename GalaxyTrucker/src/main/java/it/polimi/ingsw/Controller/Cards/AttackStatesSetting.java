@@ -54,6 +54,9 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     results[i] = AttackStates.EnemyDefeated;
+                    PlayerFlightInputHandler.endPlayerTurn(player);
+
+                    break;
 
                 } else if (chosenFirePower == requirementNumber) {
 
