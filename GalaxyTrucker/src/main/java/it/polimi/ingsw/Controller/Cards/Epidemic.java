@@ -39,11 +39,12 @@ public class Epidemic extends Card {
         List<int[]> cabinsToInfect;
         int[] coordinates;
         boolean isEliminated;
-        int numberOfRemovedInhabitants = 0;
+        int numberOfRemovedInhabitants;
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
 
             isEliminated = false;
+            numberOfRemovedInhabitants = 0;
 
             //Checks the validity of the current index (precaution for disconnection)
             i = IndexChecker.checkIndex(gameInformation, i);
