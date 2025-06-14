@@ -1,9 +1,19 @@
-/*package it.polimi.ingsw.View.AssemblyView;
+package it.polimi.ingsw.View.GUI.AssemblyControllers;
 
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.View.GeneralView;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -16,7 +26,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 // TODO: implement
-public abstract class AssemblyViewGUI extends AssemblyView {
+public abstract class AssemblyViewGUI extends GeneralView {
     private transient AtomicReference<String> userInput;
     String input;
 
@@ -27,6 +37,11 @@ public abstract class AssemblyViewGUI extends AssemblyView {
             private ImageView booked1;
     @FXML
             private ImageView booked2;
+    @FXML
+            private ImageView flightBoard;
+
+    @FXML private Button Tile1, Tile2, Tile3, Tile4;
+    @FXML private Button Tile1T, Tile2T, Tile3T, Tile4T;
 
 
 
@@ -41,19 +56,19 @@ public abstract class AssemblyViewGUI extends AssemblyView {
     @FXML
     public void drawInput(ActionEvent event){
         input = "draw";
-        this.userInput.set(input);
+        sendData(input);
     }
     @FXML
     public void placeInput(ActionEvent event){
         input = "place";
-        this.userInput.set(input);
+        sendData(input);
         //... logica rinoscimento id e place
     }
 
     @FXML
     public void rotateInput(ActionEvent event){
         input = "rotate";
-        this.userInput.set(input);
+        sendData(input);
     }
 
    @Override
@@ -66,7 +81,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
     @FXML
     public void choiceInput(ActionEvent event){
         input = "choice";
-        this.userInput.set(input);
+        sendData(input);
     }
 
     public void printUncovered(List<Component> components){
@@ -83,13 +98,13 @@ public abstract class AssemblyViewGUI extends AssemblyView {
             VBox container = (VBox) popupRoot.lookup("#dynamicContainer");
 
             Stage popupStage = new Stage();
-            popupStage.setTitle("Choose your component");
+            sendData("Choose your component");
             popupStage.setScene(new Scene(popupRoot));
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
             //I dynamically add the components to the popup
             for (int i = 0; i < components.size(); i++) {
-                final int index = i;
+                int index = i;
 
                 ImageView imageView = new ImageView(new Image(getClass().getResource(components.get(i).getImgAddress()).toExternalForm()));
                 imageView.setFitWidth(50);
@@ -100,7 +115,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
                 wrapper.setPadding(new Insets(10));
                 wrapper.setStyle("-fx-cursor: hand;");
                 wrapper.setOnMouseClicked(event -> {
-                    this.userInput.set(String.valueOf(index));
+                    sendData(String.valueOf(index));
                     popupStage.close();
                 });
 
@@ -123,14 +138,13 @@ public abstract class AssemblyViewGUI extends AssemblyView {
             HBox container = (HBox) popupRoot.lookup("#imageContainer");
 
             Stage popupStage = new Stage();
-            popupStage.setTitle("Show deck");
+            sendData("Show deck");
             popupStage.setScene(new Scene(popupRoot));
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
 
             for (int i = 0; i < 3; i++) {
-                final int index = i;
-
+                int index = i;
                 Image image = new Image(getClass().getResource("/Polytechnic.cards.GT-cards_II_IT_0121.jpg").toExternalForm());
                 ImageView imageView = new ImageView(image);
                 imageView.setFitWidth(100);
@@ -139,7 +153,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
                 imageView.setCursor(Cursor.HAND);
 
                 imageView.setOnMouseClicked(event -> {
-                    this.userInput.set(String.valueOf(index));
+                    sendData(String.valueOf(index));
                     popupStage.close();
                 });
 
@@ -179,7 +193,7 @@ public abstract class AssemblyViewGUI extends AssemblyView {
 
             Button closeButton = (Button) popupRoot.lookup("#closeButton");
             closeButton.setOnAction(e -> {
-                userInput.set("yes");
+                sendData("yes");
                 popupStage.close();
             });
             popupStage.show();
@@ -191,37 +205,65 @@ public abstract class AssemblyViewGUI extends AssemblyView {
     @FXML
     public void showInput(ActionEvent event){
         input = "show";
-        this.userInput.set(input);
+        sendData(input);
     }
 
     @FXML
     public void placeBookedInput(ActionEvent event){
         input = "place booked";
-        this.userInput.set(input);
+        sendData(input);
         if(event.getSource() == booked1){
             input = String.valueOf(0);
-            this.userInput.set(input);
+            sendData(input);
         }else{
             input = String.valueOf(1);
-            this.userInput.set(input);
+            sendData(input);
         }
     }
 
     @FXML
     public void bookInput(ActionEvent event){
         input = "book";
-        this.userInput.set(input);
+        sendData(input);
     }
 
     @FXML
     public void endInput(ActionEvent event){
         input = "end";
-        this.userInput.set(input);
+        sendData(input);
     }
 
-    public void positionChoicePopUp(){
+    public void positionChoicePopUp(FlightBoard fly){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/PositionChoicePopUp.fxml"));
+        flightBoard.setImage(fly.getImgAddress()).toExternalForm();
+
+        if(fly.getImgAddress().equals("src/main/resources/Polytechnic/cardboard/cardboard-5.png")){
+            //TODO creation of starting position tiles
+            Tile1.setOnMouseClicked(event -> {
+                sendData("7");
+            });
+            Tile2.setOnMouseClicked(event -> {
+                sendData("4");
+            });
+            Tile3.setOnMouseClicked(event -> {
+                sendData("2");
+            });
+            Tile4.setOnMouseClicked(event -> {
+                sendData("1");
+            });
+        }else{
+            //TODO creation of starting position tiles in TestGame
+            Tile1T.setOnMouseClicked(event -> {sendData("5");});
+            Tile2T.setOnMouseClicked(event -> {sendData("3");});
+            Tile3T.setOnMouseClicked(event -> {sendData("2");});
+            Tile4T.setOnMouseClicked(event -> {sendData("1");});
+        }
 
     }
+
+    public void sendData(String playerInput){
+        ClientInputManager.setUserInput(playerInput);
+    }
+
 
 }
-*/
