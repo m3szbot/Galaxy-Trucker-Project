@@ -85,7 +85,7 @@ public interface GoodsGain {
 
         String message;
         PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        boolean rearrangementPhaseFlag = false, errorFlag = true;
+        boolean rearrangementPhaseFlag;
 
         message = "Are there some goods that you want to rearrange ?";
         playerMessenger.printMessage(message);
@@ -95,8 +95,7 @@ public interface GoodsGain {
         while (rearrangementPhaseFlag) {
             //player decide that he wants to rearrange some goods
 
-            int[] sourceCoordinates = new int[2], destCoordinates = new int[2];
-            int[] sourceGoods;
+            int[] sourceCoordinates, destCoordinates;
 
             message = "Enter coordinate of the source storage component: ";
             playerMessenger.printMessage(message);
@@ -118,9 +117,11 @@ public interface GoodsGain {
                 playerMessenger.printMessage(message);
 
             } catch (IllegalArgumentException e) {
+
                 //If an error occurs (caused by the player giving wrong information), they are asked if they still want to rearrange and repeat the cycle
                 message = e.getMessage();
                 playerMessenger.printMessage(message);
+
             }
 
             //Resets the array for the next cycle
