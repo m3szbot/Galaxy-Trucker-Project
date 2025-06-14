@@ -433,6 +433,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         int[] coordinates = new int[2];
         while (true) {
             String input = getPlayerInput();
+
+            input.replaceAll("[^\\d]", " ");
+            
             try {
                 /*
                 trim removes the spaces before and after the user input string. Split creates an array
