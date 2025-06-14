@@ -44,7 +44,7 @@ public interface SufferBlows {
             if (blow != null) {
 
                 //Pause before each blow
-                Sleeper.sleepXSeconds(3);
+                Sleeper.sleepXSeconds(1);
 
                 componentCoordinates = findHitComponent(player, blow, componentCoordinates);
 

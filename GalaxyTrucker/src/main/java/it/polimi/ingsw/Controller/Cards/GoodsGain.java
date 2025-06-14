@@ -34,8 +34,8 @@ public interface GoodsGain {
 
         String message;
         PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        boolean discardingPhaseFlag = false;
-        int[] coordinates = new int[2];
+        boolean discardingPhaseFlag;
+        int[] coordinates;
 
         message = "Are there some goods that you want to discard ?";
         playerMessenger.printMessage(message);
@@ -54,15 +54,27 @@ public interface GoodsGain {
             int[] goodsToRemove;
             goodsToRemove = askForGoods(player, "remove", 0, 3, gameInformation);
 
-            //Tries to remove the goods inserted by the player
-            player.getShipBoard().removeGoods(coordinates[0], coordinates[1], goodsToRemove);
+            try {
+                //Tries to remove the goods inserted by the player
+                player.getShipBoard().removeGoods(coordinates[0], coordinates[1], goodsToRemove);
 
-            message = "The goods have been successfully removed from the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
-            playerMessenger.printMessage(message);
+                message = "The goods have been successfully removed from the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
+                playerMessenger.printMessage(message);
 
+            } catch (IllegalArgumentException e) {
+
+                message = e.getMessage();
+                playerMessenger.printMessage(message);
+
+            }
 
             message = "Do you still want to discard some goods?";
             playerMessenger.printMessage(message);
+
+            //Resets the array for the next cycle
+            for (int j = 0; j <= 3; j++) {
+                goodsToRemove[j] = 0;
+            }
 
             discardingPhaseFlag = playerMessenger.getPlayerBoolean();
         }
@@ -73,7 +85,7 @@ public interface GoodsGain {
 
         String message;
         PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        boolean rearrangementPhaseFlag = false, errorFlag = true;
+        boolean rearrangementPhaseFlag;
 
         message = "Are there some goods that you want to rearrange ?";
         playerMessenger.printMessage(message);
@@ -83,8 +95,7 @@ public interface GoodsGain {
         while (rearrangementPhaseFlag) {
             //player decide that he wants to rearrange some goods
 
-            int[] sourceCoordinates = new int[2], destCoordinates = new int[2];
-            int[] sourceGoods;
+            int[] sourceCoordinates, destCoordinates;
 
             message = "Enter coordinate of the source storage component: ";
             playerMessenger.printMessage(message);
@@ -106,9 +117,16 @@ public interface GoodsGain {
                 playerMessenger.printMessage(message);
 
             } catch (IllegalArgumentException e) {
+
                 //If an error occurs (caused by the player giving wrong information), they are asked if they still want to rearrange and repeat the cycle
                 message = e.getMessage();
                 playerMessenger.printMessage(message);
+
+            }
+
+            //Resets the array for the next cycle
+            for (int j = 0; j <= 3; j++) {
+                movingGoods[j] = 0;
             }
 
             message = "Do you still want to rearrange some goods ?";
@@ -123,8 +141,8 @@ public interface GoodsGain {
     private void GoodsPlacementPhase(Player player, int[] goods, GameInformation gameInformation) throws PlayerDisconnectedException {
         String message;
         PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        boolean placementPhaseFlag = false;
-        int[] coordinates = new int[2], goodsToAdd;
+        boolean placementPhaseFlag;
+        int[] coordinates, goodsToAdd;
         int remainingRedSlots, remainingBlueSlots;
 
         //Check if there's goods left to add
@@ -153,11 +171,19 @@ public interface GoodsGain {
                     //Asks for which goods they want to add to the storage
                     goodsToAdd = askForGoods(player, "add", 0, 3, gameInformation);
 
-                    //Tries to add the goods to the specified component
-                    player.getShipBoard().addGoods(coordinates[0], coordinates[1], goodsToAdd);
+                    try {
+                        //Tries to add the goods to the specified component
+                        player.getShipBoard().addGoods(coordinates[0], coordinates[1], goodsToAdd);
 
-                    message = "The goods have been successfully added to the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
-                    playerMessenger.printMessage(message);
+                        message = "The goods have been successfully added to the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
+                        playerMessenger.printMessage(message);
+
+                    } catch (IllegalArgumentException e) {
+
+                        message = e.getMessage();
+                        playerMessenger.printMessage(message);
+
+                    }
 
 
                     remainingRedSlots = player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots();

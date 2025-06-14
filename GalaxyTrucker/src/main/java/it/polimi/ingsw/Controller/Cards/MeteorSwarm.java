@@ -93,7 +93,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
             }
 
-            Sleeper.sleepXSeconds(3);
+            Sleeper.sleepXSeconds(2);
 
             if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.endPlayerTurn(player);
