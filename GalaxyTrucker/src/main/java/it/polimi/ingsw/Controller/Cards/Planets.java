@@ -30,6 +30,7 @@ public class Planets extends Card implements GoodsGain, Movable {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
+        this.daysLost = cardBuilder.getDaysLost();
         this.planet1 = cardBuilder.getPlanet1();
         this.planet2 = cardBuilder.getPlanet2();
         this.planet3 = cardBuilder.getPlanet3();

@@ -440,6 +440,7 @@
   {
     "level": 1,
     "cardName": "Smugglers",
+    "daysLost": 1,
     "requirementType": "FirePower",
     "lossType": "Goods",
     "requirementNumber": 4,
@@ -454,6 +455,7 @@
   {
     "level": 2,
     "cardName": "Smugglers",
+    "daysLost": 1,
     "requirementType": "FirePower",
     "lossType": "Goods",
     "requirementNumber": 8,
