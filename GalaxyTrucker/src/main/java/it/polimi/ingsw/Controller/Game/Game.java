@@ -6,6 +6,8 @@ import it.polimi.ingsw.Controller.CorrectionPhase.CorrectionPhase;
 import it.polimi.ingsw.Controller.EvaluationPhase.EvaluationPhase;
 import it.polimi.ingsw.Controller.FlightPhase.FlightPhase;
 import it.polimi.ingsw.Controller.InitializationPhase.InitializationPhase;
+import it.polimi.ingsw.Model.Components.*;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -96,6 +98,7 @@ public class Game implements Runnable, Serializable {
      * Start the different phases of the game.
      */
     public void run() {
+
         System.out.println("Starting assembly phase of game" + gameCode + "...");
         assemblyPhase.start();
         System.out.println("Starting correction phase of game" + gameCode + "...");
