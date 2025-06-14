@@ -282,7 +282,7 @@ public class ShipBoard implements Serializable {
             this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 8, 5);
 
             this.addComponent(new Cabin(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 6, 7);
-            this.addComponent(new Cabin(universalSides, CrewType.Brown, 1), 5, 7);
+            this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 7);
             this.addComponent(new AlienSupport(universalSides, true), 4, 7);
             this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 8);
             this.addComponent(new Cabin(universalSides, CrewType.Purple, 1), 4, 8);

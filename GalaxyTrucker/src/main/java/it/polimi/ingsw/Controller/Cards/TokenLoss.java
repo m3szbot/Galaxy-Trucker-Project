@@ -174,9 +174,13 @@ public interface TokenLoss {
 
             //there are batteries that can be removed
             if (batteriesAvailable >= quantity) {
+
                 numberOfBatteriesToRemove = quantity;
+
             } else {
+
                 numberOfBatteriesToRemove = batteriesAvailable;
+
             }
 
             while (numberOfBatteriesToRemove > 0) {
@@ -192,9 +196,11 @@ public interface TokenLoss {
                     numberOfBatteriesToRemove--;
 
                 } catch (IllegalArgumentException e) {
+
                     message = e.getMessage();
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                     playerMessenger.printMessage(message);
+
                 }
             }
 

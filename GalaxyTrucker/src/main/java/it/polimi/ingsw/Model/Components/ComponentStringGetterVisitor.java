@@ -162,9 +162,9 @@ public class ComponentStringGetterVisitor implements ComponentVisitor<String, Ru
         // row 5
         // back covered
         if (shield.getCoveredSides()[2])
-            builder.append(String.format("+%s###%s%d%s###%s+\n", GREEN, RESET, componentSideTranslator(shield.getFront()), GREEN, RESET));
+            builder.append(String.format("+%s###%s%d%s###%s+\n", GREEN, RESET, componentSideTranslator(shield.getBack()), GREEN, RESET));
         else
-            builder.append(String.format("+---%d---+\n", componentSideTranslator(shield.getFront())));
+            builder.append(String.format("+---%d---+\n", componentSideTranslator(shield.getBack())));
 
         // component string constructed
         return builder.toString();

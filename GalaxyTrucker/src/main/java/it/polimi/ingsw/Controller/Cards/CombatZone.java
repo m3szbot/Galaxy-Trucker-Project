@@ -149,6 +149,10 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //lowest engine power
 
         try {
+            message = "You have the weakest engine power!\n";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
+            playerMessenger.printMessage(message);
+
             inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
 
             message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " lost " + lossNumber +
@@ -185,7 +189,14 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //lowest firepower
 
         try {
+            message = "You have the lowest fire power!\n";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
+            playerMessenger.printMessage(message);
+
             hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
+
+            message = "Player " + weakestFirePowerPlayer.getColouredNickName() + "is getting shot at!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } catch (NoHumanCrewLeftException e) {
             message = e.getMessage();
