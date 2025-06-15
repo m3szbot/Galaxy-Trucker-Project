@@ -9,6 +9,7 @@ import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.Components.Cabin;
 import it.polimi.ingsw.Model.Components.CrewType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.*;
 
 import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.*;
@@ -99,7 +100,7 @@ public class CorrectionThread implements Runnable {
                     shipBoard.removeComponent(coordinates[0], coordinates[1], true);
                     // throws PlayerDisconnectedException, NoHumanCrewLeftException
 
-                } catch (IllegalArgumentException e) {
+                } catch (IllegalSelectionException e) {
                     // repeat removal loop
                     removeComponentSuccess = false;
                     // print exception message to player
@@ -203,7 +204,7 @@ public class CorrectionThread implements Runnable {
                         if (selectCrewSuccess) {
                             try {
                                 shipBoard.setCrewType(i + 1, j + 1, crewType);
-                            } catch (IllegalArgumentException e) {
+                            } catch (IllegalSelectionException e) {
                                 // failed to set crew (alien not supported etc.)
                                 playerMessenger.printMessage(e.getMessage());
                                 selectCrewSuccess = false;
