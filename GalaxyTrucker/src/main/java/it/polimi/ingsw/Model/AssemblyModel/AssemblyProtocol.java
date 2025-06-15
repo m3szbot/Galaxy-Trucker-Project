@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.*;
@@ -116,16 +117,16 @@ public class AssemblyProtocol {
      * @param num the deck index (1 to 3), 0 is blocked
      * @return the selected deck
      */
-    public Deck showDeck(int num) {
+    public Deck showDeck(int num) throws IllegalSelectionException {
         if (num >= 1 && num <= 3) {
             if (!decksList[num - 1].getInUse()) {
                 decksList[num - 1].setInUse(true);
                 return decksList[num - 1];
             } else {
-                throw new IllegalStateException("Deck is in use by others");
+                throw new IllegalSelectionException("Deck is in use by others");
             }
         } else {
-            throw new IllegalArgumentException("Invalid deck number");
+            throw new IllegalSelectionException("Invalid deck number");
         }
     }
 
@@ -134,9 +135,9 @@ public class AssemblyProtocol {
      * Moves the previous component in hand (if any) to the uncovered list.
      *
      * @param player the player drawing a component
-     * @throws IndexOutOfBoundsException if no more components are available
+     * @throws IllegalSelectionException if no more components are available
      */
-    public void newComponent(Player player) throws IndexOutOfBoundsException {
+    public void newComponent(Player player) throws IllegalSelectionException {
         addComponentInHandToUncoveredList(player);
         // add new random component to player's hand
         if (!coveredList.isEmpty()) {
@@ -148,7 +149,7 @@ public class AssemblyProtocol {
             int randomIndex = randomizer.nextInt(coveredList.size());
             inHandMap.put(player, uncoveredList.remove(randomIndex));
         } else {
-            throw new IndexOutOfBoundsException("Covered list empty");
+            throw new IllegalSelectionException("Component lists are empty");
         }
     }
 
@@ -173,14 +174,14 @@ public class AssemblyProtocol {
      * @param player the player making the selection
      * @param index  the index of the component in the uncovered list
      */
-    public void chooseUncoveredComponent(Player player, int index) {
+    public void chooseUncoveredComponent(Player player, int index) throws IllegalSelectionException {
         // size: 0-size
         // index: 0-(size-1)
         if (uncoveredList.size() > index) {
             addComponentInHandToUncoveredList(player);
             inHandMap.put(player, uncoveredList.remove(index));
         } else {
-            throw new IndexOutOfBoundsException("Uncovered list does not have enough elements");
+            throw new IllegalSelectionException("Uncovered component list is empty");
         }
     }
 
@@ -191,17 +192,17 @@ public class AssemblyProtocol {
      * @param player the player booking the component
      * @author Boti
      */
-    public void bookComponent(Player player) {
+    public void bookComponent(Player player) throws IllegalSelectionException {
         if (inHandMap.containsKey(player)) {
             if (bookedMap.get(player).size() < 3) {
                 bookedMap.get(player).add(inHandMap.get(player));
                 // remove component from hand (newComponent places component in hand in uncovered list)
                 inHandMap.remove(player);
             } else {
-                throw new IllegalStateException("Too many components booked");
+                throw new IllegalSelectionException("Too many components booked");
             }
         } else {
-            throw new NoSuchElementException("No component in hand");
+            throw new IllegalSelectionException("No component in hand");
         }
     }
 
@@ -212,12 +213,12 @@ public class AssemblyProtocol {
      * @param index  the index of the component to take
      * @author Boti
      */
-    public void chooseBookedComponent(Player player, int index) {
+    public void chooseBookedComponent(Player player, int index) throws IllegalSelectionException {
         if (bookedMap.get(player).size() > index) {
             addComponentInHandToUncoveredList(player);
             inHandMap.put(player, bookedMap.get(player).remove(index));
         } else {
-            throw new IndexOutOfBoundsException("Not enough booked components");
+            throw new IllegalSelectionException("Not enough booked components");
         }
     }
 

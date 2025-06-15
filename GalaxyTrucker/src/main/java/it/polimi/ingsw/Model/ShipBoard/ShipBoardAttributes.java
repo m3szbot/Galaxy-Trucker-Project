@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.Components.*;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 
 import java.io.Serializable;
 
@@ -385,9 +386,9 @@ public class ShipBoardAttributes implements Serializable {
      *
      * @return True if protected, false if unprotected.
      */
-    public boolean checkSideShieldProtected(int side) {
+    public boolean checkSideShieldProtected(int side) throws IllegalSelectionException {
         if (side < 0 || side >= coveredSides.length)
-            throw new IllegalArgumentException("Invalid side entered (0-3 is valid)");
+            throw new IllegalSelectionException("Invalid side entered (0-3 is valid)");
         // no batteries remaining
         if (remainingBatteries <= 0)
             return false;

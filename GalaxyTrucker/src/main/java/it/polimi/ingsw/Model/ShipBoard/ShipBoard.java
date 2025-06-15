@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 
 import java.io.Serializable;
 import java.util.*;
@@ -149,7 +150,7 @@ public class ShipBoard implements Serializable {
         Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2);
         try {
             addComponent(SB_CENTER_COL, SB_CENTER_ROW, starterCabin);
-        } catch (NotPermittedPlacementException e) {
+        } catch (NotPermittedPlacementException | IllegalSelectionException e) {
             System.out.println("Couldn't add starter cabin");
         }
         // set center
@@ -165,7 +166,7 @@ public class ShipBoard implements Serializable {
     /**
      * Alternative parameter order to improve readability during testing.
      */
-    public void addComponent(int visibleCol, int visibleRow, Component component) throws NotPermittedPlacementException, IllegalArgumentException {
+    public void addComponent(int visibleCol, int visibleRow, Component component) throws NotPermittedPlacementException, IllegalSelectionException {
         addComponent(component, visibleCol, visibleRow);
     }
 
@@ -178,9 +179,9 @@ public class ShipBoard implements Serializable {
      * @param visibleRow Visible row.
      * @author Giacomo, Boti
      */
-    public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException, IllegalArgumentException {
+    public void addComponent(Component component, int visibleCol, int visibleRow) throws NotPermittedPlacementException, IllegalSelectionException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
+            throw new IllegalSelectionException("Coordinates out of bounds.");
 
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
@@ -306,11 +307,11 @@ public class ShipBoard implements Serializable {
             this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 9);
             addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Smooth, SideType.Universal}, false), 10, 9);
 
-        } catch (NotPermittedPlacementException e) {
-            throw new IllegalArgumentException("The perbuilt shipboard has illegal placements.");
+        } catch (NotPermittedPlacementException | IllegalSelectionException e) {
+            throw new IllegalStateException("The prebuilt shipboard has illegal placements.");
         }
         if (this.isErroneous())
-            throw new IllegalArgumentException("The prebuilt shipboard has errors.");
+            throw new IllegalStateException("The prebuilt shipboard has errors.");
     }
 
     public boolean[][] getValidityMatrix() {
@@ -550,22 +551,21 @@ public class ShipBoard implements Serializable {
      * Updates shipBoard, shipBoardAttributes, destroyedComponents, centerCabinCoordinates (if center cabin is removed).
      * Calls check for fracture if flag is set.
      *
-     * @throws IllegalArgumentException    if operation not possible.
      * @throws NoHumanCrewLeftException    if no human crew left and player forced to give up.
      * @throws FracturedShipBoardException if shipboard is fractured into multiple pieces.
      * @author Giacomo, Boti
      */
     public void removeComponent(int visibleCol, int visibleRow, boolean checkFracture)
-            throws IllegalArgumentException, NoHumanCrewLeftException, FracturedShipBoardException {
+            throws IllegalSelectionException, NoHumanCrewLeftException, FracturedShipBoardException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
+            throw new IllegalSelectionException("Coordinates out of bounds.");
 
         int realCol = getRealIndex(visibleCol);
         int realRow = getRealIndex(visibleRow);
         Component component = componentMatrix[realCol][realRow];
 
         if (component == null) {
-            throw new IllegalArgumentException("No component present at the given coordinates.");
+            throw new IllegalSelectionException("No component present at the given coordinates.");
         }
         // present component to be removed
 
@@ -846,6 +846,8 @@ public class ShipBoard implements Serializable {
                         this.removeComponent(getVisibleIndex(realCol), getVisibleIndex(realRow), false);
                     } catch (FracturedShipBoardException e) {
                         throw new IllegalStateException("Error: entering infinite checkFracture loop.");
+                    } catch (IllegalSelectionException e) {
+                        throw new IllegalArgumentException("Couldn't remove component");
                     }
                 }
             }
@@ -924,19 +926,18 @@ public class ShipBoard implements Serializable {
      * Remove a battery from the battery storage at the given coordinates, if possible.
      * Updates shipBoardAttributes.
      *
-     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void removeBattery(int visibleCol, int visibleRow) throws IllegalArgumentException {
+    public void removeBattery(int visibleCol, int visibleRow) throws IllegalSelectionException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
+            throw new IllegalSelectionException("Coordinates out of bounds.");
 
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
 
         if (!(component instanceof Battery))
-            throw new IllegalArgumentException("The selected component is not a battery");
+            throw new IllegalSelectionException("The selected component is not a battery");
 
         if (component.getBatteryPower() - 1 >= 0) {
             ((Battery) component).removeBattery();
@@ -947,7 +948,7 @@ public class ShipBoard implements Serializable {
                 throw new IllegalStateException("Error: no human crew left after removing battery.");
             }
         } else
-            throw new IllegalArgumentException("Not enough batteries at the selected component.");
+            throw new IllegalSelectionException("Not enough batteries at the selected component.");
     }
 
     /**
@@ -955,20 +956,19 @@ public class ShipBoard implements Serializable {
      * Accounts for humans and aliens.
      * Updates shipBoardAttributes.
      *
-     * @throws NoHumanCrewLeftException if no human crew left after removal and player forced to give up.
      * @throws IllegalArgumentException if removal operation not possible.
      * @author Boti
      */
-    public void removeCrewMember(int visibleCol, int visibleRow) throws IllegalArgumentException, NoHumanCrewLeftException {
+    public void removeCrewMember(int visibleCol, int visibleRow) throws IllegalSelectionException, NoHumanCrewLeftException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
+            throw new IllegalSelectionException("Coordinates out of bounds.");
 
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
 
         if (!(component instanceof Cabin))
-            throw new IllegalArgumentException("The selected component is not a cabin");
+            throw new IllegalSelectionException("The selected component is not a cabin");
 
         // crew >=1 on cabin
         // throw NoHumanCrewLeftException if no crew remains on shipboard after removal
@@ -979,7 +979,7 @@ public class ShipBoard implements Serializable {
         }
         // 0 crew on cabin
         else {
-            throw new IllegalArgumentException("Not enough crew members at the selected component.");
+            throw new IllegalSelectionException("Not enough crew members at the selected component.");
         }
     }
 
@@ -989,19 +989,18 @@ public class ShipBoard implements Serializable {
      * Denies change to alien crew if no human crew would be left.
      * Updates shipBoardAttributes.
      *
-     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void setCrewType(int visibleCol, int visibleRow, CrewType crewType) throws IllegalArgumentException {
+    public void setCrewType(int visibleCol, int visibleRow, CrewType crewType) throws IllegalSelectionException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
+            throw new IllegalSelectionException("Coordinates out of bounds.");
 
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
 
         if (!(component instanceof Cabin))
-            throw new IllegalArgumentException("The selected component is not a cabin");
+            throw new IllegalSelectionException("The selected component is not a cabin");
 
         // save original data if component is a cabin
         Cabin cabin = (Cabin) component;
@@ -1010,12 +1009,12 @@ public class ShipBoard implements Serializable {
 
         // no crew in cabin
         if (originalCrewCount <= 0)
-            throw new IllegalArgumentException("The selected cabin has no crew members.");
+            throw new IllegalSelectionException("The selected cabin has no crew members.");
 
         // no crew would be left after changing crewType from Human
         if (cabin.getCrewType().equals(CrewType.Human) && !crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Human) &&
                 (shipBoardAttributes.getHumanCrewMembers() - cabin.getCrewMembers() <= 0)) {
-            throw new IllegalArgumentException("Cannot change crew type from human: no humans would be left.");
+            throw new IllegalSelectionException("Cannot change crew type from human: no humans would be left.");
         }
 
         // change only if needed
@@ -1023,10 +1022,10 @@ public class ShipBoard implements Serializable {
             // alien checks
             if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple) || crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Brown)) {
                 if (shipBoardAttributes.getAlien(crewType))
-                    throw new IllegalArgumentException("Cannot change crew to alien: the alien is already present elsewhere.");
+                    throw new IllegalSelectionException("Cannot change crew to alien: the alien is already present elsewhere.");
 
                 if (!checkForAlienSupport(col, row, crewType))
-                    throw new IllegalArgumentException("Cannot change crew to alien: no alien support nearby.");
+                    throw new IllegalSelectionException("Cannot change crew to alien: no alien support nearby.");
             }
 
             // all conditions met to change crew type
@@ -1115,11 +1114,10 @@ public class ShipBoard implements Serializable {
     /**
      * Moves goods from the storage at the starting coordinates to the storage at the final coordinates, if possible.
      *
-     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
     public void moveGoods(int visibleColStarter, int visibleRowStarter, int visibleColFinal, int visibleRowFinal, int[] goods)
-            throws IllegalArgumentException {
+            throws IllegalSelectionException {
         // removeGoods throws IllegalArgumentException if not possible
         removeGoods(visibleColStarter, visibleRowStarter, goods);
 
@@ -1137,34 +1135,33 @@ public class ShipBoard implements Serializable {
      * Add goods to the storage at the given coordinates, if possible.
      * Updates shipBoardAttributes.
      *
-     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
+    public void addGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalSelectionException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
+            throw new IllegalSelectionException("Coordinates out of bounds.");
 
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
 
         if (!(component instanceof Storage))
-            throw new IllegalArgumentException("The selected component is not a storage");
+            throw new IllegalSelectionException("The selected component is not a storage");
 
         // negative goods - malicious intent
         if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
-            throw new IllegalArgumentException("Cannot add negative number of goods");
+            throw new IllegalSelectionException("Cannot add negative number of goods");
 
         // check red goods slots
         if (goods[0] > component.getAvailableRedSlots())
-            throw new IllegalArgumentException("Not enough red goods storage available");
+            throw new IllegalSelectionException("Not enough red goods storage available");
 
         // check red + normal goods slots
         int totalGoods = 0;
         for (int good : goods)
             totalGoods += good;
         if (totalGoods > (component.getAvailableRedSlots() + component.getAvailableBlueSlots()))
-            throw new IllegalArgumentException("Not enough goods storage available");
+            throw new IllegalSelectionException("Not enough goods storage available");
 
         // no problems, add goods to component
         ((Storage) component).addGoods(goods);
@@ -1180,29 +1177,28 @@ public class ShipBoard implements Serializable {
      * Remove goods from the storage at the given coordinates, if possible.
      * Updates shipBoardAttributes.
      *
-     * @throws IllegalArgumentException if operation not possible.
      * @author Boti
      */
-    public void removeGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalArgumentException {
+    public void removeGoods(int visibleCol, int visibleRow, int[] goods) throws IllegalSelectionException {
         if (!checkCoordinatesInBounds(visibleCol, visibleRow))
-            throw new IllegalArgumentException("Coordinates out of bounds.");
+            throw new IllegalSelectionException("Coordinates out of bounds.");
 
         int col = getRealIndex(visibleCol);
         int row = getRealIndex(visibleRow);
         Component component = componentMatrix[col][row];
 
         if (!(component instanceof Storage))
-            throw new IllegalArgumentException("The selected component is not a storage");
+            throw new IllegalSelectionException("The selected component is not a storage");
 
         // negative goods - malicious intent
         if (goods[0] < 0 || goods[1] < 0 || goods[2] < 0 || goods[3] < 0)
-            throw new IllegalArgumentException("Cannot add negative number of goods");
+            throw new IllegalSelectionException("Cannot add negative number of goods");
 
         // check available goods
         int[] componentGoods = ((Storage) component).getGoods();
         for (int i = 0; i < componentGoods.length; i++) {
             if (componentGoods[i] < goods[i])
-                throw new IllegalArgumentException("Not enough goods storage available");
+                throw new IllegalSelectionException("Not enough goods storage available");
         }
 
         // no problems, remove goods from component

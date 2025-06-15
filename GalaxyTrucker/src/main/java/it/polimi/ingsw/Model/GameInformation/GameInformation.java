@@ -77,7 +77,7 @@ public class GameInformation implements Serializable {
             setUpCards();
             setUpComponents();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Failed to set up cards/components");
         }
         setUpFlightBoard();
     }
