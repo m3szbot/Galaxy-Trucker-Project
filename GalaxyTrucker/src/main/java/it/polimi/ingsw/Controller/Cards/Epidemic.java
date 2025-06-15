@@ -8,6 +8,7 @@ import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -69,7 +70,6 @@ public class Epidemic extends Card {
 
                     coordinates = cabinsToInfect.get(j);
 
-                    //Here I don't catch the IllegalArgumentException because the coordinates from where to remove the crew members are provided by a controlled method, so they must not be erroneous
                     try {
                         player.getShipBoard().removeCrewMember(coordinates[0], coordinates[1]);
                         numberOfRemovedInhabitants++;
@@ -85,6 +85,12 @@ public class Epidemic extends Card {
                         isEliminated = true;
                         i--;
                         break;
+
+                    } catch (IllegalSelectionException e) {
+
+                        message = e.getMessage();
+                        playerMessenger.printMessage(message);
+
 
                     }
 

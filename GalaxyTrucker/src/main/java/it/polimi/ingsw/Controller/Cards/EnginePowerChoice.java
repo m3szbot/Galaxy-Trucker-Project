@@ -6,6 +6,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.Components.Battery;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -85,7 +86,7 @@ public interface EnginePowerChoice {
                             player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
                             break;
 
-                        } catch (IllegalArgumentException e) {
+                        } catch (IllegalArgumentException | IllegalSelectionException e) {
 
                             message = e.getMessage();
                             playerMessenger.printMessage(message);

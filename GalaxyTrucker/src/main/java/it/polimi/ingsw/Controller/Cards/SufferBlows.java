@@ -8,6 +8,7 @@ import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.Components.Cannon;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -166,17 +167,24 @@ public interface SufferBlows {
     private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         String message;
-        PlayerMessenger playerMessenger;
-        boolean hitFlag;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        boolean hitFlag, isProtected = false;
         ShipBoard playerShipBoard = player.getShipBoard();
 
-        if (playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction) && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
+        try {
+
+            isProtected = playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction);
+
+        } catch (IllegalSelectionException e) {
+            playerMessenger.printMessage(e.getMessage());
+        }
+
+        if (isProtected && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
 
             //player can defend themselves with a shield and has batteries to do so
             message = "A small cannon blow is directed on position ["
                     + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                     directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
             if (playerMessenger.getPlayerBoolean()) {
@@ -256,9 +264,9 @@ public interface SufferBlows {
     private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         String message;
-        PlayerMessenger playerMessenger;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
         ShipBoard playerShipBoard = player.getShipBoard();
-        boolean hitFlag = false;
+        boolean hitFlag = false, isProtected = false;
 
         //condition is true if the side of the component hit is not smooth
         if ((direction == 0
@@ -270,13 +278,20 @@ public interface SufferBlows {
                 || (direction == 3
                 && player.getShipBoard().getRealComponent(xCoord, yCoord).getLeft() != SideType.Smooth)) {
 
-            if (playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction) && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
+            try {
+
+                isProtected = playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction);
+
+            } catch (IllegalSelectionException e) {
+                playerMessenger.printMessage(e.getMessage());
+            }
+
+            if (isProtected && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
 
                 //player can defend themselves by using shields
                 message = "A small asteroid is directed on position ["
                         + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
                         directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
                 playerMessenger.printMessage(message);
 
                 if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
@@ -338,7 +353,13 @@ public interface SufferBlows {
             player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
 
         } catch (FracturedShipBoardException e) {
+
             ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
+
+        } catch (IllegalSelectionException e) {
+
+            playerMessenger.printMessage(e.getMessage());
+
         }
 
         return true;
@@ -380,10 +401,11 @@ public interface SufferBlows {
                 player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
                 break;
 
-            } catch (IllegalArgumentException e) {
-                message = e.getMessage();
+            } catch (IllegalArgumentException | IllegalSelectionException e) {
+
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                playerMessenger.printMessage(message);
+                playerMessenger.printMessage(e.getMessage());
+
             }
 
             //If there was an exception

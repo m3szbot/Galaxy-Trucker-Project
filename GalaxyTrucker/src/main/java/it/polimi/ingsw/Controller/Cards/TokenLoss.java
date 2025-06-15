@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -84,7 +85,7 @@ public interface TokenLoss {
                 player.getShipBoard().removeCrewMember(coordinates[0], coordinates[1]);
                 numberOfCrewToRemove--;
 
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | IllegalSelectionException e) {
 
                 message = e.getMessage();
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
@@ -140,7 +141,7 @@ public interface TokenLoss {
                     player.getShipBoard().removeGoods(coordinates[0], coordinates[1], tempNumberToRemove);
                     numberOfColourGoodsToRemove -= tempNumberToRemove[i];
 
-                } catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException | IllegalSelectionException e) {
 
                     //This makes sure the cycle asking to remove a certain number of goods is repeated until the player puts in the right information
                     errorFlag = true;
@@ -195,7 +196,7 @@ public interface TokenLoss {
                     player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
                     numberOfBatteriesToRemove--;
 
-                } catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException | IllegalSelectionException e) {
 
                     message = e.getMessage();
                     playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
