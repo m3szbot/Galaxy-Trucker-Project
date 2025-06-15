@@ -53,6 +53,9 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
 
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             //player can afford to lose some crew members to solve the card if he wants to

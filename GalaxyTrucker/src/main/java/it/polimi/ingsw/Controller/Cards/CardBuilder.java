@@ -86,7 +86,7 @@ public class CardBuilder {
         return this;
     }
 
-    public CardBuilder buildCardImage(String image){
+    public CardBuilder buildCardImage(String image) {
         this.imagePath = image;
         return this;
     }
@@ -109,8 +109,6 @@ public class CardBuilder {
             builtCard = new OpenSpace(this);
         } else if (cardName.equals("Planets")) {
             builtCard = new Planets(this);
-        } else if (cardName.equals("Sabotage")) {
-            builtCard = new Sabotage(this);
         } else if (cardName.equals("Slavers")) {
             builtCard = new Slavers(this);
         } else if (cardName.equals("Smugglers")) {

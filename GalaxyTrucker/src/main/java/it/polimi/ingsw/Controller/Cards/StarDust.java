@@ -33,7 +33,6 @@ public class StarDust extends Card implements Movable {
 
     public void resolve(GameInformation gameInformation) {
 
-        String message;
         int externalJunctions;
         Player player;
 
@@ -46,6 +45,9 @@ public class StarDust extends Card implements Movable {
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
+
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             externalJunctions = player.getShipBoard().countExternalJunctions();
 

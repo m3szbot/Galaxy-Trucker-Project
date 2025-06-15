@@ -50,6 +50,9 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
 
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             if (isCrewSatisfying(player, requirementNumber)) {

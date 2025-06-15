@@ -49,7 +49,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         int[] enginePowers = new int[numberOfPlayers];
         float[] firePowers = new float[numberOfPlayers];
         Player lowestInhabitantNumberPlayer, weakestEnginePowerPlayer, weakestFirePowerPlayer, player;
-        String message;
         PlayerMessenger playerMessenger;
 
         //If there is only one player left this card needs to be skipped
@@ -75,6 +74,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
+
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
@@ -109,6 +111,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
+
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 

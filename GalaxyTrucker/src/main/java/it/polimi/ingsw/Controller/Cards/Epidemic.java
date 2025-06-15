@@ -34,7 +34,6 @@ public class Epidemic extends Card {
     public void resolve(GameInformation gameInformation) {
 
         Player player;
-        String message;
         PlayerMessenger playerMessenger;
         List<int[]> cabinsToInfect;
         int[] coordinates;
@@ -52,6 +51,9 @@ public class Epidemic extends Card {
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
 
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             message = "An epidemic is spreading in your ship!  You may lose many crew members to the disease!\n";
@@ -67,6 +69,7 @@ public class Epidemic extends Card {
 
                     coordinates = cabinsToInfect.get(j);
 
+                    //Here I don't catch the IllegalArgumentException because the coordinates from where to remove the crew members are provided by a controlled method, so they must not be erroneous
                     try {
                         player.getShipBoard().removeCrewMember(coordinates[0], coordinates[1]);
                         numberOfRemovedInhabitants++;

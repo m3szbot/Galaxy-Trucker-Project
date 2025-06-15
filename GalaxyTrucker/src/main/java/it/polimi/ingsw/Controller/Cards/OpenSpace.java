@@ -43,6 +43,9 @@ public class OpenSpace extends Card implements Movable, EnginePowerChoice {
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
 
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
             playerSingleEnginePower = player.getShipBoard().getShipBoardAttributes().getSingleEnginePower();

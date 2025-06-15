@@ -37,7 +37,6 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
     public void resolve(GameInformation gameInformation) {
 
-        String message;
         PlayerMessenger playerMessenger;
         Player player;
 
@@ -55,6 +54,9 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
+
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 

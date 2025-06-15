@@ -44,7 +44,6 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
     public void resolve(GameInformation gameInformation) {
 
         int i;
-        String message;
         PlayerMessenger playerMessenger;
         AttackStates[] results;
         Player player;
@@ -59,6 +58,9 @@ public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
+
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 

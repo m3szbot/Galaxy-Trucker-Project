@@ -27,7 +27,6 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
     public AttackStates[] setAttackStates(int requirementNumber, GameInformation gameInformation) {
 
-        String message;
         int i;
         AttackStates[] results = new AttackStates[gameInformation.getFlightBoard().getPlayerOrderList().size()];
         float chosenFirePower;
@@ -41,6 +40,9 @@ public abstract class AttackStatesSetting extends Card implements FirePowerChoic
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
+
+            message = "It's " + player.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
