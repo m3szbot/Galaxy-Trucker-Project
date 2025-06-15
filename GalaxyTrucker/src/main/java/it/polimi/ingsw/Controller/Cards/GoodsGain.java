@@ -142,14 +142,15 @@ public interface GoodsGain {
     private void GoodsPlacementPhase(Player player, int[] goods, GameInformation gameInformation) throws PlayerDisconnectedException {
         String message;
         PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        boolean placementPhaseFlag;
-        int[] coordinates, goodsToAdd;
-        int remainingRedSlots, remainingBlueSlots;
+        boolean placementPhaseFlag, isDone;
+        int[] coordinates, goodsToAdd = new int[4];
+        int remainingRedSlots, remainingBlueSlots, numberOfGoods = 0;
+        String[] colors = {"red", "yellow", "green", "blue"};
 
-        //Check if there's goods left to add
+        //Checks if there's goods to add
         if (goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) {
 
-            //Check if there's storage space left
+            //Checks if there's storage space left and asks if the player wants to remove some goods
             if (!(player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0 || player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() > 0)) {
                 message = "You don't have enough storage slots available on your ship.\n";
                 playerMessenger.printMessage(message);
@@ -158,6 +159,7 @@ public interface GoodsGain {
 
             }
 
+            //If the player has space on their ship
             if (player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0 || player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() > 0) {
 
                 message = "Do you want to add goods to your ship ? ";
@@ -167,29 +169,79 @@ public interface GoodsGain {
 
                 while (placementPhaseFlag) {
 
-                    //Asks for coordinates
-                    message = "Enter coordinates of storage component to place the goods: ";
-                    playerMessenger.printMessage(message);
+                    isDone = false;
 
-                    coordinates = playerMessenger.getPlayerCoordinates();
+                    for (int i = 0; i <= 3 && !isDone; i++) {
 
-                    //Asks for which goods they want to add to the storage
-                    goodsToAdd = askForGoods(player, "add", 0, 3, gameInformation);
+                        if (goods[i] != 0) {
 
-                    try {
-                        //Tries to add the goods to the specified component
-                        player.getShipBoard().addGoods(coordinates[0], coordinates[1], goodsToAdd);
+                            message = "There are " + goods[i] + " " + colors[i] + " goods, do you want to add some? ";
+                            playerMessenger.printMessage(message);
 
-                        message = "The goods have been successfully added to the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
-                        playerMessenger.printMessage(message);
+                            isDone = !playerMessenger.getPlayerBoolean();
 
-                    } catch (IllegalArgumentException e) {
+                            while (!isDone) {
 
-                        message = e.getMessage();
-                        playerMessenger.printMessage(message);
+                                //Asks for the number of goods of color i to add
+                                message = "How many " + colors[i] + " goods do you want to add? ";
+                                playerMessenger.printMessage(message);
+
+                                goodsToAdd[i] = playerMessenger.getPlayerInt();
+
+                                //Asks for coordinates
+                                message = "Enter coordinates of storage component where to place the goods: ";
+                                playerMessenger.printMessage(message);
+
+                                coordinates = playerMessenger.getPlayerCoordinates();
+
+                                try {
+                                    //Tries to add the goods to the specified component
+                                    player.getShipBoard().addGoods(coordinates[0], coordinates[1], goodsToAdd);
+
+                                    goods[i] -= goodsToAdd[i];
+
+                                    message = "The goods have been successfully added to the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
+                                    playerMessenger.printMessage(message);
+
+                                } catch (IllegalArgumentException e) {
+
+                                    message = e.getMessage();
+                                    playerMessenger.printMessage(message);
+
+                                }
+
+                                remainingRedSlots = player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots();
+                                remainingBlueSlots = player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots();
+
+                                //If there's goods of color i left to be taken
+                                if (goods[i] != 0 && (remainingBlueSlots > 0 || remainingRedSlots > 0)) {
+
+                                    message = "Do you still want to add " + goods[i] + " " + colors[i] + " goods to your ship? ";
+                                    playerMessenger.printMessage(message);
+
+                                    isDone = !playerMessenger.getPlayerBoolean();
+
+                                } else {
+                                    isDone = true;
+                                }
+
+                                //Resets the array for the next cycle
+                                for (int j = 0; j <= 3; j++) {
+                                    goodsToAdd[j] = 0;
+                                }
+
+                            }
+                        }
+
+                        remainingRedSlots = player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots();
+                        remainingBlueSlots = player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots();
+
+                        //Checks if the player can add more goods
+                        isDone = !((goods[0] > 0 || goods[1] > 0 || goods[2] > 0 || goods[3] > 0) && (remainingRedSlots > 0 || remainingBlueSlots > 0));
+
+                        //If there's goods left to take and the player still has space on the ship the cycle repeats
 
                     }
-
 
                     remainingRedSlots = player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots();
                     remainingBlueSlots = player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots();
@@ -203,15 +255,12 @@ public interface GoodsGain {
 
                         placementPhaseFlag = playerMessenger.getPlayerBoolean();
 
-                        //Resets the array for the next cycle
-                        for (int j = 0; j <= 3; j++) {
-                            goodsToAdd[j] = 0;
-                        }
-
                     } else {
                         placementPhaseFlag = false;
                     }
+
                 }
+
             }
 
         } else {
