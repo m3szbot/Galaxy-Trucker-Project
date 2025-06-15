@@ -71,12 +71,13 @@ public interface GoodsGain {
             message = "Do you still want to discard some goods?";
             playerMessenger.printMessage(message);
 
+            discardingPhaseFlag = playerMessenger.getPlayerBoolean();
+
             //Resets the array for the next cycle
             for (int j = 0; j <= 3; j++) {
                 goodsToRemove[j] = 0;
             }
 
-            discardingPhaseFlag = playerMessenger.getPlayerBoolean();
         }
 
     }
@@ -97,12 +98,12 @@ public interface GoodsGain {
 
             int[] sourceCoordinates, destCoordinates;
 
-            message = "Enter coordinate of the source storage component: ";
+            message = "Enter coordinates of the source storage : ";
             playerMessenger.printMessage(message);
 
             sourceCoordinates = playerMessenger.getPlayerCoordinates();
 
-            message = "Enter coordinate of the destination storage component: ";
+            message = "Enter coordinates of the destination storage : ";
             playerMessenger.printMessage(message);
 
             destCoordinates = playerMessenger.getPlayerCoordinates();
@@ -124,15 +125,15 @@ public interface GoodsGain {
 
             }
 
-            //Resets the array for the next cycle
-            for (int j = 0; j <= 3; j++) {
-                movingGoods[j] = 0;
-            }
-
             message = "Do you still want to rearrange some goods ?";
             playerMessenger.printMessage(message);
 
             rearrangementPhaseFlag = playerMessenger.getPlayerBoolean();
+
+            //Resets the array for the next cycle
+            for (int j = 0; j <= 3; j++) {
+                movingGoods[j] = 0;
+            }
 
         }
     }
@@ -152,11 +153,15 @@ public interface GoodsGain {
             if (!(player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0 || player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() > 0)) {
                 message = "You don't have enough storage slots available on your ship.\n";
                 playerMessenger.printMessage(message);
-            } else {
+
+                discardingPhase(player, gameInformation);
+
+            }
+
+            if (player.getShipBoard().getShipBoardAttributes().getRemainingRedSlots() > 0 || player.getShipBoard().getShipBoardAttributes().getRemainingBlueSlots() > 0) {
 
                 message = "Do you want to add goods to your ship ? ";
                 playerMessenger.printMessage(message);
-
 
                 placementPhaseFlag = playerMessenger.getPlayerBoolean();
 
@@ -202,6 +207,7 @@ public interface GoodsGain {
                         for (int j = 0; j <= 3; j++) {
                             goodsToAdd[j] = 0;
                         }
+
                     } else {
                         placementPhaseFlag = false;
                     }
@@ -209,8 +215,10 @@ public interface GoodsGain {
             }
 
         } else {
+
             message = "There's no more goods left to take.\n";
             playerMessenger.printMessage(message);
+
         }
     }
 
