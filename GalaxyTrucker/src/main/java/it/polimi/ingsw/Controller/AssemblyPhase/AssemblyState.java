@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.ComponentRotatorVisitor;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -56,7 +57,12 @@ public class AssemblyState extends GameState {
             case "draw":
                 actionTaken = true;
                 synchronized (assemblyProtocol.lockCoveredList) {
-                    assemblyProtocol.newComponent(player);
+                    try {assemblyProtocol.newComponent(player);}
+                    catch(IllegalSelectionException e){
+                        playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
+                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                        break;
+                    }
                 }
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 break;
@@ -122,7 +128,11 @@ public class AssemblyState extends GameState {
                 }
                 if (assemblyProtocol.getBookedMap().get(player).size() < 2) {
                     if (assemblyProtocol.getInHandMap().get(player) != null) {
-                        assemblyProtocol.bookComponent(player);
+                        try {assemblyProtocol.bookComponent(player);}catch(IllegalSelectionException e){
+                            playerMessenger.printMessage("Omg! Arriving here it's almost impossible... You must have finished inside a black hole! OK, don't panic, now I'll bring you back");
+                            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                            break;
+                        }
                     } else {
                         message = "Your hand is empty";
                         playerMessenger.printMessage(message);
