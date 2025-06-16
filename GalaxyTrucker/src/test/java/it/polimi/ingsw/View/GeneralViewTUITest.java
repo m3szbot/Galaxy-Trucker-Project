@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -92,7 +93,7 @@ class GeneralViewTUITest {
     }
 
     @Test
-    public void printFlightBoardTest() {
+    public void printFlightBoardTest() throws IllegalSelectionException {
         FlightBoard flightBoard = new FlightBoard(GameType.NORMALGAME, gameInformation.getCardsList());
 
         Player player1 = new Player("Player1", Color.RED, gameInformation);

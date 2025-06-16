@@ -181,6 +181,9 @@ public class ScoreCounter {
         int playerPoints = 0;
         playerPoints += calculateGoodsPoints(player) / 2;
         playerPoints += calculateLostComponentsPoints(player);
+        
+        if (playerPoints < 0)
+            playerPoints = 0;
         return playerPoints;
     }
 

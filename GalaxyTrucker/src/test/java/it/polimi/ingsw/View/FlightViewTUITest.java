@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.TUI.TUIView;
@@ -47,7 +48,7 @@ public class FlightViewTUITest {
     }
 
     @Test
-    public void printFlightBoardTest() {
+    public void printFlightBoardTest() throws IllegalSelectionException {
         FlightBoard flightBoard = new FlightBoard(GameType.NORMALGAME, gameInformation.getCardsList());
 
         Player player1 = new Player("Player1", Color.RED, gameInformation);

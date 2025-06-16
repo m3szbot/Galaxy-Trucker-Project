@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.Components.Storage;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void onePlayerEmptyShip() {
+    void onePlayerEmptyShip() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
         scoreCounter.calculatePlayerScores(flightBoard);
         // score: 4 + 8
@@ -47,7 +48,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void fourPlayersEmptyShip() {
+    void fourPlayersEmptyShip() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerC, flightBoard.getStartingTiles().getLast());
@@ -61,7 +62,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void OneEliminatedPlayerEmptyShip() {
+    void OneEliminatedPlayerEmptyShip() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
         flightBoard.eliminatePlayer(playerA);
         scoreCounter.calculatePlayerScores(flightBoard);
@@ -69,9 +70,18 @@ class ScoreCounterTest {
     }
 
     @Test
-    void OneGaveUpPlayerEmptyShip() {
+    void OneGaveUpPlayerEmptyShip() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
         flightBoard.voluntarilyGiveUpPlayer(playerA);
+        scoreCounter.calculatePlayerScores(flightBoard);
+        assertEquals(0, scoreCounter.getPlayerScore(playerA));
+    }
+
+    @Test
+    void OneGaveUpPlayerNegativePoints() throws IllegalSelectionException {
+        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
+        flightBoard.voluntarilyGiveUpPlayer(playerA);
+        playerA.getShipBoard().getShipBoardAttributes().destroyComponents(1000);
         scoreCounter.calculatePlayerScores(flightBoard);
         assertEquals(0, scoreCounter.getPlayerScore(playerA));
     }
@@ -85,7 +95,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void negativeEarnedPoints() {
+    void negativeEarnedPoints() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
         playerA.getShipBoard().getShipBoardAttributes().destroyComponents(100);
         scoreCounter.calculatePlayerScores(flightBoard);
@@ -93,7 +103,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void testGameOnePlayerEmptyShip() {
+    void testGameOnePlayerEmptyShip() throws IllegalSelectionException {
         // create new TestGame gameInformation
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
@@ -106,7 +116,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void OneOfEachGoodScore() throws NotPermittedPlacementException {
+    void OneOfEachGoodScore() throws NotPermittedPlacementException, IllegalSelectionException {
         // 8 order points
         // 4 least exposed links points?
         // 4 3 2 1 goods points
@@ -127,7 +137,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void LostOneComponentScores() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException {
+    void LostOneComponentScores() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException, IllegalSelectionException {
         // add and remove 1 component
         // 8 order + 4 least links - 1 component
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
@@ -141,7 +151,7 @@ class ScoreCounterTest {
     }
 
     @Test
-    void TwoPlayersOneLeastLinks() throws NotPermittedPlacementException {
+    void TwoPlayersOneLeastLinks() throws NotPermittedPlacementException, IllegalSelectionException {
         // order: 8 6
         // least exposed links: 4
         Component component = new Component(singleSides);

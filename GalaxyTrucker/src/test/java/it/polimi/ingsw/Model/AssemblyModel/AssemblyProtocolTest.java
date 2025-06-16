@@ -3,6 +3,7 @@ package it.polimi.ingsw.Model.AssemblyModel;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,10 +51,10 @@ class AssemblyProtocolTest {
     }
 
     @Test
-    void checkSetup() {
+    void checkSetup() throws IllegalSelectionException {
         // check initial values
         assertNotNull(assemblyProtocol.getHourGlass());
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.showDeck(0);
         });
         assertEquals(3, assemblyProtocol.showDeck(1).getNumCards());
@@ -65,7 +66,7 @@ class AssemblyProtocolTest {
     }
 
     @Test
-    void drawTwoNewComponents() {
+    void drawTwoNewComponents() throws IllegalSelectionException {
         // draw first component
         assemblyProtocol.newComponent(playerA);
         assertNotNull(assemblyProtocol.getInHandMap().get(playerA));
@@ -78,13 +79,13 @@ class AssemblyProtocolTest {
     }
 
     @Test
-    void chooseOneComponentFromUncoveredList() {
+    void chooseOneComponentFromUncoveredList() throws IllegalSelectionException {
         // put 1 component in uncoveredList
         assemblyProtocol.newComponent(playerA);
         assemblyProtocol.newComponent(playerA);
         Component inHand = assemblyProtocol.getInHandMap().get(playerA);
         // choose from uncoveredList
-        assertThrows(IndexOutOfBoundsException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.chooseUncoveredComponent(playerA, 1);
         });
         assemblyProtocol.chooseUncoveredComponent(playerA, 0);
@@ -93,26 +94,26 @@ class AssemblyProtocolTest {
     }
 
     @Test
-    void deckInUse() {
+    void deckInUse() throws IllegalSelectionException {
         assemblyProtocol.showDeck(1);
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.showDeck(1);
         });
     }
 
 
     @Test
-    void exhaustCoveredList() {
+    void exhaustCoveredList() throws IllegalSelectionException {
         while (!assemblyProtocol.getCoveredList().isEmpty()) {
             assemblyProtocol.newComponent(playerA);
         }
-        assertThrows(IndexOutOfBoundsException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.newComponent(playerA);
         });
     }
 
     @Test
-    void bookOneComponent() {
+    void bookOneComponent() throws IllegalSelectionException {
         assemblyProtocol.newComponent(playerA);
         Component inHand = assemblyProtocol.getInHandMap().get(playerA);
         assemblyProtocol.bookComponent(playerA);
@@ -128,7 +129,7 @@ class AssemblyProtocolTest {
     }
 
     @Test
-    void bookTooManyComponents() {
+    void bookTooManyComponents() throws IllegalSelectionException {
         // book 3 components
         assemblyProtocol.newComponent(playerA);
         assemblyProtocol.bookComponent(playerA);
@@ -137,13 +138,13 @@ class AssemblyProtocolTest {
         assemblyProtocol.newComponent(playerA);
         assemblyProtocol.bookComponent(playerA);
         assemblyProtocol.newComponent(playerA);
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.bookComponent(playerA);
         });
     }
 
     @Test
-    void chooseBookedComponent() {
+    void chooseBookedComponent() throws IllegalSelectionException {
         assemblyProtocol.newComponent(playerA);
         Component inHand = assemblyProtocol.getInHandMap().get(playerA);
         assemblyProtocol.bookComponent(playerA);

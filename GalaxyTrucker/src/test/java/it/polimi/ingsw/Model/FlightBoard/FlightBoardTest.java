@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.View.TUI.TUIView;
@@ -98,7 +99,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void addOnePlayer() {
+    void addOnePlayer() throws IllegalSelectionException {
         assertFalse(flightBoard.isInGame(playerA));
         int tile = flightBoard.getStartingTiles().getLast();
         flightBoard.addPlayer(playerA, tile);
@@ -109,7 +110,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void nextIncrementTileOccupied() throws LappedPlayersException {
+    void nextIncrementTileOccupied() throws LappedPlayersException, IllegalSelectionException {
         // next tile occupied
         // 1 2 4 7
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
@@ -123,7 +124,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void nextIncrementTilesOccupied() throws LappedPlayersException {
+    void nextIncrementTilesOccupied() throws LappedPlayersException, IllegalSelectionException {
         // next 2 tiles occupied
         // 1 2 4 7
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
@@ -141,7 +142,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void nextDecrementTileOccupied() throws LappedPlayersException {
+    void nextDecrementTileOccupied() throws LappedPlayersException, IllegalSelectionException {
         // next tile occupied
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
@@ -154,7 +155,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void eliminatePLayer() {
+    void eliminatePLayer() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.eliminatePlayer(playerA);
         assertThrows(NoSuchElementException.class, () -> {
@@ -165,7 +166,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void removeLappedPlayerOnUpdate() {
+    void removeLappedPlayerOnUpdate() throws IllegalSelectionException {
         // normal game: 24 tiles
         // 1 2 4 7
         // playerA steps on (28->29) playerB (4) lapping him
@@ -182,7 +183,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void lapPlayerByFar() {
+    void lapPlayerByFar() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getLast());
         flightBoard.incrementPlayerTile(playerA, 100);
@@ -193,7 +194,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void addDuplicatePlayers() {
+    void addDuplicatePlayers() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         assertThrows(IllegalArgumentException.class, () -> {
             flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
@@ -201,16 +202,16 @@ class FlightBoardTest {
     }
 
     @Test
-    void AddAndExhaustGoods() {
+    void AddAndExhaustGoods() throws IllegalSelectionException {
         // {12, 17, 13, 14}
         flightBoard.addGoods(new int[]{1, 1, 1, 1});
         // nothing is removed if limit exceeded
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             flightBoard.removeGoods(new int[]{0, 0, 0, 100});
         });
         // set every good to 0 (fails on Exception)
         flightBoard.removeGoods(new int[]{13, 18, 14, 15});
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             flightBoard.removeGoods(new int[]{0, 1, 0, 0});
         });
     }
@@ -230,7 +231,7 @@ class FlightBoardTest {
     }
 
     @Test
-    public void incrementEliminatedPlayer() {
+    public void incrementEliminatedPlayer() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.eliminatePlayer(playerA);
         assertThrows(NoSuchElementException.class, () -> {
@@ -241,7 +242,7 @@ class FlightBoardTest {
     }
 
     @Test
-    public void incrementGaveUpPlayer() {
+    public void incrementGaveUpPlayer() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getLast());
         flightBoard.voluntarilyGiveUpPlayer(playerA);
         assertThrows(NoSuchElementException.class, () -> {
@@ -273,7 +274,7 @@ class FlightBoardTest {
                     try {
                         System.out.printf("Trying to add player to %d\n", flightBoard.getStartingTiles().getFirst());
                         flightBoard.addPlayer(player, flightBoard.getStartingTiles().getFirst());
-                    } catch (IndexOutOfBoundsException e) {
+                    } catch (IllegalSelectionException e) {
                         System.out.printf("Failed to add player to %d\n", flightBoard.getStartingTiles().getFirst());
                     }
                 }
@@ -300,7 +301,7 @@ class FlightBoardTest {
     }
 
     @Test
-    void addPlayersCheckOrder() {
+    void addPlayersCheckOrder() throws IllegalSelectionException {
         flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
         flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getFirst());
         flightBoard.addPlayer(playerC, flightBoard.getStartingTiles().getFirst());

@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,7 @@ class EvaluationPhaseTest {
     EvaluationPhase evaluationPhase;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IllegalSelectionException {
         // set up gameInformation
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
