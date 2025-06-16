@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.ComponentRotatorVisitor;
 import it.polimi.ingsw.Model.Components.ComponentVisitor;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
@@ -81,7 +82,9 @@ public class ComponentPlacingState extends GameState {
                     String message = "Placing position out of bounds!";
                     playerMessenger.printMessage(message);
                     if (booked) {
-                        assemblyProtocol.bookComponent(player);
+                        try {assemblyProtocol.bookComponent(player);} catch (IllegalSelectionException e){
+                            playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
+                        }
                     }
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 } else {
@@ -94,20 +97,29 @@ public class ComponentPlacingState extends GameState {
                             try {
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getInHandMap().get(player), num1, num2);
                                 synchronized (assemblyProtocol.lockCoveredList) {
-                                    assemblyProtocol.newComponent(player);
+                                    try{assemblyProtocol.newComponent(player);}catch(IllegalSelectionException e){
+                                        playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
+                                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                                    }
                                 }
                             } catch (NotPermittedPlacementException e) {
                                 String message = "Your are not allowed to place your component here";
                                 playerMessenger.printMessage(message);
                                 if (booked) {
-                                    assemblyProtocol.bookComponent(player);
+                                    try {assemblyProtocol.bookComponent(player);} catch (IllegalSelectionException er){
+                                        playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
+                                    }
                                 }
+                            } catch (IllegalSelectionException e){
+                                playerMessenger.printMessage("I have seen a lot of strange things during my journey across the galaxy, but it's the first time that i see a ship taking off without a crew");
                             }
                         } else {
                             String message = "You can't place your component here, it would float in the air";
                             playerMessenger.printMessage(message);
                             if (booked) {
-                                assemblyProtocol.bookComponent(player);
+                                try {assemblyProtocol.bookComponent(player);} catch (IllegalSelectionException e){
+                                    playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
+                                }
                             }
                         }
                         assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));

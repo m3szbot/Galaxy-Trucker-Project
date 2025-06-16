@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.ArrayList;
@@ -53,9 +54,14 @@ public class ChooseStartingPositionState extends GameState {
         }
 
         try {
-            assemblyProtocol.getFlightBoard().addPlayer(player, selected);
-            playerMessenger.printFlightBoard(assemblyProtocol.getFlightBoard());
-            assemblyThread.setState(new AssemblingEndState(assemblyProtocol, playerMessenger, player));
+            try {
+                assemblyProtocol.getFlightBoard().addPlayer(player, selected);
+                playerMessenger.printFlightBoard(assemblyProtocol.getFlightBoard());
+                assemblyThread.setState(new AssemblingEndState(assemblyProtocol, playerMessenger, player));
+            }catch (IllegalSelectionException e){
+                playerMessenger.printMessage(e.getMessage());
+                assemblyThread.setState(new ChooseStartingPositionState(assemblyProtocol, playerMessenger, player));
+            }
 
         } catch (IndexOutOfBoundsException e) {
             // tile selected is unavailable

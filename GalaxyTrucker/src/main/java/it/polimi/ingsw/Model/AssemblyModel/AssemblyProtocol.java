@@ -177,7 +177,7 @@ public class AssemblyProtocol {
     public void chooseUncoveredComponent(Player player, int index) throws IllegalSelectionException {
         // size: 0-size
         // index: 0-(size-1)
-        if (uncoveredList.size() > index) {
+        if (uncoveredList.size() > index && index >= 0) {
             addComponentInHandToUncoveredList(player);
             inHandMap.put(player, uncoveredList.remove(index));
         } else {
