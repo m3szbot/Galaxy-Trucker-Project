@@ -388,10 +388,10 @@ public class FlightBoard implements Serializable {
      *
      * @param goods Array of quantities to add of each color of goods (red, yellow, green, blue)
      */
-    public void addGoods(int[] goods) throws IllegalSelectionException {
+    public void addGoods(int[] goods) {
         for (int i = 0; i < goods.length; i++) {
-            if (goodsNumber[i] + goods[i] < 0) {
-                throw new IllegalSelectionException("Negative goods inventory in flightBoard.");
+            if (goods[i] < 0) {
+                throw new IllegalArgumentException("Cannot add negative goods.");
             }
         }
 

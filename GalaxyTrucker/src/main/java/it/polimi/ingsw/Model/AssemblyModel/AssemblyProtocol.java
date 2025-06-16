@@ -195,14 +195,19 @@ public class AssemblyProtocol {
     public void bookComponent(Player player) throws IllegalSelectionException {
         if (inHandMap.containsKey(player)) {
             if (bookedMap.get(player).size() < 3) {
+                // book component
                 bookedMap.get(player).add(inHandMap.get(player));
                 // remove component from hand (newComponent places component in hand in uncovered list)
                 inHandMap.remove(player);
+
             } else {
-                throw new IllegalSelectionException("Too many components booked");
+                // booked map already full
+                throw new IllegalSelectionException("Cannot book component, booked map is already full.");
             }
+
         } else {
-            throw new IllegalSelectionException("No component in hand");
+            // error: no booked map for player
+            throw new IllegalStateException("Error: the player has no booked map");
         }
     }
 
