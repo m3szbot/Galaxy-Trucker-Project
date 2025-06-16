@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.AssemblyModel.Deck;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -48,9 +49,13 @@ public class ShowDeckState extends GameState {
             if (index > 0 && index <= 3) {
                 if (assemblyProtocol.getDeck(index - 1).getInUse() == false) {
                     synchronized (assemblyProtocol.lockDecksList) {
-                        Deck deck = assemblyProtocol.showDeck(index);
-                        for (Card card : deck.getCards()) {
-                            playerMessenger.printCard(card);
+                        try {Deck deck = assemblyProtocol.showDeck(index);
+                            for (Card card : deck.getCards()) {
+                                playerMessenger.printCard(card);
+                            }
+                        }catch (IllegalSelectionException e){
+                            playerMessenger.printMessage("Error in showing deck");
+                            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                         }
                     }
                     assemblyThread.setState(new DeckInUseState(assemblyProtocol, playerMessenger, player, index));

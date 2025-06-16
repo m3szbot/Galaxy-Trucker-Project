@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.ArrayList;
@@ -72,7 +73,10 @@ public class ComponentChoiceState extends GameState {
             case 1:
                 synchronized (assemblyProtocol.lockUncoveredList) {
                     if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyProtocol.getUncoveredList().get(Integer.parseInt(input.toLowerCase()))) {
-                        assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));
+                        try {assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));} catch (IllegalSelectionException e) {
+                            playerMessenger.printMessage("Another unreachable place in the universe has been reached.");
+                            break;
+                        }
                         component = assemblyProtocol.getInHandMap().get(player);
                         message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
                     } else {
@@ -81,7 +85,6 @@ public class ComponentChoiceState extends GameState {
                 }
                 playerMessenger.printMessage(message);
                 break;
-            // TODO case 2 unreachable
             case 2:
                 message = "Error in component choice";
                 playerMessenger.printMessage(message);

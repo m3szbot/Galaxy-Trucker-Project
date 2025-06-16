@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
@@ -56,7 +57,10 @@ public class PlaceBookedComponentState extends GameState {
             if (index == 0 || index == 1) {
                 if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
                     synchronized (assemblyProtocol.lockUncoveredList) {
-                        assemblyProtocol.chooseBookedComponent(player, index);
+                        try{assemblyProtocol.chooseBookedComponent(player, index);} catch (IllegalSelectionException e){
+                            playerMessenger.printMessage("For a moment, nothing happened. Then, after a second or so, nothing continued to happen.");
+                            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                        }
                         playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
                     }
                     assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, true));
