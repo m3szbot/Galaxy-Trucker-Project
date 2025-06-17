@@ -13,6 +13,9 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+// test single methods
+// + test concurrency for each method
 class AssemblyProtocolTest {
     GameInformation gameInformation;
     AssemblyProtocol assemblyProtocol;

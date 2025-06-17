@@ -26,19 +26,29 @@ public class AssemblyProtocol {
     private final GameType gameType;
     private final FlightBoard flightBoard;
     private final HourGlass hourGlass;
-    // cards
+
+    // CARDS
     private final Deck[] showableDecksList;
-    // components - synchronized lists! - concurrent access by multiple players
+
+    // COMPONENTS:
+    // synchronizedLists: Thread-safe for individual add/remove/get operations, good for frequent add/remove
     private final List<Component> coveredList;
     private final List<Component> uncoveredList;
-    // ConcurrentMap does NOT allow null values!
-    // Components currently in hand (viewMap).
-    // Does not contain player entry if no component in hand (no nulls).
+
+    // ConcurrentHashMap:
+    // Threads can safely call put, get, remove, etc., simultaneously. Does NOT allow null values!
+
+    // Components in hand for each player:
+    // Stores components currently in hand for each player.
+    // Does not contain player entry if no component in hand (no nulls, only remove())!
     private final Map<Player, Component> inHandMap;
-    // Booked components.
-    // List has no elements if no components booked, but entry is not removed.
+
+    // Booked components for each player:
+    // List of player is empty if no components booked, but player Map entry is not removed.
     private final Map<Player, List<Component>> bookedMap;
 
+    // TODO remove locks? - collections are already synchronized?
+    // TODO synchronize manually instead of synchronized collections?
     public Object lockUncoveredList = new Object();
     public Object lockCoveredList = new Object();
     public Object lockDecksList = new Object();
@@ -64,7 +74,8 @@ public class AssemblyProtocol {
             showableDecksList[i] = new Deck(tmpCardList, gameInformation.getGameType());
         }
 
-        // component lists
+        // component lists:
+        // synchronizedList: Thread-safe for individual add/remove/get operations, good for frequent add/remove
         coveredList = Collections.synchronizedList(new ArrayList<>());
         coveredList.addAll(gameInformation.getComponentList());
         Collections.shuffle(coveredList);
@@ -149,14 +160,17 @@ public class AssemblyProtocol {
         if (!coveredList.isEmpty()) {
             int randomIndex = ThreadLocalRandom.current().nextInt(coveredList.size());
             inHandMap.put(player, coveredList.remove(randomIndex));
-
         }
+
         // from uncoveredList
         else if (!uncoveredList.isEmpty()) {
             int randomIndex = ThreadLocalRandom.current().nextInt(uncoveredList.size());
             inHandMap.put(player, uncoveredList.remove(randomIndex));
 
-        } else {
+        }
+
+        // coveredList and uncoveredList empty
+        else {
             throw new IllegalSelectionException("Component lists are empty");
         }
     }
