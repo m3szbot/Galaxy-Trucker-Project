@@ -104,9 +104,28 @@ class AssemblyProtocolTest {
 
     @Test
     void exhaustCoveredList() throws IllegalSelectionException {
+        int componentsCount = assemblyProtocol.getCoveredList().size();
+        assertEquals(componentsCount, assemblyProtocol.getCoveredList().size());
+        assertEquals(0, assemblyProtocol.getUncoveredList().size());
+
         while (!assemblyProtocol.getCoveredList().isEmpty()) {
             assemblyProtocol.newComponent(playerA);
         }
+
+        assertEquals(0, assemblyProtocol.getCoveredList().size());
+        // -1: 1 component in hand
+        assertEquals(componentsCount - 1, assemblyProtocol.getUncoveredList().size());
+
+        // discard components from hand
+        while (!assemblyProtocol.getUncoveredList().isEmpty()) {
+            assemblyProtocol.newComponent(playerA);
+            // discard component in hand
+            assemblyProtocol.getInHandMap().remove(playerA);
+        }
+
+        assertEquals(0, assemblyProtocol.getCoveredList().size());
+        assertEquals(0, assemblyProtocol.getUncoveredList().size());
+
         assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.newComponent(playerA);
         });

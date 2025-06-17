@@ -8,8 +8,12 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * AssemblyProtocol handles the logic behind deck selection, component
@@ -18,28 +22,26 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Giacomo, Boti
  */
 public class AssemblyProtocol {
-    public Object lockUncoveredList = new Object();
-    public Object lockCoveredList = new Object();
-    public Object lockDecksList = new Object();
-
-    private HourGlass hourGlass;
+    private final int gameCode;
+    private final GameType gameType;
+    private final FlightBoard flightBoard;
+    private final HourGlass hourGlass;
     // cards
-    private Deck blockedDeck;
-    private Deck[] decksList;
+    private final Deck[] showableDecksList;
     // components - synchronized lists! - concurrent access by multiple players
-    private List<Component> coveredList;
-    private List<Component> uncoveredList;
+    private final List<Component> coveredList;
+    private final List<Component> uncoveredList;
     // ConcurrentMap does NOT allow null values!
     // Components currently in hand (viewMap).
     // Does not contain player entry if no component in hand (no nulls).
-    private Map<Player, Component> inHandMap;
+    private final Map<Player, Component> inHandMap;
     // Booked components.
     // List has no elements if no components booked, but entry is not removed.
-    private Map<Player, List<Component>> bookedMap;
-    private GameType gameType;
-    private FlightBoard flightBoard;
-    private int gameCode;
-    private Random randomizer;
+    private final Map<Player, List<Component>> bookedMap;
+
+    public Object lockUncoveredList = new Object();
+    public Object lockCoveredList = new Object();
+    public Object lockDecksList = new Object();
 
     /**
      * Initializes the assembly protocol with the game setup.
@@ -48,31 +50,33 @@ public class AssemblyProtocol {
      * @param gameInformation information about players, cards, and components
      */
     public AssemblyProtocol(GameInformation gameInformation) {
+        gameType = gameInformation.getGameType();
+        flightBoard = gameInformation.getFlightBoard();
+        gameCode = gameInformation.getGameCode();
         hourGlass = new HourGlass();
 
+        // cards
         // copy cardList! - do not remove cards from original
         List<Card> tmpCardList = new ArrayList<>(gameInformation.getCardsList());
-        blockedDeck = new Deck(tmpCardList, gameInformation.getGameType());
-        decksList = new Deck[3];
+        showableDecksList = new Deck[3];
         for (int i = 0; i < 3; i++) {
             // used cards must be removed from cardsList
-            decksList[i] = new Deck(tmpCardList, gameInformation.getGameType());
+            showableDecksList[i] = new Deck(tmpCardList, gameInformation.getGameType());
         }
-        // concurrently accessed lists
+
+        // component lists
         coveredList = Collections.synchronizedList(new ArrayList<>());
         coveredList.addAll(gameInformation.getComponentList());
         Collections.shuffle(coveredList);
         uncoveredList = Collections.synchronizedList(new ArrayList<>());
+
         // player mapped structures
         inHandMap = new ConcurrentHashMap<>();
         bookedMap = new ConcurrentHashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
             bookedMap.put(player, new ArrayList<>());
         }
-        gameType = gameInformation.getGameType();
-        flightBoard = gameInformation.getFlightBoard();
-        gameCode = gameInformation.getGameCode();
-        randomizer = new Random();
+
     }
 
     /**
@@ -119,9 +123,9 @@ public class AssemblyProtocol {
      */
     public Deck showDeck(int num) throws IllegalSelectionException {
         if (num >= 1 && num <= 3) {
-            if (!decksList[num - 1].getInUse()) {
-                decksList[num - 1].setInUse(true);
-                return decksList[num - 1];
+            if (!showableDecksList[num - 1].getInUse()) {
+                showableDecksList[num - 1].setInUse(true);
+                return showableDecksList[num - 1];
             } else {
                 throw new IllegalSelectionException("Deck is in use by others");
             }
@@ -140,14 +144,18 @@ public class AssemblyProtocol {
     public void newComponent(Player player) throws IllegalSelectionException {
         addComponentInHandToUncoveredList(player);
         // add new random component to player's hand
+
+        //from coveredList
         if (!coveredList.isEmpty()) {
-            // from covered list
-            int randomIndex = randomizer.nextInt(coveredList.size());
+            int randomIndex = ThreadLocalRandom.current().nextInt(coveredList.size());
             inHandMap.put(player, coveredList.remove(randomIndex));
-        } else if (!uncoveredList.isEmpty()) {
-            // from uncovered list
-            int randomIndex = randomizer.nextInt(coveredList.size());
+
+        }
+        // from uncoveredList
+        else if (!uncoveredList.isEmpty()) {
+            int randomIndex = ThreadLocalRandom.current().nextInt(uncoveredList.size());
             inHandMap.put(player, uncoveredList.remove(randomIndex));
+
         } else {
             throw new IllegalSelectionException("Component lists are empty");
         }
@@ -240,6 +248,6 @@ public class AssemblyProtocol {
     }
 
     public Deck getDeck(int index) {
-        return decksList[index];
+        return showableDecksList[index];
     }
 }
