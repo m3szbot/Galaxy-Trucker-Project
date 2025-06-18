@@ -57,12 +57,6 @@ public class AssemblyProtocol {
     // Booked components cannot be returned to uncoveredList.
     private final Map<Player, Component> playersPlacingBookedComponentsCache;
 
-
-    // TODO remove locks - model already synchronized
-    public Object lockUncoveredList = new Object();
-    public Object lockCoveredList = new Object();
-    public Object lockDecksList = new Object();
-
     /**
      * Initializes the assembly protocol with the game setup.
      * Prepares decks, covered components, and player maps.
