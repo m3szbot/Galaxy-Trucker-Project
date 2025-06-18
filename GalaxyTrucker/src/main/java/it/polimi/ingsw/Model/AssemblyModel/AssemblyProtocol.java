@@ -27,7 +27,7 @@ public class AssemblyProtocol {
     private final FlightBoard flightBoard;
     private final HourGlass hourGlass;
 
-    // CARDS
+    // DECKS
     private final Deck[] showableDecksList;
 
     // COMPONENTS:
@@ -65,7 +65,7 @@ public class AssemblyProtocol {
         gameCode = gameInformation.getGameCode();
         hourGlass = new HourGlass();
 
-        // cards
+        // DECKS:
         // copy cardList! - do not remove cards from original
         List<Card> tmpCardList = new ArrayList<>(gameInformation.getCardsList());
         showableDecksList = new Deck[3];
@@ -74,7 +74,7 @@ public class AssemblyProtocol {
             showableDecksList[i] = new Deck(tmpCardList, gameInformation.getGameType());
         }
 
-        // component lists:
+        // COMPONENTS:
         // synchronizedList: Thread-safe for individual add/remove/get operations, good for frequent add/remove
         coveredComponentsList = Collections.synchronizedList(new ArrayList<>());
         coveredComponentsList.addAll(gameInformation.getComponentList());
@@ -127,21 +127,30 @@ public class AssemblyProtocol {
     }
 
     /**
-     * Marks a deck as revealed and returns it.
+     * Marks a deck as inUse and returns it.
      *
      * @param num the deck index (1 to 3), 0 is blocked
      * @return the selected deck
      */
     public Deck showDeck(int num) throws IllegalSelectionException {
-        if (num >= 1 && num <= 3) {
-            if (!showableDecksList[num - 1].getInUse()) {
-                showableDecksList[num - 1].setInUse(true);
-                return showableDecksList[num - 1];
-            } else {
-                throw new IllegalSelectionException("Deck is in use by others");
-            }
-        } else {
+        if (num < 1 || num > 3)
             throw new IllegalSelectionException("Invalid deck number");
+
+        // valid deck number
+        int index = num - 1;
+
+        synchronized (showableDecksList[index]) {
+            if (!showableDecksList[index].getInUse()) {
+                /*
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                }
+                */
+                showableDecksList[index].setInUse(true);
+                return showableDecksList[index];
+            } else
+                throw new IllegalSelectionException("Deck is in use by others");
         }
     }
 
@@ -263,5 +272,9 @@ public class AssemblyProtocol {
 
     public Deck getDeck(int index) {
         return showableDecksList[index];
+    }
+
+    public Deck[] getAllDecks() {
+        return showableDecksList;
     }
 }

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutorService;
@@ -271,18 +272,21 @@ class FlightBoardTest {
      * Add 4 players from different threads concurrently.
      * All try to add to the first tile, which causes conflicts of occupation.
      */
-    @RepeatedTest(100)
+    @RepeatedTest(1000)
     void testConcurrentAddPlayer() throws InterruptedException {
+        // setup tests
         assertEquals(4, gameInformation.getPlayerList().size());
         assertEquals(0, flightBoard.getPlayerOrderList().size());
 
+        // create threads
         ExecutorService executor = Executors.newFixedThreadPool(4);
-        List<Player> order = new ArrayList<>();
+        // the return list modified by the threads must be synchronized too!
+        List<Player> order = Collections.synchronizedList(new ArrayList<>());
 
         // create adder threads
         for (Player player : gameInformation.getPlayerList()) {
             executor.submit((() -> {
-                System.out.printf("Started %s thread\n", player.getColouredNickName());
+                // thread task
                 while (!flightBoard.isInGame(player)) {
                     int highestTile = flightBoard.getStartingTiles().getLast();
                     try {
@@ -290,9 +294,7 @@ class FlightBoardTest {
                         flightBoard.addPlayer(player, highestTile);
                         // List: first added is first
                         order.add(player);
-                        System.out.printf("Added %s to %d\n", player.getColouredNickName(), highestTile);
                     } catch (IllegalSelectionException e) {
-                        System.out.printf("Failed to add %s to %d\n", player.getColouredNickName(), highestTile);
                     }
                 }
             }));
@@ -301,7 +303,7 @@ class FlightBoardTest {
         executor.shutdown();
         executor.awaitTermination(30, TimeUnit.SECONDS);
 
-        // check results
+        // result tests
         assertEquals(4, flightBoard.getPlayerOrderList().size());
         assertEquals(order, flightBoard.getPlayerOrderList());
         assertEquals(0, flightBoard.getStartingTiles().size());

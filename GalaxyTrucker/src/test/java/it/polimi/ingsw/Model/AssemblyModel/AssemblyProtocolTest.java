@@ -7,15 +7,26 @@ import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test single methods
+ * + test concurrency for each method
+ *
+ * @author Boti
+ */
 
-// test single methods
-// + test concurrency for each method
 class AssemblyProtocolTest {
     GameInformation gameInformation;
     AssemblyProtocol assemblyProtocol;
@@ -104,6 +115,19 @@ class AssemblyProtocolTest {
         });
     }
 
+    @Test
+    void testShowDeckIndexes() throws IllegalSelectionException {
+        assemblyProtocol.showDeck(1);
+        assemblyProtocol.showDeck(2);
+        assemblyProtocol.showDeck(3);
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.showDeck(0);
+        });
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.showDeck(4);
+        });
+    }
+
 
     @Test
     void exhaustCoveredList() throws IllegalSelectionException {
@@ -145,7 +169,7 @@ class AssemblyProtocolTest {
 
     @Test
     void bookWithEmptyHand() {
-        assertThrows(NoSuchElementException.class, () -> {
+        assertThrows(IllegalStateException.class, () -> {
             assemblyProtocol.bookComponent(playerA);
         });
     }
@@ -178,8 +202,57 @@ class AssemblyProtocolTest {
 
     @Test
     void chooseBookedComponentFromEmptyList() {
-        assertThrows(IndexOutOfBoundsException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.chooseBookedComponent(playerA, 0);
         });
     }
+
+
+    // TEST SYNCHRONIZATION
+    // TODO
+
+    @RepeatedTest(500)
+    void testConcurrentShowDeck() throws InterruptedException {
+        // ADD Thread.sleep() to the source code to delay operations and check concurrent access
+
+        // setup tests
+        assertEquals(4, gameInformation.getPlayerList().size());
+        for (Deck deck : assemblyProtocol.getAllDecks())
+            assertFalse(deck.getInUse());
+
+        // create threads
+        ExecutorService executor = Executors.newFixedThreadPool(100);
+        // save the returned decks of showDeck in a list
+        // shouldn't have duplicates! - check with streams
+        // the return list modified by the threads must be synchronized too!
+        List<Deck> returnedDecks = Collections.synchronizedList(new ArrayList<>());
+
+
+        // create adder threads
+        for (int i = 0; i < 100; i++) {
+            executor.submit((() -> {
+                // thread task
+                try {
+                    returnedDecks.add(assemblyProtocol.showDeck(ThreadLocalRandom.current().nextInt(1, 4)));
+                } catch (IllegalSelectionException e) {
+                }
+            }));
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(15, TimeUnit.SECONDS);
+
+        // result tests
+        // all decks in use
+        for (Deck deck : assemblyProtocol.getAllDecks())
+            assertTrue(deck.getInUse());
+
+        // all decks only returned once
+        assertEquals(3, returnedDecks.size());
+        for (Deck deck : returnedDecks) {
+            assertEquals(1, returnedDecks.stream().filter(deck::equals).count());
+        }
+
+    }
+
 }
