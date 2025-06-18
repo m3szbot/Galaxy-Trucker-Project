@@ -32,8 +32,8 @@ public class AssemblyProtocol {
 
     // COMPONENTS:
     // synchronizedLists: Thread-safe for individual add/remove/get operations, good for frequent add/remove
-    private final List<Component> coveredList;
-    private final List<Component> uncoveredList;
+    private final List<Component> coveredComponentsList;
+    private final List<Component> uncoveredComponentsList;
 
     // ConcurrentHashMap:
     // Threads can safely call put, get, remove, etc., simultaneously. Does NOT allow null values!
@@ -41,11 +41,11 @@ public class AssemblyProtocol {
     // Components in hand for each player:
     // Stores components currently in hand for each player.
     // Does not contain player entry if no component in hand (no nulls, only remove())!
-    private final Map<Player, Component> inHandMap;
+    private final Map<Player, Component> playersInHandMap;
 
     // Booked components for each player:
     // List of player is empty if no components booked, but player Map entry is not removed.
-    private final Map<Player, List<Component>> bookedMap;
+    private final Map<Player, List<Component>> playersBookedMap;
 
     // TODO remove locks? - collections are already synchronized?
     // TODO synchronize manually instead of synchronized collections?
@@ -76,16 +76,16 @@ public class AssemblyProtocol {
 
         // component lists:
         // synchronizedList: Thread-safe for individual add/remove/get operations, good for frequent add/remove
-        coveredList = Collections.synchronizedList(new ArrayList<>());
-        coveredList.addAll(gameInformation.getComponentList());
-        Collections.shuffle(coveredList);
-        uncoveredList = Collections.synchronizedList(new ArrayList<>());
+        coveredComponentsList = Collections.synchronizedList(new ArrayList<>());
+        coveredComponentsList.addAll(gameInformation.getComponentList());
+        Collections.shuffle(coveredComponentsList);
+        uncoveredComponentsList = Collections.synchronizedList(new ArrayList<>());
 
         // player mapped structures
-        inHandMap = new ConcurrentHashMap<>();
-        bookedMap = new ConcurrentHashMap<>();
+        playersInHandMap = new ConcurrentHashMap<>();
+        playersBookedMap = new ConcurrentHashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
-            bookedMap.put(player, new ArrayList<>());
+            playersBookedMap.put(player, new ArrayList<>());
         }
 
     }
@@ -93,29 +93,29 @@ public class AssemblyProtocol {
     /**
      * Returns the list of covered components on the table.
      */
-    public List<Component> getCoveredList() {
-        return coveredList;
+    public List<Component> getCoveredComponentsList() {
+        return coveredComponentsList;
     }
 
     /**
      * Returns the list of uncovered components on the table.
      */
-    public List<Component> getUncoveredList() {
-        return uncoveredList;
+    public List<Component> getUncoveredComponentsList() {
+        return uncoveredComponentsList;
     }
 
     /**
      * Returns the map of booked components per player.
      */
-    public Map<Player, List<Component>> getBookedMap() {
-        return bookedMap;
+    public Map<Player, List<Component>> getPlayersBookedMap() {
+        return playersBookedMap;
     }
 
     /**
      * Returns the current visible component for each player.
      */
-    public Map<Player, Component> getInHandMap() {
-        return inHandMap;
+    public Map<Player, Component> getPlayersInHandMap() {
+        return playersInHandMap;
     }
 
 
@@ -156,20 +156,20 @@ public class AssemblyProtocol {
         addComponentInHandToUncoveredList(player);
         // add new random component to player's hand
 
-        //from coveredList
-        if (!coveredList.isEmpty()) {
-            int randomIndex = ThreadLocalRandom.current().nextInt(coveredList.size());
-            inHandMap.put(player, coveredList.remove(randomIndex));
+        //from coveredComponentsList
+        if (!coveredComponentsList.isEmpty()) {
+            int randomIndex = ThreadLocalRandom.current().nextInt(coveredComponentsList.size());
+            playersInHandMap.put(player, coveredComponentsList.remove(randomIndex));
         }
 
-        // from uncoveredList
-        else if (!uncoveredList.isEmpty()) {
-            int randomIndex = ThreadLocalRandom.current().nextInt(uncoveredList.size());
-            inHandMap.put(player, uncoveredList.remove(randomIndex));
+        // from uncoveredComponentsList
+        else if (!uncoveredComponentsList.isEmpty()) {
+            int randomIndex = ThreadLocalRandom.current().nextInt(uncoveredComponentsList.size());
+            playersInHandMap.put(player, uncoveredComponentsList.remove(randomIndex));
 
         }
 
-        // coveredList and uncoveredList empty
+        // coveredComponentsList and uncoveredComponentsList empty
         else {
             throw new IllegalSelectionException("Component lists are empty");
         }
@@ -177,14 +177,14 @@ public class AssemblyProtocol {
 
     /**
      * If a component is present in the player's hand, return component to the uncovered list,
-     * remove player entry from inHandMap.
+     * remove player entry from playersInHandMap.
      *
      * @author Boti
      */
     private void addComponentInHandToUncoveredList(Player player) {
-        if (inHandMap.containsKey(player)) {
-            uncoveredList.add(inHandMap.get(player));
-            inHandMap.remove(player);
+        if (playersInHandMap.containsKey(player)) {
+            uncoveredComponentsList.add(playersInHandMap.get(player));
+            playersInHandMap.remove(player);
         }
     }
 
@@ -199,9 +199,9 @@ public class AssemblyProtocol {
     public void chooseUncoveredComponent(Player player, int index) throws IllegalSelectionException {
         // size: 0-size
         // index: 0-(size-1)
-        if (uncoveredList.size() > index && index >= 0) {
+        if (uncoveredComponentsList.size() > index && index >= 0) {
             addComponentInHandToUncoveredList(player);
-            inHandMap.put(player, uncoveredList.remove(index));
+            playersInHandMap.put(player, uncoveredComponentsList.remove(index));
         } else {
             throw new IllegalSelectionException("Uncovered component list is empty");
         }
@@ -215,12 +215,12 @@ public class AssemblyProtocol {
      * @author Boti
      */
     public void bookComponent(Player player) throws IllegalSelectionException {
-        if (inHandMap.containsKey(player)) {
-            if (bookedMap.get(player).size() < 3) {
+        if (playersInHandMap.containsKey(player)) {
+            if (playersBookedMap.get(player).size() < 3) {
                 // book component
-                bookedMap.get(player).add(inHandMap.get(player));
+                playersBookedMap.get(player).add(playersInHandMap.get(player));
                 // remove component from hand (newComponent places component in hand in uncovered list)
-                inHandMap.remove(player);
+                playersInHandMap.remove(player);
 
             } else {
                 // booked map already full
@@ -241,9 +241,9 @@ public class AssemblyProtocol {
      * @author Boti
      */
     public void chooseBookedComponent(Player player, int index) throws IllegalSelectionException {
-        if (bookedMap.get(player).size() > index) {
+        if (playersBookedMap.get(player).size() > index) {
             addComponentInHandToUncoveredList(player);
-            inHandMap.put(player, bookedMap.get(player).remove(index));
+            playersInHandMap.put(player, playersBookedMap.get(player).remove(index));
         } else {
             throw new IllegalSelectionException("Not enough booked components");
         }

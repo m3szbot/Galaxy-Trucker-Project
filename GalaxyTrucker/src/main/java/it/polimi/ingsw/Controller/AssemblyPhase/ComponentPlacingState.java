@@ -2,9 +2,7 @@ package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
-import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.ComponentRotatorVisitor;
-import it.polimi.ingsw.Model.Components.ComponentVisitor;
 import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -38,9 +36,9 @@ public class ComponentPlacingState extends GameState {
     @Override
     public void enter(AssemblyThread assemblyThread) {
         String message;
-        if(!booked){
+        if (!booked) {
             message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
-        } else{
+        } else {
             message = "Where do you want to place your booked component? Indicate coordinates Cols and Rows or write Rotate";
         }
         playerMessenger.printMessage(message);
@@ -56,17 +54,17 @@ public class ComponentPlacingState extends GameState {
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {
-        if(input.trim().toLowerCase().equals("rotate")){
-            if(booked){
-                assemblyProtocol.getInHandMap().get(player).accept(new ComponentRotatorVisitor());
-                playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
+        if (input.trim().toLowerCase().equals("rotate")) {
+            if (booked) {
+                assemblyProtocol.getPlayersInHandMap().get(player).accept(new ComponentRotatorVisitor());
+                playerMessenger.printComponent(assemblyProtocol.getPlayersInHandMap().get(player));
                 assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, booked));
-            }else{
+            } else {
                 String message = "Not valid format!";
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
-        }else{
+        } else {
             input.replaceAll("[^\\d]", " ");
             String[] parts = input.trim().split("[ ,]+"); //trim eliminates white spaces at the beginning and at the end
 
@@ -82,22 +80,26 @@ public class ComponentPlacingState extends GameState {
                     String message = "Placing position out of bounds!";
                     playerMessenger.printMessage(message);
                     if (booked) {
-                        try {assemblyProtocol.bookComponent(player);} catch (IllegalSelectionException e){
+                        try {
+                            assemblyProtocol.bookComponent(player);
+                        } catch (IllegalSelectionException e) {
                             playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
                         }
                     }
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 } else {
-                    if (assemblyProtocol.getInHandMap().get(player) != null) {
+                    if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
                         // TODO delete checks, NotPermittedPlacement checked by shipboard
                         if (assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 2, num2 - 1) != null ||
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1, num2 - 1) != null ||
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2 - 2) != null ||
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2) != null) {
                             try {
-                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getInHandMap().get(player), num1, num2);
+                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getPlayersInHandMap().get(player), num1, num2);
                                 synchronized (assemblyProtocol.lockCoveredList) {
-                                    try{assemblyProtocol.newComponent(player);}catch(IllegalSelectionException e){
+                                    try {
+                                        assemblyProtocol.newComponent(player);
+                                    } catch (IllegalSelectionException e) {
                                         playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
                                         assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                                     }
@@ -106,18 +108,22 @@ public class ComponentPlacingState extends GameState {
                                 String message = "Your are not allowed to place your component here";
                                 playerMessenger.printMessage(message);
                                 if (booked) {
-                                    try {assemblyProtocol.bookComponent(player);} catch (IllegalSelectionException er){
+                                    try {
+                                        assemblyProtocol.bookComponent(player);
+                                    } catch (IllegalSelectionException er) {
                                         playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
                                     }
                                 }
-                            } catch (IllegalSelectionException e){
+                            } catch (IllegalSelectionException e) {
                                 playerMessenger.printMessage("I have seen a lot of strange things during my journey across the galaxy, but it's the first time that i see a ship taking off without a crew");
                             }
                         } else {
                             String message = "You can't place your component here, it would float in the air";
                             playerMessenger.printMessage(message);
                             if (booked) {
-                                try {assemblyProtocol.bookComponent(player);} catch (IllegalSelectionException e){
+                                try {
+                                    assemblyProtocol.bookComponent(player);
+                                } catch (IllegalSelectionException e) {
                                     playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
                                 }
                             }

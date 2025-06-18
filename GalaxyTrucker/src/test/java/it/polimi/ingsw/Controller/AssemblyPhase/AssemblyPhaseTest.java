@@ -34,7 +34,7 @@ public class AssemblyPhaseTest {
         state1 = new ComponentChoiceState(ass.getAssemblyView(),ass.getAssemblyProtocol(), gecky);
         ass.setState(state1);
         state1.enter(ass, ass.getAssemblyView());
-        System.out.println(ass.getAssemblyProtocol().getInHandMap().get(gecky).getComponentName() + " "+ ass.getAssemblyProtocol().getInHandMap().get(gecky).getFront() + " " + ass.getAssemblyProtocol().getInHandMap().get(gecky).getRight() + " " + ass.getAssemblyProtocol().getInHandMap().get(gecky).getBack());
+        System.out.println(ass.getAssemblyProtocol().getPlayersInHandMap().get(gecky).getComponentName() + " "+ ass.getAssemblyProtocol().getPlayersInHandMap().get(gecky).getFront() + " " + ass.getAssemblyProtocol().getPlayersInHandMap().get(gecky).getRight() + " " + ass.getAssemblyProtocol().getPlayersInHandMap().get(gecky).getBack());
 
     }
 */

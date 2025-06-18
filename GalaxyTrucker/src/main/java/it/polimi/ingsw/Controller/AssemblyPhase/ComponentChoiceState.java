@@ -34,7 +34,7 @@ public class ComponentChoiceState extends GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyThread) {
-        components = new ArrayList<>(assemblyProtocol.getUncoveredList());
+        components = new ArrayList<>(assemblyProtocol.getUncoveredComponentsList());
         int i = 0;
         for (Component component : components) {
             message = i + ": " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
@@ -64,7 +64,7 @@ public class ComponentChoiceState extends GameState {
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             return;
         }
-        if (caseManagement >= 0 && caseManagement < assemblyProtocol.getUncoveredList().size()) {
+        if (caseManagement >= 0 && caseManagement < assemblyProtocol.getUncoveredComponentsList().size()) {
             caseManagement = 1;
         } else {
             caseManagement = 0;
@@ -72,12 +72,14 @@ public class ComponentChoiceState extends GameState {
         switch (caseManagement) {
             case 1:
                 synchronized (assemblyProtocol.lockUncoveredList) {
-                    if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyProtocol.getUncoveredList().get(Integer.parseInt(input.toLowerCase()))) {
-                        try {assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));} catch (IllegalSelectionException e) {
+                    if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyProtocol.getUncoveredComponentsList().get(Integer.parseInt(input.toLowerCase()))) {
+                        try {
+                            assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));
+                        } catch (IllegalSelectionException e) {
                             playerMessenger.printMessage("Another unreachable place in the universe has been reached.");
                             break;
                         }
-                        component = assemblyProtocol.getInHandMap().get(player);
+                        component = assemblyProtocol.getPlayersInHandMap().get(player);
                         message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
                     } else {
                         message = "Component has been already taken";

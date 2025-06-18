@@ -30,9 +30,9 @@ public class PlaceBookedComponentState extends GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyThread) {
-        if (assemblyProtocol.getBookedMap().get(player).size() > 0) {
-            for (int i = 0; i < assemblyProtocol.getBookedMap().get(player).size(); i++) {
-                Component component = assemblyProtocol.getBookedMap().get(player).get(i);
+        if (assemblyProtocol.getPlayersBookedMap().get(player).size() > 0) {
+            for (int i = 0; i < assemblyProtocol.getPlayersBookedMap().get(player).size(); i++) {
+                Component component = assemblyProtocol.getPlayersBookedMap().get(player).get(i);
                 String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
                 playerMessenger.printMessage(message);
             }
@@ -55,13 +55,15 @@ public class PlaceBookedComponentState extends GameState {
         try {
             int index = Integer.parseInt(input);
             if (index == 0 || index == 1) {
-                if (assemblyProtocol.getBookedMap().get(player).get(index) != null) {
+                if (assemblyProtocol.getPlayersBookedMap().get(player).get(index) != null) {
                     synchronized (assemblyProtocol.lockUncoveredList) {
-                        try{assemblyProtocol.chooseBookedComponent(player, index);} catch (IllegalSelectionException e){
+                        try {
+                            assemblyProtocol.chooseBookedComponent(player, index);
+                        } catch (IllegalSelectionException e) {
                             playerMessenger.printMessage("For a moment, nothing happened. Then, after a second or so, nothing continued to happen.");
                             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                         }
-                        playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
+                        playerMessenger.printComponent(assemblyProtocol.getPlayersInHandMap().get(player));
                     }
                     assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, true));
                 } else {

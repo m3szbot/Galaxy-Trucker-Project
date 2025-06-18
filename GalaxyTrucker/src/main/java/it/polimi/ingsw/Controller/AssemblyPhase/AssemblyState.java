@@ -30,8 +30,8 @@ public class AssemblyState extends GameState {
         startTime = System.currentTimeMillis();
         actionTaken = false;
         playerMessenger.printShipboard(player.getShipBoard());
-        if (assemblyProtocol.getInHandMap().get(player) != null) {
-            playerMessenger.printComponent(assemblyProtocol.getInHandMap().get(player));
+        if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
+            playerMessenger.printComponent(assemblyProtocol.getPlayersInHandMap().get(player));
         }
         playerMessenger.printMessage("👾AssemblyPhase: enter command:");
         playerMessenger.printMessage("(Place (current component) / Draw (a new component) / Choose (an uncovered component) / Show (a deck) / Rotate (current component)");
@@ -57,8 +57,9 @@ public class AssemblyState extends GameState {
             case "draw":
                 actionTaken = true;
                 synchronized (assemblyProtocol.lockCoveredList) {
-                    try {assemblyProtocol.newComponent(player);}
-                    catch(IllegalSelectionException e){
+                    try {
+                        assemblyProtocol.newComponent(player);
+                    } catch (IllegalSelectionException e) {
                         playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
                         assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                         break;
@@ -73,8 +74,8 @@ public class AssemblyState extends GameState {
                 break;
 
             case "rotate":
-                if (assemblyProtocol.getInHandMap().get(player) != null) {
-                    assemblyProtocol.getInHandMap().get(player).accept(new ComponentRotatorVisitor());
+                if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
+                    assemblyProtocol.getPlayersInHandMap().get(player).accept(new ComponentRotatorVisitor());
                     message = "Component successfully rotated:";
                     playerMessenger.printMessage(message);
                 } else {
@@ -126,9 +127,11 @@ public class AssemblyState extends GameState {
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     break;
                 }
-                if (assemblyProtocol.getBookedMap().get(player).size() < 2) {
-                    if (assemblyProtocol.getInHandMap().get(player) != null) {
-                        try {assemblyProtocol.bookComponent(player);}catch(IllegalSelectionException e){
+                if (assemblyProtocol.getPlayersBookedMap().get(player).size() < 2) {
+                    if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
+                        try {
+                            assemblyProtocol.bookComponent(player);
+                        } catch (IllegalSelectionException e) {
                             playerMessenger.printMessage("Omg! Arriving here it's almost impossible... You must have finished inside a black hole! OK, don't panic, now I'll bring you back");
                             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                             break;
