@@ -256,7 +256,7 @@ public class AssemblyProtocol {
                 try {
                     bookComponent(player);
                 } catch (IllegalSelectionException e) {
-                    throw new IllegalStateException("Error: cannot rebook current, previously booked component.");
+                    throw new IllegalStateException("Error: cannot book the same component twice.");
                 }
             }
 

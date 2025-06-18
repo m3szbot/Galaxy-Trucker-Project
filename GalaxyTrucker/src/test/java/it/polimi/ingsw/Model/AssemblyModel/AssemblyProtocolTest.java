@@ -144,6 +144,35 @@ class AssemblyProtocolTest {
         assertEquals(9, assemblyProtocol.getUncoveredComponentsList().size());
     }
 
+    @Test
+    void testBookSameComponentTwice() throws IllegalSelectionException {
+        assemblyProtocol.newComponent(playerA);
+        Component comp = assemblyProtocol.getPlayersInHandComponents().get(playerA);
+        assemblyProtocol.bookComponent(playerA);
+        assemblyProtocol.getPlayersInHandComponents().put(playerA, comp);
+        assertThrows(IllegalStateException.class, () -> {
+            assemblyProtocol.bookComponent(playerA);
+        });
+    }
+
+    @Test
+    void testChooseBookedComponent() throws IllegalSelectionException {
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+
+        // book component
+        assemblyProtocol.newComponent(playerA);
+        Component inHand = assemblyProtocol.getPlayersInHandComponents().get(playerA);
+        assemblyProtocol.bookComponent(playerA);
+        assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(1, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertEquals(inHand, assemblyProtocol.getPlayersBookedComponents().get(playerA).getFirst());
+
+        // choose booked component
+        assemblyProtocol.chooseBookedComponent(playerA, 0);
+        assertEquals(inHand, assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+    }
+
 
     @Test
     void testShowDeckDeckInUse() throws IllegalSelectionException {
@@ -280,30 +309,11 @@ class AssemblyProtocolTest {
     }
 
     @Test
-    void chooseBookedComponent() throws IllegalSelectionException {
-        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
-
-        // book component
-        assemblyProtocol.newComponent(playerA);
-        Component inHand = assemblyProtocol.getPlayersInHandComponents().get(playerA);
-        assemblyProtocol.bookComponent(playerA);
-        assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
-        assertEquals(1, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
-        assertEquals(inHand, assemblyProtocol.getPlayersBookedComponents().get(playerA).getFirst());
-
-        // choose booked component
-        assemblyProtocol.chooseBookedComponent(playerA, 0);
-        assertEquals(inHand, assemblyProtocol.getPlayersInHandComponents().get(playerA));
-        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
-    }
-
-    @Test
     void chooseBookedComponentFromEmptyList() {
         assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.chooseBookedComponent(playerA, 0);
         });
     }
-
 
     @RepeatedTest(500)
     void testConcurrentShowDeck() throws InterruptedException {
@@ -402,11 +412,6 @@ class AssemblyProtocolTest {
 
     }
 
-    @RepeatedTest(100)
-    void testConcurrentRandomMethods4PlayerThreads() {
-        // TODO
-    }
-
     @Test
     void testPreviouslyBookedComponentInHand() throws IllegalSelectionException {
         // test booking and choosing and rebooking 2 components
@@ -465,5 +470,74 @@ class AssemblyProtocolTest {
         assertEquals(booked2, assemblyProtocol.getPlayersInHandComponents().get(playerA));
         assertEquals(uncoveredSize + 1, assemblyProtocol.getUncoveredComponentsList().size());
     }
+
+    @RepeatedTest(3)
+    void testSimulate4PlayerThreadsRandomMethods() throws InterruptedException {
+        // simulate players and wait for unexpected exceptions
+
+        // setup tests
+        assertEquals(4, gameInformation.getPlayerList().size());
+
+        // create threads
+        ExecutorService executor = Executors.newFixedThreadPool(gameInformation.getPlayerList().size());
+
+
+        // create adder threads
+        for (Player player : gameInformation.getPlayerList()) {
+            executor.submit((() -> {
+                // thread task
+                // execute random commands until shut down
+                while (true) {
+                    try {
+                        randomCommand(player);
+                    } catch (IllegalSelectionException e) {
+                    }
+                }
+            }));
+        }
+
+        executor.shutdown();
+        // execute until shut down
+        executor.awaitTermination(15, TimeUnit.SECONDS);
+
+        // result tests
+
+    }
+
+    private void randomCommand(Player player) throws IllegalSelectionException, InterruptedException {
+        int command = ThreadLocalRandom.current().nextInt(0, 5);
+
+        // indexes from -2 to simulate wrong selection input
+        switch (command) {
+            case 0 -> {
+                // show deck (and return it)
+                int index = ThreadLocalRandom.current().nextInt(-2, 3);
+                assemblyProtocol.showDeck(index);
+                // watch deck
+                Thread.sleep(5);
+                // return deck
+                assemblyProtocol.getDeck(index).setInUse(false);
+            }
+            case 1 -> {
+                // new component
+                assemblyProtocol.newComponent(player);
+            }
+            case 2 -> {
+                // book component
+                assemblyProtocol.bookComponent(player);
+            }
+            case 3 -> {
+                // choose uncovered component
+                int index = ThreadLocalRandom.current().nextInt(-2, assemblyProtocol.getUncoveredComponentsList().size());
+                assemblyProtocol.chooseUncoveredComponent(player, index);
+            }
+            case 4 -> {
+                // choose booked component
+                int index = ThreadLocalRandom.current().nextInt(-2, assemblyProtocol.getUncoveredComponentsList().size());
+                assemblyProtocol.chooseBookedComponent(player, index);
+            }
+        }
+    }
+
 
 }
