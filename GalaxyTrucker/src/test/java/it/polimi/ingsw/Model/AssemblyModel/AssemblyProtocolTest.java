@@ -76,12 +76,10 @@ class AssemblyProtocolTest {
         assertEquals(3, assemblyProtocol.showDeck(3).getNumCards());
         assertEquals(152, assemblyProtocol.getCoveredComponentsList().size());
         assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
-        assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
-        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
-        assertEquals(4, assemblyProtocol.getPlayersInHandComponents().size());
         assertEquals(4, assemblyProtocol.getPlayersBookedComponents().size());
-        assertEquals(4, assemblyProtocol.getPlayersPlacingBookedComponentsCache().size());
-
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertNull(assemblyProtocol.getPlayersPlacingBookedComponentsCache().get(playerA));
     }
 
     @Test

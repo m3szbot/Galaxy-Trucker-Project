@@ -8,7 +8,11 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -37,17 +41,19 @@ public class AssemblyProtocol {
     private final List<Component> uncoveredComponentsList;
 
     // PLAYER ASSOCIATED MAPS:
+    // Use concurrentHashMap for extra safety:
+    // (cannot have null values, so remove entry if no value)
+    // (get return value or null if no value)
+    // No need to be synchronized: each thread accesses only its own player's entry, map structure is not modified.
+
     // Component in hand for each player:
-    // Not synchronized: each thread accesses only its own player's entry, map structure is not modified.
-    // If no component in hand, null value is used (but do not remove entry).
     private final Map<Player, Component> playersInHandComponents;
 
     // Booked components for each player:
-    // Not synchronized: each thread accesses only its own player's entry, map structure is not modified.
-    // If no component in hand, null value is used (but do not remove entry).
+    // player enty must not be removed, but list can be empty
     private final Map<Player, List<Component>> playersBookedComponents;
 
-    // Stores a previously booked component currently in the hand of a player (to be placed).
+    // Stores a previously booked component currently in the hand of a player (to be placed):
     // Booked components cannot be returned to uncoveredList.
     private final Map<Player, Component> playersPlacingBookedComponentsCache;
 
@@ -87,13 +93,11 @@ public class AssemblyProtocol {
         uncoveredComponentsList = new ArrayList<>();
 
         // player mapped structures
-        playersInHandComponents = new HashMap<>();
-        playersBookedComponents = new HashMap<>();
-        playersPlacingBookedComponentsCache = new HashMap<>();
+        playersInHandComponents = new ConcurrentHashMap<>();
+        playersBookedComponents = new ConcurrentHashMap<>();
+        playersPlacingBookedComponentsCache = new ConcurrentHashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
-            playersInHandComponents.put(player, null);
             playersBookedComponents.put(player, new ArrayList<>());
-            playersPlacingBookedComponentsCache.put(player, null);
         }
 
     }
@@ -244,12 +248,12 @@ public class AssemblyProtocol {
      * @author Boti
      */
     private void returnComponentInHand(Player player) {
-
-        // if no component in hand, value == null
-        // only return component in hand to uncovered list if there is a component in hand (!=null)
+        // get component or null if no component in hand
         Component current = playersInHandComponents.get(player);
-        // a component is in hand
+
+        // only return component in hand to uncovered list if there is a component in hand
         if (current != null) {
+
             // current component was previously booked
             if (current.equals(playersPlacingBookedComponentsCache.get(player))) {
                 // rebook current component
@@ -267,7 +271,7 @@ public class AssemblyProtocol {
                     uncoveredComponentsList.add(playersInHandComponents.get(player));
                 }
                 // remove returned component from hand
-                playersInHandComponents.put(player, null);
+                playersInHandComponents.remove(player);
             }
         }
     }
@@ -290,7 +294,7 @@ public class AssemblyProtocol {
                     // book component
                     playersBookedComponents.get(player).add(current);
                     // remove component from hand (newComponent places component in hand in uncovered list)
-                    playersInHandComponents.put(player, null);
+                    playersInHandComponents.remove(player);
 
                 } else {
                     // booked map already full
