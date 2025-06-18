@@ -21,8 +21,8 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * test single methods
- * + test concurrency for each method
+ * Single thread tests + multithread tests (sync)
+ * In the game, 1 thread for each player - important for player maps (inHand, booked
  *
  * @author Boti
  */
@@ -56,7 +56,7 @@ class AssemblyProtocolTest {
     // decks remove cards from a copy of cardsList, but not cardsList itself
     // because it cancels flightBoard cards
     @Test
-    void deckCardsNotRemovedFromGameInformation() {
+    void testDeckCardsNotRemovedFromGameInformation() {
         gameInformation = new GameInformation();
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         int cardCount = gameInformation.getCardsList().size();
@@ -74,9 +74,14 @@ class AssemblyProtocolTest {
         assertEquals(3, assemblyProtocol.showDeck(1).getNumCards());
         assertEquals(3, assemblyProtocol.showDeck(2).getNumCards());
         assertEquals(3, assemblyProtocol.showDeck(3).getNumCards());
+        assertEquals(152, assemblyProtocol.getCoveredComponentsList().size());
         assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
         assertNull(assemblyProtocol.getPlayersInHandMap().get(playerA));
         assertEquals(0, assemblyProtocol.getPlayersBookedMap().get(playerA).size());
+        assertEquals(4, assemblyProtocol.getPlayersInHandMap().size());
+        assertEquals(4, assemblyProtocol.getPlayersBookedMap().size());
+        assertEquals(4, assemblyProtocol.getPlayersBookedFlag().size());
+
     }
 
     @Test
@@ -108,11 +113,28 @@ class AssemblyProtocolTest {
     }
 
     @Test
-    void deckInUse() throws IllegalSelectionException {
+    void testShowDeckDeckInUse() throws IllegalSelectionException {
+        // use decks
         assemblyProtocol.showDeck(1);
         assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.showDeck(1);
         });
+        assemblyProtocol.showDeck(2);
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.showDeck(2);
+        });
+        assemblyProtocol.showDeck(3);
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.showDeck(3);
+        });
+        // free decks
+        assemblyProtocol.getDeck(0).setInUse(false);
+        assemblyProtocol.getDeck(1).setInUse(false);
+        assemblyProtocol.getDeck(2).setInUse(false);
+        // reuse decks
+        assemblyProtocol.showDeck(1);
+        assemblyProtocol.showDeck(2);
+        assemblyProtocol.showDeck(3);
     }
 
     @Test
@@ -130,7 +152,7 @@ class AssemblyProtocolTest {
 
 
     @Test
-    void exhaustCoveredList() throws IllegalSelectionException {
+    void testNewComponentExhaustCoveredListExhaustUncoveredList() throws IllegalSelectionException {
         int componentsCount = assemblyProtocol.getCoveredComponentsList().size();
         assertEquals(componentsCount, assemblyProtocol.getCoveredComponentsList().size());
         assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
@@ -140,9 +162,10 @@ class AssemblyProtocolTest {
         }
 
         assertEquals(0, assemblyProtocol.getCoveredComponentsList().size());
-        // -1: 1 component in hand
+        // 1 component left in hand
         assertEquals(componentsCount - 1, assemblyProtocol.getUncoveredComponentsList().size());
 
+        // empty uncovered list
         // discard components from hand
         while (!assemblyProtocol.getUncoveredComponentsList().isEmpty()) {
             assemblyProtocol.newComponent(playerA);
@@ -167,26 +190,21 @@ class AssemblyProtocolTest {
         assertEquals(inHand, assemblyProtocol.getPlayersBookedMap().get(playerA).getFirst());
     }
 
-    @Test
-    void bookWithEmptyHand() {
-        assertThrows(IllegalStateException.class, () -> {
-            assemblyProtocol.bookComponent(playerA);
-        });
-    }
 
     @Test
-    void bookTooManyComponents() throws IllegalSelectionException {
+    void testBookTooManyComponents() throws IllegalSelectionException {
         // book 3 components
         assemblyProtocol.newComponent(playerA);
         assemblyProtocol.bookComponent(playerA);
         assemblyProtocol.newComponent(playerA);
         assemblyProtocol.bookComponent(playerA);
         assemblyProtocol.newComponent(playerA);
-        assemblyProtocol.bookComponent(playerA);
-        assemblyProtocol.newComponent(playerA);
+        // booked full
         assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.bookComponent(playerA);
         });
+
+        assemblyProtocol.chooseBookedComponent(playerA, 0);
     }
 
     @Test
@@ -252,6 +270,58 @@ class AssemblyProtocolTest {
         for (Deck deck : returnedDecks) {
             assertEquals(1, returnedDecks.stream().filter(deck::equals).count());
         }
+
+    }
+
+    // TODO
+    @RepeatedTest(500)
+    void testConcurrentNewComponentFromCoveredList() throws InterruptedException {
+        // ADD Thread.sleep() to the source code to delay operations and check concurrent access
+
+        // setup tests
+        assertEquals(4, gameInformation.getPlayerList().size());
+        assertEquals(152, assemblyProtocol.getCoveredComponentsList().size());
+        assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
+
+        // create threads
+        ExecutorService executor = Executors.newFixedThreadPool(100);
+        // save the returned decks of showDeck in a list
+        // shouldn't have duplicates! - check with streams
+        // the return list modified by the threads must be synchronized too!
+        List<Component> resultList = Collections.synchronizedList(new ArrayList<>());
+        Object lock = new Object();
+
+        // create adder threads
+        for (int i = 0; i < 100; i++) {
+
+            executor.submit((() -> {
+                // thread task
+                while (!assemblyProtocol.getCoveredComponentsList().isEmpty()) {
+                    try {
+                        synchronized (lock) {
+                            assemblyProtocol.newComponent(playerA);
+                            // add component in hand to result list
+                            resultList.add(assemblyProtocol.getPlayersInHandMap().get(playerA));
+                        }
+                    } catch (IllegalSelectionException e) {
+                    }
+                }
+            }));
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(15, TimeUnit.SECONDS);
+
+        // result tests
+        // each component added only once
+        for (Component component : resultList) {
+            assertEquals(1, resultList.stream().filter(component::equals).count());
+        }
+        assertEquals(152, resultList.size());
+        assertEquals(0, assemblyProtocol.getCoveredComponentsList().size());
+        // 1 component left in hand
+        assertEquals(151, assemblyProtocol.getUncoveredComponentsList().size());
+
 
     }
 
