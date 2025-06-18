@@ -52,8 +52,7 @@ public class AssemblyProtocol {
     private final Map<Player, Component> playersPlacingBookedComponentsCache;
 
 
-    // TODO remove locks? - collections are already synchronized?
-    // TODO synchronize manually instead of synchronized collections?
+    // TODO remove locks - model already synchronized
     public Object lockUncoveredList = new Object();
     public Object lockCoveredList = new Object();
     public Object lockDecksList = new Object();
@@ -200,8 +199,8 @@ public class AssemblyProtocol {
     }
 
     /**
+     * Returns the previous component in hand.
      * Draws a new random component for the player and puts in the player's hand.
-     * Moves the previous component in hand (if any) to the uncovered list.
      * Draws from coveredList until it is exhausted, then it draws from uncoveredList.
      * Synchronized.
      *
@@ -307,6 +306,7 @@ public class AssemblyProtocol {
     }
 
     /**
+     * Returns the previous component in hand.
      * Allows the player to choose a component from the uncovered list.
      * The player's current component is returned to the uncovered list,
      * and the selected component replaces it in the player's hand.
@@ -333,6 +333,7 @@ public class AssemblyProtocol {
     }
 
     /**
+     * Returns the previous component in hand.
      * Takes and removes a booked component from the player's booked components based on index.
      *
      * @param player the player retrieving a booked component
