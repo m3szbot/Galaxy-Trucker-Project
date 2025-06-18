@@ -76,11 +76,11 @@ class AssemblyProtocolTest {
         assertEquals(3, assemblyProtocol.showDeck(3).getNumCards());
         assertEquals(152, assemblyProtocol.getCoveredComponentsList().size());
         assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
-        assertNull(assemblyProtocol.getPlayersInHandMap().get(playerA));
-        assertEquals(0, assemblyProtocol.getPlayersBookedMap().get(playerA).size());
-        assertEquals(4, assemblyProtocol.getPlayersInHandMap().size());
-        assertEquals(4, assemblyProtocol.getPlayersBookedMap().size());
-        assertEquals(4, assemblyProtocol.getPlayersBookedFlag().size());
+        assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertEquals(4, assemblyProtocol.getPlayersInHandComponents().size());
+        assertEquals(4, assemblyProtocol.getPlayersBookedComponents().size());
+        assertEquals(4, assemblyProtocol.getPlayersPlacingBookedComponentsCache().size());
 
     }
 
@@ -88,12 +88,12 @@ class AssemblyProtocolTest {
     void drawTwoNewComponents() throws IllegalSelectionException {
         // draw first component
         assemblyProtocol.newComponent(playerA);
-        assertNotNull(assemblyProtocol.getPlayersInHandMap().get(playerA));
-        Component inHand = assemblyProtocol.getPlayersInHandMap().get(playerA);
+        assertNotNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        Component inHand = assemblyProtocol.getPlayersInHandComponents().get(playerA);
         // draw second component
         assemblyProtocol.newComponent(playerA);
-        assertNotNull(assemblyProtocol.getPlayersInHandMap().get(playerA));
-        assertNotEquals(inHand, assemblyProtocol.getPlayersInHandMap().get(playerA));
+        assertNotNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertNotEquals(inHand, assemblyProtocol.getPlayersInHandComponents().get(playerA));
         assertEquals(inHand, assemblyProtocol.getUncoveredComponentsList().getFirst());
     }
 
@@ -102,15 +102,48 @@ class AssemblyProtocolTest {
         // put 1 component in uncoveredList
         assemblyProtocol.newComponent(playerA);
         assemblyProtocol.newComponent(playerA);
-        Component inHand = assemblyProtocol.getPlayersInHandMap().get(playerA);
+        Component inHand = assemblyProtocol.getPlayersInHandComponents().get(playerA);
         // choose from uncoveredList
         assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.chooseUncoveredComponent(playerA, 1);
         });
         assemblyProtocol.chooseUncoveredComponent(playerA, 0);
-        assertNotEquals(inHand, assemblyProtocol.getPlayersInHandMap().get(playerA));
+        assertNotEquals(inHand, assemblyProtocol.getPlayersInHandComponents().get(playerA));
         assertEquals(inHand, assemblyProtocol.getUncoveredComponentsList().getFirst());
     }
+
+    @Test
+    void testUncoveredListIndexes() throws IllegalSelectionException {
+        assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
+
+        assertThrows(IllegalSelectionException.class, () -> {
+                    assemblyProtocol.chooseUncoveredComponent(playerA, 0);
+                }
+        );
+
+        for (int i = 0; i < 10; i++)
+            assemblyProtocol.newComponent(playerA);
+
+        // indexes out of range
+        // 1 element always left in hand
+        assertEquals(9, assemblyProtocol.getUncoveredComponentsList().size());
+        assertThrows(IllegalSelectionException.class, () -> {
+                    assemblyProtocol.chooseUncoveredComponent(playerA, 9);
+                }
+        );
+        assertThrows(IllegalSelectionException.class, () -> {
+                    assemblyProtocol.chooseUncoveredComponent(playerA, -1);
+                }
+        );
+
+        // indexes in range, component reput into uncovered list
+        // 1 element always left in hand
+        for (int i = 0; i < 9; i++)
+            assemblyProtocol.chooseUncoveredComponent(playerA, i);
+
+        assertEquals(9, assemblyProtocol.getUncoveredComponentsList().size());
+    }
+
 
     @Test
     void testShowDeckDeckInUse() throws IllegalSelectionException {
@@ -153,6 +186,7 @@ class AssemblyProtocolTest {
 
     @Test
     void testNewComponentExhaustCoveredListExhaustUncoveredList() throws IllegalSelectionException {
+        // test with newComponent
         int componentsCount = assemblyProtocol.getCoveredComponentsList().size();
         assertEquals(componentsCount, assemblyProtocol.getCoveredComponentsList().size());
         assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
@@ -170,7 +204,39 @@ class AssemblyProtocolTest {
         while (!assemblyProtocol.getUncoveredComponentsList().isEmpty()) {
             assemblyProtocol.newComponent(playerA);
             // discard component in hand
-            assemblyProtocol.getPlayersInHandMap().remove(playerA);
+            assemblyProtocol.getPlayersInHandComponents().remove(playerA);
+        }
+
+        assertEquals(0, assemblyProtocol.getCoveredComponentsList().size());
+        assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
+
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.newComponent(playerA);
+        });
+    }
+
+    @Test
+    void testChooseUncoveredComponentExhaustCoveredListExhaustUncoveredList() throws IllegalSelectionException {
+        // test with newComponent + chooseUncoveredComponent
+        int componentsCount = assemblyProtocol.getCoveredComponentsList().size();
+        assertEquals(componentsCount, assemblyProtocol.getCoveredComponentsList().size());
+        assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
+
+        while (!assemblyProtocol.getCoveredComponentsList().isEmpty()) {
+            assemblyProtocol.newComponent(playerA);
+        }
+
+        assertEquals(0, assemblyProtocol.getCoveredComponentsList().size());
+        // 1 component left in hand
+        assertEquals(componentsCount - 1, assemblyProtocol.getUncoveredComponentsList().size());
+
+        // empty uncovered list
+        // discard components from hand
+        while (!assemblyProtocol.getUncoveredComponentsList().isEmpty()) {
+            assemblyProtocol.chooseUncoveredComponent(playerA,
+                    ThreadLocalRandom.current().nextInt(0, assemblyProtocol.getUncoveredComponentsList().size()));
+            // discard component in hand
+            assemblyProtocol.getPlayersInHandComponents().remove(playerA);
         }
 
         assertEquals(0, assemblyProtocol.getCoveredComponentsList().size());
@@ -184,10 +250,10 @@ class AssemblyProtocolTest {
     @Test
     void bookOneComponent() throws IllegalSelectionException {
         assemblyProtocol.newComponent(playerA);
-        Component inHand = assemblyProtocol.getPlayersInHandMap().get(playerA);
+        Component inHand = assemblyProtocol.getPlayersInHandComponents().get(playerA);
         assemblyProtocol.bookComponent(playerA);
-        assertNull(assemblyProtocol.getPlayersInHandMap().get(playerA));
-        assertEquals(inHand, assemblyProtocol.getPlayersBookedMap().get(playerA).getFirst());
+        assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(inHand, assemblyProtocol.getPlayersBookedComponents().get(playerA).getFirst());
     }
 
 
@@ -198,8 +264,14 @@ class AssemblyProtocolTest {
         assemblyProtocol.bookComponent(playerA);
         assemblyProtocol.newComponent(playerA);
         assemblyProtocol.bookComponent(playerA);
-        assemblyProtocol.newComponent(playerA);
+
+        // book again - hand emptied
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.bookComponent(playerA);
+        });
+
         // booked full
+        assemblyProtocol.newComponent(playerA);
         assertThrows(IllegalSelectionException.class, () -> {
             assemblyProtocol.bookComponent(playerA);
         });
@@ -209,13 +281,20 @@ class AssemblyProtocolTest {
 
     @Test
     void chooseBookedComponent() throws IllegalSelectionException {
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+
+        // book component
         assemblyProtocol.newComponent(playerA);
-        Component inHand = assemblyProtocol.getPlayersInHandMap().get(playerA);
+        Component inHand = assemblyProtocol.getPlayersInHandComponents().get(playerA);
         assemblyProtocol.bookComponent(playerA);
-        assertNull(assemblyProtocol.getPlayersInHandMap().get(playerA));
+        assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(1, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertEquals(inHand, assemblyProtocol.getPlayersBookedComponents().get(playerA).getFirst());
+
+        // choose booked component
         assemblyProtocol.chooseBookedComponent(playerA, 0);
-        assertEquals(inHand, assemblyProtocol.getPlayersInHandMap().get(playerA));
-        assertEquals(0, assemblyProtocol.getPlayersBookedMap().get(playerA).size());
+        assertEquals(inHand, assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
     }
 
     @Test
@@ -225,9 +304,6 @@ class AssemblyProtocolTest {
         });
     }
 
-
-    // TEST SYNCHRONIZATION
-    // TODO
 
     @RepeatedTest(500)
     void testConcurrentShowDeck() throws InterruptedException {
@@ -273,7 +349,6 @@ class AssemblyProtocolTest {
 
     }
 
-    // TODO
     @RepeatedTest(500)
     void testConcurrentNewComponentFromCoveredList() throws InterruptedException {
         // ADD Thread.sleep() to the source code to delay operations and check concurrent access
@@ -296,14 +371,16 @@ class AssemblyProtocolTest {
 
             executor.submit((() -> {
                 // thread task
-                while (!assemblyProtocol.getCoveredComponentsList().isEmpty()) {
-                    try {
-                        synchronized (lock) {
-                            assemblyProtocol.newComponent(playerA);
+                synchronized (lock) {
+                    while (!assemblyProtocol.getCoveredComponentsList().isEmpty()) {
+                        try {
+                            Player player = gameInformation.getPlayerList().get(ThreadLocalRandom.current().nextInt(0,
+                                    gameInformation.getPlayerList().size()));
+                            assemblyProtocol.newComponent(player);
                             // add component in hand to result list
-                            resultList.add(assemblyProtocol.getPlayersInHandMap().get(playerA));
+                            resultList.add(assemblyProtocol.getPlayersInHandComponents().get(player));
+                        } catch (IllegalSelectionException e) {
                         }
-                    } catch (IllegalSelectionException e) {
                     }
                 }
             }));
@@ -319,10 +396,74 @@ class AssemblyProtocolTest {
         }
         assertEquals(152, resultList.size());
         assertEquals(0, assemblyProtocol.getCoveredComponentsList().size());
-        // 1 component left in hand
-        assertEquals(151, assemblyProtocol.getUncoveredComponentsList().size());
+        // 1 component left in hand, 4 players
+        assertEquals(148, assemblyProtocol.getUncoveredComponentsList().size());
 
 
+    }
+
+    @RepeatedTest(100)
+    void testConcurrentRandomMethods4PlayerThreads() {
+        // TODO
+    }
+
+    @Test
+    void testPreviouslyBookedComponentInHand() throws IllegalSelectionException {
+        // test booking and choosing and rebooking 2 components
+
+        // TEST BOOK COMPONENT:
+
+        // book from empty hand error
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.bookComponent(playerA);
+        });
+
+        // book 2 components
+        assemblyProtocol.newComponent(playerA);
+        assemblyProtocol.bookComponent(playerA);
+        assemblyProtocol.newComponent(playerA);
+        assemblyProtocol.bookComponent(playerA);
+        assertEquals(2, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+
+        // book again - hand emptied
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.bookComponent(playerA);
+        });
+
+        assemblyProtocol.newComponent(playerA);
+        // fail to book new component
+        assertThrows(IllegalSelectionException.class, () -> {
+            assemblyProtocol.bookComponent(playerA);
+        });
+
+
+        // TEST PREVIOUSLY BOOKED IN HAND - MUST BE RETURNED TO BOOKED
+        Component booked1 = assemblyProtocol.getPlayersBookedComponents().get(playerA).get(1);
+        Component booked2 = assemblyProtocol.getPlayersBookedComponents().get(playerA).get(0);
+
+        assemblyProtocol.chooseBookedComponent(playerA, 1);
+        int uncoveredSize = assemblyProtocol.getUncoveredComponentsList().size();
+        assertEquals(1, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertFalse(assemblyProtocol.getPlayersBookedComponents().get(playerA).contains(booked1));
+        assertEquals(booked1, assemblyProtocol.getPlayersPlacingBookedComponentsCache().get(playerA));
+        assertEquals(booked1, assemblyProtocol.getPlayersInHandComponents().get(playerA));
+
+        // get new component - prevBooked in hand gets rebooked
+        assemblyProtocol.newComponent(playerA);
+        assertEquals(2, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertTrue(assemblyProtocol.getPlayersBookedComponents().get(playerA).contains(booked1));
+        assertEquals(booked1, assemblyProtocol.getPlayersPlacingBookedComponentsCache().get(playerA));
+        assertNotEquals(booked1, assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(uncoveredSize, assemblyProtocol.getUncoveredComponentsList().size());
+
+        // put the other booked in hand (prevBooked still booked)
+        assemblyProtocol.chooseBookedComponent(playerA, 0);
+        assertEquals(1, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+        assertTrue(assemblyProtocol.getPlayersBookedComponents().get(playerA).contains(booked1));
+        assertEquals(booked2, assemblyProtocol.getPlayersPlacingBookedComponentsCache().get(playerA));
+        assertEquals(booked2, assemblyProtocol.getPlayersInHandComponents().get(playerA));
+        assertEquals(uncoveredSize + 1, assemblyProtocol.getUncoveredComponentsList().size());
     }
 
 }

@@ -15,7 +15,9 @@ import java.util.concurrent.ThreadLocalRandom;
  * AssemblyProtocol handles the logic behind deck selection, component
  * booking and drawing, and other player interactions.
  * <p>
- * Synchronization: synchronized each method!
+ * Synchronization:
+ * Shared: covered, uncovered component lists, individual Decks
+ * Not shared: player maps - player thread only accesses own player's entry - structure is never modified
  *
  * @author Giacomo, Boti
  */
@@ -38,15 +40,18 @@ public class AssemblyProtocol {
     // Component in hand for each player:
     // Not synchronized: each thread accesses only its own player's entry, map structure is not modified.
     // If no component in hand, null value is used (but do not remove entry).
-    private final Map<Player, Component> playersInHandMap;
+    private final Map<Player, Component> playersInHandComponents;
 
     // Booked components for each player:
     // Not synchronized: each thread accesses only its own player's entry, map structure is not modified.
     // If no component in hand, null value is used (but do not remove entry).
-    private final Map<Player, List<Component>> playersBookedMap;
-    // Signals if a component currently in hand has been booked before
-    // so it cannot be returned to uncoveredList.
-    private final Map<Player, Boolean> playersBookedFlag;
+    private final Map<Player, List<Component>> playersBookedComponents;
+
+    // Stores a previously booked component currently in the hand of a player (to be placed).
+    // Booked components cannot be returned to uncoveredList.
+    private final Map<Player, Component> playersPlacingBookedComponentsCache;
+
+
     // TODO remove locks? - collections are already synchronized?
     // TODO synchronize manually instead of synchronized collections?
     public Object lockUncoveredList = new Object();
@@ -83,19 +88,19 @@ public class AssemblyProtocol {
         uncoveredComponentsList = new ArrayList<>();
 
         // player mapped structures
-        playersInHandMap = new HashMap<>();
-        playersBookedMap = new HashMap<>();
-        playersBookedFlag = new HashMap<>();
+        playersInHandComponents = new HashMap<>();
+        playersBookedComponents = new HashMap<>();
+        playersPlacingBookedComponentsCache = new HashMap<>();
         for (Player player : gameInformation.getPlayerList()) {
-            playersInHandMap.put(player, null);
-            playersBookedMap.put(player, new ArrayList<>());
-            playersBookedFlag.put(player, false);
+            playersInHandComponents.put(player, null);
+            playersBookedComponents.put(player, new ArrayList<>());
+            playersPlacingBookedComponentsCache.put(player, null);
         }
 
     }
 
-    public Map<Player, Boolean> getPlayersBookedFlag() {
-        return playersBookedFlag;
+    public Map<Player, Component> getPlayersPlacingBookedComponentsCache() {
+        return playersPlacingBookedComponentsCache;
     }
 
     public GameType getGameType() {
@@ -116,16 +121,13 @@ public class AssemblyProtocol {
         }
     }
 
+    /**
+     * not synchronized! - use only for testing
+     */
     public Deck[] getAllDecks() {
-        // TODO deadlock?
-        synchronized (showableDecksList[0]) {
-            synchronized (showableDecksList[1]) {
-                synchronized (showableDecksList[2]) {
-                    return showableDecksList;
-                }
-            }
-        }
+        return showableDecksList;
     }
+
 
     /**
      * Returns the list of covered components on the table.
@@ -148,15 +150,15 @@ public class AssemblyProtocol {
     /**
      * Returns the map of booked components per player.
      */
-    public Map<Player, List<Component>> getPlayersBookedMap() {
-        return playersBookedMap;
+    public Map<Player, List<Component>> getPlayersBookedComponents() {
+        return playersBookedComponents;
     }
 
     /**
      * Returns the current visible component for each player.
      */
-    public Map<Player, Component> getPlayersInHandMap() {
-        return playersInHandMap;
+    public Map<Player, Component> getPlayersInHandComponents() {
+        return playersInHandComponents;
     }
 
 
@@ -208,14 +210,14 @@ public class AssemblyProtocol {
      */
     public void newComponent(Player player) throws IllegalSelectionException {
         // add previous component to uncovered list from hand
-        addComponentInHandToUncoveredList(player);
+        returnComponentInHand(player);
 
         // add new random component to player's hand
         // from coveredComponentsList
         synchronized (coveredComponentsList) {
             if (!coveredComponentsList.isEmpty()) {
                 int randomIndex = ThreadLocalRandom.current().nextInt(coveredComponentsList.size());
-                playersInHandMap.put(player, coveredComponentsList.remove(randomIndex));
+                playersInHandComponents.put(player, coveredComponentsList.remove(randomIndex));
                 return;
             }
         }
@@ -224,7 +226,7 @@ public class AssemblyProtocol {
         synchronized (uncoveredComponentsList) {
             if (!uncoveredComponentsList.isEmpty()) {
                 int randomIndex = ThreadLocalRandom.current().nextInt(uncoveredComponentsList.size());
-                playersInHandMap.put(player, uncoveredComponentsList.remove(randomIndex));
+                playersInHandComponents.put(player, uncoveredComponentsList.remove(randomIndex));
                 return;
             }
         }
@@ -234,21 +236,74 @@ public class AssemblyProtocol {
     }
 
     /**
-     * If a component is present in the player's hand, return it to the uncovered list and empty the player's hand.
+     * Return component currently in hand to the correct place.
+     * If a previously booked component is in hand, return it to the booked components.
+     * If a never booked component is in hand, return it to end of the uncovered list.
+     * If nothing in hand, do nothing.
      * Synchronized.
      *
      * @author Boti
      */
-    private void addComponentInHandToUncoveredList(Player player) {
+    private void returnComponentInHand(Player player) {
+
         // if no component in hand, value == null
         // only return component in hand to uncovered list if there is a component in hand (!=null)
-        if (playersInHandMap.get(player) != null) {
-            synchronized (uncoveredComponentsList) {
-                uncoveredComponentsList.add(playersInHandMap.get(player));
+        Component current = playersInHandComponents.get(player);
+        // a component is in hand
+        if (current != null) {
+            // current component was previously booked
+            if (current.equals(playersPlacingBookedComponentsCache.get(player))) {
+                // rebook current component
+                try {
+                    bookComponent(player);
+                } catch (IllegalSelectionException e) {
+                    throw new IllegalStateException("Error: cannot rebook current, previously booked component.");
+                }
             }
-            // remove returned component from hand
-            playersInHandMap.put(player, null);
+
+            // current component was not booked previously
+            else {
+                synchronized (uncoveredComponentsList) {
+                    // return component to uncovered list
+                    uncoveredComponentsList.add(playersInHandComponents.get(player));
+                }
+                // remove returned component from hand
+                playersInHandComponents.put(player, null);
+            }
         }
+    }
+
+    /**
+     * If component is present in player's hand, books the component
+     * if the number of booked components hasn't reached the max (2).
+     * Empties the player's hand (null).
+     *
+     * @param player the player booking the component
+     * @author Boti
+     */
+    public void bookComponent(Player player) throws IllegalSelectionException {
+        Component current = playersInHandComponents.get(player);
+        if (current != null) {
+            // component not yet booked
+            if (!playersBookedComponents.get(player).contains(current)) {
+                // booked limit not reached
+                if (playersBookedComponents.get(player).size() < 2) {
+                    // book component
+                    playersBookedComponents.get(player).add(current);
+                    // remove component from hand (newComponent places component in hand in uncovered list)
+                    playersInHandComponents.put(player, null);
+
+                } else {
+                    // booked map already full
+                    throw new IllegalSelectionException("Cannot book any more components, limit is reached (2).");
+                }
+            } else {
+                // component already booked once
+                throw new IllegalStateException("Error: trying to rebook an already booked component.");
+            }
+        } else
+            throw new IllegalSelectionException("No component in hand to book.");
+
     }
 
     /**
@@ -264,35 +319,17 @@ public class AssemblyProtocol {
         // size: 0-size
         // index: 0-(size-1)
         synchronized (uncoveredComponentsList) {
+            if (uncoveredComponentsList.isEmpty())
+                throw new IllegalSelectionException("Uncovered list is empty.");
+
             if (index >= 0 && index < uncoveredComponentsList.size()) {
-                addComponentInHandToUncoveredList(player);
-                playersInHandMap.put(player, uncoveredComponentsList.remove(index));
+                // returned component added to last place - does not disturb indexes
+                returnComponentInHand(player);
+                playersInHandComponents.put(player, uncoveredComponentsList.remove(index));
             } else {
-                throw new IllegalSelectionException("Uncovered component list is empty");
+                throw new IllegalSelectionException("Index out of range.");
             }
         }
-    }
-
-    /**
-     * If component is present in player's hand, books the component
-     * if the number of booked components hasn't reached the max (2).
-     * Empties the player's hand (null).
-     *
-     * @param player the player booking the component
-     * @author Boti
-     */
-    public void bookComponent(Player player) throws IllegalSelectionException {
-        if (playersBookedMap.get(player).size() < 2) {
-            // book component
-            playersBookedMap.get(player).add(playersInHandMap.get(player));
-            // remove component from hand (newComponent places component in hand in uncovered list)
-            playersInHandMap.put(player, null);
-
-        } else {
-            // booked map already full
-            throw new IllegalSelectionException("Cannot book any more components, limit is reached (2).");
-        }
-
     }
 
     /**
@@ -303,11 +340,14 @@ public class AssemblyProtocol {
      * @author Boti
      */
     public void chooseBookedComponent(Player player, int index) throws IllegalSelectionException {
-        if (index >= 0 && index < playersBookedMap.get(player).size()) {
-            addComponentInHandToUncoveredList(player);
-            playersInHandMap.put(player, playersBookedMap.get(player).remove(index));
+        if (index >= 0 && index < playersBookedComponents.get(player).size()) {
+            returnComponentInHand(player);
+
+            Component tmp = playersBookedComponents.get(player).remove(index);
+            playersPlacingBookedComponentsCache.put(player, tmp);
+            playersInHandComponents.put(player, tmp);
         } else {
-            throw new IllegalSelectionException("Not enough booked components");
+            throw new IllegalSelectionException("Invalid selection from booked components.");
         }
     }
 

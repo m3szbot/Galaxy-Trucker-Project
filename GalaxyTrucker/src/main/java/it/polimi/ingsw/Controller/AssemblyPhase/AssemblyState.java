@@ -30,8 +30,8 @@ public class AssemblyState extends GameState {
         startTime = System.currentTimeMillis();
         actionTaken = false;
         playerMessenger.printShipboard(player.getShipBoard());
-        if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
-            playerMessenger.printComponent(assemblyProtocol.getPlayersInHandMap().get(player));
+        if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
+            playerMessenger.printComponent(assemblyProtocol.getPlayersInHandComponents().get(player));
         }
         playerMessenger.printMessage("👾AssemblyPhase: enter command:");
         playerMessenger.printMessage("(Place (current component) / Draw (a new component) / Choose (an uncovered component) / Show (a deck) / Rotate (current component)");
@@ -74,8 +74,8 @@ public class AssemblyState extends GameState {
                 break;
 
             case "rotate":
-                if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
-                    assemblyProtocol.getPlayersInHandMap().get(player).accept(new ComponentRotatorVisitor());
+                if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
+                    assemblyProtocol.getPlayersInHandComponents().get(player).accept(new ComponentRotatorVisitor());
                     message = "Component successfully rotated:";
                     playerMessenger.printMessage(message);
                 } else {
@@ -127,8 +127,8 @@ public class AssemblyState extends GameState {
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     break;
                 }
-                if (assemblyProtocol.getPlayersBookedMap().get(player).size() < 2) {
-                    if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
+                if (assemblyProtocol.getPlayersBookedComponents().get(player).size() < 2) {
+                    if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
                         try {
                             assemblyProtocol.bookComponent(player);
                         } catch (IllegalSelectionException e) {

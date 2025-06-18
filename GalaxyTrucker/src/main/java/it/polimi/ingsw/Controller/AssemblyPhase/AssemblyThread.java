@@ -184,7 +184,7 @@ public class AssemblyThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            associatedPlayer.getShipBoard().getShipBoardAttributes().destroyComponents(assemblyProtocol.getPlayersBookedMap().get(associatedPlayer).size());
+            associatedPlayer.getShipBoard().getShipBoardAttributes().destroyComponents(assemblyProtocol.getPlayersBookedComponents().get(associatedPlayer).size());
             setEnd();
             if (blocked.get()) {
                 playerMessenger.unblockUserInputGetterCall();

@@ -56,8 +56,8 @@ public class ComponentPlacingState extends GameState {
     public void handleInput(String input, AssemblyThread assemblyThread) {
         if (input.trim().toLowerCase().equals("rotate")) {
             if (booked) {
-                assemblyProtocol.getPlayersInHandMap().get(player).accept(new ComponentRotatorVisitor());
-                playerMessenger.printComponent(assemblyProtocol.getPlayersInHandMap().get(player));
+                assemblyProtocol.getPlayersInHandComponents().get(player).accept(new ComponentRotatorVisitor());
+                playerMessenger.printComponent(assemblyProtocol.getPlayersInHandComponents().get(player));
                 assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, booked));
             } else {
                 String message = "Not valid format!";
@@ -88,14 +88,14 @@ public class ComponentPlacingState extends GameState {
                     }
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 } else {
-                    if (assemblyProtocol.getPlayersInHandMap().get(player) != null) {
+                    if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
                         // TODO delete checks, NotPermittedPlacement checked by shipboard
                         if (assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 2, num2 - 1) != null ||
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1, num2 - 1) != null ||
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2 - 2) != null ||
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2) != null) {
                             try {
-                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getPlayersInHandMap().get(player), num1, num2);
+                                assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getPlayersInHandComponents().get(player), num1, num2);
                                 synchronized (assemblyProtocol.lockCoveredList) {
                                     try {
                                         assemblyProtocol.newComponent(player);

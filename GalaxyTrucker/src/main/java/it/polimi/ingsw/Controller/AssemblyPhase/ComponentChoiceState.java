@@ -79,7 +79,7 @@ public class ComponentChoiceState extends GameState {
                             playerMessenger.printMessage("Another unreachable place in the universe has been reached.");
                             break;
                         }
-                        component = assemblyProtocol.getPlayersInHandMap().get(player);
+                        component = assemblyProtocol.getPlayersInHandComponents().get(player);
                         message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
                     } else {
                         message = "Component has been already taken";
