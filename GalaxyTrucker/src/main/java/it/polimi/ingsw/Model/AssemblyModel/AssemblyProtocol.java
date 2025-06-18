@@ -183,12 +183,6 @@ public class AssemblyProtocol {
 
         synchronized (showableDecksList[index]) {
             if (!showableDecksList[index].getInUse()) {
-                /*
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                }
-                */
                 showableDecksList[index].setInUse(true);
                 return showableDecksList[index];
             } else
