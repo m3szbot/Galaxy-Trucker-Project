@@ -133,20 +133,20 @@ public class AssemblyProtocol {
 
 
     /**
-     * Returns the list of covered components on the table.
+     * Returns a copy of the list of covered components on the table (safe get).
      */
     public List<Component> getCoveredComponentsList() {
         synchronized (coveredComponentsList) {
-            return coveredComponentsList;
+            return new ArrayList<>(coveredComponentsList);
         }
     }
 
     /**
-     * Returns the list of uncovered components on the table.
+     * Returns a copy of the list of uncovered components on the table (safe get).
      */
     public List<Component> getUncoveredComponentsList() {
         synchronized (uncoveredComponentsList) {
-            return uncoveredComponentsList;
+            return new ArrayList<>(uncoveredComponentsList);
         }
     }
 
