@@ -22,8 +22,8 @@ public class Deck {
     public static final int TEST_LEVEL_ONE_CARD_COUNT = 2;
     public static final int TEST_LEVEL_TWO_CARD_COUNT = 0;
 
-    private boolean inUse; // Indicates if the deck is in use
-    private List<Card> cards; // List storing the deck's cards
+    private final List<Card> cards; // List storing the deck's cards, effectively final
+    private boolean inUse; // Indicates if the deck is in use, mutable
 
     /**
      * Construct a deck based on gameType.
@@ -75,7 +75,7 @@ public class Deck {
      *
      * @return True if the deck is in use, false otherwise.
      */
-    public boolean getInUse() {
+    public synchronized boolean getInUse() {
         return inUse;
     }
 
@@ -84,7 +84,7 @@ public class Deck {
      *
      * @param used true if deck is used
      */
-    public void setInUse(boolean used) {
+    public synchronized void setInUse(boolean used) {
         this.inUse = used;
     }
 

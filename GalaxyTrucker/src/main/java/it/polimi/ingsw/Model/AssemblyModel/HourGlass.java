@@ -3,7 +3,6 @@ package it.polimi.ingsw.Model.AssemblyModel;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -17,11 +16,11 @@ import java.util.concurrent.TimeUnit;
  * @author Giacomo
  */
 public class HourGlass {
+    private final int life = 60; // Duration of the timer in seconds
+    
+    ScheduledExecutorService scheduler;
     private int state; // Represents the current state of the hourglass
     private boolean finished; // Indicates whether the timer has completed
-    private int life = 60; // Duration of the timer in seconds
-    List<Player> listOfPlayers = new ArrayList<>();
-    ScheduledExecutorService scheduler;
 
     /**
      * Constructor initializes the HourGlass with a default state and finished status.
@@ -35,7 +34,7 @@ public class HourGlass {
      * Starts the hourglass timer if it is not already running.
      * The timer runs for a predefined duration and updates the state when completed.
      */
-    public void twist(AssemblyProtocol assemblyProtocol, List<Player> players) {
+    public synchronized void twist(AssemblyProtocol assemblyProtocol, List<Player> players) {
         if (finished == true) { // Ensures the hourglass is not already running
             finished = false;
             scheduler = Executors.newScheduledThreadPool(1);
@@ -46,7 +45,7 @@ public class HourGlass {
                 @Override
                 public void run() {
                     if (elapsedTime < life) {
-                        if(elapsedTime % 15 == 0) {
+                        if (elapsedTime % 15 == 0) {
                             String message = ("Elapsed Time: " + elapsedTime + "s");
                             ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendMessageToAll(message);
 
@@ -70,10 +69,6 @@ public class HourGlass {
         }
     }
 
-    public void stopHourglass() {
-        scheduler.shutdownNow();
-    }
-
     /**
      * Updates the state of the hourglass when the timer finishes.
      */
@@ -81,16 +76,20 @@ public class HourGlass {
         state++;
     }
 
+    public synchronized void stopHourglass() {
+        scheduler.shutdownNow();
+    }
+
     /**
      * Returns the current state of the hourglass.
      *
      * @return the state of the hourglass
      */
-    public int getState() {
+    public synchronized int getState() {
         return state;
     }
 
-    public boolean isFinished() {
+    public synchronized boolean isFinished() {
         return finished;
     }
 }
