@@ -37,19 +37,6 @@ public class AssemblyPhase extends Phase {
         return gameMessenger;
     }
 
-
-    /**
-     * Sets the current state of the game and triggers its enter logic.
-     *
-     * @param newState the new state to switch to
-     */
-    public void setState(GameState newState) {
-        // TODO delete / uncomment?
-        /*
-        this.currentState = newState;
-        currentState.enter(this, assemblyView);*/
-    }
-
     /**
      * Returns the game information object containing all players.
      */

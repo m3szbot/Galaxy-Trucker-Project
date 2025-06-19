@@ -14,7 +14,6 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  * @author Giacomo
  */
 public class AssemblyState extends GameState {
-    private long startTime;
     private boolean actionTaken = false;
 
     public AssemblyState(AssemblyProtocol assemblyProtocol, PlayerMessenger playerMessenger, Player player) {
@@ -27,7 +26,6 @@ public class AssemblyState extends GameState {
     @Override
     public void enter(AssemblyThread assemblyThread) {
 
-        startTime = System.currentTimeMillis();
         actionTaken = false;
         playerMessenger.printShipboard(player.getShipBoard());
         if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
@@ -165,23 +163,6 @@ public class AssemblyState extends GameState {
                 message = "Invalid command";
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-        }
-    }
-
-    /**
-     * Periodically called to check if the player has timed out.
-     */
-    // TODO method never used
-    public void update(AssemblyPhase assemblyPhase) {
-        if (!actionTaken) {
-            long now = System.currentTimeMillis();
-            if (now - startTime >= 50000) {
-                String message = "👾AssemblyPhase (place (current component) / draw (a new component) / Choose (a component) / Rotate (current component) / turn (the hourglass) / book (current component and have a new one) / place booked (component) / end (finish your assembling phase)"; // 50 seconds timeout
-                playerMessenger.printMessage(message);
-
-                actionTaken = true;
-                assemblyPhase.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-            }
         }
     }
 }
