@@ -47,21 +47,15 @@ public class ShowDeckState extends GameState {
         try {
             int index = Integer.parseInt(input);
             if (index > 0 && index <= 3) {
-                if (assemblyProtocol.getDeck(index - 1).getInUse() == false) {
-                    try {Deck deck = assemblyProtocol.showDeck(index);
-                        for (Card card : deck.getCards()) {
-                            playerMessenger.printCard(card);
-                        }
-                    }catch (IllegalSelectionException e){
-                        playerMessenger.printMessage("Error in showing deck");
-                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                try {Deck deck = assemblyProtocol.showDeck(index);
+                    for (Card card : deck.getCards()) {
+                        playerMessenger.printCard(card);
                     }
-                    assemblyThread.setState(new DeckInUseState(assemblyProtocol, playerMessenger, player, index));
-                } else {
-                    String message = "Deck already in use!";
-                    playerMessenger.printMessage(message);
+                }catch (IllegalSelectionException e){
+                    playerMessenger.printMessage(e.getMessage());
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 }
+                assemblyThread.setState(new DeckInUseState(assemblyProtocol, playerMessenger, player, index));
             } else {
                 String message = "Invalid deck number";
                 playerMessenger.printMessage(message);
