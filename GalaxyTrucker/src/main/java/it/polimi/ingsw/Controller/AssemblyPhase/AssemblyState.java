@@ -56,14 +56,12 @@ public class AssemblyState extends GameState {
 
             case "draw":
                 actionTaken = true;
-                synchronized (assemblyProtocol.lockCoveredList) {
-                    try {
-                        assemblyProtocol.newComponent(player);
-                    } catch (IllegalSelectionException e) {
-                        playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
-                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-                        break;
-                    }
+                try {
+                    assemblyProtocol.newComponent(player);
+                } catch (IllegalSelectionException e) {
+                    playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
+                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                    break;
                 }
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 break;

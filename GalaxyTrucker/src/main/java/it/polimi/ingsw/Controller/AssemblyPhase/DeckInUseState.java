@@ -25,9 +25,7 @@ public class DeckInUseState extends GameState {
 
     public void handleInput(String input, AssemblyThread assemblyThread) {
         if (input.equalsIgnoreCase("yes")) {
-            synchronized (assemblyProtocol.lockDecksList) {
-                assemblyProtocol.getDeck(index - 1).setInUse(false);
-            }
+            assemblyProtocol.getDeck(index - 1).setInUse(false);
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         } else {
             String message = "Invalid Input";

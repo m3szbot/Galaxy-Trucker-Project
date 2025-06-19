@@ -96,13 +96,11 @@ public class ComponentPlacingState extends GameState {
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().getRealComponent(num1 - 1, num2) != null) {
                             try {
                                 assemblyThread.getGameInformation().getPlayerList().get(assemblyThread.getGameInformation().getPlayerList().indexOf(player)).getShipBoard().addComponent(assemblyProtocol.getPlayersInHandComponents().get(player), num1, num2);
-                                synchronized (assemblyProtocol.lockCoveredList) {
-                                    try {
-                                        assemblyProtocol.newComponent(player);
-                                    } catch (IllegalSelectionException e) {
-                                        playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
-                                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-                                    }
+                                try {
+                                    assemblyProtocol.newComponent(player);
+                                } catch (IllegalSelectionException e) {
+                                    playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
+                                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                                 }
                             } catch (NotPermittedPlacementException e) {
                                 String message = "Your are not allowed to place your component here";

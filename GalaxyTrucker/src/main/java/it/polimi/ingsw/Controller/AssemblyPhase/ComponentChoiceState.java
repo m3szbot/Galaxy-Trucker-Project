@@ -71,19 +71,17 @@ public class ComponentChoiceState extends GameState {
         }
         switch (caseManagement) {
             case 1:
-                synchronized (assemblyProtocol.lockUncoveredList) {
-                    if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyProtocol.getUncoveredComponentsList().get(Integer.parseInt(input.toLowerCase()))) {
-                        try {
-                            assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));
-                        } catch (IllegalSelectionException e) {
-                            playerMessenger.printMessage("Another unreachable place in the universe has been reached.");
-                            break;
-                        }
-                        component = assemblyProtocol.getPlayersInHandComponents().get(player);
-                        message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
-                    } else {
-                        message = "Component has been already taken";
+                if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyProtocol.getUncoveredComponentsList().get(Integer.parseInt(input.toLowerCase()))) {
+                    try {
+                        assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));
+                    } catch (IllegalSelectionException e) {
+                        playerMessenger.printMessage("Another unreachable place in the universe has been reached.");
+                        break;
                     }
+                    component = assemblyProtocol.getPlayersInHandComponents().get(player);
+                    message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
+                } else {
+                    message = "Component has been already taken";
                 }
                 playerMessenger.printMessage(message);
                 break;

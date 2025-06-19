@@ -56,15 +56,13 @@ public class PlaceBookedComponentState extends GameState {
             int index = Integer.parseInt(input);
             if (index == 0 || index == 1) {
                 if (assemblyProtocol.getPlayersBookedComponents().get(player).get(index) != null) {
-                    synchronized (assemblyProtocol.lockUncoveredList) {
-                        try {
-                            assemblyProtocol.chooseBookedComponent(player, index);
-                        } catch (IllegalSelectionException e) {
-                            playerMessenger.printMessage("For a moment, nothing happened. Then, after a second or so, nothing continued to happen.");
-                            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-                        }
-                        playerMessenger.printComponent(assemblyProtocol.getPlayersInHandComponents().get(player));
+                    try {
+                        assemblyProtocol.chooseBookedComponent(player, index);
+                    } catch (IllegalSelectionException e) {
+                        playerMessenger.printMessage("For a moment, nothing happened. Then, after a second or so, nothing continued to happen.");
+                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     }
+                    playerMessenger.printComponent(assemblyProtocol.getPlayersInHandComponents().get(player));
                     assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, true));
                 } else {
                     String message = "The Booked Component chose doesn't exist";
