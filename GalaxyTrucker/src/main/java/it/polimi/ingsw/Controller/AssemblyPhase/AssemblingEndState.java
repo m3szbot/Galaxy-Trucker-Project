@@ -6,8 +6,6 @@ import it.polimi.ingsw.Model.AssemblyModel.HourGlass;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.List;
-
 public class AssemblingEndState extends GameState {
     // inherited attributes: assemblyProtocol, playerMessenger, player
 
@@ -36,7 +34,6 @@ public class AssemblingEndState extends GameState {
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {
         HourGlass hourGlass = assemblyProtocol.getHourGlass();
-        List<Player> playerList = assemblyThread.getGameInformation().getPlayerList();
 
         if (input.equalsIgnoreCase("yes")) {
             // "yes" input
@@ -44,16 +41,16 @@ public class AssemblingEndState extends GameState {
                 if (assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
                     if (hourGlass.getState() == 2) {
                         playerMessenger.printMessage("Waiting for other players position choice");
-                        hourGlass.twist(assemblyProtocol, playerList);
+                        hourGlass.twist(assemblyProtocol);
                     } else {
-                        hourGlass.twist(assemblyProtocol, playerList);
+                        hourGlass.twist(assemblyProtocol);
                     }
                 } else {
                     if (hourGlass.getState() == 1) {
                         playerMessenger.printMessage("Waiting for other players position choice");
-                        hourGlass.twist(assemblyProtocol, playerList);
+                        hourGlass.twist(assemblyProtocol);
                     } else {
-                        hourGlass.twist(assemblyProtocol, playerList);
+                        hourGlass.twist(assemblyProtocol);
                     }
                 }
             } else {

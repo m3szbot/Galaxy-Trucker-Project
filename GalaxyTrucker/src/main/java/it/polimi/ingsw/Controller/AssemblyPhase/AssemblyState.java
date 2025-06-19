@@ -95,7 +95,7 @@ public class AssemblyState extends GameState {
                         } else {
                             message = "Turn the hourglass";
                             playerMessenger.printMessage(message);
-                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyThread.getGameInformation().getPlayerList());
+                            assemblyProtocol.getHourGlass().twist(assemblyProtocol);
                         }
                     } else {
                         if (assemblyProtocol.getHourGlass().getState() == 1) {
@@ -104,7 +104,7 @@ public class AssemblyState extends GameState {
                         } else {
                             message = "Turn the hourglass";
                             playerMessenger.printMessage(message);
-                            assemblyProtocol.getHourGlass().twist(assemblyProtocol, assemblyThread.getGameInformation().getPlayerList());
+                            assemblyProtocol.getHourGlass().twist(assemblyProtocol);
                         }
                     }
                 } else {

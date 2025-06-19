@@ -89,7 +89,7 @@ public class AssemblyThread implements Runnable {
     public void run() {
         try {
             setState(new AssemblyState(assemblyProtocol, playerMessenger, associatedPlayer));
-            assemblyProtocol.getHourGlass().twist(assemblyProtocol, gameInformation.getPlayerList());
+            assemblyProtocol.getHourGlass().twist(assemblyProtocol);
 
             // Separate thread for reading user input from the console
             t = new Thread(() -> {
