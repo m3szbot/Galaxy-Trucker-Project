@@ -89,11 +89,11 @@ public class Deck {
     }
 
     /**
-     * Returns the list of cards in the deck.
+     * Returns a copy of the list of cards in the deck (safe get).
      *
      * @return The deck's card list.
      */
     public List<Card> getCards() {
-        return cards;
+        return new ArrayList<>(cards);
     }
 }
