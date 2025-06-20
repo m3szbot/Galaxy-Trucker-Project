@@ -55,6 +55,7 @@ public class AssemblyPhase extends Phase {
         CountDownLatch allPlayersReady = new CountDownLatch(gameInformation.getPlayerList().size());
         ExecutorService executor = Executors.newFixedThreadPool(gameInformation.getPlayerList().size());
         for (Player player : gameInformation.getPlayerList()) {
+            gameMessenger.getPlayerMessenger(player).unblockUserInputGetterCall();
             executor.submit(new AssemblyThread(gameInformation, player, assemblyProtocol, running, allPlayersReady));
         }
 

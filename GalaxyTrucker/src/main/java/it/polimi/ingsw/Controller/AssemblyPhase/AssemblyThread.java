@@ -30,6 +30,7 @@ public class AssemblyThread implements Runnable {
     private AtomicBoolean end = new AtomicBoolean(false);
     private Thread t;
     private AtomicBoolean blocked = new AtomicBoolean(false);
+    private AtomicBoolean disconnected = new AtomicBoolean(false);
 
 
     public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, CountDownLatch latch) {
@@ -91,43 +92,26 @@ public class AssemblyThread implements Runnable {
             setState(new AssemblyState(assemblyProtocol, playerMessenger, associatedPlayer));
             assemblyProtocol.getHourGlass().twist(assemblyProtocol);
 
+
             // Separate thread for reading user input from the console
             t = new Thread(() -> {
-                AtomicBoolean disconnected = new AtomicBoolean(false);
-                while (!end.get()) {
-                    if (!disconnected.get()) {
+                while (!end.get() && !disconnected.get()) {
+                    try {
+                        blocked.set(true);
+                        String input = playerMessenger.getPlayerString();
+                        blocked.set(false);
+
+                        inputQueue.offer(input);
+
                         try {
-
-                            blocked.set(true);
-                            String input = playerMessenger.getPlayerString();
-                            blocked.set(false);
-
-                            inputQueue.offer(input);
-
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-
-                                break;
-                            }
-                        } catch (PlayerDisconnectedException e) {
-                            gameMessenger.disconnectPlayer(gameInformation, associatedPlayer);
-                            disconnected.set(true);
-                        }
-                    } else {
-                        try {
-                            Thread.sleep(1000);
+                            Thread.sleep(100);
                         } catch (InterruptedException e) {
 
                             break;
                         }
-
-                        if (gameMessenger.isPlayerConnected(associatedPlayer, gameInformation)) {
-                            disconnected.set(false);
-                            String message = "Welcome back! You have been reconnected.";
-                            playerMessenger.printMessage(message);
-
-                        }
+                    } catch (PlayerDisconnectedException e) {
+                        gameMessenger.disconnectPlayer(gameInformation, associatedPlayer);
+                        disconnected.set(true);
                     }
                 }
             });
@@ -135,7 +119,7 @@ public class AssemblyThread implements Runnable {
 
 
             // Main non-blocking game loop
-            while (running.get()) {
+            while (running.get() && !disconnected.get()) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -159,7 +143,7 @@ public class AssemblyThread implements Runnable {
                 }
             }
 
-            if (!amIChoosing.get()) {
+            if (!amIChoosing.get() && !disconnected.get()) {
                 setState(new ChooseStartingPositionState(assemblyProtocol, playerMessenger, associatedPlayer));
                 while (!isfinished.get()) {
                     String input = inputQueue.poll();
@@ -184,13 +168,14 @@ public class AssemblyThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            associatedPlayer.getShipBoard().getShipBoardAttributes().destroyComponents(assemblyProtocol.getPlayersBookedComponents().get(associatedPlayer).size());
-            setEnd();
-            if (blocked.get()) {
-                playerMessenger.unblockUserInputGetterCall();
+            if(!disconnected.get()){
+                associatedPlayer.getShipBoard().getShipBoardAttributes().destroyComponents(assemblyProtocol.getPlayersBookedComponents().get(associatedPlayer).size());
+                setEnd();
+                if (blocked.get()) {
+                    playerMessenger.unblockUserInputGetterCall();
+                }
             }
             latch.countDown();
-
         }
     }
 
