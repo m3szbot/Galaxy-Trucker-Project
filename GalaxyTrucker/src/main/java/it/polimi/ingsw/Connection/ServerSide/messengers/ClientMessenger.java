@@ -34,6 +34,7 @@ public class ClientMessenger {
     }
 
     public static void removePlayerLobbyMessenger(String nickname){
+
         playersInLobbyMessengerMap.remove(nickname);
     }
 

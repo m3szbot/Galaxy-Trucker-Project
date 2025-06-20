@@ -39,6 +39,7 @@ public class Game implements Runnable, Serializable {
 
     public void setUpPhases() {
 
+
         initializationPhase = new InitializationPhase(gameInformation);
         initializationPhase.start();
         assemblyPhase = new AssemblyPhase(gameInformation);
@@ -64,7 +65,6 @@ public class Game implements Runnable, Serializable {
     public int getGameCode() {
         return gameCode;
     }
-
 
     public void addPlayer(Player player, boolean first) {
 
@@ -110,5 +110,4 @@ public class Game implements Runnable, Serializable {
         System.out.println("Game " + gameCode + " has ended");
 
     }
-
 }

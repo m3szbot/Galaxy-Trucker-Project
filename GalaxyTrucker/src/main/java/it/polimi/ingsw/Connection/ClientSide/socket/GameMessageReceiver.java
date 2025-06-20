@@ -72,6 +72,9 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
         else if(command.equals("unblock")){
             ClientInputManager.unblockInput();
         }
+        else if(command.equals("ping")){
+            //doing nothing
+        }
         else {
             callView(dataContainer);
         }

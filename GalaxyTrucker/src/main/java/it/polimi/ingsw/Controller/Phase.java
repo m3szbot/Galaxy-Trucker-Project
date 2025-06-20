@@ -42,6 +42,7 @@ public abstract class Phase {
 
         // clients
         if (gamePhase == GamePhase.Initialization) {
+
             gameMessenger.sendMessageToAll("\nThe game is starting!");
             String bannerMessage = """
                     The following commands can always be used during each phase of the game:\s
@@ -59,4 +60,5 @@ public abstract class Phase {
 
 
     }
+
 }

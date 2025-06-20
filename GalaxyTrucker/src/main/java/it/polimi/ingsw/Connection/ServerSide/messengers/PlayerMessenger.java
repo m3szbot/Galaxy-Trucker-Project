@@ -38,6 +38,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     private DataContainer dataContainer;
     private SocketDataExchanger socketDataExchanger;
     private ClientRemoteInterface virtualClient;
+    private boolean disconnectedFlag = false;
     private int gameCode;
 
     // RMI
@@ -95,6 +96,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void setGamePhase(GamePhase gamePhase) {
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -109,6 +113,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 System.err.println("An error occurred while setting the gamePhase of " + player.getColouredNickName() +
                         " through rmi protocol");
+                disconnectedFlag = true;
             }
         }
     }
@@ -122,6 +127,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 socketDataExchanger.sendContainer(dataContainer);
             } catch (IOException e) {
                 System.out.println("Error while sending dataContainer.");
+                disconnectedFlag = true;
             } finally {
                 dataContainer.clearContainer();
             }
@@ -133,6 +139,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     @Override
     public void endGame() {
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -148,6 +157,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             } catch (RemoteException e) {
 
                 System.err.println("RMI error while terminating " + player.getColouredNickName() + " game");
+                disconnectedFlag = true;
 
             }
 
@@ -163,7 +173,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             try {
                 socketDataExchanger.closeResources();
             } catch (IOException e) {
-                System.err.println("Error while closing all players resources");
+                System.err.println("Error while closing player resources");
             }
 
         }
@@ -179,7 +189,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
 
     public void unblockUserInputGetterCall() {
-
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType == ConnectionType.SOCKET) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -194,6 +206,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
             } catch (RemoteException e) {
                 System.err.println("Error while calling remote client method through rmi");
+                disconnectedFlag = true;
             }
 
         }
@@ -206,7 +219,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
 
     public void sendShortCutMessage(String message) {
-
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType.equals(ConnectionType.SOCKET)) {
             try {
                 socketDataExchanger.sendString(message);
@@ -220,6 +235,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printMessage(message);
             } catch (RemoteException e) {
                 System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
+                disconnectedFlag = true;
             }
 
         }
@@ -241,6 +257,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     private String getPlayerInput() throws PlayerDisconnectedException {
 
+        if(disconnectedFlag){
+            throw new PlayerDisconnectedException(player);
+        }
 
         synchronized (readerLock) {
 
@@ -313,6 +332,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printMessage(String message) {
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -329,6 +351,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             } catch (RemoteException e) {
                 System.err.println("An error occurred while sending a message to " + player.getColouredNickName() +
                         " through rmi protocol");
+                disconnectedFlag = true;
             }
 
         }
@@ -337,6 +360,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printComponent(Component component) {
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -352,6 +378,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 System.err.println("An error occurred while sending a component to " + player.getColouredNickName() +
                         " through rmi protocol");
+                disconnectedFlag = true;
             }
 
         }
@@ -360,6 +387,11 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public synchronized void printShipboard(ShipBoard shipBoard) {
+
+        if(disconnectedFlag){
+            return;
+        }
+
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -375,6 +407,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 System.err.println("An error occurred while sending a shipboard to " + player.getColouredNickName() +
                         " through rmi protocol");
+                disconnectedFlag = true;
             }
 
         }
@@ -383,6 +416,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printCard(Card card) {
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -398,6 +434,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 System.err.println("An error occurred while sending a card to " + player.getColouredNickName() +
                         " through rmi protocol");
+                disconnectedFlag = true;
             }
 
         }
@@ -406,6 +443,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
+        if(disconnectedFlag){
+            return;
+        }
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -421,6 +461,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 System.err.println("An error occurred while sending a flightboard to " + player.getColouredNickName() +
                         " through rmi protocol");
+                disconnectedFlag = true;
             }
 
         }
