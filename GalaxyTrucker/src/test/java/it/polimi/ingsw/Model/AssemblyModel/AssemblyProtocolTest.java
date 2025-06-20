@@ -64,6 +64,7 @@ class AssemblyProtocolTest {
         assertEquals(cardCount, gameInformation.getCardsList().size());
     }
 
+
     @Test
     void checkSetup() throws IllegalSelectionException {
         // check initial values
@@ -169,6 +170,18 @@ class AssemblyProtocolTest {
         assemblyProtocol.chooseBookedComponent(playerA, 0);
         assertEquals(inHand, assemblyProtocol.getPlayersInHandComponents().get(playerA));
         assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+    }
+
+    @Test
+    void testRemovePlacedComponentFromHand() throws IllegalSelectionException {
+        assemblyProtocol.newComponent(playerA);
+        assemblyProtocol.removePlacedComponentFromHand(playerA);
+        assertEquals(0, assemblyProtocol.getUncoveredComponentsList().size());
+        assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
+
+        assertThrows(IllegalStateException.class, () -> {
+            assemblyProtocol.removePlacedComponentFromHand(playerA);
+        });
     }
 
 
