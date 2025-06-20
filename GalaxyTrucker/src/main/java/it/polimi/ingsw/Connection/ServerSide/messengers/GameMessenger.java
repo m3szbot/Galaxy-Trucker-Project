@@ -107,7 +107,7 @@ public class GameMessenger {
         gameInformation.disconnectPlayerInGameInformation(player);
 
         if (gameInformation.getFlightBoard().getPlayerOrderList().contains(player)) {
-            gameInformation.getFlightBoard().disconnectPlayer(player);
+            gameInformation.getFlightBoard().eliminatePlayer(player);
         }
 
         if(!playerMessengerMap.containsKey(player)){
