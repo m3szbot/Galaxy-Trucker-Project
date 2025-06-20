@@ -49,19 +49,13 @@ public class FlightPhase extends Phase {
 
             card = flightBoard.getNewCard();
 
-            for (Player player : flightBoard.getPlayerOrderList()) {
-
+            // print card for each player
+            for (Player player : gameInformation.getPlayerList()) {
                 playerMessenger = gameMessenger.getPlayerMessenger(player);
                 playerMessenger.printCard(card);
 
             }
 
-            for (Player player : flightBoard.getEliminatedList()) {
-
-                playerMessenger = gameMessenger.getPlayerMessenger(player);
-                playerMessenger.printCard(card);
-
-            }
 
             Sleeper.sleepXSeconds(3);
 

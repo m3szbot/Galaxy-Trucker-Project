@@ -35,7 +35,7 @@ public class FlightBoard implements Serializable {
     private Map<Player, Integer> playerTilesMap;
     // order of players still in game
     private List<Player> playerOrderList;
-    // players forcibly eliminated
+    // players forcibly eliminated (connected or disconnected)
     private List<Player> eliminatedList;
     // players who voluntarily gave up
     private List<Player> gaveUpList;
@@ -137,7 +137,7 @@ public class FlightBoard implements Serializable {
     }
 
     /**
-     * @return copy of eliminated list (safe get).
+     * @return copy of eliminated list (safe get). Can contain connected and disconnected players!
      */
     public List<Player> getEliminatedList() {
         return new ArrayList<>(eliminatedList);
@@ -151,7 +151,7 @@ public class FlightBoard implements Serializable {
     }
 
     /**
-     * @return a copy of playerOrderList.
+     * @return a copy of playerOrderList. Contains only connected players.
      */
     public List<Player> getPlayerOrderList() {
         return new ArrayList<>(playerOrderList);
@@ -288,6 +288,7 @@ public class FlightBoard implements Serializable {
     /**
      * Eliminate player from game (if in game), put him into eliminatedList,
      * and sort playerOrderList.
+     * Disconnected players are eliminated too!
      *
      * @param player Player to remove
      */
