@@ -56,6 +56,13 @@ public class FlightPhase extends Phase {
 
             }
 
+            for (Player player : flightBoard.getEliminatedList()) {
+
+                playerMessenger = gameMessenger.getPlayerMessenger(player);
+                playerMessenger.printCard(card);
+
+            }
+
             Sleeper.sleepXSeconds(3);
 
             card.resolve(gameInformation);

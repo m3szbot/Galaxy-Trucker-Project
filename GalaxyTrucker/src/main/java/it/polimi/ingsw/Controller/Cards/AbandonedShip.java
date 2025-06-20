@@ -99,8 +99,6 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
                     message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                    PlayerFlightInputHandler.endPlayerTurn(player);
-
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
 

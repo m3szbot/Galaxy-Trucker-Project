@@ -120,8 +120,6 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                     message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-                    PlayerFlightInputHandler.endPlayerTurn(player);
-
                     gameInformation.getFlightBoard().eliminatePlayer(player);
                     i--;
 
