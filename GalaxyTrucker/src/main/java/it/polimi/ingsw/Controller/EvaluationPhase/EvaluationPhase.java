@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
 import it.polimi.ingsw.Controller.Phase;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ScoreCounter.ScoreCounter;
@@ -12,7 +13,9 @@ import java.util.Map;
 
 
 /**
- * calculates final scores of players after flight phase ends
+ * Calculates final scores of players added to the flightBoard after flight phase ends.
+ *
+ * @author Boti
  */
 public class EvaluationPhase extends Phase {
     // gameInformation, gameMessenger attributes inherited from Phase
@@ -31,18 +34,14 @@ public class EvaluationPhase extends Phase {
         setGamePhaseToClientServer(GamePhase.Evaluation);
         String message;
         // assign player credits to shipBoard
-        assignPlayerCredits(gameInformation);
+        assignPlayerCredits();
 
-        message = getLeaderboardMessage(gameInformation);
+        message = getLeaderboardMessage();
         gameMessenger.sendMessageToAll(message);
 
         // suspend main thread so that players have time to read the leaderboard
-        try {
-            // 1000ms = 1s
-            Thread.sleep(60000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Sleeper.sleepXSeconds(30);
+        
         // end of evaluationPhase
         // end of game
         gameMessenger.endGameToAll();
@@ -51,39 +50,53 @@ public class EvaluationPhase extends Phase {
 
 
     /**
-     * Calculate and assign final points for each player.
+     * Calculate and assign final points for each player. Only for players added to the flightBoard.
      */
-    private void assignPlayerCredits(GameInformation gameInformation) {
+    private void assignPlayerCredits() {
         ScoreCounter scoreCounter = new ScoreCounter(gameInformation.getGameType());
+
         // calculate player credits
         scoreCounter.calculatePlayerScores(gameInformation.getFlightBoard());
-        // assign player credits to their shipboards
-        for (Player player : gameInformation.getPlayerList()) {
+
+        // assign player credits to their shipboards (only players added to the flightBoard)
+        // finishing players
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList())
             player.getShipBoard().getShipBoardAttributes().addCredits(scoreCounter.getPlayerScore(player));
-        }
-        for (Player player : gameInformation.getDisconnectedPlayerList()) {
+
+        // eliminated players
+        for (Player player : gameInformation.getFlightBoard().getEliminatedList())
             player.getShipBoard().getShipBoardAttributes().addCredits(scoreCounter.getPlayerScore(player));
-        }
+
+        // gave up players
+        for (Player player : gameInformation.getFlightBoard().getGaveUpList())
+            player.getShipBoard().getShipBoardAttributes().addCredits(scoreCounter.getPlayerScore(player));
     }
 
     /**
-     * creates message string containing players and their credits in descending order
+     * Creates message string containing players and their credits in descending order.
+     * Only for players added to the flightBoard (connected or disconnected).
      *
      * @return leaderboard string
      */
-    private String getLeaderboardMessage(GameInformation gameInformation) {
+    private String getLeaderboardMessage() {
         ArrayList<Map.Entry<Player, Integer>> creditsList = new ArrayList<>();
 
-        // extract player credits into creditsList
+        // extract player credits into creditsList (only players added to the fligthBoard)
 
         // connected players
-        for (Player player : gameInformation.getPlayerList()) {
+        for (Player player : gameInformation.getFlightBoard().getPlayerOrderList()) {
             Map.Entry<Player, Integer> entry = new AbstractMap.SimpleEntry<>(player, player.getShipBoard().getShipBoardAttributes().getCredits());
             creditsList.add(entry);
         }
 
-        // disconnected players
-        for (Player player : gameInformation.getDisconnectedPlayerList()) {
+        // eliminated players
+        for (Player player : gameInformation.getFlightBoard().getEliminatedList()) {
+            Map.Entry<Player, Integer> entry = new AbstractMap.SimpleEntry<>(player, player.getShipBoard().getShipBoardAttributes().getCredits());
+            creditsList.add(entry);
+        }
+
+        // gave up players
+        for (Player player : gameInformation.getFlightBoard().getGaveUpList()) {
             Map.Entry<Player, Integer> entry = new AbstractMap.SimpleEntry<>(player, player.getShipBoard().getShipBoardAttributes().getCredits());
             creditsList.add(entry);
         }
@@ -106,6 +119,10 @@ public class EvaluationPhase extends Phase {
             // add (disconnected) for disconnected players
             if (gameInformation.getDisconnectedPlayerList().contains(entry.getKey()))
                 result.append("(disconnected) ");
+
+            // did not finish
+            if (!gameInformation.getFlightBoard().getPlayerOrderList().contains(entry.getKey()))
+                result.append("(DNF) ");
 
             // add player name and score
             result.append(String.format("%s - %d\n", entry.getKey().getColouredNickName(), entry.getValue()));

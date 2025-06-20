@@ -8,7 +8,8 @@ import java.util.*;
 
 /**
  * ScoreCounter class to evaluate player score at end of flight.
- * Calculates scores for both finishing and DNF players.
+ * Calculates scores for the players added to the flightBoard,
+ * both finishing and DNF players.
  * <p>
  * Finishing players: normal pointing
  * Did not finish (gave up/eliminated): special pointing:
@@ -26,9 +27,9 @@ public class ScoreCounter {
     private final int leastExposedLinksPoints;
     private final int lostComponentsPoints;
     // map of player scores
-    private Map<Player, Integer> playerScoresMap;
+    private final Map<Player, Integer> playerScoresMap;
     // more players can have the minimum and both receive points
-    private List<Player> leastExposedLinksList;
+    private final List<Player> leastExposedLinksList;
 
     /**
      * Constructor. Sets scoring based on GameType.
@@ -57,7 +58,7 @@ public class ScoreCounter {
     }
 
     /**
-     * Calculates the scores for each player based on flightBoard
+     * Calculates the scores for each player added to the flightBoard
      * (finished and DNF included).
      */
     public void calculatePlayerScores(FlightBoard flightBoard) {
@@ -81,11 +82,12 @@ public class ScoreCounter {
     }
 
     /**
-     * Populate leastExposedLinksList with players
+     * Populate leastExposedLinksList with players. Only players who finished are counted.
      *
-     * @param playerList List of all players
+     * @param playerList list of finishing players.
      */
     private void calculateLeastExposedLinks(List<Player> playerList) {
+
         // Map: player - player exposed links
         Map<Player, Integer> playerExposedLinks = new Hashtable<>();
         // calculate exposed links of player and add to temporary Map
@@ -181,16 +183,16 @@ public class ScoreCounter {
         int playerPoints = 0;
         playerPoints += calculateGoodsPoints(player) / 2;
         playerPoints += calculateLostComponentsPoints(player);
-        
+
         if (playerPoints < 0)
             playerPoints = 0;
         return playerPoints;
     }
 
     /**
-     * Return score of given player.
+     * Return score of given player. Only valid for players added to the flightBoard.
      *
-     * @param player Player to examine
+     * @param player Player to examine, previously added to the flightBoard.
      * @return Score of given player
      */
     public int getPlayerScore(Player player) {

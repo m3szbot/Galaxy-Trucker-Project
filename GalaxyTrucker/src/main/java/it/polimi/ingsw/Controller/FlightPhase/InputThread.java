@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author carlo
  */
 
-public class InputThread extends Thread{
+public class InputThread extends Thread {
 
     private PlayerMessenger playerMessenger;
     private Player player;
@@ -25,7 +25,7 @@ public class InputThread extends Thread{
     private AtomicBoolean blocked;
     private AtomicBoolean isSleeping;
 
-    public InputThread(Player player, GameInformation gameInformation){
+    public InputThread(Player player, GameInformation gameInformation) {
         this.playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
         this.running = new AtomicBoolean(true);
         this.isPlayerTurn = new AtomicBoolean(false);
@@ -38,55 +38,59 @@ public class InputThread extends Thread{
     @Override
     public void run() {
 
-           while(running.get()){
+        while (running.get()) {
 
-               try {
+            try {
 
-                   blocked.set(true);
-                   playerMessenger.getPlayerString();
-                   blocked.set(false);
+                blocked.set(true);
+                playerMessenger.getPlayerString();
+                blocked.set(false);
 
-                   //It's the player turn
-                   while (isPlayerTurn.get()){
-                       isSleeping.set(true);
-                       Sleeper.sleepXSeconds(1);
-                   }
+                //It's the player turn
+                while (isPlayerTurn.get()) {
+                    isSleeping.set(true);
+                    Sleeper.sleepXSeconds(1);
+                }
 
-                   isSleeping.set(false);
+                isSleeping.set(false);
 
 
-               } catch (PlayerDisconnectedException e) {
+            } catch (PlayerDisconnectedException e) {
 
-                   ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
-                   this.running.set(false);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                this.running.set(false);
 
-               }
+            }
 
-           }
+        }
     }
 
-   public void setPlayerTurn(boolean val){
+    public boolean getIsPlayerTurn() {
+        return isPlayerTurn.get();
+    }
+
+    public void setPlayerTurn(boolean val) {
         isPlayerTurn.set(val);
 
-        if(val){
+        if (val) {
 
-            if(blocked.get()) {
+            if (blocked.get()) {
                 playerMessenger.unblockUserInputGetterCall();
             }
 
-            while(!isSleeping.get());
+            while (!isSleeping.get()) ;
 
         }
-   }
+    }
 
-   public void endThread(){
+    public void endThread() {
 
         running.set(false);
         isPlayerTurn.set(false);
 
-        if(blocked.get()){
+        if (blocked.get()) {
             playerMessenger.unblockUserInputGetterCall();
         }
 
-   }
+    }
 }
