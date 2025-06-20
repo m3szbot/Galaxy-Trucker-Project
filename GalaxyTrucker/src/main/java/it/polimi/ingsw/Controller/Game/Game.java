@@ -6,8 +6,6 @@ import it.polimi.ingsw.Controller.CorrectionPhase.CorrectionPhase;
 import it.polimi.ingsw.Controller.EvaluationPhase.EvaluationPhase;
 import it.polimi.ingsw.Controller.FlightPhase.FlightPhase;
 import it.polimi.ingsw.Controller.InitializationPhase.InitializationPhase;
-import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -99,13 +97,13 @@ public class Game implements Runnable, Serializable {
      */
     public void run() {
 
-        System.out.println("Starting assembly phase of game" + gameCode + "...");
+        System.out.println("Starting assembly phase of game " + gameCode + "...");
         assemblyPhase.start();
-        System.out.println("Starting correction phase of game" + gameCode + "...");
+        System.out.println("Starting correction phase of game " + gameCode + "...");
         correctionPhase.start();
-        System.out.println("Starting flight phase of game" + gameCode + "...");
+        System.out.println("Starting flight phase of game " + gameCode + "...");
         flightPhase.start();
-        System.out.println("Starting evaluation phase of game" + gameCode + "...");
+        System.out.println("Starting evaluation phase of game " + gameCode + "...");
         evaluationPhase.start();
         gameState = GameState.GameOver;
         ClientMessenger.endGame(gameCode);

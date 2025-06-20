@@ -11,6 +11,9 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 
 public class InitializationPhase extends Phase {
+
+
+
     public InitializationPhase(GameInformation gameInformation) {
         super(gameInformation);
     }
@@ -21,6 +24,7 @@ public class InitializationPhase extends Phase {
     @Override
     public void start() {
         setGamePhaseToClientServer(GamePhase.Initialization);
+
         gameInformation.setUpGameInformation(gameInformation.getGameType(), gameInformation.getMaxNumberOfPlayers());
         System.out.println("Initialization phase ended");
     }

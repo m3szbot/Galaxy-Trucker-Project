@@ -64,6 +64,7 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             setGamePhase(dataContainer.getGamePhase());
         } else if (command.equals("endGame")) {
             endGame();
+            ClientInputManager.unblockInput();
         }
         else if(command.equals("joined")){
             ClientInputManager.setTimeOut(300000);

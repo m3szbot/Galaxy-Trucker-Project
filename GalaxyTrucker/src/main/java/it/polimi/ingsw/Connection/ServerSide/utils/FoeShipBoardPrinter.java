@@ -26,7 +26,7 @@ public class FoeShipBoardPrinter{
 
     }
 
-    public void start() throws PlayerDisconnectedException{
+    public String start() throws PlayerDisconnectedException{
 
         Player foe = null;
         boolean playerPresentFlag = false;
@@ -34,7 +34,7 @@ public class FoeShipBoardPrinter{
 
         if(connectedPlayers.isEmpty()){
             playerMessenger.printMessage("Nobody is in game!");
-            return;
+            return "repeat";
         }
 
         playerMessenger.printMessage("Which player's ship board do you want to spy ?");
@@ -50,9 +50,10 @@ public class FoeShipBoardPrinter{
         }
 
         String input = playerMessenger.getPlayerString();
+        System.out.println("Input received: " + input);
 
         if(input.equals("unblock")){
-            return;
+            return "unblocked";
         }
 
         for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
@@ -75,6 +76,8 @@ public class FoeShipBoardPrinter{
            playerMessenger.printMessage("The player you entered is currently not in game!");
 
        }
+
+       return "repeat";
 
     }
 

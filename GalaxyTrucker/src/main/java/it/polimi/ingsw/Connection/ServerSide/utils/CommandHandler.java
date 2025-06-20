@@ -18,24 +18,21 @@ public final class CommandHandler {
      * @return true if the command was correct and executed
      * @throws PlayerDisconnectedException
      */
-    public static boolean executeCommand(String command, PlayerMessenger playerMessenger) throws PlayerDisconnectedException {
+    public static String executeCommand(String command, PlayerMessenger playerMessenger) throws PlayerDisconnectedException {
         switch (command){
             case "show-shipboard" ->{
-                (new FoeShipBoardPrinter(playerMessenger)).start();
-                return true;
+                return (new FoeShipBoardPrinter(playerMessenger)).start();
             }
             case "private-message"->{
 
-                (new ChatUtil(playerMessenger)).startPrivateMessageHandler();
-                return true;
+                return (new ChatUtil(playerMessenger)).startPrivateMessageHandler();
 
             }
             case "public-message"->{
-                (new ChatUtil(playerMessenger)).startPublicMessageHandler();
-                return true;
+                return (new ChatUtil(playerMessenger)).startPublicMessageHandler();
             }
             default -> {
-                return false;
+                return "repeat";
             }
         }
     }

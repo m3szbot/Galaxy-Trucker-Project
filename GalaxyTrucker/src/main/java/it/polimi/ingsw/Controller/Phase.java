@@ -17,6 +17,10 @@ public abstract class Phase {
     protected final GameInformation gameInformation;
     protected final GameMessenger gameMessenger;
 
+    private String bannerMessage = "\n\nThe following commands can always be used during each phase of the game: \n" +
+            "show-shipboard: to see the shipboard of another player\n" +
+            "private-message: to send a message to only one player of the game\n" +
+            "public-message: to send a message to all the players currently connected to the game\n";
     /**
      * Subclasses must use Phase constructor by calling:
      * super(gameInformation)
@@ -37,10 +41,21 @@ public abstract class Phase {
         GameMessenger gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
         // server
         gameInformation.setGamePhase(gamePhase);
-        System.out.printf("%s phase is starting...\n", gamePhase);
-        // clients
-        gameMessenger.setGamePhaseToAll(gamePhase);
-        gameMessenger.sendMessageToAll(String.format("%s phase is starting...\n", gamePhase));
+        if(gamePhase == GamePhase.Initialization){
+
+            System.out.printf("%s phase is starting...\n", gamePhase);
+            gameMessenger.sendMessageToAll(bannerMessage);
+            Sleeper.sleepXSeconds(10);
+
+
+        }
+        else {
+            System.out.printf("%s phase is starting...\n", gamePhase);
+            // clients
+            gameMessenger.setGamePhaseToAll(gamePhase);
+            gameMessenger.sendMessageToAll(String.format("%s phase is starting...\n", gamePhase));
+
+        }
 
         Sleeper.sleepXSeconds(2);
 

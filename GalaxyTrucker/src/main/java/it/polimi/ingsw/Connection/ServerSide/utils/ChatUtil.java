@@ -24,7 +24,7 @@ public class ChatUtil {
 
     }
 
-    public void startPrivateMessageHandler() throws PlayerDisconnectedException {
+    public String startPrivateMessageHandler() throws PlayerDisconnectedException {
 
         Player targetPlayer = null;
         boolean playerPresentFlag = false;
@@ -33,7 +33,7 @@ public class ChatUtil {
 
         if(connectedPlayers.isEmpty()){
             playerMessenger.printMessage("Nobody is in game!");
-            return;
+            return "repeat";
         }
 
         playerMessenger.printMessage("To which player do you want to send a message ?");
@@ -51,7 +51,7 @@ public class ChatUtil {
         String input = playerMessenger.getPlayerString();
 
         if(input.equals("unblock")){
-            return;
+            return "unblocked";
         }
 
         for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
@@ -71,7 +71,7 @@ public class ChatUtil {
             String message = playerMessenger.getPlayerString();
 
             if(message.equals("unblock")){
-                return;
+                return "unblocked";
             }
             StringBuilder stringBuilder = new StringBuilder("[Private intergalactic message from " + playerMessenger.getPlayer().getNickName() + "]: ");
             stringBuilder.append(message);
@@ -85,16 +85,18 @@ public class ChatUtil {
             playerMessenger.printMessage("The player you entered is currently not in game!");
 
         }
+
+        return "repeat";
     }
 
-    public void startPublicMessageHandler() throws PlayerDisconnectedException{
+    public String startPublicMessageHandler() throws PlayerDisconnectedException{
 
         playerMessenger.printMessage("Type your intergalactic message: ");
 
         String message = playerMessenger.getPlayerString();
 
         if(message.equals("unblock")){
-            return;
+            return "unblocked";
         }
         StringBuilder stringBuilder = new StringBuilder("[Public intergalactic message from " + playerMessenger.getPlayer().getNickName() + "]: ");
         stringBuilder.append(message);
@@ -111,6 +113,9 @@ public class ChatUtil {
         }
 
         playerMessenger.printMessage("The intergalactic message was sent");
+
+        return "repeat";
     }
+
 
 }

@@ -3,7 +3,6 @@ package it.polimi.ingsw.Controller.FlightPhase;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Connection.ServerSide.utils.CommandHandler;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -24,7 +23,7 @@ public class InputThread extends Thread{
     private AtomicBoolean running;
     private AtomicBoolean isPlayerTurn;
     private AtomicBoolean blocked;
-    private AtomicBoolean commandExecuting;
+    private AtomicBoolean isSleeping;
 
     public InputThread(Player player, GameInformation gameInformation){
         this.playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
@@ -32,8 +31,8 @@ public class InputThread extends Thread{
         this.isPlayerTurn = new AtomicBoolean(false);
         this.player = player;
         this.gameInformation = gameInformation;
-        this.commandExecuting = new AtomicBoolean(false);
         this.blocked = new AtomicBoolean(false);
+        this.isSleeping = new AtomicBoolean(false);
     }
 
     @Override
@@ -44,17 +43,16 @@ public class InputThread extends Thread{
                try {
 
                    blocked.set(true);
-                   String input = playerMessenger.getPlayerString();
+                   playerMessenger.getPlayerString();
                    blocked.set(false);
-
-                   commandExecuting.set(true);
-                   CommandHandler.executeCommand(input, playerMessenger);
-                   commandExecuting.set(false);
 
                    //It's the player turn
                    while (isPlayerTurn.get()){
+                       isSleeping.set(true);
                        Sleeper.sleepXSeconds(1);
                    }
+
+                   isSleeping.set(false);
 
 
                } catch (PlayerDisconnectedException e) {
@@ -68,27 +66,25 @@ public class InputThread extends Thread{
     }
 
    public void setPlayerTurn(boolean val){
-        this.isPlayerTurn.set(val);
+        isPlayerTurn.set(val);
 
         if(val){
-
-            if(commandExecuting.get()){
-                playerMessenger.unblockUserInputGetterCall();
-            }
 
             if(blocked.get()) {
                 playerMessenger.unblockUserInputGetterCall();
             }
+
+            while(!isSleeping.get());
 
         }
    }
 
    public void endThread(){
 
-        this.running.set(false);
+        running.set(false);
         isPlayerTurn.set(false);
 
-        if(blocked.get() || commandExecuting.get()){
+        if(blocked.get()){
             playerMessenger.unblockUserInputGetterCall();
         }
 

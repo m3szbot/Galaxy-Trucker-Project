@@ -38,7 +38,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     private DataContainer dataContainer;
     private SocketDataExchanger socketDataExchanger;
     private ClientRemoteInterface virtualClient;
-    private String lastMessage;
     private int gameCode;
 
     // RMI
@@ -75,6 +74,23 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     public ConnectionType getConnectionType() {
         return connectionType;
+    }
+
+    public boolean isCommand(String command){
+        switch (command){
+            case "show-shipboard" -> {
+                return true;
+            }
+            case "private-message" -> {
+                return true;
+            }
+            case "public-message" -> {
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
     }
 
     @Override
@@ -234,9 +250,13 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                     while (true) {
                         String input = socketDataExchanger.getString();
 
-                        if (CommandHandler.executeCommand(input, this)) {
-                            //bypassing
-                        } else if (input.equals("inactivity")) {
+                        if(isCommand(input)){
+                            String result = CommandHandler.executeCommand(input, this);
+                            if(result.equals("unblocked")){
+                                return "unblocked";
+                            }
+                        }
+                        else if (input.equals("inactivity")) {
 
                             System.out.println("Player " + player.getColouredNickName() + " was kicked because of inactivity");
                             throw new PlayerDisconnectedException(player);
@@ -261,8 +281,11 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                     while (true) {
                         String input = virtualClient.getString();
 
-                        if (CommandHandler.executeCommand(input, this)) {
-                           //bypassing
+                        if(isCommand(input)){
+                            String result = CommandHandler.executeCommand(input, this);
+                            if(result.equals("unblocked")){
+                                return "unblocked";
+                            }
                         }
                         else {
                             return input;
@@ -290,7 +313,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printMessage(String message) {
-        lastMessage = message;
         if (connectionType.equals(ConnectionType.SOCKET)) {
             synchronized (dataContainerLock) {
                 dataContainer.clearContainer();
@@ -413,6 +435,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
         while (true) {
             String input = getPlayerInput();
+
             try {
 
                 return Integer.parseInt(input);
