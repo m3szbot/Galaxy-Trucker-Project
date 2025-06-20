@@ -84,7 +84,7 @@ public class CorrectionPhase extends Phase {
                 gameMessenger.sendMessageToAll(String.format("\n%s didn't correct the errors in his/her shipboard and have been eliminated from the flight.", player.getColouredNickName()));
 
                 // remove player from flightboard if already added
-                if (gameInformation.getFlightBoard().isInGame(player))
+                if (gameInformation.getFlightBoard().isInFlight(player))
                     gameInformation.getFlightBoard().eliminatePlayer(player);
             }
         }

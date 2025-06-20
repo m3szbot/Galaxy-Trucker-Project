@@ -164,7 +164,7 @@ public class FlightBoard implements Serializable {
      * @return player's order in playerOrder List (1-4)
      */
     public int getPlayerOrder(Player player) {
-        if (isInGame(player)) {
+        if (isInFlight(player)) {
             return (playerOrderList.indexOf(player) + 1);
         } else {
             // throw exception
@@ -173,19 +173,21 @@ public class FlightBoard implements Serializable {
     }
 
     /**
-     * Check if player is still in game or throws exception for player not present/eliminated/given up.
+     * Check if player is still in game (in flight).
      * Checks coherence between playerTilesMap and playerOrderList.
      *
      * @param player Player to examine
      * @return true if player is in game, false if not in game
      */
-    public boolean isInGame(Player player) {
+    public boolean isInFlight(Player player) {
         if (playerTilesMap.containsKey(player) && !playerOrderList.contains(player)) {
             throw new IllegalStateException("Player is present in playerTilesMap but not in playerOrderList ");
         }
         if (!playerTilesMap.containsKey(player) && playerOrderList.contains(player)) {
             throw new IllegalStateException("player is present in playerOrderList but not in playerTilesMap");
         }
+        // no anomalies
+        // check if player is still in flight
         return (playerTilesMap.containsKey(player) && playerOrderList.contains(player));
     }
 
@@ -213,7 +215,7 @@ public class FlightBoard implements Serializable {
      * @param tile   Player's starting tile
      */
     public synchronized void addPlayer(Player player, int tile) throws IllegalSelectionException {
-        if (!isInGame(player)) {
+        if (!isInFlight(player)) {
             if (startingTiles.contains(tile)) {
                 // add player
                 this.playerTilesMap.put(player, tile);
@@ -293,7 +295,7 @@ public class FlightBoard implements Serializable {
      * @param player Player to remove
      */
     public void eliminatePlayer(Player player) {
-        if (isInGame(player)) {
+        if (isInFlight(player)) {
             playerTilesMap.remove(player);
             playerOrderList.remove(player);
             sortPlayerOrderList();
@@ -310,7 +312,7 @@ public class FlightBoard implements Serializable {
      * @param player player who gives up
      */
     public void voluntarilyGiveUpPlayer(Player player) {
-        if (isInGame(player)) {
+        if (isInFlight(player)) {
             playerTilesMap.remove(player);
             playerOrderList.remove(player);
             sortPlayerOrderList();
@@ -327,7 +329,7 @@ public class FlightBoard implements Serializable {
      * @param tiles Value of increment of tiles
      */
     public void incrementPlayerTile(Player player, int tiles) {
-        if (isInGame(player)) {
+        if (isInFlight(player)) {
             int nextTile = this.getPlayerTile(player) + tiles;
             // if tile to move to is occupied, jump before/behind
             // circular board (% numberOftTiles)
@@ -360,7 +362,7 @@ public class FlightBoard implements Serializable {
      * @return player's tile on FlightBoard
      */
     public int getPlayerTile(Player player) {
-        if (isInGame(player))
+        if (isInFlight(player))
             return this.playerTilesMap.get(player);
         else {
             throw new NoSuchElementException("Player not in game");

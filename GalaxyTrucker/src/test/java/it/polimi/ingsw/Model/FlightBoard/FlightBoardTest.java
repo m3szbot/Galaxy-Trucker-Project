@@ -110,13 +110,13 @@ class FlightBoardTest {
 
     @Test
     void addOnePlayer() throws IllegalSelectionException {
-        assertFalse(flightBoard.isInGame(playerA));
+        assertFalse(flightBoard.isInFlight(playerA));
         int tile = flightBoard.getStartingTiles().getLast();
         flightBoard.addPlayer(playerA, tile);
         assertEquals(tile, flightBoard.getPlayerTile(playerA));
         assertEquals(1, flightBoard.getPlayerOrder(playerA));
         assertEquals(1, flightBoard.getPlayerOrderList().size());
-        assertTrue(flightBoard.isInGame(playerA));
+        assertTrue(flightBoard.isInFlight(playerA));
     }
 
     @Test
@@ -287,7 +287,7 @@ class FlightBoardTest {
         for (Player player : gameInformation.getPlayerList()) {
             executor.submit((() -> {
                 // thread task
-                while (!flightBoard.isInGame(player)) {
+                while (!flightBoard.isInFlight(player)) {
                     int highestTile = flightBoard.getStartingTiles().getLast();
                     try {
                         // add player to highest starting tile (List in descending order)

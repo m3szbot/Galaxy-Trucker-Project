@@ -28,18 +28,16 @@ public class GameMessenger {
     }
 
     /**
-     *
      * @param player
      * @return true if the playerMessenger is present, false otherwise
      */
 
-    public boolean checkPlayerMessengerPresence(Player player){
-       if(playerMessengerMap.containsKey(player)){
-           return true;
-       }
-       else{
-           return false;
-       }
+    public boolean checkPlayerMessengerPresence(Player player) {
+        if (playerMessengerMap.containsKey(player)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -106,11 +104,11 @@ public class GameMessenger {
 
         gameInformation.disconnectPlayerInGameInformation(player);
 
-        if (gameInformation.getFlightBoard().getPlayerOrderList().contains(player)) {
+        if (gameInformation.getFlightBoard().isInFlight(player)) {
             gameInformation.getFlightBoard().eliminatePlayer(player);
         }
 
-        if(!playerMessengerMap.containsKey(player)){
+        if (!playerMessengerMap.containsKey(player)) {
             System.err.println("Critical error: player " + player.getNickName() + " is not in playerMessenger map during disconnection method call");
             return;
         }
