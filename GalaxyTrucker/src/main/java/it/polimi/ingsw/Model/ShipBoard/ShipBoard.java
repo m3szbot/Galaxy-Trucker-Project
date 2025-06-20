@@ -204,7 +204,7 @@ public class ShipBoard implements Serializable {
     /**
      * @return the realIndex from the passed visibleIndex.
      */
-    private int getRealIndex(int visibleIndex) {
+    public static int getRealIndex(int visibleIndex) {
         return visibleIndex - 1;
     }
 
@@ -258,7 +258,7 @@ public class ShipBoard implements Serializable {
      * @return true if at least 1 neighbor cell is not empty, false if all neighbor cells are empty.
      * @author Boti
      */
-    private boolean checkNotEmptyNeighbors(int realCol, int realRow) {
+    public boolean checkNotEmptyNeighbors(int realCol, int realRow) {
         return (componentMatrix[realCol - 1][realRow] != null || componentMatrix[realCol + 1][realRow] != null ||
                 componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
     }
@@ -1271,7 +1271,7 @@ public class ShipBoard implements Serializable {
     /**
      * @return the visibleIndex from the passed realIndex.
      */
-    private int getVisibleIndex(int realIndex) {
+    public static int getVisibleIndex(int realIndex) {
         return realIndex + 1;
     }
 

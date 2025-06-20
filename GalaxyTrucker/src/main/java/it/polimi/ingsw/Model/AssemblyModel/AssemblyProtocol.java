@@ -298,6 +298,19 @@ public class AssemblyProtocol {
     }
 
     /**
+     * Remove the placed component from the player's hand.
+     *
+     * @param player
+     * @author Boti
+     */
+    public void removePlacedComponentFromHand(Player player) {
+        if (playersInHandComponents.get(player) != null) {
+            playersInHandComponents.remove(player);
+        } else
+            throw new IllegalStateException("Error: cannot remove component from empty hand.");
+    }
+
+    /**
      * Returns the previous component in hand.
      * Allows the player to choose a component from the uncovered list.
      * The player's current component is returned to the uncovered list,
