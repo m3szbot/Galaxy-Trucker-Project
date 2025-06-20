@@ -59,7 +59,7 @@ public interface TokenLoss {
     private void removeCrewMembers(Player player, int quantity, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         String message;
-        PlayerMessenger playerMessenger;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
         int[] coordinates;
 
         //removing crew members or aliens
@@ -76,7 +76,6 @@ public interface TokenLoss {
 
             message = "You must remove " + numberOfCrewToRemove + " inhabitants." +
                     " Enter the coordinates of the cabin of the crew member you want to remove: ";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
             playerMessenger.printMessage(message);
 
             coordinates = playerMessenger.getPlayerCoordinates();
