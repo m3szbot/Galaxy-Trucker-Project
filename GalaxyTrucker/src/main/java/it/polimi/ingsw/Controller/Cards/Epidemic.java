@@ -79,8 +79,6 @@ public class Epidemic extends Card {
                         message = e.getMessage();
                         playerMessenger.printMessage(message);
 
-                        PlayerFlightInputHandler.endPlayerTurn(player);
-
                         gameInformation.getFlightBoard().eliminatePlayer(player);
                         isEliminated = true;
                         i--;

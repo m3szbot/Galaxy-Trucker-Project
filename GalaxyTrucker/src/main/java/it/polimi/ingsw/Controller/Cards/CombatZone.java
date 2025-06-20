@@ -173,8 +173,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-            PlayerFlightInputHandler.endPlayerTurn(weakestEnginePowerPlayer);
-
             gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
 
         } catch (PlayerDisconnectedException e) {
@@ -210,8 +208,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-            PlayerFlightInputHandler.endPlayerTurn(weakestFirePowerPlayer);
 
             gameInformation.getFlightBoard().eliminatePlayer(weakestFirePowerPlayer);
 
