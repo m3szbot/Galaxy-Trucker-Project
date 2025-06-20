@@ -302,6 +302,19 @@ public class FlightBoard implements Serializable {
         }
     }
 
+    public void disconnectPlayer(Player player){
+
+        if(isInGame(player)){
+            playerTilesMap.remove(player);
+            playerOrderList.remove(player);
+            sortPlayerOrderList();
+        }
+        else{
+            throw new NoSuchElementException("Player not in game");
+        }
+
+    }
+
     /**
      * Remove player from game (if in game), put him into giveUpList,
      * sort playerOrderList.
