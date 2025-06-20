@@ -73,11 +73,21 @@ public class EvaluationPhase extends Phase {
      */
     private String getLeaderboardMessage(GameInformation gameInformation) {
         ArrayList<Map.Entry<Player, Integer>> creditsList = new ArrayList<>();
+
         // extract player credits into creditsList
+
+        // connected players
         for (Player player : gameInformation.getPlayerList()) {
             Map.Entry<Player, Integer> entry = new AbstractMap.SimpleEntry<>(player, player.getShipBoard().getShipBoardAttributes().getCredits());
             creditsList.add(entry);
         }
+
+        // disconnected players
+        for (Player player : gameInformation.getDisconnectedPlayerList()) {
+            Map.Entry<Player, Integer> entry = new AbstractMap.SimpleEntry<>(player, player.getShipBoard().getShipBoardAttributes().getCredits());
+            creditsList.add(entry);
+        }
+
         // sort players based on credits in descending order
         creditsList.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
 
@@ -92,7 +102,12 @@ public class EvaluationPhase extends Phase {
                 case 3 -> result.append("3rd: ");
                 default -> result.append(String.format("%dth: ", pos));
             }
-            // print player and credits
+
+            // add (disconnected) for disconnected players
+            if (gameInformation.getDisconnectedPlayerList().contains(entry.getKey()))
+                result.append("(disconnected) ");
+
+            // add player name and score
             result.append(String.format("%s - %d\n", entry.getKey().getColouredNickName(), entry.getValue()));
             pos++;
         }

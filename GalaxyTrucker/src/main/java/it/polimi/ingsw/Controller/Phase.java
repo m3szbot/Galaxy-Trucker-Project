@@ -17,10 +17,6 @@ public abstract class Phase {
     protected final GameInformation gameInformation;
     protected final GameMessenger gameMessenger;
 
-    private String bannerMessage = "\n\nThe following commands can always be used during each phase of the game: \n" +
-            "show-shipboard: to see the shipboard of another player\n" +
-            "private-message: to send a message to only one player of the game\n" +
-            "public-message: to send a message to all the players currently connected to the game\n";
     /**
      * Subclasses must use Phase constructor by calling:
      * super(gameInformation)
@@ -39,25 +35,27 @@ public abstract class Phase {
      */
     public void setGamePhaseToClientServer(GamePhase gamePhase) {
         GameMessenger gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
+
         // server
+        System.out.printf("%s phase is starting...\n", gamePhase);
         gameInformation.setGamePhase(gamePhase);
-        if(gamePhase == GamePhase.Initialization){
 
-            System.out.printf("%s phase is starting...\n", gamePhase);
+        // clients
+        if (gamePhase == GamePhase.Initialization) {
+            gameMessenger.sendMessageToAll("\nThe game is starting!");
+            String bannerMessage = """
+                    The following commands can always be used during each phase of the game:\s
+                    show-shipboard: to see the shipboard of another player
+                    private-message: to send a message to only one player of the game
+                    public-message: to send a message to all the players currently connected to the game""";
             gameMessenger.sendMessageToAll(bannerMessage);
-            Sleeper.sleepXSeconds(10);
 
-
-        }
-        else {
-            System.out.printf("%s phase is starting...\n", gamePhase);
-            // clients
+        } else {
+            gameMessenger.sendMessageToAll(String.format("\n%s phase is starting...", gamePhase));
+            Sleeper.countDown(5, gameMessenger);
+            // set phase as last (hourglass print)
             gameMessenger.setGamePhaseToAll(gamePhase);
-            gameMessenger.sendMessageToAll(String.format("%s phase is starting...\n", gamePhase));
-
         }
-
-        Sleeper.sleepXSeconds(2);
 
 
     }

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Controller.FlightPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Controller.Cards.Blow;
 import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Controller.Cards.CardBuilder;
-import it.polimi.ingsw.Controller.Cards.ElementType;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -45,7 +42,8 @@ public class FlightPhase extends Phase {
 
 
         // resolve cards
-        while (flightBoard.getCardsNumber() > 0) {
+        // while there are unresolved cards and players in flight
+        while (flightBoard.getCardsNumber() > 0 && !flightBoard.getPlayerOrderList().isEmpty()) {
 
             Sleeper.sleepXSeconds(3);
 
