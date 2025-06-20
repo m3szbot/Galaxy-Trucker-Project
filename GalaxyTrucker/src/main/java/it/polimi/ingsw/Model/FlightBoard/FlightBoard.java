@@ -151,7 +151,7 @@ public class FlightBoard implements Serializable {
     }
 
     /**
-     * @return a copy of playerOrderList. Contains only connected players.
+     * @return a copy of playerOrderList.
      */
     public List<Player> getPlayerOrderList() {
         return new ArrayList<>(playerOrderList);

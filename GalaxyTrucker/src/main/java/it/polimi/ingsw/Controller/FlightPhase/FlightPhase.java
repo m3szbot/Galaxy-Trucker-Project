@@ -26,6 +26,9 @@ public class FlightPhase extends Phase {
 
         // send initial flightBoard to players and starting the threads
         for (Player player : flightBoard.getPlayerOrderList()) {
+            
+            if (!gameInformation.getPlayerList().contains(player))
+                throw new IllegalStateException("The player in flight on the flightBoard has been disconnected.");
 
             playerMessenger = gameMessenger.getPlayerMessenger(player);
             playerMessenger.printFlightBoard(flightBoard);

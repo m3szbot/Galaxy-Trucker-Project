@@ -57,6 +57,9 @@ public class InputThread extends Thread {
 
             } catch (PlayerDisconnectedException e) {
 
+                if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()) == null)
+                    throw new IllegalStateException(String.format("Error: the game has already ended, the InputThread of %s shouldn't be running.", player.getColouredNickName()));
+
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
                 this.running.set(false);
 
