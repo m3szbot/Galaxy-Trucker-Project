@@ -69,7 +69,7 @@ public class PlayerFlightInputHandler {
         InputThread inputThread = playerInputThreadMap.get(player);
 
         if (inputThread.getIsPlayerTurn())
-            throw new IllegalStateException(("Error: player turn already started"));
+            System.err.println("Error: player turn already started");
 
         inputThread.setPlayerTurn(true);
     }
@@ -84,7 +84,7 @@ public class PlayerFlightInputHandler {
         InputThread inputThread = playerInputThreadMap.get(player);
 
         if (!inputThread.getIsPlayerTurn())
-            throw new IllegalStateException(("Error: player turn already ended"));
+            System.err.println("Error: player turn already ended");
 
         inputThread.setPlayerTurn(false);
     }
