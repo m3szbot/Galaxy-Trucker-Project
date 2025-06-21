@@ -27,7 +27,7 @@ public class FlightPhase extends Phase {
         for (Player player : flightBoard.getPlayerOrderList()) {
 
             if (!gameInformation.getPlayerList().contains(player))
-                throw new IllegalStateException("The player in flight on the flightBoard has been disconnected.");
+                System.err.println("The player in flight on the flightBoard has been disconnected.");
 
             PlayerFlightInputHandler.addPlayer(player, gameInformation);
 
