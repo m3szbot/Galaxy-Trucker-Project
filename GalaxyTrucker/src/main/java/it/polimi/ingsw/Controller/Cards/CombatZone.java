@@ -154,6 +154,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //lowest engine power
 
         if (gameInformation.checkPlayerConnectivity(weakestEnginePowerPlayer) && gameInformation.getFlightBoard().isInFlight(weakestEnginePowerPlayer)) {
+
+            PlayerFlightInputHandler.startPlayerTurn(weakestEnginePowerPlayer);
+
             try {
                 message = "You have the weakest engine power!\n";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
@@ -177,6 +180,11 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestEnginePowerPlayer);
             }
+
+            if (PlayerFlightInputHandler.checkInputThreadActivity(weakestEnginePowerPlayer)) {
+                PlayerFlightInputHandler.endPlayerTurn(weakestEnginePowerPlayer);
+            }
+
         }
 
         //rolling the dice for each shot and then hitting
@@ -190,6 +198,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //lowest firepower
 
         if (gameInformation.checkPlayerConnectivity(weakestFirePowerPlayer) && gameInformation.getFlightBoard().isInFlight(weakestFirePowerPlayer)) {
+
+            PlayerFlightInputHandler.startPlayerTurn(weakestFirePowerPlayer);
+
             try {
                 message = "You have the lowest fire power!\n";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
@@ -212,6 +223,11 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestFirePowerPlayer);
             }
+
+            if (PlayerFlightInputHandler.checkInputThreadActivity(weakestFirePowerPlayer)) {
+                PlayerFlightInputHandler.endPlayerTurn(weakestFirePowerPlayer);
+            }
+
         }
 
         try {
