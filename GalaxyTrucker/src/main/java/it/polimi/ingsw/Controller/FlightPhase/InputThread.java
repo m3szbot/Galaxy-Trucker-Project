@@ -63,7 +63,7 @@ public class InputThread extends Thread {
             } catch (PlayerDisconnectedException e) {
 
                 if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()) == null)
-                    throw new IllegalStateException(String.format("Error: the game has already ended, the InputThread of %s shouldn't be running.", player.getColouredNickName()));
+                    System.err.println(String.format("Error: the game has already ended, the InputThread of %s shouldn't be running.", player.getColouredNickName()));
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
                 running.set(false);
@@ -92,9 +92,8 @@ public class InputThread extends Thread {
 
             while (!isSleeping.get()) ;
 
-        }
-        else{
-            while(isSleeping.get());
+        } else {
+            while (isSleeping.get()) ;
         }
     }
 
@@ -107,7 +106,7 @@ public class InputThread extends Thread {
             playerMessenger.unblockUserInputGetterCall();
         }
 
-        while(!ended.get());
+        while (!ended.get()) ;
 
     }
 }

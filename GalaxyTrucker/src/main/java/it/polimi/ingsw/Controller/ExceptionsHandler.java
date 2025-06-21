@@ -35,7 +35,7 @@ public final class ExceptionsHandler {
         PlayerMessenger playerMessenger = gameMessenger.getPlayerMessenger(player);
 
         if (playerMessenger == null)
-            throw new IllegalStateException("The playerMessenger has been removed.");
+            System.err.println("The playerMessenger has been removed.");
 
         // print player messages
         playerMessenger.printMessage("\nYou have lost all human crew and have been eliminated from the flight.");
