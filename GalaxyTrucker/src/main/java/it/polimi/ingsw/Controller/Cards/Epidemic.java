@@ -76,9 +76,6 @@ public class Epidemic extends Card {
 
                     } catch (NoHumanCrewLeftException e) {
 
-                        message = e.getMessage();
-                        playerMessenger.printMessage(message);
-
                         gameInformation.getFlightBoard().eliminatePlayer(player);
                         isEliminated = true;
                         i--;

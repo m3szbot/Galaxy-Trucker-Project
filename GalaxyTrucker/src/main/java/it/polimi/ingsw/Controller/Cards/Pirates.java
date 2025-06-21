@@ -114,9 +114,6 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
 
                 } catch (NoHumanCrewLeftException e) {
 
-                    message = e.getMessage();
-                    playerMessenger.printMessage(message);
-
                     message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
