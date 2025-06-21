@@ -129,9 +129,11 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             try {
                 socketDataExchanger.sendContainer(dataContainer);
             } catch (IOException e) {
+
                 if(inLobby){
                     return;
                 }
+
                 System.out.println("Error while sending dataContainer.");
                 disconnectedFlag = true;
                 ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
@@ -178,11 +180,8 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     public void clearPlayerResources() {
         if (connectionType == ConnectionType.SOCKET) {
-            try {
-                socketDataExchanger.closeResources();
-            } catch (IOException e) {
-                System.err.println("Error while closing player resources");
-            }
+
+            socketDataExchanger.closeResources();
 
         }
 
@@ -220,35 +219,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
         }
 
-    }
-
-    /**
-     * WARNING!! TO USE ONLY IN JOINING PHASE (FOR NOW)
-     * (Used by Carlo)
-     */
-
-    public void sendShortCutMessage(String message) {
-        if(disconnectedFlag){
-            return;
-        }
-        if (connectionType.equals(ConnectionType.SOCKET)) {
-            try {
-                socketDataExchanger.sendString(message);
-            } catch (IOException e) {
-                System.err.println("Error while sending string shortcut to the player");
-            }
-        } else {
-
-            try {
-
-                virtualClient.printMessage(message);
-            } catch (RemoteException e) {
-                System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
-                disconnectedFlag = true;
-                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
-            }
-
-        }
     }
 
     /**

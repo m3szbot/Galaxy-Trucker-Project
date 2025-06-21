@@ -45,13 +45,8 @@ public class SocketGameHandler {
 
         if(isNickNameRepeated(socketDataExchanger)){
 
-            try {
+            socketDataExchanger.closeResources();
 
-                socketDataExchanger.closeResources();
-
-            } catch (IOException e) {
-                System.err.println("Error while closing server socket");
-            }
             return;
         }
 
@@ -59,15 +54,7 @@ public class SocketGameHandler {
 
         gameStarter.start(clientInfo);
 
-        try {
-
-            clientInfo.getDataExchanger().closeResources();
-            System.out.println("Resources closed succesfully");
-
-        } catch (IOException e) {
-            System.err.println("Critical error while closing server socket and streams");
-
-        }
+        clientInfo.getDataExchanger().closeResources();
 
     }
 

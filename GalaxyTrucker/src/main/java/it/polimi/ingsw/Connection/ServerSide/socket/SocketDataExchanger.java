@@ -61,13 +61,33 @@ public class SocketDataExchanger {
 
     }
 
+    /*
+    Important: if the resources are closed after a write failure, the stream is corrupted and therefore
+    most likely an exception will be thrown on the corrupted one. On the other hand, if they are closed
+    after a read failure no exception are thrown.
+     */
 
-    public void closeResources() throws IOException{
+    public void closeResources(){
 
-        clientSocket.close();
-        inputStream.close();
-        outputStream.close();
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            System.err.println("Error closing client socket: " + e.getMessage());
+        }
 
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            System.err.println("Error closing input stream: " + e.getMessage());
+        }
+
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            System.err.println("Error closing output stream: " + e.getMessage());
+        }
+
+        System.out.println("Resources closed successfully");
 
     }
 

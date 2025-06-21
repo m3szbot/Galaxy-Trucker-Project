@@ -40,6 +40,9 @@ public class InputThread extends Thread {
     @Override
     public void run() {
 
+        //for debugging purpose
+        System.out.println("Input thread of client " + player.getNickName() + " is starting");
+
         while (running.get()) {
 
             try {
@@ -70,6 +73,8 @@ public class InputThread extends Thread {
         }
 
         ended.set(true);
+        //for debugging purpose
+        System.out.println("Input thread of " + player.getNickName() + " is finished");
     }
 
     public boolean getIsPlayerTurn() {

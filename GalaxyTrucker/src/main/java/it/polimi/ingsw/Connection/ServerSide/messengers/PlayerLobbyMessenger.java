@@ -138,10 +138,6 @@ public class PlayerLobbyMessenger {
     }
 
     public void cleanResources(){
-        try{
             socketDataExchanger.closeResources();
-        } catch (IOException e) {
-            System.out.println("Error while closing " + nickName + " resources");
-        }
     }
 }
