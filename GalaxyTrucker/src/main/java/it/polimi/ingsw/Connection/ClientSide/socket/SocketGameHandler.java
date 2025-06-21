@@ -55,7 +55,7 @@ public class SocketGameHandler {
             return;
         }
 
-        this.clientInfo.setDataExchanger(socketDataExchanger);
+        clientInfo.setDataExchanger(socketDataExchanger);
 
         gameStarter.start(clientInfo);
 

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameInformation implements Serializable {
     private GameType gameType;
@@ -43,8 +44,8 @@ public class GameInformation implements Serializable {
     public GameInformation() {
         cardsList = new ArrayList<>();
         componentList = new ArrayList<>();
-        connectedPlayerList = new ArrayList<>();
-        disconnectedPlayerList = new ArrayList<>();
+        connectedPlayerList = new CopyOnWriteArrayList<>();
+        disconnectedPlayerList = new CopyOnWriteArrayList<>();
     }
 
     public GamePhase getGamePhase() {

@@ -64,16 +64,12 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             setGamePhase(dataContainer.getGamePhase());
         } else if (command.equals("endGame")) {
             endGame();
-            ClientInputManager.unblockInput();
         }
         else if(command.equals("joined")){
             ClientInputManager.setTimeOut(300000);
         }
         else if(command.equals("unblock")){
             ClientInputManager.unblockInput();
-        }
-        else if(command.equals("ping")){
-            //doing nothing
         }
         else {
             callView(dataContainer);
@@ -89,6 +85,7 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
     public void endGame() {
         running.set(false);
         System.out.println("The game has ended");
+        ClientInputManager.unblockInput();
     }
 
     private void callView(DataContainer container) {
@@ -111,15 +108,19 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             running.set(false);
             System.err.println("Critical error while accessing view method: method not found ");
             System.out.println("You have been disconnected");
+            ClientInputManager.unblockInput();
         } catch (IllegalAccessException e2) {
             running.set(false);
             System.err.println("Critical error while accessing view method: method does not have access to the definition of the specified class");
             System.out.println("You have been disconnected");
+            ClientInputManager.unblockInput();
         } catch (InvocationTargetException e3) {
             running.set(false);
             System.err.println("Critical error while accessing view method: the method invoked did not behave correctly");
             System.out.println("You have been disconnected");
+            ClientInputManager.unblockInput();
         }
+
     }
 
 }

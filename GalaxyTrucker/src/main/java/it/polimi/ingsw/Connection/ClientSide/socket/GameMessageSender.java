@@ -39,6 +39,7 @@ public class GameMessageSender implements Runnable {
 
                 input = ClientInputManager.getUserInput();
 
+
             } catch (TimeoutException e) {
 
                 viewCommunicator.getView().printMessage("Timeout reached, you are considered inactive, disconnection will soon happen");
@@ -60,7 +61,10 @@ public class GameMessageSender implements Runnable {
 
             try {
 
-                dataExchanger.sendString(input);
+                if(running.get()) {
+
+                    dataExchanger.sendString(input);
+                }
 
 
             } catch (IOException e) {

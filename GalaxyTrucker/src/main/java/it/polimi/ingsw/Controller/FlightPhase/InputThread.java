@@ -24,6 +24,7 @@ public class InputThread extends Thread {
     private AtomicBoolean isPlayerTurn;
     private AtomicBoolean blocked;
     private AtomicBoolean isSleeping;
+    private AtomicBoolean ended;
 
     public InputThread(Player player, GameInformation gameInformation) {
         this.playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
@@ -33,6 +34,7 @@ public class InputThread extends Thread {
         this.gameInformation = gameInformation;
         this.blocked = new AtomicBoolean(false);
         this.isSleeping = new AtomicBoolean(false);
+        this.ended = new AtomicBoolean(false);
     }
 
     @Override
@@ -61,11 +63,13 @@ public class InputThread extends Thread {
                     throw new IllegalStateException(String.format("Error: the game has already ended, the InputThread of %s shouldn't be running.", player.getColouredNickName()));
 
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
-                this.running.set(false);
+                running.set(false);
 
             }
 
         }
+
+        ended.set(true);
     }
 
     public boolean getIsPlayerTurn() {
@@ -84,6 +88,9 @@ public class InputThread extends Thread {
             while (!isSleeping.get()) ;
 
         }
+        else{
+            while(isSleeping.get());
+        }
     }
 
     public void endThread() {
@@ -94,6 +101,8 @@ public class InputThread extends Thread {
         if (blocked.get()) {
             playerMessenger.unblockUserInputGetterCall();
         }
+
+        while(!ended.get());
 
     }
 }

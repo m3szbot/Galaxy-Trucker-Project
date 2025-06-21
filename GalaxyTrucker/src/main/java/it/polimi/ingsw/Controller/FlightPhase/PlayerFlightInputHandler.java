@@ -3,8 +3,8 @@ package it.polimi.ingsw.Controller.FlightPhase;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Static class which handles the input thread of the flightPhase
@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class PlayerFlightInputHandler {
 
-    private static Map<Player, InputThread> playerInputThreadMap = new HashMap<>();
+    private static Map<Player, InputThread> playerInputThreadMap = new ConcurrentHashMap<>();
 
     /**
      * @param player
