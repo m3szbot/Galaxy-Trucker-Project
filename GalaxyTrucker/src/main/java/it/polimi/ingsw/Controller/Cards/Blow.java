@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller.Cards;
 
 import java.io.Serializable;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Class that represents a blow
@@ -35,10 +36,14 @@ public class Blow implements Serializable {
         return big;
     }
 
+    /**
+     * Get a real index between 1 and 11 (included).
+     * (Dice roll can have values 2-12).
+     */
     public void rollDice() {
 
-        //Real index
-        roll = (int) ((Math.random() * 11) + 1);
+        // Real index: (2-12) - 1
+        roll = ThreadLocalRandom.current().nextInt(1, 12);
 
     }
 }
