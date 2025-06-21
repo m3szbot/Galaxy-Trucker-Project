@@ -295,6 +295,7 @@ public class GameJoinerThread extends Thread {
         playerLobbyMessenger.sendCommand("joined");
 
         if (centralServer.getCurrentStartingGame().isFull()) {
+            ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).exitLobby();
             centralServer.startCurrentGame();
         } else {
             playerLobbyMessenger.printMessage("Waiting for other players to join...");
@@ -305,7 +306,6 @@ public class GameJoinerThread extends Thread {
     private void notifyAllPlayers(String message) {
 
         ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).sendMessageToAll(message);
-
 
     }
 }

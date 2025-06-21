@@ -5,7 +5,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Class which is has the sole purpose of printing the shipboard of another
@@ -30,7 +30,7 @@ public class FoeShipBoardPrinter{
 
         Player foe = null;
         boolean playerPresentFlag = false;
-        Set<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
+        List<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
 
         if(connectedPlayers.isEmpty()){
             playerMessenger.printMessage("Nobody is in game!");

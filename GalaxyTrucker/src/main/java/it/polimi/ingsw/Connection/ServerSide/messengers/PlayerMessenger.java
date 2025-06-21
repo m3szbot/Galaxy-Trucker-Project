@@ -40,9 +40,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     private ClientRemoteInterface virtualClient;
     private boolean disconnectedFlag = false;
     private int gameCode;
-
-    // RMI
-    // TODO
+    private boolean inLobby = true;
 
     /**
      * Add socket player.
@@ -63,6 +61,10 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         this.connectionType = ConnectionType.RMI;
         this.virtualClient = virtualClient;
         this.gameCode = gameCode;
+    }
+
+    public void exitLobby(){
+        inLobby = false;
     }
 
     public int getGameCode() {
@@ -127,6 +129,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             try {
                 socketDataExchanger.sendContainer(dataContainer);
             } catch (IOException e) {
+                if(inLobby){
+                    return;
+                }
                 System.out.println("Error while sending dataContainer.");
                 disconnectedFlag = true;
                 ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
@@ -354,6 +359,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printMessage(message);
 
             } catch (RemoteException e) {
+                if(inLobby){
+                    return;
+                }
                 System.err.println("An error occurred while sending a message to " + player.getColouredNickName() +
                         " through rmi protocol");
                 disconnectedFlag = true;

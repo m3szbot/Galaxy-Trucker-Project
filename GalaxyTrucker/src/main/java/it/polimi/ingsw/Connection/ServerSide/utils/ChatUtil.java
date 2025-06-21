@@ -5,7 +5,8 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.Set;
+
+import java.util.List;
 
 /**
  * Class which handles the chat
@@ -29,7 +30,7 @@ public class ChatUtil {
         Player targetPlayer = null;
         boolean playerPresentFlag = false;
 
-        Set<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
+        List<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
 
         if(connectedPlayers.isEmpty()){
             playerMessenger.printMessage("Nobody is in game!");
