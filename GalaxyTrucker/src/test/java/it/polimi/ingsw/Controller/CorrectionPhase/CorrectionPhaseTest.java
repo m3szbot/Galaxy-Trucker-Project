@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -29,7 +28,6 @@ class CorrectionPhaseTest {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 
         // set up GameMessenger used by Phase
-        ClientMessenger.addGame(gameInformation.getGameCode());
 
         // add players
         playerA = new Player("A", Color.BLUE, gameInformation);

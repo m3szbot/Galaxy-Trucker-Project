@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -23,7 +22,6 @@ class EvaluationPhaseTest {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 
         // set up GameMessenger used by Phase
-        ClientMessenger.addGame(gameInformation.getGameCode());
 
         // add players
         Player playerA, playerB, playerC, playerD;

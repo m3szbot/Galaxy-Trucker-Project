@@ -24,7 +24,6 @@ class GameMessengerTest {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 
         // set up GameMessenger
-        ClientMessenger.addGame(gameInformation.getGameCode());
         gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
 
         // add player
