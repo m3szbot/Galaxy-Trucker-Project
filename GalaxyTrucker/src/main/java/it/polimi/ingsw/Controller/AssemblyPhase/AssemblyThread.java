@@ -110,7 +110,7 @@ public class AssemblyThread implements Runnable {
                             break;
                         }
                     } catch (PlayerDisconnectedException e) {
-                        gameMessenger.disconnectPlayer(gameInformation, associatedPlayer);
+                        gameMessenger.disconnectPlayer(associatedPlayer);
                         disconnected.set(true);
                     }
                 }

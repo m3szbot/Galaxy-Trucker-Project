@@ -384,4 +384,16 @@ public class GameInformation implements Serializable {
         connectedPlayerList.remove(player);
         disconnectedPlayerList.add(player);
     }
+
+    /**
+     * @param player
+     * @return true if the player is connected, false otherwise.
+     */
+
+    public boolean checkPlayerConnectivity(Player player){
+        if(connectedPlayerList.contains(player)){
+            return true;
+        }
+        else return false;
+    }
 }

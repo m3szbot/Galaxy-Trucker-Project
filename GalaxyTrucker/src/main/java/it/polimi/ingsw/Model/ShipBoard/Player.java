@@ -13,6 +13,8 @@ public class Player implements Serializable {
     // The player's ship board, representing their ship in the game
     private ShipBoard shipBoard;
 
+    private boolean disconnected;
+
     /**
      * Constructor for the Player class.
      * Initializes a new player with a nickname, a new ship board, and a color.
@@ -25,6 +27,15 @@ public class Player implements Serializable {
         this.nickName = nickName;
         this.shipBoard = new ShipBoard(gameInformation.getGameType());
         this.color = color;
+        this.disconnected = false;
+    }
+
+    public void disconnect(){
+        disconnected = true;
+    }
+
+    public boolean getConnectionStatus(){
+        return disconnected;
     }
 
     /**

@@ -3,6 +3,7 @@ package it.polimi.ingsw.Connection.ServerSide.messengers;
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,9 +45,9 @@ public class ClientMessenger {
      * @param gameCode of the added game
      */
 
-    public static void addGame(int gameCode){
+    public static void addGame(int gameCode, GameInformation gameInformation){
 
-        gameMessengerMap.put(gameCode, new GameMessenger(gameCode));
+        gameMessengerMap.put(gameCode, new GameMessenger(gameCode, gameInformation));
 
     }
 

@@ -12,8 +12,6 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import static it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler.checkInputThreadActivity;
-
 /**
  * Class that represent the card combat
  *
@@ -86,7 +84,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             } catch (PlayerDisconnectedException e) {
                 PlayerFlightInputHandler.removePlayer(player);
 
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
                 i--;
 
             }
@@ -123,7 +121,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
             } catch (PlayerDisconnectedException e) {
                 PlayerFlightInputHandler.removePlayer(player);
 
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
                 i--;
 
             }
@@ -178,7 +176,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         } catch (PlayerDisconnectedException e) {
             PlayerFlightInputHandler.removePlayer(weakestEnginePowerPlayer);
 
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestEnginePowerPlayer);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestEnginePowerPlayer);
         }
 
         //rolling the dice for each shot and then hitting
@@ -214,7 +212,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         } catch (PlayerDisconnectedException e) {
             PlayerFlightInputHandler.removePlayer(weakestFirePowerPlayer);
 
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, weakestFirePowerPlayer);
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestFirePowerPlayer);
         }
 
         try {

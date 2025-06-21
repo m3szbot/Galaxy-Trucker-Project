@@ -50,7 +50,6 @@ public class FoeShipBoardPrinter{
         }
 
         String input = playerMessenger.getPlayerString();
-        System.out.println("Input received: " + input);
 
         if(input.equals("unblock")){
             return "unblocked";

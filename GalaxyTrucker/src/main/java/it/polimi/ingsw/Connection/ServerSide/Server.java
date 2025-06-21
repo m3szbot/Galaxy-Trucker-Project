@@ -45,7 +45,7 @@ public class Server {
         this.gameCode = 0;
         this.currentStartingGame = new Game(gameCode);
         VirtualServer virtualServer;
-        ClientMessenger.addGame(gameCode);
+        ClientMessenger.addGame(gameCode, currentStartingGame.getGameInformation());
         ClientMessenger.setCentralServer(this);
 
         try {
@@ -124,8 +124,6 @@ public class Server {
         return currentStartingGame;
     }
 
-    //Method overloading, the second one is used to add the first player to a
-
     public ReentrantLock getLock() {
         return lock;
     }
@@ -187,7 +185,7 @@ public class Server {
         //new game
         currentStartingGame = new Game(gameCode);
 
-        ClientMessenger.addGame(gameCode);
+        ClientMessenger.addGame(gameCode, currentStartingGame.getGameInformation());
         System.out.println("New game created");
     }
 

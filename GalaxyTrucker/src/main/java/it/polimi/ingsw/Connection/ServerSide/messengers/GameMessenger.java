@@ -7,9 +7,9 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class used to communicate with players during the game.
@@ -20,11 +20,13 @@ import java.util.Set;
  */
 
 public class GameMessenger {
-    private Map<Player, PlayerMessenger> playerMessengerMap = new HashMap<>();
+    private Map<Player, PlayerMessenger> playerMessengerMap = new ConcurrentHashMap<>();
     private int gameCode;
+    private GameInformation gameInformation;
 
-    public GameMessenger(int gameCode) {
+    public GameMessenger(int gameCode, GameInformation gameInformation) {
         this.gameCode = gameCode;
+        this.gameInformation = gameInformation;
     }
 
     /**
@@ -100,24 +102,30 @@ public class GameMessenger {
     /**
      * Disconnects the player from the game.
      */
-    public void disconnectPlayer(GameInformation gameInformation, Player player) {
+    public void disconnectPlayer(Player player) {
 
-        gameInformation.disconnectPlayerInGameInformation(player);
+        if(!player.getConnectionStatus()) {
 
-        if (gameInformation.getFlightBoard().isInFlight(player)) {
-            gameInformation.getFlightBoard().eliminatePlayer(player);
+            System.out.println("Disconnected method executing for " + player.getNickName());
+            gameInformation.disconnectPlayerInGameInformation(player);
+
+            if (gameInformation.getFlightBoard().isInFlight(player)) {
+                gameInformation.getFlightBoard().eliminatePlayer(player);
+            }
+
+            if (!playerMessengerMap.containsKey(player)) {
+                System.err.println("Critical error: player " + player.getNickName() + " is not in playerMessenger map during disconnection method call");
+                return;
+            }
+
+            playerMessengerMap.get(player).clearPlayerResources();
+            playerMessengerMap.remove(player);
+            System.out.println(String.format("Player %s disconnected!", player.getColouredNickName()));
+            sendMessageToAll(String.format("Player %s disconnected!", player.getColouredNickName()));
+            ClientMessenger.getCentralServer().removeNickName(player.getNickName());
+            player.disconnect();
+
         }
-
-        if (!playerMessengerMap.containsKey(player)) {
-            System.err.println("Critical error: player " + player.getNickName() + " is not in playerMessenger map during disconnection method call");
-            return;
-        }
-
-        playerMessengerMap.get(player).clearPlayerResources();
-        playerMessengerMap.remove(player);
-        System.out.println(String.format("Player %s disconnected!", player.getColouredNickName()));
-        sendMessageToAll(String.format("Player %s disconnected!", player.getColouredNickName()));
-        ClientMessenger.getCentralServer().removeNickName(player.getNickName());
     }
 
     /**

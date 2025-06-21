@@ -84,7 +84,16 @@ public class FlightPhase extends Phase {
 
 
         //ending input thread
-        for (Player player : flightBoard.getPlayerOrderList()) {
+        for (Player player : gameInformation.getPlayerList()) {
+
+            if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
+                PlayerFlightInputHandler.removePlayer(player);
+            }
+
+        }
+
+        //For precaution, checking also the disconnected player list.
+        for (Player player : gameInformation.getDisconnectedPlayerList()) {
 
             if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
                 PlayerFlightInputHandler.removePlayer(player);

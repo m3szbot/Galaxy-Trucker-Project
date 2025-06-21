@@ -114,6 +114,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 System.err.println("An error occurred while setting the gamePhase of " + player.getColouredNickName() +
                         " through rmi protocol");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
         }
     }
@@ -128,6 +129,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             } catch (IOException e) {
                 System.out.println("Error while sending dataContainer.");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             } finally {
                 dataContainer.clearContainer();
             }
@@ -158,6 +160,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 System.err.println("RMI error while terminating " + player.getColouredNickName() + " game");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
 
             }
 
@@ -207,6 +210,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             } catch (RemoteException e) {
                 System.err.println("Error while calling remote client method through rmi");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
 
         }
@@ -236,6 +240,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
             } catch (RemoteException e) {
                 System.err.println("Error while communicating with the client with RMI protocol: shortCutMessage method");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
 
         }
@@ -352,6 +357,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 System.err.println("An error occurred while sending a message to " + player.getColouredNickName() +
                         " through rmi protocol");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
 
         }
@@ -379,6 +385,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 System.err.println("An error occurred while sending a component to " + player.getColouredNickName() +
                         " through rmi protocol");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
 
         }
@@ -408,6 +415,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 System.err.println("An error occurred while sending a shipboard to " + player.getColouredNickName() +
                         " through rmi protocol");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
 
         }
@@ -435,6 +443,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 System.err.println("An error occurred while sending a card to " + player.getColouredNickName() +
                         " through rmi protocol");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
 
         }
@@ -462,6 +471,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 System.err.println("An error occurred while sending a flightboard to " + player.getColouredNickName() +
                         " through rmi protocol");
                 disconnectedFlag = true;
+                ClientMessenger.getGameMessenger(gameCode).disconnectPlayer(player);
             }
 
         }

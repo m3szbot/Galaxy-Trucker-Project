@@ -37,7 +37,7 @@ public class CorrectionThread implements Runnable {
             errorCorrector();
         } catch (PlayerDisconnectedException e) {
             // disconnect player and end player thread
-            gameMessenger.disconnectPlayer(gameInformation, player);
+            gameMessenger.disconnectPlayer(player);
             return;
         } catch (NoHumanCrewLeftException e) {
             // force player to give up and end player thread

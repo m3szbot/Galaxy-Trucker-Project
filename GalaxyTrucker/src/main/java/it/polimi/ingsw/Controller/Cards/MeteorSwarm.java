@@ -81,7 +81,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
             } catch (PlayerDisconnectedException e) {
                 PlayerFlightInputHandler.removePlayer(player);
 
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(gameInformation, player);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
                 i--;
 
             }
