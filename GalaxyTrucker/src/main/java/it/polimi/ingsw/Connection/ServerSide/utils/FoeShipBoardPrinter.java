@@ -67,7 +67,7 @@ public class FoeShipBoardPrinter {
 
         if (playerPresentFlag) {
 
-            playerMessenger.printMessage(foe.getColouredNickName() + " shipboard");
+            playerMessenger.printMessage(foe.getColouredNickName() + "'s shipboard:");
             playerMessenger.printShipboard(foe.getShipBoard());
 
         } else {
