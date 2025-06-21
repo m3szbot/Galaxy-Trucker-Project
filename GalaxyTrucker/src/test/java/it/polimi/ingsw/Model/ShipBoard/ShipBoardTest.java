@@ -314,6 +314,7 @@ public class ShipBoardTest {
     @Test
     void testRemoveCrewFromCenterCabinEmptyShipboard() throws NoHumanCrewLeftException, IllegalSelectionException {
         shipBoard.removeCrewMember(7, 7);
+        assertEquals(1, shipBoard.getShipBoardAttributes().getCrewMembers());
         assertThrows(NoHumanCrewLeftException.class, () -> {
             shipBoard.removeCrewMember(7, 7);
         });
