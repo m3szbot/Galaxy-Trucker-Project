@@ -135,10 +135,6 @@ public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGa
 
         } catch (LappedPlayersException e) {
             ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
-
-            for (Player player1 : e.getPlayerList()) {
-                PlayerFlightInputHandler.removePlayer(player1);
-            }
         }
 
     }
