@@ -157,6 +157,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
             PlayerFlightInputHandler.startPlayerTurn(weakestEnginePowerPlayer);
 
+            message = "It's " + weakestEnginePowerPlayer.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
             try {
                 message = "You have the weakest engine power!\n";
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
@@ -200,6 +203,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         if (gameInformation.checkPlayerConnectivity(weakestFirePowerPlayer) && gameInformation.getFlightBoard().isInFlight(weakestFirePowerPlayer)) {
 
             PlayerFlightInputHandler.startPlayerTurn(weakestFirePowerPlayer);
+
+            message = "It's " + weakestFirePowerPlayer.getColouredNickName() + "'s turn.\n";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
             try {
                 message = "You have the lowest fire power!\n";
