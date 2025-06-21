@@ -52,31 +52,38 @@ public interface SufferBlows {
                 if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
 
                     //a component was hit
-                    if (blowType == ElementType.CannonBlow) {
 
-                        if (blow.isBig()) {
+                    try {
+                        if (blowType == ElementType.CannonBlow) {
 
-                            hitFlag = bigCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], gameInformation);
+                            if (blow.isBig()) {
 
+                                hitFlag = bigCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                            } else {
+
+                                //player can defend itself
+                                hitFlag = smallCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], blow.getDirection(), gameInformation);
+                            }
                         } else {
 
-                            //player can defend itself
-                            hitFlag = smallCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], blow.getDirection(), gameInformation);
+                            //BlowType is Meteorite
+                            if (blow.isBig()) {
+
+                                // player can defend itself only with cannon
+                                hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                            } else {
+
+                                //blow is small
+                                hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                            }
                         }
-                    } else {
+                    }catch (NoHumanCrewLeftException e){
 
-                        //BlowType is Meteorite
-                        if (blow.isBig()) {
-
-                            // player can defend itself only with cannon
-                            hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
-
-                        } else {
-
-                            //blow is small
-                            hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
-
-                        }
+                        notifyAll(player, blow.getDirection(), hitFlag, componentCoordinates[0], componentCoordinates[1], blowType, gameInformation);
+                        throw new NoHumanCrewLeftException();
                     }
 
                 }
