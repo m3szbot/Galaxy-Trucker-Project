@@ -32,10 +32,15 @@ public final class ExceptionsHandler {
      * @param gameMessenger
      */
     public static void handleNoHumanCrewLeftException(GameMessenger gameMessenger, Player player, FlightBoard flightBoard) {
+        PlayerMessenger playerMessenger = gameMessenger.getPlayerMessenger(player);
+
+        if (playerMessenger == null)
+            throw new IllegalStateException("The playerMessenger has been removed before printing the messages.");
+
         // print player messages
-        gameMessenger.getPlayerMessenger(player).printMessage("\nYou have lost all human crew and have been eliminated from the flight.");
-        gameMessenger.getPlayerMessenger(player).printMessage("You are now spectating.");
-        gameMessenger.getPlayerMessenger(player).printMessage("(your shipboard will be evaluated after the flight ends)");
+        playerMessenger.printMessage("\nYou have lost all human crew and have been eliminated from the flight.");
+        playerMessenger.printMessage("You are now spectating.");
+        playerMessenger.printMessage("(your shipboard will be evaluated after the flight ends)");
 
         // notify all
         gameMessenger.sendMessageToAll(String.format("\n%s has lost all human crew and have been eliminated from the flight.", player.getColouredNickName()));
