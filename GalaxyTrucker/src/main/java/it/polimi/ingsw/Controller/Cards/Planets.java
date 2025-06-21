@@ -118,13 +118,13 @@ public class Planets extends Card implements GoodsGain, Movable {
 
                             } else {
 
-                                message = "The planet you selected has already been occupied.\n";
+                                message = "The planet you selected has already been occupied. Please select another one:";
                                 playerMessenger.printMessage(message);
 
                             }
                         } else {
 
-                            message = "The planet you chose is invalid.\n";
+                            message = "The planet you chose is invalid. Please select another one:";
                             playerMessenger.printMessage(message);
 
                         }

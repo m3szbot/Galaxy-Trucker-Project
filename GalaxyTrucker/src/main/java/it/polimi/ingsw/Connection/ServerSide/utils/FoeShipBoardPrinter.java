@@ -14,37 +14,37 @@ import java.util.List;
  * @author carlo
  */
 
-public class FoeShipBoardPrinter{
+public class FoeShipBoardPrinter {
 
     private int gameCode;
     private PlayerMessenger playerMessenger;
 
-    public FoeShipBoardPrinter(PlayerMessenger playerMessenger){
+    public FoeShipBoardPrinter(PlayerMessenger playerMessenger) {
 
         this.playerMessenger = playerMessenger;
         this.gameCode = playerMessenger.getGameCode();
 
     }
 
-    public String start() throws PlayerDisconnectedException{
+    public String start() throws PlayerDisconnectedException {
 
         Player foe = null;
         boolean playerPresentFlag = false;
         List<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
 
         //he is the only one in game
-        if(connectedPlayers.size() == 1){
+        if (connectedPlayers.size() == 1) {
             playerMessenger.printMessage("Nobody is in game!");
             return "repeat";
         }
 
         playerMessenger.printMessage("Which player's ship board do you want to spy ?");
 
-        for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()){
+        for (Player player : ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
 
-            if(!player.getNickName().equals(playerMessenger.getPlayer().getNickName())) {
+            if (!player.getNickName().equals(playerMessenger.getPlayer().getNickName())) {
 
-                playerMessenger.printMessage(player.getNickName());
+                playerMessenger.printMessage(player.getColouredNickName());
 
             }
 
@@ -52,11 +52,11 @@ public class FoeShipBoardPrinter{
 
         String input = playerMessenger.getPlayerString();
 
-        if(input.equals("unblock")){
+        if (input.equals("unblock")) {
             return "unblocked";
         }
 
-        for(Player player: ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
+        for (Player player : ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers()) {
 
             if (input.equals(player.getNickName())) {
                 foe = player;
@@ -65,19 +65,18 @@ public class FoeShipBoardPrinter{
             }
         }
 
-        if(playerPresentFlag){
+        if (playerPresentFlag) {
 
-           playerMessenger.printMessage(foe.getNickName() + " shipboard");
-           playerMessenger.printShipboard(foe.getShipBoard());
+            playerMessenger.printMessage(foe.getColouredNickName() + " shipboard");
+            playerMessenger.printShipboard(foe.getShipBoard());
 
-       }
-       else{
+        } else {
 
-           playerMessenger.printMessage("The player you entered is currently not in game!");
+            playerMessenger.printMessage("The player you entered is currently not in game!");
 
-       }
+        }
 
-       return "repeat";
+        return "repeat";
 
     }
 
