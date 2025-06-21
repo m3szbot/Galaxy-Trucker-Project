@@ -498,7 +498,6 @@ public interface SufferBlows {
             }
 
         }
-
         //If side is smooth there is no damage
         //False if not hit
         return hitFlag;
