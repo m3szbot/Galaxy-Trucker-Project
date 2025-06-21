@@ -76,6 +76,6 @@ public class ClientWelcomer {
         System.out.print("Enter the IP address of the server: ");
         input = scanner.nextLine();
         clientInfo.setServerIp(input);
-        System.out.println("The ip address of the server is " + input);
+        System.out.println("The IP address of the server is " + input);
     }
 }
