@@ -2,6 +2,8 @@ package it.polimi.ingsw.Connection.ServerSide.messengers;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.ClientRemoteInterface;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -103,7 +105,7 @@ public class GameMessenger {
      */
     public void disconnectPlayer(Player player) {
 
-        if(!player.getConnectionStatus()) {
+        if (!player.getConnectionStatus()) {
 
             gameInformation.disconnectPlayerInGameInformation(player);
 
@@ -136,7 +138,24 @@ public class GameMessenger {
     }
 
     /**
-     * TODO
+     * Print the flightBoard to all players.
+     */
+    public void sendFlightBoardToAll(FlightBoard flightBoard) {
+        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
+            playerMessenger.printFlightBoard(flightBoard);
+        }
+    }
+
+    /**
+     * Print a card to all players.
+     */
+    public void sendCardToAll(Card card) {
+        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
+            playerMessenger.printCard(card);
+        }
+    }
+
+    /**
      * Clears resources of all players. To call at server shutdown?
      */
 
@@ -146,8 +165,8 @@ public class GameMessenger {
         }
     }
 
-    public void exitLobby(){
-        for(PlayerMessenger playerMessenger: playerMessengerMap.values()){
+    public void exitLobby() {
+        for (PlayerMessenger playerMessenger : playerMessengerMap.values()) {
             playerMessenger.exitLobby();
         }
     }

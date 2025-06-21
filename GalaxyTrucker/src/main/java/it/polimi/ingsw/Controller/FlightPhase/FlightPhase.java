@@ -24,20 +24,10 @@ public class FlightPhase extends Phase {
 
         FlightBoard flightBoard = gameInformation.getFlightBoard();
 
-        // send initial flightBoard to players and starting the threads
         for (Player player : flightBoard.getPlayerOrderList()) {
-            
+
             if (!gameInformation.getPlayerList().contains(player))
                 throw new IllegalStateException("The player in flight on the flightBoard has been disconnected.");
-
-            playerMessenger = gameMessenger.getPlayerMessenger(player);
-            playerMessenger.printFlightBoard(flightBoard);
-
-            Sleeper.sleepXSeconds(3);
-
-            playerMessenger.printMessage("Your shipboard:\n");
-
-            playerMessenger.printShipboard(player.getShipBoard());
 
             PlayerFlightInputHandler.addPlayer(player, gameInformation);
 
@@ -48,17 +38,28 @@ public class FlightPhase extends Phase {
         // while there are unresolved cards and players in flight
         while (flightBoard.getCardsNumber() > 0 && !flightBoard.getPlayerOrderList().isEmpty()) {
 
+            // print flightBoard for each player
+            gameMessenger.sendFlightBoardToAll(flightBoard);
+
             Sleeper.sleepXSeconds(3);
 
-            card = flightBoard.getNewCard();
+            // print shipboard for each player
+            for (Player player : flightBoard.getPlayerOrderList()) {
 
-            // print card for each player
-            for (Player player : gameInformation.getPlayerList()) {
                 playerMessenger = gameMessenger.getPlayerMessenger(player);
-                playerMessenger.printCard(card);
+
+                playerMessenger.printMessage("Your shipboard:\n");
+
+                playerMessenger.printShipboard(player.getShipBoard());
 
             }
 
+            Sleeper.sleepXSeconds(3);
+
+
+            card = flightBoard.getNewCard();
+            // print card for each player
+            gameMessenger.sendCardToAll(card);
 
             Sleeper.sleepXSeconds(3);
 
@@ -66,20 +67,7 @@ public class FlightPhase extends Phase {
 
             Sleeper.sleepXSeconds(3);
 
-            //Printing necessary information after each card to every player
-            for (Player player : flightBoard.getPlayerOrderList()) {
 
-                playerMessenger = gameMessenger.getPlayerMessenger(player);
-
-                playerMessenger.printFlightBoard(flightBoard);
-
-                Sleeper.sleepXSeconds(3);
-
-                playerMessenger.printMessage("Your shipboard:\n");
-
-                playerMessenger.printShipboard(player.getShipBoard());
-
-            }
         }
 
 
