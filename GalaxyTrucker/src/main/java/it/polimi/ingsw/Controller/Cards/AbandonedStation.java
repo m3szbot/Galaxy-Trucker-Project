@@ -71,7 +71,11 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                         message = player.getColouredNickName() + " has solved the card!";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
                         solved = true;
-                        PlayerFlightInputHandler.endPlayerTurn(player);
+
+                        if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
+                            PlayerFlightInputHandler.endPlayerTurn(player);
+                        }
+
                         break;
 
                     } else {

@@ -95,6 +95,11 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
 
                 }
+
+                if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
+                    PlayerFlightInputHandler.endPlayerTurn(player);
+                }
+
                 break;
 
             } else if (results[i] == AttackStates.PlayerDefeated) {

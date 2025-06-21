@@ -101,6 +101,11 @@ public class Pirates extends AttackStatesSetting implements SufferBlows, Credits
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
 
                 }
+
+                if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
+                    PlayerFlightInputHandler.endPlayerTurn(player);
+                }
+
                 break;
 
             } else if (results[i] == AttackStates.PlayerDefeated) {

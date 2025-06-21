@@ -134,6 +134,11 @@ public class Planets extends Card implements GoodsGain, Movable {
                     if (freePlanet == 0) {
                         message = "All planets have been occupied.\n";
                         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                        if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
+                            PlayerFlightInputHandler.endPlayerTurn(player);
+                        }
+
                         break;
                     }
 
