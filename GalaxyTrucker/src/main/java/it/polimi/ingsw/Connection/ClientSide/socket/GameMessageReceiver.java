@@ -64,14 +64,11 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             setGamePhase(dataContainer.getGamePhase());
         } else if (command.equals("endGame")) {
             endGame();
-        }
-        else if(command.equals("joined")){
+        } else if (command.equals("joined")) {
             ClientInputManager.setTimeOut(300000);
-        }
-        else if(command.equals("unblock")){
+        } else if (command.equals("unblock")) {
             ClientInputManager.unblockInput();
-        }
-        else {
+        } else {
             callView(dataContainer);
         }
     }
@@ -106,17 +103,17 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
 
         } catch (NoSuchMethodException e1) {
             running.set(false);
-            System.err.println("Critical error while accessing view method: method not found ");
+            System.err.printf("Critical error while accessing view method: method %s not found\n", methodName);
             System.out.println("You have been disconnected");
             ClientInputManager.unblockInput();
         } catch (IllegalAccessException e2) {
             running.set(false);
-            System.err.println("Critical error while accessing view method: method does not have access to the definition of the specified class");
+            System.err.printf("Critical error while accessing view method: method %s does not have access to the definition of the specified class\n", methodName);
             System.out.println("You have been disconnected");
             ClientInputManager.unblockInput();
         } catch (InvocationTargetException e3) {
             running.set(false);
-            System.err.println("Critical error while accessing view method: the method invoked did not behave correctly");
+            System.err.printf("Critical error while accessing view method: the method invoked %s did not behave correctly\n", methodName);
             System.out.println("You have been disconnected");
             ClientInputManager.unblockInput();
         }
