@@ -32,7 +32,7 @@ public class ChatUtil {
 
         List<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
 
-        if(connectedPlayers.isEmpty()){
+        if(connectedPlayers.size() == 1){
             playerMessenger.printMessage("Nobody is in game!");
             return "repeat";
         }
@@ -91,6 +91,13 @@ public class ChatUtil {
     }
 
     public String startPublicMessageHandler() throws PlayerDisconnectedException{
+
+        List<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
+
+        if(connectedPlayers.size() == 1){
+            playerMessenger.printMessage("Nobody is in game!");
+            return "repeat";
+        }
 
         playerMessenger.printMessage("Type your intergalactic message: ");
 

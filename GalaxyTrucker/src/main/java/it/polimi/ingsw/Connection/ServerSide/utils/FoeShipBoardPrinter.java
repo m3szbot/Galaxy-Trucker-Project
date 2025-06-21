@@ -32,7 +32,8 @@ public class FoeShipBoardPrinter{
         boolean playerPresentFlag = false;
         List<Player> connectedPlayers = ClientMessenger.getGameMessenger(gameCode).getConnectedPlayers();
 
-        if(connectedPlayers.isEmpty()){
+        //he is the only one in game
+        if(connectedPlayers.size() == 1){
             playerMessenger.printMessage("Nobody is in game!");
             return "repeat";
         }
