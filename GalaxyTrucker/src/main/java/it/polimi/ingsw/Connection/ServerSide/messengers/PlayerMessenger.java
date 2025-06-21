@@ -483,9 +483,15 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     public int[] getPlayerCoordinates() throws PlayerDisconnectedException {
         int[] coordinates = new int[2];
         while (true) {
-            String input = getPlayerInput();
 
-            input.replaceAll("[^\\d]", " ");
+            String input = getPlayerInput();
+            
+            if (input == null || input.trim().isEmpty()) {
+                printMessage("Empty input received, please enter the coordinates (X Y): ");
+                continue;
+            }
+
+            input = input.replaceAll("[^\\d]", " ");
 
             try {
                 /*
