@@ -289,6 +289,14 @@ public class ShipBoardTest {
     }
 
     @Test
+    void testRemoveCrewFromCenterCabinEmptyShipboard() throws NoHumanCrewLeftException, IllegalSelectionException {
+        shipBoard.removeCrewMember(7, 7);
+        assertThrows(NoHumanCrewLeftException.class, () -> {
+            shipBoard.removeCrewMember(7, 7);
+        });
+    }
+
+    @Test
     void testErrorCount5SmoothConnectors() throws NotPermittedPlacementException, IllegalSelectionException {
         // add smooth connectors to test error count of unconnected sides
         assertEquals(0, shipBoard.getErrorCount());
