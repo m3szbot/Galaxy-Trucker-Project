@@ -143,7 +143,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         //giving the various penalties to players
 
         //lowest inhabitants
-        changePlayerPosition(lowestInhabitantNumberPlayer, -daysLost, gameInformation.getFlightBoard());
+        if (gameInformation.checkPlayerConnectivity(lowestInhabitantNumberPlayer) && gameInformation.getFlightBoard().isInFlight(lowestInhabitantNumberPlayer)) {
+            changePlayerPosition(lowestInhabitantNumberPlayer, -daysLost, gameInformation.getFlightBoard());
+        }
 
         message = "Player " + lowestInhabitantNumberPlayer.getColouredNickName() + " lost " + daysLost +
                 " flight days as he has the lowest number of inhabitants!";
@@ -151,32 +153,34 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         //lowest engine power
 
-        try {
-            message = "You have the weakest engine power!\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
-            playerMessenger.printMessage(message);
+        if (gameInformation.checkPlayerConnectivity(weakestEnginePowerPlayer) && gameInformation.getFlightBoard().isInFlight(weakestEnginePowerPlayer)) {
+            try {
+                message = "You have the weakest engine power!\n";
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
+                playerMessenger.printMessage(message);
 
-            inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
+                inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
 
-            message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " lost " + lossNumber +
-                    " crew members as he has the weakest engine power!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " lost " + lossNumber +
+                        " crew members as he has the weakest engine power!";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-        } catch (NoHumanCrewLeftException e) {
+            } catch (NoHumanCrewLeftException e) {
 
-            message = e.getMessage();
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
-            playerMessenger.printMessage(message);
+                message = e.getMessage();
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
+                playerMessenger.printMessage(message);
 
-            message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-            gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
+                gameInformation.getFlightBoard().eliminatePlayer(weakestEnginePowerPlayer);
 
-        } catch (PlayerDisconnectedException e) {
-            PlayerFlightInputHandler.removePlayer(weakestEnginePowerPlayer);
+            } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(weakestEnginePowerPlayer);
 
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestEnginePowerPlayer);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestEnginePowerPlayer);
+            }
         }
 
         //rolling the dice for each shot and then hitting
@@ -189,30 +193,32 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         //lowest firepower
 
-        try {
-            message = "You have the lowest fire power!\n";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
-            playerMessenger.printMessage(message);
+        if (gameInformation.checkPlayerConnectivity(weakestFirePowerPlayer) && gameInformation.getFlightBoard().isInFlight(weakestFirePowerPlayer)) {
+            try {
+                message = "You have the lowest fire power!\n";
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
+                playerMessenger.printMessage(message);
 
-            hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
+                hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
 
-            message = "Player " + weakestFirePowerPlayer.getColouredNickName() + "is getting shot at!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                message = "Player " + weakestFirePowerPlayer.getColouredNickName() + "is getting shot at!";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-        } catch (NoHumanCrewLeftException e) {
-            message = e.getMessage();
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
-            playerMessenger.printMessage(message);
+            } catch (NoHumanCrewLeftException e) {
+                message = e.getMessage();
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
+                playerMessenger.printMessage(message);
 
-            message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
-            gameInformation.getFlightBoard().eliminatePlayer(weakestFirePowerPlayer);
+                gameInformation.getFlightBoard().eliminatePlayer(weakestFirePowerPlayer);
 
-        } catch (PlayerDisconnectedException e) {
-            PlayerFlightInputHandler.removePlayer(weakestFirePowerPlayer);
+            } catch (PlayerDisconnectedException e) {
+                PlayerFlightInputHandler.removePlayer(weakestFirePowerPlayer);
 
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestFirePowerPlayer);
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(weakestFirePowerPlayer);
+            }
         }
 
         try {

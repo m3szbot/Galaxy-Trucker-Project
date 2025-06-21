@@ -39,6 +39,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
         PlayerMessenger playerMessenger;
         Player player;
+        boolean isEliminated;
 
         //rolling all dices
         for (int i = 0; i < blows.length; i++) {
@@ -54,6 +55,8 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
             player = gameInformation.getFlightBoard().getPlayerOrderList().get(i);
             PlayerFlightInputHandler.startPlayerTurn(player);
+
+            isEliminated = false;
 
             message = "It's " + player.getColouredNickName() + "'s turn.\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
@@ -75,6 +78,8 @@ public class MeteorSwarm extends Card implements SufferBlows {
                 ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 gameInformation.getFlightBoard().eliminatePlayer(player);
+
+                isEliminated = true;
                 i--;
 
 
@@ -86,7 +91,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
             }
 
-            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
+            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player) && !isEliminated) {
 
                 message = "You survived the meteor storm!\n";
                 playerMessenger.printMessage(message);
