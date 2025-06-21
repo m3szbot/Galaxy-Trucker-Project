@@ -214,9 +214,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
                 hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
 
-                message = "Player " + weakestFirePowerPlayer.getColouredNickName() + "is getting shot at!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
             } catch (NoHumanCrewLeftException e) {
 
                 message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
