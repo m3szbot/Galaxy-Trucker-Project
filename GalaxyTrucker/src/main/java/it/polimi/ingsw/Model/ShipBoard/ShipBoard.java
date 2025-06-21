@@ -24,6 +24,7 @@ import java.util.*;
 public class ShipBoard implements Serializable {
     // All attributes must be Serializable or transient
     // visible values
+    // visible coordinate bounds: [1, max]
     public static final int SB_COLS = 12;
     public static final int SB_ROWS = 12;
     public static final int SB_CENTER_COL = 7;
@@ -210,13 +211,16 @@ public class ShipBoard implements Serializable {
 
     /**
      * Checks if the given visible coordinates respect the bounds of shipboard coordinates.
+     * Coordinates in bounds are [1, max] (included).
+     * Real coordinates are visible - 1: [0, max-1]
      *
      * @return true if coordinates are in bounds, false if out of bounds.
      * @author Boti
      */
     public static boolean checkCoordinatesInBounds(int visibleCol, int visibleRow) {
-        // coordinates must be between 1 and max
-        return (visibleCol > 0 && visibleCol < SB_COLS && visibleRow > 0 && visibleRow < SB_ROWS);
+        // coordinates must be between [1, max] (included)
+        // 0 out of bounds! - error in arrays
+        return (visibleCol > 0 && visibleRow > 0 && visibleCol <= SB_COLS && visibleRow <= SB_ROWS);
     }
 
     /**

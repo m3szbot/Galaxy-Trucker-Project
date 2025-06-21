@@ -289,6 +289,29 @@ public class ShipBoardTest {
     }
 
     @Test
+    void testCoordinatesOutOfBounds() {
+        // illegal coordinates
+        assertFalse(ShipBoard.checkCoordinatesInBounds(0, 1));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(1, 0));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(0, 0));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(-1, -1));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(1, -1));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(-1, 1));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(13, 1));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(1, 13));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(1, 130));
+        assertFalse(ShipBoard.checkCoordinatesInBounds(100, 1));
+
+        // legal coordinates
+        assertTrue(ShipBoard.checkCoordinatesInBounds(1, 1));
+        for (int i = 1; i <= shipBoard.SB_COLS; i++) {
+            for (int j = 1; j <= shipBoard.SB_ROWS; j++) {
+                assertTrue(ShipBoard.checkCoordinatesInBounds(i, j));
+            }
+        }
+    }
+
+    @Test
     void testRemoveCrewFromCenterCabinEmptyShipboard() throws NoHumanCrewLeftException, IllegalSelectionException {
         shipBoard.removeCrewMember(7, 7);
         assertThrows(NoHumanCrewLeftException.class, () -> {

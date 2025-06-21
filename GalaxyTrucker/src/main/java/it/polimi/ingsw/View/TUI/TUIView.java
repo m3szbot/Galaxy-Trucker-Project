@@ -170,13 +170,13 @@ public class TUIView extends GeneralView {
                 diff = temp2 - temp1;
 
                 if (i == 0) {
-                    System.out.printf("%s:%d (1st)\n\n", nickname, temp1);
+                    System.out.printf("%s:%d (1st)\n", nickname, temp1);
                 } else {
                     System.out.printf("%s:%d ---%d---> ", nickname, temp1, diff);
                 }
             }
         }
-        System.out.printf("(%d cards remaining)", flightBoard.getCardsNumber());
+        System.out.printf("(%d cards remaining)\n", flightBoard.getCardsNumber());
     }
 
     /**
