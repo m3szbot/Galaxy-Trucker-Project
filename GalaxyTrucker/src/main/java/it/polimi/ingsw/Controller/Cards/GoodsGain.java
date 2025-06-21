@@ -62,7 +62,7 @@ public interface GoodsGain {
                 message = "The goods have been successfully removed from the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
                 playerMessenger.printMessage(message);
 
-            } catch (IllegalArgumentException | IllegalSelectionException e) {
+            } catch (IllegalSelectionException e) {
 
                 message = e.getMessage();
                 playerMessenger.printMessage(message);
@@ -118,7 +118,7 @@ public interface GoodsGain {
                 message = "The goods have successfully been moved.\n";
                 playerMessenger.printMessage(message);
 
-            } catch (IllegalArgumentException | IllegalSelectionException e) {
+            } catch (IllegalSelectionException e) {
 
                 //If an error occurs (caused by the player giving wrong information), they are asked if they still want to rearrange and repeat the cycle
                 message = e.getMessage();
@@ -204,7 +204,7 @@ public interface GoodsGain {
                                     message = "The goods have been successfully added to the component at [" + coordinates[0] + "," + coordinates[1] + "].\n";
                                     playerMessenger.printMessage(message);
 
-                                } catch (IllegalArgumentException | IllegalSelectionException e) {
+                                } catch (IllegalSelectionException e) {
 
                                     message = e.getMessage();
                                     playerMessenger.printMessage(message);

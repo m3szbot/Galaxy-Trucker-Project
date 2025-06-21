@@ -105,10 +105,6 @@ public class Slavers extends AttackStatesSetting implements CreditsGain, Movable
 
                 } catch (NoHumanCrewLeftException e) {
 
-                    message = e.getMessage();
-                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                    playerMessenger.printMessage(message);
-
                     message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 

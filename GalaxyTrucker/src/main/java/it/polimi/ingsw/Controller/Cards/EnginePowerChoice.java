@@ -86,7 +86,7 @@ public interface EnginePowerChoice {
                             player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
                             break;
 
-                        } catch (IllegalArgumentException | IllegalSelectionException e) {
+                        } catch (IllegalSelectionException e) {
 
                             message = e.getMessage();
                             playerMessenger.printMessage(message);
