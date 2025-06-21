@@ -47,7 +47,7 @@ public interface SufferBlows {
                 //Pause before each blow
                 Sleeper.sleepXSeconds(1);
 
-                componentCoordinates = findHitComponent(player, blow, componentCoordinates);
+                findHitComponent(player, blow, componentCoordinates);
 
                 if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
 
@@ -88,7 +88,7 @@ public interface SufferBlows {
         }
     }
 
-    private int[] findHitComponent(Player player, Blow blow, int[] coords) {
+    private void findHitComponent(Player player, Blow blow, int[] coords) {
 
         int rows = player.getShipBoard().getMatrixRows();
         int cols = player.getShipBoard().getMatrixCols();
@@ -154,13 +154,33 @@ public interface SufferBlows {
 
         }
 
-        return coords;
 
     }
 
     private boolean bigCannonBlowHit(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
 
         return removeComponent(player, xCoord, yCoord, gameInformation);
+
+    }
+
+    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
+
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+
+        try {
+            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+
+        } catch (FracturedShipBoardException e) {
+
+            ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
+
+        } catch (IllegalSelectionException e) {
+
+            playerMessenger.printMessage(e.getMessage());
+
+        }
+
+        return true;
 
     }
 
@@ -207,6 +227,58 @@ public interface SufferBlows {
 
         //False if not hit
         return hitFlag;
+    }
+
+    private String directionSolver(int direction) {
+
+        if (direction == 0) {
+            return "front";
+        } else if (direction == 1) {
+            return "right";
+        } else if (direction == 2) {
+            return "back";
+        } else if (direction == 3) {
+            return "left";
+        } else {
+            return null;
+        }
+    }
+
+    //Returns
+    private boolean useBattery(Player player, GameInformation gameInformation) throws PlayerDisconnectedException {
+
+        String message;
+        PlayerMessenger playerMessenger;
+        int[] coordinates;
+
+        message = "Enter the coordinates of the battery you want to use: ";
+        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        playerMessenger.printMessage(message);
+
+        while (true) {
+
+            coordinates = playerMessenger.getPlayerCoordinates();
+
+            try {
+                player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
+                break;
+
+            } catch (IllegalSelectionException e) {
+
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(e.getMessage());
+
+            }
+
+            //If there was an exception
+            message = "Please enter new coordinates: ";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
+        }
+
+        return false;
+
     }
 
     private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
@@ -260,165 +332,6 @@ public interface SufferBlows {
         return hitFlag;
 
     }
-
-    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
-
-        String message;
-        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        ShipBoard playerShipBoard = player.getShipBoard();
-        boolean hitFlag = false, isProtected = false;
-
-        //condition is true if the side of the component hit is not smooth
-        if ((direction == 0
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getFront() != SideType.Smooth)
-                || (direction == 1
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getRight() != SideType.Smooth)
-                || (direction == 2
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getBack() != SideType.Smooth)
-                || (direction == 3
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getLeft() != SideType.Smooth)) {
-
-            try {
-
-                isProtected = playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction);
-
-            } catch (IllegalSelectionException e) {
-                playerMessenger.printMessage(e.getMessage());
-            }
-
-            if (isProtected && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
-
-                //player can defend themselves by using shields
-                message = "A small asteroid is directed on position ["
-                        + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
-                        directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
-                playerMessenger.printMessage(message);
-
-                if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
-
-                    hitFlag = useBattery(player, gameInformation);
-
-                } else {
-
-                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
-
-                }
-
-            } else {
-
-                hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
-
-            }
-
-        }
-
-        //If side is smooth there is no damage
-        //False if not hit
-        return hitFlag;
-    }
-
-
-    private void notifyAll(Player player, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, GameInformation gameInformation) {
-
-        String message;
-
-        if (hitFlag) {
-
-            message = "Player " + player.getColouredNickName() + " was hit by a " +
-                    blowType.toString().toLowerCase() + " at position " +
-                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-        } else if (xCoord != -1) {
-
-            message = "Player " + player.getColouredNickName() + " wasn't damaged by the " +
-                    blowType.toString().toLowerCase() + " that hit position " +
-                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-        } else {
-
-            message = "Player " + player.getColouredNickName() + " dodged the " +
-                    blowType.toString().toLowerCase() + " coming at him from the " + directionSolver(direction) + "!";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
-
-        }
-    }
-
-    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
-
-        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-
-        try {
-            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
-
-        } catch (FracturedShipBoardException e) {
-
-            ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
-
-        } catch (IllegalSelectionException e) {
-
-            playerMessenger.printMessage(e.getMessage());
-
-        }
-
-        return true;
-
-    }
-
-    private String directionSolver(int direction) {
-
-        if (direction == 0) {
-            return "front";
-        } else if (direction == 1) {
-            return "right";
-        } else if (direction == 2) {
-            return "back";
-        } else if (direction == 3) {
-            return "left";
-        } else {
-            return null;
-        }
-    }
-
-
-    //Returns
-    private boolean useBattery(Player player, GameInformation gameInformation) throws PlayerDisconnectedException {
-
-        String message;
-        PlayerMessenger playerMessenger;
-        int[] coordinates;
-
-        message = "Enter the coordinates of the battery you want to use: ";
-        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        playerMessenger.printMessage(message);
-
-        while (true) {
-
-            coordinates = playerMessenger.getPlayerCoordinates();
-
-            try {
-                player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
-                break;
-
-            } catch (IllegalArgumentException | IllegalSelectionException e) {
-
-                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-                playerMessenger.printMessage(e.getMessage());
-
-            }
-
-            //If there was an exception
-            message = "Please enter new coordinates: ";
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-            playerMessenger.printMessage(message);
-
-        }
-
-        return false;
-
-    }
-
 
     private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
 
@@ -491,7 +404,6 @@ public interface SufferBlows {
         return cannonCoords;
     }
 
-
     private boolean checkCannonPresenceOnSides(int direction, Player player, int[] cannonCoords, int i, int temp) {
 
         if (player.getShipBoard().getRealComponent(i, temp) != null) {
@@ -527,5 +439,88 @@ public interface SufferBlows {
 
         }
         return false;
+    }
+
+    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
+
+        String message;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        ShipBoard playerShipBoard = player.getShipBoard();
+        boolean hitFlag = false, isProtected = false;
+
+        //condition is true if the side of the component hit is not smooth
+        if ((direction == 0
+                && player.getShipBoard().getRealComponent(xCoord, yCoord).getFront() != SideType.Smooth)
+                || (direction == 1
+                && player.getShipBoard().getRealComponent(xCoord, yCoord).getRight() != SideType.Smooth)
+                || (direction == 2
+                && player.getShipBoard().getRealComponent(xCoord, yCoord).getBack() != SideType.Smooth)
+                || (direction == 3
+                && player.getShipBoard().getRealComponent(xCoord, yCoord).getLeft() != SideType.Smooth)) {
+
+            try {
+
+                isProtected = playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction);
+
+            } catch (IllegalSelectionException e) {
+                playerMessenger.printMessage(e.getMessage());
+            }
+
+            if (isProtected && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
+
+                //player can defend themselves by using shields
+                message = "A small asteroid is directed on position ["
+                        + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
+                        directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
+                playerMessenger.printMessage(message);
+
+                if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
+
+                    hitFlag = useBattery(player, gameInformation);
+
+                } else {
+
+                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
+                }
+
+            } else {
+
+                hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
+            }
+
+        }
+
+        //If side is smooth there is no damage
+        //False if not hit
+        return hitFlag;
+    }
+
+    private void notifyAll(Player player, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, GameInformation gameInformation) {
+
+        String message;
+
+        if (hitFlag) {
+
+            message = "Player " + player.getColouredNickName() + " was hit by a " +
+                    blowType.toString().toLowerCase() + " at position " +
+                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        } else if (xCoord != -1) {
+
+            message = "Player " + player.getColouredNickName() + " wasn't damaged by the " +
+                    blowType.toString().toLowerCase() + " that hit position " +
+                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        } else {
+
+            message = "Player " + player.getColouredNickName() + " dodged the " +
+                    blowType.toString().toLowerCase() + " coming at him from the " + directionSolver(direction) + "!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        }
     }
 }
