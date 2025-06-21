@@ -215,7 +215,8 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public static boolean checkCoordinatesInBounds(int visibleCol, int visibleRow) {
-        return (visibleCol >= 0 && visibleCol < SB_COLS && visibleRow >= 0 && visibleRow < SB_ROWS);
+        // coordinates must be between 1 and max
+        return (visibleCol > 0 && visibleCol < SB_COLS && visibleRow > 0 && visibleRow < SB_ROWS);
     }
 
     /**

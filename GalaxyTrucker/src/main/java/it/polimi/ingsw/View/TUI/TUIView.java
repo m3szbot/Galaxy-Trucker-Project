@@ -176,6 +176,7 @@ public class TUIView extends GeneralView {
                 }
             }
         }
+        System.out.printf("(%d cards remaining)", flightBoard.getCardsNumber());
     }
 
     /**
