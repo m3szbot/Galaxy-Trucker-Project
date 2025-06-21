@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.ExceptionsHandler;
 import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
@@ -37,6 +38,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
 
     public void resolve(GameInformation gameInformation) {
 
+        GameMessenger gameMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode());
         PlayerMessenger playerMessenger;
         Player player;
         boolean isEliminated;
@@ -59,12 +61,12 @@ public class MeteorSwarm extends Card implements SufferBlows {
             isEliminated = false;
 
             message = "It's " + player.getColouredNickName() + "'s turn.\n";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+            gameMessenger.sendMessageToAll(message);
 
-            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger = gameMessenger.getPlayerMessenger(player);
 
             message = "Player " + player.getColouredNickName() + " is in a meteor swarm!\n";
-            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+            gameMessenger.sendMessageToAll(message);
 
             try {
                 hit(player, blows, blowType, gameInformation);
@@ -75,7 +77,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
                 playerMessenger.printMessage(message);
 
                 message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                gameMessenger.sendMessageToAll(message);
 
                 gameInformation.getFlightBoard().eliminatePlayer(player);
 
@@ -86,12 +88,12 @@ public class MeteorSwarm extends Card implements SufferBlows {
             } catch (PlayerDisconnectedException e) {
                 PlayerFlightInputHandler.removePlayer(player);
 
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
+                gameMessenger.disconnectPlayer(player);
                 i--;
 
             }
 
-            if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player) && !isEliminated) {
+            if (gameMessenger.checkPlayerMessengerPresence(player) && !isEliminated) {
 
                 message = "You survived the meteor storm!\n";
                 playerMessenger.printMessage(message);
@@ -110,7 +112,7 @@ public class MeteorSwarm extends Card implements SufferBlows {
             gameInformation.getFlightBoard().updateFlightBoard();
 
         } catch (LappedPlayersException e) {
-            ExceptionsHandler.handleLappedPlayersException(ClientMessenger.getGameMessenger(gameInformation.getGameCode()), e);
+            ExceptionsHandler.handleLappedPlayersException(gameMessenger, e);
         }
 
     }
