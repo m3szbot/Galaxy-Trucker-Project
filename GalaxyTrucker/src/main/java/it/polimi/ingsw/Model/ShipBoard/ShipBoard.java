@@ -327,19 +327,15 @@ public class ShipBoard implements Serializable {
         else {
             try {
                 this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
-                this.addComponent(new AlienSupport(universalSides, false), 6, 8);
-
-
-                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 7, 6);
-                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 8, 6);
-
+                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 6, 8);
+                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 7, 6);
+                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 7, 5);
+                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 8, 6);
                 this.addComponent(new Cabin(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 6, 7);
                 this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 7);
-                this.addComponent(new Cabin(universalSides, CrewType.Brown, 2), 5, 8);
-
+                this.addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special}, true), 5, 8);
                 this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 8, 7);
                 this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 9, 7);
-
                 this.addComponent(new Storage(universalSides, false, 3), 8, 8);
                 this.addComponent(new Storage(universalSides, false, 3), 9, 8);
                 this.addComponent(new Storage(universalSides, true, 1), 8, 9);
