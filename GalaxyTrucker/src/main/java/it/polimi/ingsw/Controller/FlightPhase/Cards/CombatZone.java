@@ -59,6 +59,14 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         }
 
+        //Explanation of the card
+
+        message = "The player with the lowest crew count will lose " + daysLost + " days.\n" +
+                "The player with the lowest activated engine power will lose" + lossNumber + " crew members.\n" +
+                "The player with the lowest activated fire power will be shot at.\n" +
+                "Choose wisely!\n";
+        ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
         //letting the players choose their firePower, from the leader backwards
 
         for (int i = 0; i < gameInformation.getFlightBoard().getPlayerOrderList().size(); i++) {
@@ -251,6 +259,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Days lost: " + daysLost);
         System.out.println("Loss type: " + lossType.toString());
+        System.out.println("Loss number:" + lossNumber);
         System.out.println("Blow type: " + blowType.toString());
         printBlows(blows);
         System.out.println();
