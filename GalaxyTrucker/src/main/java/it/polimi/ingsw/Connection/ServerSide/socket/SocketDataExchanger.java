@@ -69,6 +69,13 @@ public class SocketDataExchanger {
 
     public void closeResources(){
 
+        if(clientSocket.isClosed()){
+            //if the socket is already closed, there is no need to free up resources as they
+            //already have been
+            System.out.println("Socket already closed");
+            return;
+        }
+
         try {
             clientSocket.close();
         } catch (IOException e) {
