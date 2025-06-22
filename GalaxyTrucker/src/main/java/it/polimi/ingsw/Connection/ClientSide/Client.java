@@ -8,6 +8,7 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ClientWelcomer;
 import it.polimi.ingsw.Connection.ClientSide.utils.InputDaemon;
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ViewType;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.View.GUI.GUILoader;
 import javafx.application.Application;
 
@@ -40,7 +41,13 @@ public class Client {
 
         }
         else{
-            Application.launch(GUILoader.class, args);
+            GUILoader.setViewCommunicator(clientInfo.getViewCommunicator());
+            Thread GUIThread = new Thread(() -> Application.launch(GUILoader.class, args));
+            GUIThread.setDaemon(false);
+            GUIThread.start();
+
+            Sleeper.sleepXSeconds(3);
+
         }
 
 

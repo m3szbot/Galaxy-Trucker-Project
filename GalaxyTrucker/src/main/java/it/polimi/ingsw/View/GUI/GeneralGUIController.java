@@ -1,6 +1,7 @@
 package it.polimi.ingsw.View.GUI;
 
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
+import it.polimi.ingsw.View.GeneralView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,73 +22,74 @@ public class GeneralGUIController {
     @FXML
     private AnchorPane rootPane;
 
-    @FXML
-    public void initialize(){
-
-        //the first phase is lobby phase
-
-        loadPhaseGUI("/fxml/LobbyView/Lobby.fxml");
-
-    }
-
     /**
      * Set the gui interface for the phase passed as parameter. The method must
      * be used in the client side in the setGamePhase method
      * @param gamePhase
      */
 
-    public void setPhaseGUI(GamePhase gamePhase){
+    public void setPhaseGUI(GamePhase gamePhase, GeneralView guiView){
 
         switch (gamePhase){
+            case Lobby -> {
+                loadPhaseGUI("/fxml/LobbyView/Lobby.fxml", guiView);
+            }
             case Assembly -> {
 
-                loadPhaseGUI("/fxml/AssemblyView/AssemblyView.fxml");
+                loadPhaseGUI("/fxml/AssemblyView/AssemblyView.fxml", guiView);
 
             }
             case Correction -> {
 
-                loadPhaseGUI("/fxml/CorrectionView/CorrectionView.fxml");
+                loadPhaseGUI("/fxml/CorrectionView/CorrectionView.fxml", guiView);
 
             }
             case Flight -> {
 
-                loadPhaseGUI("/fxml/FlightView/FlightView.fxml");
+                loadPhaseGUI("/fxml/FlightView/FlightView.fxml", guiView);
 
             }
             case Evaluation -> {
 
-                loadPhaseGUI("/fxml/EvaluationView/EvaluationView.fxml");
+                loadPhaseGUI("/fxml/EvaluationView/EvaluationView.fxml", guiView);
 
+            }
+            default -> {
+                return;
             }
         }
 
     }
-
-    private void loadPhaseGUI(String fxmlPath){
+    private void loadPhaseGUI(String fxmlPath, GeneralView guiView){
 
         try {
-
-            Node node = FXMLLoader.load(getClass().getResource(fxmlPath));
-
-            //removing the old node
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Node node = loader.load();
 
             rootPane.getChildren().clear();
 
-            //adding the new node
             rootPane.getChildren().add(node);
 
-            //making the inserted node occupy the entire stage
+            //centering everything
 
-            AnchorPane.setTopAnchor(node, 0.0);
-            AnchorPane.setBottomAnchor(node, 0.0);
-            AnchorPane.setLeftAnchor(node, 0.0);
-            AnchorPane.setRightAnchor(node, 0.0);
+            rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+                node.setLayoutX((newVal.doubleValue() - node.prefWidth(-1)) / 2);
+            });
+            rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+                node.setLayoutY((newVal.doubleValue() - node.prefHeight(-1)) / 2);
+            });
+
+            node.setLayoutX((rootPane.getWidth() - node.prefWidth(-1)) / 2);
+            node.setLayoutY((rootPane.getHeight() - node.prefHeight(-1)) / 2);
+
+            GUIController controller = loader.getController();
+            ((GUIView)guiView).setGuiController(controller);
 
         } catch (IOException e) {
-
             System.err.println("Error while loading the fxml file at path: " + fxmlPath);
-
+            e.printStackTrace();
         }
     }
+
 
 }

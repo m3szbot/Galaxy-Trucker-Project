@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 // TODO: implement
-public abstract class AssemblyGUIController extends GUIController {
+public abstract class AssemblyGUIController extends GUIController implements PlayerInputSetter {
     private transient AtomicReference<String> userInput;
     String input;
 

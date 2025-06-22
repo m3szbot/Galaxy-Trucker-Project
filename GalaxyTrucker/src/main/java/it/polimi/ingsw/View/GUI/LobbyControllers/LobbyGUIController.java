@@ -1,14 +1,15 @@
 package it.polimi.ingsw.View.GUI.LobbyControllers;
 
-import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.View.GUI.GUIController;
+import it.polimi.ingsw.View.GUI.PlayerInputSetter;
+import it.polimi.ingsw.View.GUI.utils.FXUtil;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class LobbyGUIController extends GUIController {
+public class LobbyGUIController extends GUIController implements PlayerInputSetter {
 
     @FXML
     private TextArea logTextArea;
@@ -19,38 +20,33 @@ public class LobbyGUIController extends GUIController {
 
     public void initialize(){
 
-        button.setOnAction(actionEvent -> sendData(playerInputField.getText()));
+        button.setOnAction(actionEvent -> setUserInput(playerInputField.getText()));
 
     }
 
 
-    public void showMessage(String message){
-        logTextArea.appendText(message);
+    public void refreshConsole(String message){
+        FXUtil.runOnFXThread(() -> logTextArea.appendText(message + "\n"));
     }
 
     @Override
-    public void showCard(Node node) {
+    public void refreshCard(Node node) {
         //not used
     }
 
     @Override
-    public void showComponent(Node node) {
+    public void refreshComponent(Node node) {
        //not used
     }
 
     @Override
-    public void showFlightBoard(Node node) {
+    public void refreshFlightBoard(Node node) {
        //not used
     }
 
     @Override
-    public void showShipBoard(Node node) {
+    public void refreshShipBoard(Node node) {
        //not used
-    }
-
-    public void sendData(String playerInput){
-
-        ClientInputManager.setUserInput(playerInput);
     }
 
 }
