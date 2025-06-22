@@ -98,6 +98,40 @@ public class GameJoinerThread extends Thread {
         }
     }
 
+    private boolean askToJoin() throws PlayerDisconnectedException, TimeoutException, IOException{
+
+        if(centralServer.getCurrentStartingGame().getCreator() == null){
+            //the game is not yet created
+            return true;
+        }
+
+        playerLobbyMessenger.printMessage("The game currently starting is the following: ");
+        playerLobbyMessenger.printMessage("Game type: " + centralServer.getCurrentStartingGame().getGameInformation().getGameType());
+        playerLobbyMessenger.printMessage("Game creator: " + centralServer.getCurrentStartingGame().getCreator());
+        playerLobbyMessenger.printMessage("Game code: " + centralServer.getCurrentGameCode() );
+
+        playerLobbyMessenger.printMessage("\nWould you like to join it ?(yes/no): ");
+
+        while(true) {
+
+            String input = playerLobbyMessenger.getPlayerString();
+
+            if (input.equals("yes")) {
+                return true;
+            } else if (input.equals("no")) {
+                return false;
+            } else {
+
+                playerLobbyMessenger.printMessage("Please enter a correct answer!(yes/no): ");
+                trials++;
+                checkTrials();
+
+            }
+
+        }
+
+    }
+
     private void startLobby() throws IOException, PlayerDisconnectedException, TimeoutException {
 
         String message;
@@ -112,16 +146,21 @@ public class GameJoinerThread extends Thread {
 
                 if (joinGame()) {
 
-                    if (isEmpty()) {
-                        //first player joining
-                        makeFirstPlayerJoin();
-                    } else {
-                        //not first player joining
-                        makeNonFirstPlayerJoin();
+                    if(askToJoin()) {
+
+                        if (isEmpty()) {
+                            //first player joining
+                            makeFirstPlayerJoin();
+                        } else {
+                            //not first player joining
+                            makeNonFirstPlayerJoin();
+                        }
+
+                        centralServer.getLock().unlock();
+                        break;
+
                     }
 
-                    centralServer.getLock().unlock();
-                    break;
 
                 } else {
                     message = "Somebody is already joining a new game, please wait.";
