@@ -4,10 +4,11 @@ import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Controller.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
-import it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController;
 import it.polimi.ingsw.View.GeneralView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 //TODO
 
 /**
@@ -18,8 +19,12 @@ import it.polimi.ingsw.View.GeneralView;
 
 public class GUIView extends GeneralView {
 
-    private GUIController guiController = new LobbyGUIController();
-    private GamePhase gamePhase = GamePhase.Lobby;
+
+    private GUIController guiController;
+
+    public void setGuiController(GUIController controller) {
+        this.guiController = controller;
+    }
 
     /*
     The idea of the methods is the following. The methods create a node which
@@ -29,47 +34,32 @@ public class GUIView extends GeneralView {
     the current fxml file.
      */
 
-    public void changePhase(){
-
-       switch (gamePhase){
-           case Lobby -> {
-               gamePhase = GamePhase.Assembly;
-               //guiController = new AssemblyGUIController();
-           }
-           case Assembly -> {
-               gamePhase = GamePhase.Correction;
-               //guiController = new CorrectionGUIController();
-           }
-           case Correction -> {
-               gamePhase = GamePhase.Flight;
-               //guiController = new FlightGUIController();
-           }
-           case Flight -> {
-               gamePhase = GamePhase.Evaluation;
-               //guiController = new EvaluationGUIController();
-           }
-
-       }
-
-    }
-
     @Override
     public void printMessage(String message) {
 
-        guiController.showMessage(message);
+        guiController.refreshConsole(message);
 
     }
 
     @Override
     public void printMessage(DataContainer dataContainer) {
 
-        guiController.showMessage(dataContainer.getMessage());
+        if(dataContainer.getMessage() == null){
+            throw new IllegalArgumentException("The DC does not contain a message");
+        }
+        else{
+            printMessage(dataContainer.getMessage());
+        }
 
     }
 
     @Override
     public void printCard(Card card) {
 
+        Image cardImage = new Image(card.getCardImage());
+        ImageView cardImageView = new ImageView(cardImage);
+
+        guiController.refreshCard(cardImageView);
 
 
     }
@@ -77,15 +67,35 @@ public class GUIView extends GeneralView {
     @Override
     public void printCard(DataContainer dataContainer) {
 
+        if(dataContainer.getCard() == null){
+            throw new IllegalArgumentException("The DC does not contain a card");
+        }
+        else{
+            printCard(dataContainer.getCard());
+        }
+
     }
 
     @Override
     public void printComponent(Component component) {
 
+        Image componentImage = new Image(component.getImagePath());
+        ImageView componentImageView = new ImageView(componentImage);
+
+        guiController.refreshComponent(componentImageView);
+
     }
 
     @Override
     public void printComponent(DataContainer dataContainer) {
+
+        if(dataContainer.getComponent() == null){
+            throw new IllegalArgumentException("The DC does not contain a component");
+        }
+        else{
+            printComponent(dataContainer.getComponent());
+        }
+
 
     }
 

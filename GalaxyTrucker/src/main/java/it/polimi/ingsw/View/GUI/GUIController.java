@@ -4,15 +4,15 @@ import javafx.scene.Node;
 
 public abstract class GUIController {
 
-    public abstract void showMessage(String message);
+    public abstract void refreshConsole(String message);
 
 
-    public abstract void showShipBoard(Node node);
+    public abstract void refreshShipBoard(Node node);
 
-    public abstract void showCard(Node node);
+    public abstract void refreshCard(Node node);
 
-    public abstract void showComponent(Node node);
+    public abstract void refreshComponent(Node node);
 
-    public abstract void showFlightBoard(Node node);
+    public abstract void refreshFlightBoard(Node node);
 
 }

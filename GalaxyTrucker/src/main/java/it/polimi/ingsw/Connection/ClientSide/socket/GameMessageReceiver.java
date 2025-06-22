@@ -47,10 +47,11 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
 
             } catch (IOException e) {
                 running.set(false);
-                viewCommunicator.showData("You have been disconnected from the server", false);
+                System.out.println("You have been disconnected from the server");
+                ClientInputManager.unblockInput();
                 break;
             } catch (Exception e) {
-                viewCommunicator.showData("Unexpected error in receiver: " + e.getMessage(), true);
+                System.out.println("Unexpected error in receiver");
                 e.printStackTrace();
             }
 
