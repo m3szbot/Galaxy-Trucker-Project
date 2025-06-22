@@ -24,7 +24,8 @@ import java.util.*;
 public class ShipBoard implements Serializable {
     // All attributes must be Serializable or transient
     // visible values
-    // visible coordinate bounds: [1, max]
+    // visible coordinate bounds: [1, 12]
+    // real coordinate bounds: [0, 12-1]
     public static final int SB_COLS = 12;
     public static final int SB_ROWS = 12;
     public static final int SB_CENTER_COL = 7;
@@ -147,7 +148,6 @@ public class ShipBoard implements Serializable {
     }
 
     private void addStarterCabin() {
-        // TODO: colored starter cabin, to get from the componentList in gameInformation
         Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2);
         try {
             addComponent(SB_CENTER_COL, SB_CENTER_ROW, starterCabin);
@@ -219,8 +219,8 @@ public class ShipBoard implements Serializable {
      */
     public static boolean checkCoordinatesInBounds(int visibleCol, int visibleRow) {
         // coordinates must be between [1, max] (included)
-        // 0 out of bounds! - error in arrays
-        return (visibleCol > 0 && visibleRow > 0 && visibleCol <= SB_COLS && visibleRow <= SB_ROWS);
+        // 0, max+1 out of bounds! - error in arrays
+        return (visibleCol >= 1 && visibleRow >= 1 && visibleCol <= SB_COLS && visibleRow <= SB_ROWS);
     }
 
     /**

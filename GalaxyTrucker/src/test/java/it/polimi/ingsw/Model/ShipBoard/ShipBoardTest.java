@@ -321,6 +321,106 @@ public class ShipBoardTest {
     }
 
     @Test
+    void testEdgeIndexesWithAddComponent() {
+        // visible indexes: [1, 12]
+        // real indexes: [0, 11]
+
+        // OUT OF BOUNDS: ILLEGALSELECTION
+
+        // visible col -1, 0
+        for (int i = -1; i <= 0; i++) {
+            for (int j = -1; j <= 13; j++) {
+                int col = i;
+                int row = j;
+                assertThrows(IllegalSelectionException.class, () -> {
+                    shipBoard.addComponent(col, row, universalConnector);
+                });
+            }
+        }
+
+        // visible col 13
+        for (int j = -1; j <= 13; j++) {
+            int col = 13;
+            int row = j;
+            assertThrows(IllegalSelectionException.class, () -> {
+                shipBoard.addComponent(col, row, universalConnector);
+            });
+        }
+
+        // visible row -1, 0
+        for (int i = -1; i <= 0; i++) {
+            for (int j = -1; j <= 13; j++) {
+                int col = j;
+                int row = i;
+                assertThrows(IllegalSelectionException.class, () -> {
+                    shipBoard.addComponent(col, row, universalConnector);
+                });
+            }
+        }
+
+        // visible row 13
+        for (int j = -1; j <= 13; j++) {
+            int col = j;
+            int row = 13;
+            assertThrows(IllegalSelectionException.class, () -> {
+                shipBoard.addComponent(col, row, universalConnector);
+            });
+        }
+
+        // IN BOUNDS, INVALID PLACEMENTS: NOTPERMITTEDPLACEMENT
+        // [1, 12]
+
+        // visible col 1
+        for (int j = 1; j <= 12; j++) {
+            int col = 1;
+            int row = j;
+            assertThrows(NotPermittedPlacementException.class, () -> {
+                shipBoard.addComponent(col, row, universalConnector);
+            });
+        }
+
+        // visible col 12
+        for (int j = 1; j <= 12; j++) {
+            int col = 12;
+            int row = j;
+            assertThrows(NotPermittedPlacementException.class, () -> {
+                shipBoard.addComponent(col, row, universalConnector);
+            });
+        }
+
+        // visible row 1
+        for (int j = 1; j <= 12; j++) {
+            int col = j;
+            int row = 1;
+            assertThrows(NotPermittedPlacementException.class, () -> {
+                shipBoard.addComponent(col, row, universalConnector);
+            });
+        }
+
+        // visible col 12
+        for (int j = 1; j <= 12; j++) {
+            int col = j;
+            int row = 12;
+            assertThrows(NotPermittedPlacementException.class, () -> {
+                shipBoard.addComponent(col, row, universalConnector);
+            });
+        }
+
+    }
+
+    // TESTS OF GIACOMO:
+    // (testing mainly ShipboardAttributes)
+    @Test
+    void addComponent() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException, IllegalSelectionException {
+        shipBoard.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
+        assertEquals(shipBoard.getShipBoardAttributes().getSingleEnginePower(), 1);
+        shipBoard.removeComponent(7, 8, false);
+        assertEquals(shipBoard.getShipBoardAttributes().getSingleEnginePower(), 0);
+        assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 1);
+
+    }
+
+    @Test
     void testErrorCount5SmoothConnectors() throws NotPermittedPlacementException, IllegalSelectionException {
         // add smooth connectors to test error count of unconnected sides
         assertEquals(0, shipBoard.getErrorCount());
@@ -681,7 +781,6 @@ public class ShipBoardTest {
 
     }
 
-
     @Test
     void removeBattery() throws NotPermittedPlacementException, IllegalSelectionException {
         // 0Batteries Cabin 2Batteries
@@ -959,20 +1058,6 @@ public class ShipBoardTest {
             shipBoard.removeComponent(7, 7, false);
         });
     }
-
-
-    // TESTS OF GIACOMO:
-    // (testing mainly ShipboardAttributes)
-    @Test
-    void addComponent() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException, IllegalSelectionException {
-        shipBoard.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
-        assertEquals(shipBoard.getShipBoardAttributes().getSingleEnginePower(), 1);
-        shipBoard.removeComponent(7, 8, false);
-        assertEquals(shipBoard.getShipBoardAttributes().getSingleEnginePower(), 0);
-        assertEquals(shipBoard.getShipBoardAttributes().getDestroyedComponents(), 1);
-
-    }
-
 
     @Test
     void addComponent2() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException, IllegalSelectionException {
