@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide.RMI;
 
-import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
@@ -9,7 +9,7 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface ClientRemoteInterface extends Remote{
+public interface ClientRemoteInterface extends Remote {
 
     public void printMessage(String message) throws RemoteException;
 

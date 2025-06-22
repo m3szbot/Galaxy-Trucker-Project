@@ -1,7 +1,7 @@
-package it.polimi.ingsw.Controller.Cards;
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
 
-import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.IllegalSelectionException;
@@ -162,6 +162,27 @@ public interface TokenLoss {
         return quantity;
     }
 
+    private String colorSolver(int good) {
+
+        if (good == 0) {
+
+            return "red";
+
+        } else if (good == 1) {
+
+            return "yellow";
+
+        } else if (good == 2) {
+
+            return "green";
+
+        } else {
+
+            return "blue";
+
+        }
+    }
+
     private void removeBatteries(Player player, int quantity, GameInformation gameInformation) throws PlayerDisconnectedException {
 
         int batteriesAvailable = player.getShipBoard().getShipBoardAttributes().getRemainingBatteries();
@@ -203,27 +224,6 @@ public interface TokenLoss {
 
                 }
             }
-
-        }
-    }
-
-    private String colorSolver(int good) {
-
-        if (good == 0) {
-
-            return "red";
-
-        } else if (good == 1) {
-
-            return "yellow";
-
-        } else if (good == 2) {
-
-            return "green";
-
-        } else {
-
-            return "blue";
 
         }
     }

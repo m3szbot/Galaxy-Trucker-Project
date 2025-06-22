@@ -7,7 +7,7 @@ import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Connection.ServerSide.utils.CommandHandler;
-import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
@@ -63,7 +63,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         this.gameCode = gameCode;
     }
 
-    public void exitLobby(){
+    public void exitLobby() {
         inLobby = false;
     }
 
@@ -79,26 +79,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         return connectionType;
     }
 
-    public boolean isCommand(String command){
-        switch (command){
-            case "show-shipboard" -> {
-                return true;
-            }
-            case "private-message" -> {
-                return true;
-            }
-            case "public-message" -> {
-                return true;
-            }
-            default -> {
-                return false;
-            }
-        }
-    }
-
     @Override
     public void setGamePhase(GamePhase gamePhase) {
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
         if (connectionType.equals(ConnectionType.SOCKET)) {
@@ -130,7 +113,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 socketDataExchanger.sendContainer(dataContainer);
             } catch (IOException e) {
 
-                if(inLobby){
+                if (inLobby) {
                     return;
                 }
 
@@ -148,7 +131,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     @Override
     public void endGame() {
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
         if (connectionType.equals(ConnectionType.SOCKET)) {
@@ -196,7 +179,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
 
     public void unblockUserInputGetterCall() {
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
         if (connectionType == ConnectionType.SOCKET) {
@@ -237,7 +220,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
      */
     private String getPlayerInput() throws PlayerDisconnectedException {
 
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             throw new PlayerDisconnectedException(player);
         }
 
@@ -249,19 +232,17 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                     while (true) {
                         String input = socketDataExchanger.getString();
 
-                        if(isCommand(input)){
+                        if (isCommand(input)) {
                             String result = CommandHandler.executeCommand(input, this);
-                            if(result.equals("unblocked")){
+                            if (result.equals("unblocked")) {
                                 return "unblocked";
                             }
-                        }
-                        else if (input.equals("inactivity")) {
+                        } else if (input.equals("inactivity")) {
 
                             System.out.println("Player " + player.getColouredNickName() + " was kicked because of inactivity");
                             throw new PlayerDisconnectedException(player);
 
-                        }
-                        else {
+                        } else {
                             return input;
                         }
                     }
@@ -280,13 +261,12 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                     while (true) {
                         String input = virtualClient.getString();
 
-                        if(isCommand(input)){
+                        if (isCommand(input)) {
                             String result = CommandHandler.executeCommand(input, this);
-                            if(result.equals("unblocked")){
+                            if (result.equals("unblocked")) {
                                 return "unblocked";
                             }
-                        }
-                        else {
+                        } else {
                             return input;
                         }
                     }
@@ -310,9 +290,46 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         }
     }
 
+    public boolean isCommand(String command) {
+        switch (command) {
+            case "show-shipboard" -> {
+                return true;
+            }
+            case "private-message" -> {
+                return true;
+            }
+            case "public-message" -> {
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * @return integer that the player sent to the server
+     * @author carlo
+     */
+    public int getPlayerInt() throws PlayerDisconnectedException {
+
+        while (true) {
+            String input = getPlayerInput();
+
+            try {
+
+                return Integer.parseInt(input);
+
+            } catch (NumberFormatException e) {
+                printMessage("You didn't enter an integer! Please reenter it: ");
+            }
+
+        }
+    }
+
     @Override
     public void printMessage(String message) {
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
         if (connectionType.equals(ConnectionType.SOCKET)) {
@@ -329,7 +346,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 virtualClient.printMessage(message);
 
             } catch (RemoteException e) {
-                if(inLobby){
+                if (inLobby) {
                     return;
                 }
                 System.err.println("An error occurred while sending a message to " + player.getColouredNickName() +
@@ -344,7 +361,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printComponent(Component component) {
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
         if (connectionType.equals(ConnectionType.SOCKET)) {
@@ -373,7 +390,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     @Override
     public synchronized void printShipboard(ShipBoard shipBoard) {
 
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
 
@@ -402,7 +419,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printCard(Card card) {
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
         if (connectionType.equals(ConnectionType.SOCKET)) {
@@ -430,7 +447,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
-        if(disconnectedFlag){
+        if (disconnectedFlag) {
             return;
         }
         if (connectionType.equals(ConnectionType.SOCKET)) {
@@ -454,26 +471,6 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
         }
 
-    }
-
-    /**
-     * @return integer that the player sent to the server
-     * @author carlo
-     */
-    public int getPlayerInt() throws PlayerDisconnectedException {
-
-        while (true) {
-            String input = getPlayerInput();
-
-            try {
-
-                return Integer.parseInt(input);
-
-            } catch (NumberFormatException e) {
-                printMessage("You didn't enter an integer! Please reenter it: ");
-            }
-
-        }
     }
 
     /**

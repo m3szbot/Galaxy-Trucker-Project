@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.AssemblyModel;
 
 
-import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.util.ArrayList;

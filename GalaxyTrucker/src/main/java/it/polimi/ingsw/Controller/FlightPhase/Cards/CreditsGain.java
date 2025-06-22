@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.Cards;
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
 
 import it.polimi.ingsw.Model.ShipBoard.Player;
 

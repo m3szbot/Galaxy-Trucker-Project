@@ -1,9 +1,8 @@
-package it.polimi.ingsw.Controller.Cards;
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -83,6 +82,26 @@ public interface GoodsGain {
 
     }
 
+    private int[] askForGoods(Player player, String messageType, int start, int end, GameInformation gameInformation) throws PlayerDisconnectedException {
+
+        int[] goods = {0, 0, 0, 0};
+        String message;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        String[] colors = {"red", "yellow", "green", "blue"};
+
+        for (int i = start; i <= end; i++) {
+
+            message = "Enter number of " + colors[i] + " goods to " + messageType;
+            playerMessenger.printMessage(message);
+
+            goods[i] = playerMessenger.getPlayerInt();
+
+
+        }
+
+        return goods;
+    }
+
     private void rearrangementPhase(Player player, GameInformation gameInformation) throws PlayerDisconnectedException {
 
         String message;
@@ -138,7 +157,6 @@ public interface GoodsGain {
 
         }
     }
-
 
     private void GoodsPlacementPhase(Player player, int[] goods, GameInformation gameInformation) throws PlayerDisconnectedException {
         String message;
@@ -270,27 +288,6 @@ public interface GoodsGain {
             playerMessenger.printMessage(message);
 
         }
-    }
-
-
-    private int[] askForGoods(Player player, String messageType, int start, int end, GameInformation gameInformation) throws PlayerDisconnectedException {
-
-        int[] goods = {0, 0, 0, 0};
-        String message;
-        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
-        String[] colors = {"red", "yellow", "green", "blue"};
-
-        for (int i = start; i <= end; i++) {
-
-            message = "Enter number of " + colors[i] + " goods to " + messageType;
-            playerMessenger.printMessage(message);
-
-            goods[i] = playerMessenger.getPlayerInt();
-
-
-        }
-
-        return goods;
     }
 
 }

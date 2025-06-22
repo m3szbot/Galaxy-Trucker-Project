@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.Cards;
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.Cards;
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
 
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
@@ -8,29 +8,32 @@ import it.polimi.ingsw.Controller.FlightPhase.IndexChecker;
 import it.polimi.ingsw.Controller.FlightPhase.PlayerFlightInputHandler;
 import it.polimi.ingsw.Model.FlightBoard.LappedPlayersException;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card abandonedStation
+ * class that represent the card abandonedShip
  *
  * @author carlo
  */
 
-//check that the adding of requirementNumber doesn't compromise json file
+public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGain {
 
-public class AbandonedStation extends Card implements Movable, GoodsGain {
+    private int daysLost;
+    private ElementType lossType;
+    private int lossNumber;
+    private int gainedCredits;
 
-    private int daysLost, requirementNumber;
-    private int[] goods;
-
-    public AbandonedStation(CardBuilder cardBuilder) {
+    public AbandonedShip(CardBuilder cardBuilder) {
 
         this.cardLevel = cardBuilder.getCardLevel();
         this.cardName = cardBuilder.getCardName();
         this.daysLost = cardBuilder.getDaysLost();
-        this.goods = cardBuilder.getGoods();
-        this.requirementNumber = cardBuilder.getRequirementNumber();
+        this.lossType = cardBuilder.getLossType();
+        this.lossNumber = cardBuilder.getLossNumber();
+        this.gainedCredits = cardBuilder.getGainedCredits();
         this.imagePath = cardBuilder.getImagePath();
+
 
     }
 
@@ -55,17 +58,19 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
             playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
 
-            if (isCrewSatisfying(player, requirementNumber)) {
-                //player has the possibility to solve the card
+            //player can afford to lose some crew members to solve the card if he wants to
 
-                message = "Do you want to solve the card ?";
+            if (player.getShipBoard().getShipBoardAttributes().getCrewMembers() > lossNumber) {
+
+                message = "Do you want to solve the card (if you do you will lose part of your crew) ? ";
                 playerMessenger.printMessage(message);
 
                 try {
                     if (playerMessenger.getPlayerBoolean()) {
-                        //player decides to solve the card
 
-                        giveGoods(player, goods, gameInformation);
+                        //player decides to solve the card
+                        inflictLoss(player, lossType, lossNumber, gameInformation);
+                        giveCredits(player, gainedCredits);
                         changePlayerPosition(player, -daysLost, gameInformation.getFlightBoard());
 
                         message = player.getColouredNickName() + " has solved the card!";
@@ -90,17 +95,27 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(player);
                     i--;
 
+                } catch (NoHumanCrewLeftException e) {
+
+                    message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    gameInformation.getFlightBoard().eliminatePlayer(player);
+                    i--;
+
                 }
             } else {
 
-                message = "Not enough crew members.\n";
+                message = "Not enough crew members to solve the card.\n";
                 playerMessenger.printMessage(message);
 
             }
 
             if (ClientMessenger.getGameMessenger(gameInformation.getGameCode()).checkPlayerMessengerPresence(player)) {
+
                 message = "You finished your turn, wait for the other players.\n";
                 playerMessenger.printMessage(message);
+
             }
 
             if (PlayerFlightInputHandler.checkInputThreadActivity(player)) {
@@ -110,8 +125,10 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
         }
 
         if (!solved) {
+
             message = "Nobody solved the card!\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
         }
 
         try {
@@ -125,26 +142,13 @@ public class AbandonedStation extends Card implements Movable, GoodsGain {
 
     public void showCard() {
 
+
         System.out.println("Card name: " + getCardName());
         System.out.println("Card level: " + getCardLevel());
         System.out.println("Days lost: " + daysLost);
-        System.out.println("Crew members required:" + requirementNumber);
-        printGoods(goods);
-        System.out.println();
-
-    }
-
-    /**
-     * @param player   target player
-     * @param quantity quantity of the specified requirement that you want to verify
-     * @return true if the player has met the requirement in the specified quantity,
-     * false otherwise
-     * @author Carlo
-     */
-
-    private boolean isCrewSatisfying(Player player, int quantity) {
-
-        return player.getShipBoard().getShipBoardAttributes().getCrewMembers() >= quantity;
+        System.out.println("Loss type: " + lossType.toString());
+        System.out.println("Loss number: " + lossNumber);
+        System.out.println("Gained credit: " + gainedCredits);
 
     }
 }
