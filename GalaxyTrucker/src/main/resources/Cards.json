@@ -617,6 +617,7 @@
     "level": 1,
     "cardName": "CombatZone",
     "daysLost": 3,
+    "lossType": "CrewMember",
     "lossNumber": 2,
     "blowType": "CannonBlow",
     "blows": [
@@ -634,6 +635,7 @@
     "level": 2,
     "cardName": "CombatZone",
     "daysLost": 4,
+    "lossType": "CrewMember",
     "lossNumber": 3,
     "blowType": "CannonBlow",
     "blows": [
