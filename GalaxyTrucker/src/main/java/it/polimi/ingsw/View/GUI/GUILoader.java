@@ -33,7 +33,7 @@ public class GUILoader extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GeneralFXML.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/general/GeneralFXML.fxml"));
             Parent root = loader.load();
 
             GeneralGUIController controller = loader.getController();

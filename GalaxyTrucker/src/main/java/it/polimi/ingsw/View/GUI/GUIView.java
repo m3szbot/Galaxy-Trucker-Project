@@ -5,14 +5,16 @@ import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.View.GUI.utils.ImageBuilder;
 import it.polimi.ingsw.View.GeneralView;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 //TODO
 
 /**
  * Class with the exact same function of TUIView but for the GUI.
+ * The methods purpose is to pass to the current controller the node
+ * containing all the information already beautifully packed.
  *
  * @author carlo
  */
@@ -55,10 +57,7 @@ public class GUIView extends GeneralView {
     @Override
     public void printComponent(Component component) {
 
-        Image componentImage = new Image(component.getImagePath());
-        ImageView componentImageView = new ImageView(componentImage);
-
-        guiController.refreshComponent(componentImageView);
+        guiController.refreshComponent(ImageBuilder.buildComponentImage(component));
 
     }
 
@@ -70,11 +69,7 @@ public class GUIView extends GeneralView {
     @Override
     public void printCard(Card card) {
 
-        Image cardImage = new Image(card.getCardImage());
-        ImageView cardImageView = new ImageView(cardImage);
-
-        guiController.refreshCard(cardImageView);
-
+        guiController.refreshCard(ImageBuilder.buildCardImage(card));
 
     }
 

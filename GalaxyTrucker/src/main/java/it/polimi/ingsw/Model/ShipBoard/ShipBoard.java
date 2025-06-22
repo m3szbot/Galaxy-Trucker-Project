@@ -54,6 +54,7 @@ public class ShipBoard implements Serializable {
     private int centerCabinRow;
 
 
+
     /**
      * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement
@@ -73,7 +74,6 @@ public class ShipBoard implements Serializable {
         this.componentMatrix = new Component[SB_COLS][SB_ROWS];
         this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
         this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
-
 
         // Initialize component matrix as empty
         for (int realCol = 0; realCol < SB_COLS; realCol++) {
