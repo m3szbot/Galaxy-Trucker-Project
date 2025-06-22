@@ -105,7 +105,7 @@ public interface SufferBlows {
             //From visible row index 5 up to 9 (5 ->9)
             for (i = 4; i <= rows - 3; i++) {
 
-                if (player.getShipBoard().getRealComponent(roll, i) != null) {
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(roll), ShipBoard.getVisibleIndex(i)) != null) {
 
                     //If it finds a component that could be hit
                     coords[1] = i;
@@ -121,7 +121,7 @@ public interface SufferBlows {
             //From visible col index 10 down to 4 (10 -> 4)
             for (i = cols - 2; i >= 3; i--) {
 
-                if (player.getShipBoard().getRealComponent(i, roll) != null) {
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(roll)) != null) {
                     coords[1] = roll;
                     coords[0] = i;
                 }
@@ -134,7 +134,7 @@ public interface SufferBlows {
             //From visible row index 9 down to 5 (9 -> 5)
             for (i = rows - 3; i >= 4; i--) {
 
-                if (player.getShipBoard().getRealComponent(roll, i) != null) {
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(roll), ShipBoard.getVisibleIndex(i)) != null) {
                     coords[1] = i;
                     coords[0] = roll;
                 }
@@ -147,7 +147,7 @@ public interface SufferBlows {
             //From visible col index 4 up to 10 (4 -> 10)
             for (i = 3; i <= cols - 2; i++) {
 
-                if (player.getShipBoard().getRealComponent(i, roll) != null) {
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(roll)) != null) {
                     coords[1] = roll;
                     coords[0] = i;
                 }
@@ -302,7 +302,7 @@ public interface SufferBlows {
 
         if (cannonCoords[0] != -1) { //player has a cannon which points toward the blow.
 
-            if (!player.getShipBoard().getRealComponent(cannonCoords[0], cannonCoords[1]).isSingle()) { //cannon is not single
+            if (!player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(cannonCoords[0]), ShipBoard.getVisibleIndex(cannonCoords[1])).isSingle()) { //cannon is not single
 
                 if (playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
 
@@ -355,10 +355,10 @@ public interface SufferBlows {
             //Searches for the first not null component on the x column
             for (i = rows - 1; i >= 0; i--) {
 
-                if (player.getShipBoard().getRealComponent(xCoord, i) != null) {
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(i)) != null) {
 
-                    if (player.getShipBoard().getRealComponent(xCoord, i) instanceof Cannon
-                            && (player.getShipBoard().getRealComponent(xCoord, i).getFront() == SideType.Special)) {
+                    if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(i)) instanceof Cannon
+                            && (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(i)).getFront() == SideType.Special)) {
 
                         //there is a cannon that can hit the blow
 
@@ -416,12 +416,12 @@ public interface SufferBlows {
 
     private boolean checkCannonPresenceOnSides(int direction, Player player, int[] cannonCoords, int i, int temp) {
 
-        if (player.getShipBoard().getRealComponent(i, temp) != null) {
+        if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(temp)) != null) {
 
-            if (player.getShipBoard().getRealComponent(i, temp) instanceof Cannon
-                    && ((player.getShipBoard().getRealComponent(i, temp).getRight() == SideType.Special
+            if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(temp)) instanceof Cannon
+                    && ((player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(temp)).getRight() == SideType.Special
                     && direction == 1)
-                    || (player.getShipBoard().getRealComponent(i, temp).getLeft() == SideType.Special)
+                    || (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(temp)).getLeft() == SideType.Special)
                     && direction == 3)) {
 
                 cannonCoords[0] = i;
@@ -436,10 +436,10 @@ public interface SufferBlows {
 
     private boolean checkCannonPresenceOnBack(Player player, int[] cannonCoords, int i, int temp) {
 
-        if (player.getShipBoard().getRealComponent(temp, i) != null) {
+        if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(temp), ShipBoard.getVisibleIndex(i)) != null) {
 
-            if (player.getShipBoard().getRealComponent(temp, i) instanceof Cannon
-                    && ((player.getShipBoard().getRealComponent(temp, i).getBack() == SideType.Special))) {
+            if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(temp), ShipBoard.getVisibleIndex(i)) instanceof Cannon
+                    && ((player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(temp), ShipBoard.getVisibleIndex(i)).getBack() == SideType.Special))) {
 
                 cannonCoords[0] = temp;
                 cannonCoords[1] = i;
@@ -460,13 +460,13 @@ public interface SufferBlows {
 
         //condition is true if the side of the component hit is not smooth
         if ((direction == 0
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getFront() != SideType.Smooth)
+                && player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(yCoord)).getFront() != SideType.Smooth)
                 || (direction == 1
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getRight() != SideType.Smooth)
+                && player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(yCoord)).getRight() != SideType.Smooth)
                 || (direction == 2
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getBack() != SideType.Smooth)
+                && player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(yCoord)).getBack() != SideType.Smooth)
                 || (direction == 3
-                && player.getShipBoard().getRealComponent(xCoord, yCoord).getLeft() != SideType.Smooth)) {
+                && player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(yCoord)).getLeft() != SideType.Smooth)) {
 
             try {
 
