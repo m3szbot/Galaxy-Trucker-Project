@@ -102,6 +102,8 @@ public class GUIView extends GeneralView {
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
 
+        Image flightBoardImage = new Image(flightBoard.getImagePath());
+
     }
 
     @Override

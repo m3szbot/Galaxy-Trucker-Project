@@ -2,6 +2,8 @@ package it.polimi.ingsw.Connection.ClientSide.socket;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ViewType;
+import it.polimi.ingsw.View.GUI.GUILoader;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -95,6 +97,12 @@ public class SocketGameHandler {
         inputStream = new ObjectInputStream(serverSocket.getInputStream());
 
         dataExchanger = new SocketDataExchanger(serverSocket, inputStream, outputStream);
+
+        if(clientInfo.getViewType() == ViewType.GUI) {
+
+            GUILoader.setSocketDataExchanger(dataExchanger);
+        }
+
         return dataExchanger;
 
     }

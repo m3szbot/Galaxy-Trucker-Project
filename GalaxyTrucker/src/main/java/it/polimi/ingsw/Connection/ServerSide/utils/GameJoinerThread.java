@@ -96,6 +96,12 @@ public class GameJoinerThread extends Thread {
             playerLobbyMessenger.cleanResources();
 
         }
+        finally {
+            //releasing the lock
+            if(centralServer.getLock().isHeldByCurrentThread()) {
+                centralServer.getLock().unlock();
+            }
+        }
     }
 
     private boolean askToJoin() throws PlayerDisconnectedException, TimeoutException, IOException{
