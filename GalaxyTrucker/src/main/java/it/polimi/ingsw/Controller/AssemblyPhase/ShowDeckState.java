@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
-import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import it.polimi.ingsw.Model.IllegalSelectionException;
@@ -47,11 +47,12 @@ public class ShowDeckState extends GameState {
         try {
             int index = Integer.parseInt(input);
             if (index > 0 && index <= 3) {
-                try {Deck deck = assemblyProtocol.showDeck(index);
+                try {
+                    Deck deck = assemblyProtocol.showDeck(index);
                     for (Card card : deck.getCards()) {
                         playerMessenger.printCard(card);
                     }
-                }catch (IllegalSelectionException e){
+                } catch (IllegalSelectionException e) {
                     playerMessenger.printMessage(e.getMessage());
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 }
@@ -61,7 +62,7 @@ public class ShowDeckState extends GameState {
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             playerMessenger.printMessage("Invalid Input, please write a number");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }

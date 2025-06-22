@@ -9,10 +9,10 @@ package it.polimi.ingsw.Model.GameInformation;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.Controller.Cards.Blow;
-import it.polimi.ingsw.Controller.Cards.Card;
-import it.polimi.ingsw.Controller.Cards.CardBuilder;
-import it.polimi.ingsw.Controller.Cards.ElementType;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Blow;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.CardBuilder;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.ElementType;
 import it.polimi.ingsw.Model.AssemblyModel.Deck;
 import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
@@ -391,10 +391,9 @@ public class GameInformation implements Serializable {
      * @return true if the player is connected, false otherwise.
      */
 
-    public boolean checkPlayerConnectivity(Player player){
-        if(connectedPlayerList.contains(player)){
+    public boolean checkPlayerConnectivity(Player player) {
+        if (connectedPlayerList.contains(player)) {
             return true;
-        }
-        else return false;
+        } else return false;
     }
 }

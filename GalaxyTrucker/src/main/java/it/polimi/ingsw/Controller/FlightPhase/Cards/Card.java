@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.Cards;
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
 
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 
@@ -63,10 +63,6 @@ public abstract class Card implements Serializable {
         }
     }
 
-    public String getCardImage(){
-        return imagePath;
-    }
-
     private String solveGoodsColor(int goodIndex) {
         if (goodIndex == 0) {
             return "red";
@@ -77,6 +73,10 @@ public abstract class Card implements Serializable {
         } else {
             return "blue";
         }
+    }
+
+    public String getCardImage() {
+        return imagePath;
     }
 
     public int getCardLevel() {

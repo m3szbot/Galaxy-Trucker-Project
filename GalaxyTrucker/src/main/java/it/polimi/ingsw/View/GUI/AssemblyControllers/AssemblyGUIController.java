@@ -1,7 +1,7 @@
 /*package it.polimi.ingsw.View.GUI.AssemblyControllers;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
-import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.View.GUI.GeneralGUIController;

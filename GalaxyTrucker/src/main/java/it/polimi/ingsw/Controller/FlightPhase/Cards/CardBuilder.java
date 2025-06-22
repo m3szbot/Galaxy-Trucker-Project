@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller.Cards;
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
 
 /**
  * Class that is used to initialize a card following the builder

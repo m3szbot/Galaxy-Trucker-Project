@@ -3,7 +3,7 @@ package it.polimi.ingsw.Connection.ClientSide.RMI;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Connection.ClientSide.utils.ViewCommunicator;
-import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeoutException;
 
-public class VirtualClient extends UnicastRemoteObject implements ClientRemoteInterface{
+public class VirtualClient extends UnicastRemoteObject implements ClientRemoteInterface {
 
     private GeneralView currentView;
     private boolean inGame;
@@ -29,23 +29,11 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
     }
 
     @Override
-    public boolean isAlive() throws RemoteException {
-       return true;
+    public void printMessage(String message) throws RemoteException {
+        currentView.printMessage(message);
     }
 
-    @Override
-    public boolean isInGame() throws RemoteException{
-        return inGame;
-    }
-
-
-    //not in use for now. May be necessary for future versions for correcting problems
-
-    public void unblockUserInput() throws RemoteException{
-        ClientInputManager.unblockInput();
-    }
-
-    public String getString() throws RemoteException{
+    public String getString() throws RemoteException {
 
         try {
 
@@ -60,14 +48,8 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
     }
 
-    public void printPreJoinMessage(String message) throws RemoteException{
-        System.out.println(message);
-    }
 
-    @Override
-    public void printMessage(String message) throws RemoteException {
-        currentView.printMessage(message);
-    }
+    //not in use for now. May be necessary for future versions for correcting problems
 
     public void printComponent(Component component) throws RemoteException {
 
@@ -75,43 +57,61 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
     }
 
-    public void printShipboard(ShipBoard shipBoard) throws RemoteException{
+    public void printShipboard(ShipBoard shipBoard) throws RemoteException {
 
         currentView.printShipboard(shipBoard);
 
     }
 
-    public void printCard(Card card) throws RemoteException{
+    public void printCard(Card card) throws RemoteException {
 
         currentView.printCard(card);
 
     }
 
-    public void printFlightBoard(FlightBoard flightBoard) throws RemoteException{
+    public void printFlightBoard(FlightBoard flightBoard) throws RemoteException {
 
         currentView.printFlightBoard(flightBoard);
 
     }
 
-    public void setGamePhase(GamePhase gamePhase) throws RemoteException{
+    public void setGamePhase(GamePhase gamePhase) throws RemoteException {
 
         viewCommunicator.setGamePhase(gamePhase);
         currentView = viewCommunicator.getView();
 
     }
 
-    public void endGame() throws RemoteException{
+    public void endGame() throws RemoteException {
 
         System.out.println("The game has ended");
         inGame = false;
     }
 
-    public void setInGame(boolean inGame){
+    @Override
+    public boolean isInGame() throws RemoteException {
+        return inGame;
+    }
+
+    public void setInGame(boolean inGame) {
         ClientInputManager.setTimeOut(300000);
         this.inGame = inGame;
     }
 
-    public void sendCommand(String command) throws RemoteException{
-       //nothing for now
+    @Override
+    public boolean isAlive() throws RemoteException {
+        return true;
+    }
+
+    public void unblockUserInput() throws RemoteException {
+        ClientInputManager.unblockInput();
+    }
+
+    public void printPreJoinMessage(String message) throws RemoteException {
+        System.out.println(message);
+    }
+
+    public void sendCommand(String command) throws RemoteException {
+        //nothing for now
     }
 }

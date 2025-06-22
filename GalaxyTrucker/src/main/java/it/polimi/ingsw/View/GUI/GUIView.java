@@ -1,7 +1,7 @@
 package it.polimi.ingsw.View.GUI;
 
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
-import it.polimi.ingsw.Controller.Cards.Card;
+import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
@@ -35,6 +35,17 @@ public class GUIView extends GeneralView {
      */
 
     @Override
+    public void printMessage(DataContainer dataContainer) {
+
+        if (dataContainer.getMessage() == null) {
+            throw new IllegalArgumentException("The DC does not contain a message");
+        } else {
+            printMessage(dataContainer.getMessage());
+        }
+
+    }
+
+    @Override
     public void printMessage(String message) {
 
         guiController.refreshConsole(message);
@@ -42,14 +53,17 @@ public class GUIView extends GeneralView {
     }
 
     @Override
-    public void printMessage(DataContainer dataContainer) {
+    public void printComponent(Component component) {
 
-        if(dataContainer.getMessage() == null){
-            throw new IllegalArgumentException("The DC does not contain a message");
-        }
-        else{
-            printMessage(dataContainer.getMessage());
-        }
+        Image componentImage = new Image(component.getImagePath());
+        ImageView componentImageView = new ImageView(componentImage);
+
+        guiController.refreshComponent(componentImageView);
+
+    }
+
+    @Override
+    public void printShipboard(ShipBoard shipBoard) {
 
     }
 
@@ -65,49 +79,9 @@ public class GUIView extends GeneralView {
     }
 
     @Override
-    public void printCard(DataContainer dataContainer) {
-
-        if(dataContainer.getCard() == null){
-            throw new IllegalArgumentException("The DC does not contain a card");
-        }
-        else{
-            printCard(dataContainer.getCard());
-        }
-
-    }
-
-    @Override
-    public void printComponent(Component component) {
-
-        Image componentImage = new Image(component.getImagePath());
-        ImageView componentImageView = new ImageView(componentImage);
-
-        guiController.refreshComponent(componentImageView);
-
-    }
-
-    @Override
-    public void printComponent(DataContainer dataContainer) {
-
-        if(dataContainer.getComponent() == null){
-            throw new IllegalArgumentException("The DC does not contain a component");
-        }
-        else{
-            printComponent(dataContainer.getComponent());
-        }
-
-
-    }
-
-    @Override
     public void printFlightBoard(FlightBoard flightBoard) {
 
         Image flightBoardImage = new Image(flightBoard.getImagePath());
-
-    }
-
-    @Override
-    public void printFlightBoard(DataContainer dataContainer) {
 
     }
 
@@ -117,12 +91,35 @@ public class GUIView extends GeneralView {
     }
 
     @Override
-    public void printShipboard(ShipBoard shipBoard) {
+    public void printComponent(DataContainer dataContainer) {
+
+        if (dataContainer.getComponent() == null) {
+            throw new IllegalArgumentException("The DC does not contain a component");
+        } else {
+            printComponent(dataContainer.getComponent());
+        }
+
 
     }
 
     @Override
     public void printShipboard(DataContainer dataContainer) {
+
+    }
+
+    @Override
+    public void printCard(DataContainer dataContainer) {
+
+        if (dataContainer.getCard() == null) {
+            throw new IllegalArgumentException("The DC does not contain a card");
+        } else {
+            printCard(dataContainer.getCard());
+        }
+
+    }
+
+    @Override
+    public void printFlightBoard(DataContainer dataContainer) {
 
     }
 }
