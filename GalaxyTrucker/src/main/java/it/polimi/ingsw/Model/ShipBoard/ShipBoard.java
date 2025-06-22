@@ -268,6 +268,10 @@ public class ShipBoard implements Serializable {
                 componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
     }
 
+    public GameType getGameType() {
+        return gameType;
+    }
+
     /**
      * Fills the shipboard with all kinds of prewritten components.
      * Adds: engines, cabins, cannons, batteries, storages, shields,
@@ -278,43 +282,79 @@ public class ShipBoard implements Serializable {
     public void preBuildShipBoard() {
         SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
 
-        try {
-            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
-            this.addComponent(new AlienSupport(universalSides, false), 6, 8);
+        // NORMALGAME
+        if (gameType.equals(GameType.NORMALGAME)) {
+            try {
+                this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
+                this.addComponent(new AlienSupport(universalSides, false), 6, 8);
 
 
-            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 7, 6);
-            this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 8, 6);
-            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 8, 5);
+                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 7, 6);
+                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 8, 6);
+                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 8, 5);
 
-            this.addComponent(new Cabin(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 6, 7);
-            this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 7);
-            this.addComponent(new AlienSupport(universalSides, true), 4, 7);
-            this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 8);
-            this.addComponent(new Cabin(universalSides, CrewType.Purple, 1), 4, 8);
+                this.addComponent(new Cabin(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 6, 7);
+                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 7);
+                this.addComponent(new AlienSupport(universalSides, true), 4, 7);
+                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 8);
+                this.addComponent(new Cabin(universalSides, CrewType.Purple, 1), 4, 8);
 
-            this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 8, 7);
-            this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 9, 7);
+                this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 8, 7);
+                this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 9, 7);
 
-            this.addComponent(new Storage(universalSides, false, 3), 8, 8);
-            this.addComponent(new Storage(universalSides, false, 3), 9, 8);
-            this.addComponent(new Storage(universalSides, true, 2), 10, 8);
-            this.addComponent(new Storage(universalSides, true, 1), 8, 9);
-            this.addComponent(new Storage(universalSides, true, 2), 9, 9);
-            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 4, 9);
-            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 5, 9);
-            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 9, 6);
-            this.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, 0, 1), 6, 6);
-            this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 10, 7);
+                this.addComponent(new Storage(universalSides, false, 3), 8, 8);
+                this.addComponent(new Storage(universalSides, false, 3), 9, 8);
+                this.addComponent(new Storage(universalSides, true, 2), 10, 8);
+                this.addComponent(new Storage(universalSides, true, 1), 8, 9);
+                this.addComponent(new Storage(universalSides, true, 2), 9, 9);
+                this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 4, 9);
+                this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 5, 9);
+                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 9, 6);
+                this.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, 0, 1), 6, 6);
+                this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 10, 7);
 
-            this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 6, 5);
-            this.addComponent(new Shield(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Smooth}, 2, 3), 5, 6);
-            this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 9);
-            addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Smooth, SideType.Universal}, false), 10, 9);
+                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, true), 6, 5);
+                this.addComponent(new Shield(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Smooth}, 2, 3), 5, 6);
+                this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 9);
+                addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Smooth, SideType.Universal}, false), 10, 9);
 
-        } catch (NotPermittedPlacementException | IllegalSelectionException e) {
-            throw new IllegalStateException("The prebuilt shipboard has illegal placements.");
+            } catch (NotPermittedPlacementException | IllegalSelectionException e) {
+                throw new IllegalStateException("The prebuilt shipboard has illegal placements.");
+            }
         }
+
+        // TESTGAME
+        else {
+            try {
+                this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
+                this.addComponent(new AlienSupport(universalSides, false), 6, 8);
+
+
+                this.addComponent(new Cannon(new SideType[]{SideType.Special, SideType.Universal, SideType.Universal, SideType.Universal}, false), 7, 6);
+                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 8, 6);
+
+                this.addComponent(new Cabin(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2), 6, 7);
+                this.addComponent(new Cabin(universalSides, CrewType.Human, 2), 5, 7);
+                this.addComponent(new Cabin(universalSides, CrewType.Brown, 2), 5, 8);
+
+                this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 8, 7);
+                this.addComponent(new Battery(new SideType[]{SideType.Universal, SideType.Universal, SideType.Single, SideType.Universal}, 9), 9, 7);
+
+                this.addComponent(new Storage(universalSides, false, 3), 8, 8);
+                this.addComponent(new Storage(universalSides, false, 3), 9, 8);
+                this.addComponent(new Storage(universalSides, true, 1), 8, 9);
+                this.addComponent(new Storage(universalSides, true, 2), 9, 9);
+                this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 5, 9);
+
+                this.addComponent(new Shield(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, 0, 1), 6, 6);
+
+                this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 9);
+
+            } catch (NotPermittedPlacementException | IllegalSelectionException e) {
+                throw new IllegalStateException("The prebuilt shipboard has illegal placements.");
+            }
+        }
+
         if (this.isErroneous())
             throw new IllegalStateException("The prebuilt shipboard has errors.");
     }

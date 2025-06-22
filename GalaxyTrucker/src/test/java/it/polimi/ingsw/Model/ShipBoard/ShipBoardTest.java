@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.View.GeneralView;
@@ -15,7 +14,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShipBoardTest {
-    GameInformation gameInformation;
     ShipBoard shipBoard;
 
     // view to print shipboard to debug
@@ -44,6 +42,29 @@ public class ShipBoardTest {
     Component specialConnector = new Component(specialSides);
 
 
+    // TESTS OF BOTI
+
+    @BeforeEach
+    void setUp() {
+        shipBoard = new ShipBoard(GameType.NORMALGAME);
+    }
+
+    @Test
+    void TestSetupTestGameShipboard() {
+        shipBoard = new ShipBoard(GameType.TESTGAME);
+        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
+        assertFalse(shipBoard.isErroneous());
+        generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void TestSetupNormalGameShipboard() {
+        // check starter cabin
+        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
+        assertFalse(shipBoard.isErroneous());
+        generalViewTUI.printFullShipboard(shipBoard);
+    }
+
     @Test
     void checkFloatingBottomRightCorner() throws NotPermittedPlacementException, NoHumanCrewLeftException, FracturedShipBoardException, IllegalSelectionException {
         // create bridge to bottom right corner, then remove connection one by one
@@ -66,31 +87,6 @@ public class ShipBoardTest {
         assertTrue(shipBoard.isErroneous());
         shipBoard.removeComponent(10, 9, false);
         assertFalse(shipBoard.isErroneous());
-    }
-
-    // TESTS OF BOTI
-
-    @BeforeEach
-    void setUp() {
-        gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
-        shipBoard = new ShipBoard(gameInformation.getGameType());
-    }
-
-    @Test
-    void TestSetupTestGameShipboard() {
-        shipBoard = new ShipBoard(GameType.TESTGAME);
-        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
-        assertFalse(shipBoard.isErroneous());
-        generalViewTUI.printShipboard(shipBoard);
-    }
-
-    @Test
-    void TestSetupNormalGameShipboard() {
-        // check starter cabin
-        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
-        assertFalse(shipBoard.isErroneous());
-        generalViewTUI.printFullShipboard(shipBoard);
     }
 
     @Test
@@ -310,6 +306,7 @@ public class ShipBoardTest {
             }
         }
     }
+
 
     @Test
     void testRemoveCrewFromCenterCabinEmptyShipboard() throws NoHumanCrewLeftException, IllegalSelectionException {
@@ -579,9 +576,26 @@ public class ShipBoardTest {
     }
 
     @Test
-    void preBuildShipBoard() {
+    void preBuildShipBoardNormalGame() {
         shipBoard.preBuildShipBoard();
         generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void preBuildShipBoardTestGame() {
+        shipBoard = new ShipBoard(GameType.TESTGAME);
+
+        shipBoard.preBuildShipBoard();
+        generalViewTUI.printShipboard(shipBoard);
+    }
+
+    @Test
+    void testAliensInTestGame() throws NotPermittedPlacementException, IllegalSelectionException {
+        shipBoard = new ShipBoard(GameType.TESTGAME);
+        shipBoard.addComponent(7, 8, new AlienSupport(universalSides, true));
+        assertThrows(IllegalStateException.class, () -> {
+            shipBoard.addComponent(8, 8, new Cabin(universalSides, CrewType.Purple, 1));
+        });
     }
 
     @Test

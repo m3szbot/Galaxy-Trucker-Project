@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.ShipBoard;
 
 import it.polimi.ingsw.Model.Components.*;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.IllegalSelectionException;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class ShipBoardAttributes implements Serializable {
     // covered sides of the ship
     // [FRONT, RIGHT, BACK, LEFT]
     boolean[] coveredSides;
+    private GameType gameType;
     // driving power of single engines
     private int singleEnginePower;
     // firepower of single cannons
@@ -60,6 +62,7 @@ public class ShipBoardAttributes implements Serializable {
      * @author Giacomo, Boti
      */
     public ShipBoardAttributes(ShipBoard shipBoard) {
+        this.gameType = shipBoard.getGameType();
         coveredSides = new boolean[]{false, false, false, false};
         singleEnginePower = 0;
         singleCannonPower = 0;
@@ -308,6 +311,9 @@ public class ShipBoardAttributes implements Serializable {
                 }
             }
         }
+
+        if (gameType.equals(GameType.TESTGAME) && (purpleAlien || brownAlien))
+            throw new IllegalStateException("Cannot have aliens in testgame.");
 
         // no human crew left: forced to give up
         // throw exception
