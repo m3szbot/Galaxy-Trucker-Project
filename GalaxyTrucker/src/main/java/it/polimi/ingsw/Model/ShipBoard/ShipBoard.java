@@ -54,7 +54,6 @@ public class ShipBoard implements Serializable {
     private int centerCabinRow;
 
 
-
     /**
      * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement
@@ -264,8 +263,19 @@ public class ShipBoard implements Serializable {
      * @author Boti
      */
     public boolean checkNotEmptyNeighbors(int realCol, int realRow) {
+        // should be a private method, shouldn't be used in Assembly
+        if (!checkCoordinatesInBounds(getVisibleIndex(realCol), getVisibleIndex(realRow)))
+            System.err.println("Error: coordinates out of bounds");
+
         return (componentMatrix[realCol - 1][realRow] != null || componentMatrix[realCol + 1][realRow] != null ||
                 componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
+    }
+
+    /**
+     * @return the visibleIndex from the passed realIndex.
+     */
+    public static int getVisibleIndex(int realIndex) {
+        return realIndex + 1;
     }
 
     public GameType getGameType() {
@@ -367,7 +377,10 @@ public class ShipBoard implements Serializable {
      * @return the component at the given visible coordinates.
      */
     public Component getComponent(int visibleCol, int visibleRow) {
-
+        // do not throw exception (crash), but signal errors
+        // SufferBlows methods should be implemented in ShipBoard
+        if (!checkCoordinatesInBounds(visibleCol, visibleRow))
+            System.err.println("Error: coordinates out of bounds in getComponents()");
 
         return componentMatrix[getRealIndex(visibleCol)][getRealIndex(visibleRow)];
     }
@@ -1309,13 +1322,6 @@ public class ShipBoard implements Serializable {
         }
         // finished scanning
         return coordinatesList;
-    }
-
-    /**
-     * @return the visibleIndex from the passed realIndex.
-     */
-    public static int getVisibleIndex(int realIndex) {
-        return realIndex + 1;
     }
 
 }
