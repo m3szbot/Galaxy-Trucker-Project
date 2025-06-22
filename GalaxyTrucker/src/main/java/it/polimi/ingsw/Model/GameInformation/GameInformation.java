@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public class GameInformation implements Serializable {
     private GameType gameType;
@@ -312,6 +313,11 @@ public class GameInformation implements Serializable {
         componentList = mapper.readValue(new File("src/main/resources/Components.json"),
                 mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
         );
+
+        // filter out aliens for TESTGAME
+        if (gameType.equals(GameType.TESTGAME))
+            componentList = componentList.stream().filter(c -> !(c instanceof AlienSupport)).collect(Collectors.toList());
+
         Collections.shuffle(componentList);
 
     }

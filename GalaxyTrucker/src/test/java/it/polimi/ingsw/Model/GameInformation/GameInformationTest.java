@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.GameInformation;
 
 import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
-import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.AlienSupport;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
@@ -81,20 +81,24 @@ class GameInformationTest {
     }
 
     @Test
-    void testSetUpComponents() throws IOException {
+    void testNormalGameSetUpComponents() throws IOException {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
         assertNotNull(gameInformation.getComponentList());
-        for (int i = 0; i < gameInformation.getComponentList().size(); i++) {
-            assertNotNull(gameInformation.getComponentList().get(i));
-            Component component = gameInformation.getComponentList().get(i);
-            assertNotNull(component.getComponentName());
-            System.out.println(component.getComponentName());
-            System.out.println(component.getFront());
-            System.out.println(component.getLeft());
-            System.out.println(component.getBack());
-            System.out.println(component.getRight());
-            System.out.println(i);
-        }
+        assertEquals(152, gameInformation.getComponentList().size());
+
+        // alien supports
+        assertTrue(0 < gameInformation.getComponentList().stream().filter(c -> c instanceof AlienSupport).count());
+        assertEquals(12, gameInformation.getComponentList().stream().filter(c -> c instanceof AlienSupport).count());
+
+    }
+
+    @Test
+    void testTestGameSetUpComponents() throws IOException {
+        gameInformation.setUpGameInformation(GameType.TESTGAME, 4);
+        assertNotNull(gameInformation.getComponentList());
+        assertEquals(140, gameInformation.getComponentList().size());
+        // no aliens supports (-12 cards)
+        assertEquals(0, gameInformation.getComponentList().stream().filter(c -> c instanceof AlienSupport).count());
     }
 
     @Test
