@@ -4,10 +4,14 @@ import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.GUI.utils.ImageBuilder;
 import it.polimi.ingsw.View.GeneralView;
-import javafx.scene.image.Image;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.Pane;
+
+import java.io.IOException;
 
 //TODO
 
@@ -21,8 +25,38 @@ import javafx.scene.image.Image;
 
 public class GUIView extends GeneralView {
 
+    private Pane shiboardPane;
 
     private GUIController guiController;
+
+    public void setGameType(GameType gameType){
+
+
+        try {
+
+            FXMLLoader loader;
+
+            if(gameType == GameType.NORMALGAME){
+
+                loader = new FXMLLoader(getClass().getResource("/fxml/normalGameFlightBoard.fxml"));
+
+            }
+            else{
+
+                loader = new FXMLLoader(getClass().getResource("/fxml/testGameFlightBoard.fxml"));
+
+            }
+
+            shiboardPane = loader.load();
+            ImageBuilder.setShipBoardController(loader.getController());
+
+        } catch (IOException e) {
+
+            System.err.println("Error while setting up ship board pane");
+
+        }
+
+    }
 
     public void setGuiController(GUIController controller) {
         this.guiController = controller;
@@ -64,6 +98,9 @@ public class GUIView extends GeneralView {
     @Override
     public void printShipboard(ShipBoard shipBoard) {
 
+        ImageBuilder.buildShipBoardPane(shipBoard);
+        guiController.refreshShipBoard(shiboardPane);
+
     }
 
     @Override
@@ -76,13 +113,13 @@ public class GUIView extends GeneralView {
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
 
-        Image flightBoardImage = new Image(flightBoard.getImagePath());
+
 
     }
 
     @Override
     public void printFullShipboard(ShipBoard shipBoard) {
-
+        //used only for testng by boti
     }
 
     @Override

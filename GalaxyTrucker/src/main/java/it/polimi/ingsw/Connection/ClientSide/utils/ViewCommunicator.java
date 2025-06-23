@@ -2,6 +2,7 @@ package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.View.GUI.GUIView;
 import it.polimi.ingsw.View.GUI.GeneralGUIController;
 import it.polimi.ingsw.View.GeneralView;
@@ -33,6 +34,17 @@ public class ViewCommunicator {
 
         }
 
+    }
+
+    public ViewType getViewType(){
+        return viewType;
+    }
+
+    public void setGameType(GameType gameType){
+
+        if(viewType == ViewType.GUI) {
+            ((GUIView) view).setGameType(gameType);
+        }
     }
 
     public void setGeneralGUIController(GeneralGUIController generalGUIController){

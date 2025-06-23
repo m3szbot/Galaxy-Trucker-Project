@@ -5,6 +5,7 @@ import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -105,6 +106,30 @@ public class PlayerLobbyMessenger {
             }
 
         }
+    }
+
+    public void sendGameType(GameType gameType){
+
+        if(connectionType == ConnectionType.SOCKET){
+
+            dataContainer.clearContainer();
+            dataContainer.setCommand("setGameType");
+            dataContainer.setMessage(gameType.toString());
+
+            try{
+                socketDataExchanger.sendContainer(dataContainer);
+            } catch (IOException e) {
+
+                System.err.println("Error while sending data to " + nickName);
+            }
+
+        }
+        else{
+
+
+
+        }
+
     }
 
     public void printMessage(String message){

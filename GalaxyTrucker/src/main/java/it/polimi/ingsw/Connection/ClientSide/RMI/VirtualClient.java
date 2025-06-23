@@ -7,6 +7,7 @@ import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.GeneralView;
 
@@ -30,7 +31,14 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
     @Override
     public void printMessage(String message) throws RemoteException {
+
         currentView.printMessage(message);
+    }
+
+    public void setGameType(String gameType) throws RemoteException{
+
+        viewCommunicator.setGameType(GameType.valueOf(gameType));
+
     }
 
     public String getString() throws RemoteException {
@@ -47,7 +55,6 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         }
 
     }
-
 
     //not in use for now. May be necessary for future versions for correcting problems
 

@@ -37,5 +37,7 @@ public interface ClientRemoteInterface extends Remote {
 
     public void printPreJoinMessage(String message) throws RemoteException;
 
+    public void setGameType(String gameType) throws RemoteException;
+
     public void sendCommand(String command) throws RemoteException;
 }

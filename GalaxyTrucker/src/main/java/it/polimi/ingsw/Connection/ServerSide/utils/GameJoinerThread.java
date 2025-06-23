@@ -338,6 +338,7 @@ public class GameJoinerThread extends Thread {
 
         playerLobbyMessenger.printMessage(message);
         playerLobbyMessenger.sendCommand("joined");
+        playerLobbyMessenger.sendGameType(centralServer.getCurrentStartingGame().getGameInformation().getGameType());
 
         if (centralServer.getCurrentStartingGame().isFull()) {
             ClientMessenger.getGameMessenger(centralServer.getCurrentGameCode()).exitLobby();

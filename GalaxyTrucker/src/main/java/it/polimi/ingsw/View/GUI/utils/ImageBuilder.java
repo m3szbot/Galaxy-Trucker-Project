@@ -2,12 +2,9 @@ package it.polimi.ingsw.View.GUI.utils;
 
 import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
-import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
 /**
  * Utility class which build the image for each relevant element
@@ -17,6 +14,14 @@ import javafx.scene.layout.StackPane;
  */
 
 public final class ImageBuilder {
+
+    private static ShipBoardController shipBoardController;
+
+    public static void setShipBoardController(ShipBoardController controller) {
+
+        shipBoardController = controller;
+
+    }
 
     public static ImageView buildCardImage(Card card){
 
@@ -31,16 +36,9 @@ public final class ImageBuilder {
         return componentImageView;
     }
 
-    public static Pane buildShipBoardImage(ShipBoard shipBoard){
+    public static void buildShipBoardPane(ShipBoard shipBoard){
 
-        if(shipBoard.getGameType() == GameType.NORMALGAME){
-
-
-
-        }
-        else{
-
-        }
+        shipBoardController.populateShipBoardTiles(shipBoard);
 
     }
 
