@@ -92,8 +92,8 @@ public interface SufferBlows {
 
     private void findHitComponent(Player player, Blow blow, int[] coords) {
 
-        int rows = ShipBoard.SB_ROWS;
-        int cols = ShipBoard.SB_COLS;
+        int rows = ShipBoard.ROWS;
+        int cols = ShipBoard.COLS;
         int i, roll = blow.getRoll();
 
         //Default value if there's no component to be hit in a specific row or column
@@ -347,8 +347,8 @@ public interface SufferBlows {
     private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
 
         int[] cannonCoords = {-1, -1};
-        int rows = ShipBoard.SB_ROWS;
-        int cols = ShipBoard.SB_COLS;
+        int rows = ShipBoard.ROWS;
+        int cols = ShipBoard.COLS;
         int i;
 
         if (direction == 0) { //Blow comes from the front

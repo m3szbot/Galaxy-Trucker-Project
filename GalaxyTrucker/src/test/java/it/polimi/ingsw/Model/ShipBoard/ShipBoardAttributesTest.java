@@ -31,7 +31,7 @@ public class ShipBoardAttributesTest {
 
     @Test
     void testSetup() {
-        assertEquals(2, shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW).getCrewMembers());
+        assertEquals(2, shipBoard.getComponent(ShipBoard.CENTER_COL, ShipBoard.CENTER_ROW).getCrewMembers());
         assertEquals(2, shipBoardAttributes.getCrewMembers());
         assertArrayEquals(new boolean[]{false, false, false, false}, shipBoardAttributes.getCoveredSides());
         assertEquals(0, shipBoardAttributes.getSingleEnginePower());

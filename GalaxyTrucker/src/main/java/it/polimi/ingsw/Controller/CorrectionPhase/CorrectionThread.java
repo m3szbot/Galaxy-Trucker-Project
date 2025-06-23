@@ -130,8 +130,8 @@ public class CorrectionThread implements Runnable {
         StringBuilder messageBuilder = new StringBuilder();
         messageBuilder.append("There are errors in your ship, please correct them:\n");
         // scan shipboard (only valid cells)
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
                 if (shipBoard.getErrorsMatrix()[i][j]) {
                     messageBuilder.append(String.format("Error in: %d %d\n", i + 1, j + 1));
                 }
@@ -155,8 +155,8 @@ public class CorrectionThread implements Runnable {
         Sleeper.sleepXSeconds(2);
 
         // scan shipboard (only valid cells)
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
 
                 // select crew type for current component:
                 // only ask player if alien could be set on the given component

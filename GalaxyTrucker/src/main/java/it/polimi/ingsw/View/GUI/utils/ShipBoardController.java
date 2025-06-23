@@ -27,16 +27,15 @@ public class ShipBoardController {
 
     public void populateShipBoardTiles(ShipBoard shipBoard) {
 
-        int rows = ShipBoard.SB_ROWS;
-        int cols = ShipBoard.SB_COLS;
+        int rows = ShipBoard.ROWS;
+        int cols = ShipBoard.COLS;
         Component[][] shipStructure = shipBoard.getComponentMatrix();
 
         int indexRow = 3;
         int indexColumn = 2;
 
-        for (int i = indexRow; i < rows - indexRow; i++) {
-
-            for (int j = indexColumn; j < cols - indexColumn; j++) {
+        for (int i = ShipBoard.FIRST_REAL_COL; i <= ShipBoard.LAST_REAL_COL; i++) {
+            for (int j = ShipBoard.FIRST_REAL_ROW; j <= ShipBoard.LAST_REAL_ROW; j++) {
 
                 Component component = shipStructure[i][j];
 
