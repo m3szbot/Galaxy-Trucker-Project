@@ -31,7 +31,7 @@ public class ShipBoardAttributesTest {
 
     @Test
     void testSetup() {
-        assertEquals(2, shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW).getCrewMembers());
+        assertEquals(2, shipBoard.getComponent(ShipBoard.CENTER_COL, ShipBoard.CENTER_ROW).getCrewMembers());
         assertEquals(2, shipBoardAttributes.getCrewMembers());
         assertArrayEquals(new boolean[]{false, false, false, false}, shipBoardAttributes.getCoveredSides());
         assertEquals(0, shipBoardAttributes.getSingleEnginePower());
@@ -73,6 +73,18 @@ public class ShipBoardAttributesTest {
         assertThrows(IllegalArgumentException.class, () -> {
             shipBoardAttributes.removeCredits(-1);
         });
+    }
+
+    @Test
+    void testReturnCreditsInBankNotes() {
+        assertArrayEquals(new int[]{0, 0, 0, 0, 0}, shipBoardAttributes.getCreditsInBankNotes());
+
+        shipBoardAttributes.addCredits(128);
+        assertArrayEquals(new int[]{2, 2, 1, 1, 1}, shipBoardAttributes.getCreditsInBankNotes());
+
+        shipBoardAttributes.addCredits(2);
+        assertArrayEquals(new int[]{2, 3, 0, 0, 0}, shipBoardAttributes.getCreditsInBankNotes());
+
     }
 
     // Test addComponent attribute changes

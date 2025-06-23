@@ -92,8 +92,8 @@ public interface SufferBlows {
 
     private void findHitComponent(Player player, Blow blow, int[] coords) {
 
-        int rows = player.getShipBoard().getMatrixRows();
-        int cols = player.getShipBoard().getMatrixCols();
+        int rows = ShipBoard.ROWS;
+        int cols = ShipBoard.COLS;
         int i, roll = blow.getRoll();
 
         //Default value if there's no component to be hit in a specific row or column
@@ -347,8 +347,8 @@ public interface SufferBlows {
     private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
 
         int[] cannonCoords = {-1, -1};
-        int rows = player.getShipBoard().getMatrixRows();
-        int cols = player.getShipBoard().getMatrixCols();
+        int rows = ShipBoard.ROWS;
+        int cols = ShipBoard.COLS;
         int i;
 
         if (direction == 0) { //Blow comes from the front
@@ -459,7 +459,7 @@ public interface SufferBlows {
 
         //condition is true if the side of the component hit is not smooth
         Component component = player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(yCoord));
-        
+
         if ((direction == 0 && component.getFront() != SideType.Smooth)
                 || (direction == 1 && component.getRight() != SideType.Smooth)
                 || (direction == 2 && component.getBack() != SideType.Smooth)

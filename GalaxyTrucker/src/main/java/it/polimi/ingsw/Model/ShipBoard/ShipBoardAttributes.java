@@ -182,8 +182,8 @@ public class ShipBoardAttributes implements Serializable {
      */
     void updateCoveredSides(ShipBoard shipBoard) {
         coveredSides = new boolean[]{false, false, false, false};
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Shield) {
                     // do OR on each covered side (add)
@@ -206,8 +206,8 @@ public class ShipBoardAttributes implements Serializable {
         singleCannonPower = 0;
         numberForwardDoubleCannons = 0;
         numberLateralDoubleCannons = 0;
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Cannon) {
                     if (component.isSingle())
@@ -235,8 +235,8 @@ public class ShipBoardAttributes implements Serializable {
     void updateEngines(ShipBoard shipBoard) {
         singleEnginePower = 0;
         doubleEnginePower = 0;
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Engine) {
                     if (component.isSingle())
@@ -255,8 +255,8 @@ public class ShipBoardAttributes implements Serializable {
      */
     void updateRemainingBatteries(ShipBoard shipBoard) {
         remainingBatteries = 0;
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Battery) {
                     remainingBatteries += component.getBatteryPower();
@@ -280,8 +280,8 @@ public class ShipBoardAttributes implements Serializable {
         purpleAlien = false;
         brownAlien = false;
         // recount crew members, aliens
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
 
                 // if cabin with crew >0 (not empty)
@@ -343,8 +343,8 @@ public class ShipBoardAttributes implements Serializable {
         goods = new int[]{0, 0, 0, 0};
         remainingRedSlots = 0;
         remainingBlueSlots = 0;
-        for (int i = SB_FIRST_REAL_COL; i <= SB_COLS - SB_FIRST_REAL_COL; i++) {
-            for (int j = SB_FIRST_REAL_ROW; j <= SB_ROWS - SB_FIRST_REAL_ROW; j++) {
+        for (int i = FIRST_REAL_COL; i <= COLS - FIRST_REAL_COL; i++) {
+            for (int j = FIRST_REAL_ROW; j <= ROWS - FIRST_REAL_ROW; j++) {
                 Component component = shipBoard.getComponentMatrix()[i][j];
                 if (component instanceof Storage) {
                     // update goods
@@ -400,6 +400,42 @@ public class ShipBoardAttributes implements Serializable {
             return false;
         // check shield coverage
         return coveredSides[side];
+    }
+
+    /**
+     * Returns an array of 5 elements of the credits of the shipboard divided in banknotes.
+     *
+     * @return array of credits in banknotes of: 50, 10, 5, 2, 1 (in order).
+     */
+    public int[] getCreditsInBankNotes() {
+        int[] returned = new int[5];
+        int remainder = credits;
+        int count;
+
+        // 50
+        count = remainder / 50;
+        remainder %= 50;
+        returned[0] = count;
+
+        // 10
+        count = remainder / 10;
+        remainder %= 10;
+        returned[1] = count;
+
+        // 5
+        count = remainder / 5;
+        remainder %= 5;
+        returned[2] = count;
+
+        // 2
+        count = remainder / 2;
+        remainder %= 2;
+        returned[3] = count;
+
+        // 1
+        returned[4] = remainder;
+
+        return returned;
     }
 
 

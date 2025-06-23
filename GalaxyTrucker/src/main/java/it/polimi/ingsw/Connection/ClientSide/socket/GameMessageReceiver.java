@@ -6,6 +6,7 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ViewCommunicator;
 import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.View.GeneralView;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
                 ClientInputManager.unblockInput();
                 break;
             } catch (Exception e) {
-                System.out.println("Unexpected error in receiver");
+                System.err.println("Unexpected error in receiver");
                 e.printStackTrace();
             }
 
@@ -69,6 +70,8 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
             ClientInputManager.setTimeOut(300000);
         } else if (command.equals("unblock")) {
             ClientInputManager.unblockInput();
+        } else if(command.equals("setGameType")){
+            viewCommunicator.setGameType(GameType.valueOf(dataContainer.getMessage()));
         } else {
             callView(dataContainer);
         }

@@ -4,10 +4,15 @@ import it.polimi.ingsw.Connection.ServerSide.socket.DataContainer;
 import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.View.GUI.utils.FlightBoardController;
 import it.polimi.ingsw.View.GUI.utils.ImageBuilder;
 import it.polimi.ingsw.View.GeneralView;
-import javafx.scene.image.Image;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.Pane;
+
+import java.io.IOException;
 
 //TODO
 
@@ -21,13 +26,6 @@ import javafx.scene.image.Image;
 
 public class GUIView extends GeneralView {
 
-
-    private GUIController guiController;
-
-    public void setGuiController(GUIController controller) {
-        this.guiController = controller;
-    }
-
     /*
     The idea of the methods is the following. The methods create a node which
     contain the information passed as parameter, ready to be shown on the screen.
@@ -35,6 +33,53 @@ public class GUIView extends GeneralView {
     The method of the current controller then handles the node by inserting it into
     the current fxml file.
      */
+
+    private Pane shipBoardPane;
+    private Pane flightBoardPane;
+
+    private GUIController guiController;
+
+    public void setGameType(GameType gameType){
+
+
+        try {
+
+            FXMLLoader shipBoardLoader;
+            FXMLLoader flightBoardLoader;
+
+            if(gameType == GameType.NORMALGAME){
+
+                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/normalGameShipBoard.fxml"));
+                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/normalGameFlightBoard.fxml"));
+
+            }
+            else{
+
+                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/testGameShipBoard.fxml"));
+                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/testGameFlightBoard.fxml"));
+
+            }
+
+            shipBoardPane = shipBoardLoader.load();
+            flightBoardPane = flightBoardLoader.load();
+            FlightBoardController flightBoardController = flightBoardLoader.getController();
+            flightBoardController.setUpTilesMap(gameType);
+
+            ImageBuilder.setShipBoardController(shipBoardLoader.getController());
+            ImageBuilder.setFlightBoardController(flightBoardController);
+
+        } catch (IOException e) {
+
+            System.err.println("Error while setting up ship board pane");
+
+        }
+
+    }
+
+    public void setGuiController(GUIController controller) {
+        this.guiController = controller;
+    }
+
 
     @Override
     public void printMessage(DataContainer dataContainer) {
@@ -64,6 +109,9 @@ public class GUIView extends GeneralView {
     @Override
     public void printShipboard(ShipBoard shipBoard) {
 
+        ImageBuilder.buildShipBoardPane(shipBoard);
+        guiController.refreshShipBoard(shipBoardPane);
+
     }
 
     @Override
@@ -76,13 +124,14 @@ public class GUIView extends GeneralView {
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
 
-        Image flightBoardImage = new Image(flightBoard.getImagePath());
+        ImageBuilder.buildFlightBoardPane(flightBoard);
+        guiController.refreshFlightBoard(flightBoardPane);
 
     }
 
     @Override
     public void printFullShipboard(ShipBoard shipBoard) {
-
+        //used only for testng by boti
     }
 
     @Override
@@ -100,6 +149,13 @@ public class GUIView extends GeneralView {
     @Override
     public void printShipboard(DataContainer dataContainer) {
 
+        if(dataContainer.getShipBoard() == null){
+            throw new IllegalArgumentException("The DC does not contain a shipboard");
+        }
+        else{
+            printShipboard(dataContainer.getShipBoard());
+        }
+
     }
 
     @Override
@@ -115,6 +171,12 @@ public class GUIView extends GeneralView {
 
     @Override
     public void printFlightBoard(DataContainer dataContainer) {
+
+        if(dataContainer.getFlightBoard() == null){
+            throw new IllegalArgumentException("The DC does not contain a flight board");
+        } else{
+            printFlightBoard(dataContainer.getFlightBoard());
+        }
 
     }
 }

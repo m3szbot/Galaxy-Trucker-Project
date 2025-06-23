@@ -81,6 +81,11 @@ class AssemblyProtocolTest {
         assertEquals(0, assemblyProtocol.getPlayersBookedComponents().get(playerA).size());
         assertNull(assemblyProtocol.getPlayersInHandComponents().get(playerA));
         assertNull(assemblyProtocol.getPlayersPlacingBookedComponentsCache().get(playerA));
+
+        // getters
+        assertEquals(gameInformation.getGameType(), assemblyProtocol.getGameType());
+        assertEquals(gameInformation.getFlightBoard(), assemblyProtocol.getFlightBoard());
+        assertEquals(gameInformation.getGameCode(), assemblyProtocol.getGameCode());
     }
 
     @Test

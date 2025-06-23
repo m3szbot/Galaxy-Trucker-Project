@@ -26,17 +26,26 @@ public class ShipBoard implements Serializable {
     // visible values
     // visible coordinate bounds: [1, 12]
     // real coordinate bounds: [0, 12-1]
-    public static final int SB_COLS = 12;
-    public static final int SB_ROWS = 12;
-    public static final int SB_CENTER_COL = 7;
-    public static final int SB_CENTER_ROW = 7;
-    // the first column and row that can contain components
-    // (components in [FIRST_REAL...MAX - FIRST_REAL (included!)])
-    public static final int SB_FIRST_REAL_COL = 3;
-    public static final int SB_FIRST_REAL_ROW = 4;
-    // last INCLUDED! column/row on the shipboard
-    public static final int SB_LAST_REAL_COL = 9;
-    public static final int SB_LAST_REAL_ROW = 8;
+    public static final int COLS = 12;
+    public static final int ROWS = 12;
+    public static final int CENTER_COL = 7;
+    public static final int CENTER_ROW = 7;
+
+    // components in componentMatrix in [FIRST_REAL_COL/ROW, LAST_REAL_COL/ROW] (included)
+
+    /*
+    Cycle to iterate componentMatrix:
+    for (int realCol = ShipBoard.FIRST_REAL_COL; realCol <= ShipBoard.LAST_REAL_COL; realCol++) {
+            for (int realRow = ShipBoard.FIRST_REAL_ROW; realRow <= ShipBoard.LAST_REAL_ROW; realRow++) {
+     */
+
+    // the first real column and row that can contain components
+    public static final int FIRST_REAL_COL = 3;
+    public static final int FIRST_REAL_ROW = 4;
+
+    // the last real column and row that can contain components (included!)
+    public static final int LAST_REAL_COL = 9;
+    public static final int LAST_REAL_ROW = 8;
 
     // final Object: reference cannot be changed (but state/elements can change)
     private final GameType gameType;
@@ -70,25 +79,25 @@ public class ShipBoard implements Serializable {
     public ShipBoard(GameType gameType) {
         this.gameType = gameType;
         this.shipBoardAttributes = new ShipBoardAttributes(this);
-        this.componentMatrix = new Component[SB_COLS][SB_ROWS];
-        this.validityMatrix = new boolean[SB_COLS][SB_ROWS];
-        this.errorsMatrix = new boolean[SB_COLS][SB_ROWS];
+        this.componentMatrix = new Component[COLS][ROWS];
+        this.validityMatrix = new boolean[COLS][ROWS];
+        this.errorsMatrix = new boolean[COLS][ROWS];
 
         // Initialize component matrix as empty
-        for (int realCol = 0; realCol < SB_COLS; realCol++) {
-            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+        for (int realCol = 0; realCol < COLS; realCol++) {
+            for (int realRow = 0; realRow < ROWS; realRow++) {
                 componentMatrix[realCol][realRow] = null;
             }
         }
         // Initialize all positions as valid
-        for (int realCol = 0; realCol < SB_COLS; realCol++) {
-            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+        for (int realCol = 0; realCol < COLS; realCol++) {
+            for (int realRow = 0; realRow < ROWS; realRow++) {
                 validityMatrix[realCol][realRow] = true;
             }
         }
         // Initialize error matrix as error free
-        for (int realCol = 0; realCol < SB_COLS; realCol++) {
-            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+        for (int realCol = 0; realCol < COLS; realCol++) {
+            for (int realRow = 0; realRow < ROWS; realRow++) {
                 errorsMatrix[realCol][realRow] = false;
             }
         }
@@ -96,7 +105,7 @@ public class ShipBoard implements Serializable {
         // Set forbidden zones for component placement
         // Set forbidden zones in the structure
         // forbidden rows
-        for (int realCol = 0; realCol < SB_COLS; realCol++) {
+        for (int realCol = 0; realCol < COLS; realCol++) {
             validityMatrix[realCol][0] = false;
             validityMatrix[realCol][1] = false;
             validityMatrix[realCol][2] = false;
@@ -107,7 +116,7 @@ public class ShipBoard implements Serializable {
 
         }
         // forbidden columns
-        for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+        for (int realRow = 0; realRow < ROWS; realRow++) {
             validityMatrix[0][realRow] = false;
             validityMatrix[1][realRow] = false;
             validityMatrix[2][realRow] = false;
@@ -128,7 +137,7 @@ public class ShipBoard implements Serializable {
         }
         // TestGame
         else {
-            for (int realRow = 0; realRow < SB_ROWS; realRow++) {
+            for (int realRow = 0; realRow < ROWS; realRow++) {
                 validityMatrix[3][realRow] = false;
                 validityMatrix[9][realRow] = false;
             }
@@ -149,13 +158,13 @@ public class ShipBoard implements Serializable {
     private void addStarterCabin() {
         Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2);
         try {
-            addComponent(SB_CENTER_COL, SB_CENTER_ROW, starterCabin);
+            addComponent(CENTER_COL, CENTER_ROW, starterCabin);
         } catch (NotPermittedPlacementException | IllegalSelectionException e) {
             System.out.println("Couldn't add starter cabin");
         }
         // set center
-        centerCabinCol = getRealIndex(SB_CENTER_COL);
-        centerCabinRow = getRealIndex(SB_CENTER_ROW);
+        centerCabinCol = getRealIndex(CENTER_COL);
+        centerCabinRow = getRealIndex(CENTER_ROW);
         try {
             starterCabin.accept(new SBAttributesUpdaterVisitor(this));
         } catch (NoHumanCrewLeftException e) {
@@ -219,7 +228,7 @@ public class ShipBoard implements Serializable {
     public static boolean checkCoordinatesInBounds(int visibleCol, int visibleRow) {
         // coordinates must be between [1, max] (included)
         // 0, max+1 out of bounds! - error in arrays
-        return (visibleCol >= 1 && visibleRow >= 1 && visibleCol <= SB_COLS && visibleRow <= SB_ROWS);
+        return (visibleCol >= 1 && visibleRow >= 1 && visibleCol <= COLS && visibleRow <= ROWS);
     }
 
     /**
@@ -231,8 +240,8 @@ public class ShipBoard implements Serializable {
      */
     private boolean checkValidPlacement(int realCol, int realRow) {
         // first component to add (to center)
-        if ((getComponentCount() == 0) && (realCol == getRealIndex(SB_CENTER_COL))
-                && (realRow == getRealIndex(SB_CENTER_ROW)))
+        if ((getComponentCount() == 0) && (realCol == getRealIndex(CENTER_COL))
+                && (realRow == getRealIndex(CENTER_ROW)))
             return true;
 
         // not first component to add
@@ -247,8 +256,8 @@ public class ShipBoard implements Serializable {
      */
     private int getComponentCount() {
         int count = 0;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 if (componentMatrix[realCol][realRow] != null)
                     count++;
             }
@@ -385,14 +394,6 @@ public class ShipBoard implements Serializable {
         return componentMatrix[getRealIndex(visibleCol)][getRealIndex(visibleRow)];
     }
 
-    public int getMatrixRows() {
-        return componentMatrix.length;
-    }
-
-    public int getMatrixCols() {
-        return componentMatrix[0].length;
-    }
-
     /**
      * Checks if there are erroneous components in the shipboard.
      * Special case if only 1 component is present (starter cabin etc.).
@@ -425,9 +426,9 @@ public class ShipBoard implements Serializable {
 
         // max-real included!
         // iterate columns
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
             // iterate rows
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 // default: no error in cell
                 // override if cell erroneous
                 errorsMatrix[realCol][realRow] = false;
@@ -470,8 +471,8 @@ public class ShipBoard implements Serializable {
     public int getErrorCount() {
         checkErrors();
         int count = 0;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 if (errorsMatrix[realCol][realRow])
                     count++;
             }
@@ -492,7 +493,7 @@ public class ShipBoard implements Serializable {
         Component temp;
 
         // starter cabin cannot cause errors
-        if (getComponentCount() == 1 && realCol == getRealIndex(SB_CENTER_COL) && realRow == getRealIndex(SB_CENTER_ROW))
+        if (getComponentCount() == 1 && realCol == getRealIndex(CENTER_COL) && realRow == getRealIndex(CENTER_ROW))
             return true;
 
         // empty cells are not connected
@@ -683,8 +684,8 @@ public class ShipBoard implements Serializable {
      */
     private void findNewCenterCabin() {
         Component component;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 component = componentMatrix[realCol][realRow];
                 // if current component is a cabin with human crew > 0
                 if (component instanceof Cabin && ((Cabin) component).getCrewType().equals(CrewType.Human)
@@ -722,8 +723,8 @@ public class ShipBoard implements Serializable {
         boolean mapped;
 
         // check if remaining components have all been mapped
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 // if component of real shipboard not null
                 if (componentMatrix[realCol][realRow] != null) {
                     mapped = false;
@@ -768,8 +769,8 @@ public class ShipBoard implements Serializable {
         ShipBoard tmpShipboard = new ShipBoard(gameType);
 
         // remove center cabin added by shipboard constructor, if current mapping is not starting from center cabin
-        if (realCol != getRealIndex(SB_CENTER_COL) || realRow != getRealIndex(SB_CENTER_ROW)) {
-            tmpShipboard.componentMatrix[getRealIndex(SB_CENTER_COL)][getRealIndex(SB_CENTER_ROW)] = null;
+        if (realCol != getRealIndex(CENTER_COL) || realRow != getRealIndex(CENTER_ROW)) {
+            tmpShipboard.componentMatrix[getRealIndex(CENTER_COL)][getRealIndex(CENTER_ROW)] = null;
         }
 
 
@@ -893,8 +894,8 @@ public class ShipBoard implements Serializable {
      */
     public void eraseShipboardFromRealShipboard(ShipBoard toErase) throws NoHumanCrewLeftException {
         // find components of the shipboard to erase
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 if (toErase.getRealComponent(realCol, realRow) != null) {
                     // remove element without checking for fracture (to avoid infinite loop)
                     // remove updates attributes
@@ -949,8 +950,8 @@ public class ShipBoard implements Serializable {
      */
     public int countExternalJunctions() {
         int externalJunctions = 0;
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 Component component = componentMatrix[realCol][realRow];
                 if (component != null) {
                     // check front
@@ -1279,8 +1280,8 @@ public class ShipBoard implements Serializable {
         Component current, temp;
 
         // find cabins
-        for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
-            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+        for (int realCol = FIRST_REAL_COL; realCol <= LAST_REAL_COL; realCol++) {
+            for (int realRow = FIRST_REAL_ROW; realRow <= LAST_REAL_ROW; realRow++) {
                 current = componentMatrix[realCol][realRow];
                 if (current instanceof Cabin && current.getCrewMembers() > 0) {
                     // check if current cabin is connected to a neighbor cabin

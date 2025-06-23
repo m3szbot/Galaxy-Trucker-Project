@@ -44,10 +44,6 @@ public class FlightBoard implements Serializable {
 
     private String imagePath;
 
-    public String getImagePath(){
-        return imagePath;
-    }
-
     /**
      * FlightBoard constructor.
      *
@@ -56,12 +52,11 @@ public class FlightBoard implements Serializable {
      */
     public FlightBoard(GameType gameType, List<Card> cardList) {
 
-        if(gameType == GameType.NORMALGAME){
+        if (gameType == GameType.NORMALGAME) {
 
             this.imagePath = "/Polytechnic/cardboard/cardboard-5.png";
 
-        }
-        else{
+        } else {
 
             this.imagePath = "/Polytechnic/cardboard/cardboard-3.png";
 
@@ -120,6 +115,9 @@ public class FlightBoard implements Serializable {
         }
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
 
     /**
      * @return copy of adventure cards on the flightboard (safe get).
@@ -420,4 +418,6 @@ public class FlightBoard implements Serializable {
             this.goodsNumber[i] += goods[i];
         }
     }
+
+
 }

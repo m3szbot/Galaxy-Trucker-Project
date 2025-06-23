@@ -52,7 +52,7 @@ public class ShipBoardTest {
     @Test
     void TestSetupTestGameShipboard() {
         shipBoard = new ShipBoard(GameType.TESTGAME);
-        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
+        assertNotNull(shipBoard.getComponent(ShipBoard.CENTER_COL, ShipBoard.CENTER_ROW));
         assertFalse(shipBoard.isErroneous());
         generalViewTUI.printShipboard(shipBoard);
     }
@@ -60,7 +60,7 @@ public class ShipBoardTest {
     @Test
     void TestSetupNormalGameShipboard() {
         // check starter cabin
-        assertNotNull(shipBoard.getComponent(ShipBoard.SB_CENTER_COL, ShipBoard.SB_CENTER_ROW));
+        assertNotNull(shipBoard.getComponent(ShipBoard.CENTER_COL, ShipBoard.CENTER_ROW));
         assertFalse(shipBoard.isErroneous());
         generalViewTUI.printFullShipboard(shipBoard);
     }
@@ -300,8 +300,8 @@ public class ShipBoardTest {
 
         // legal coordinates
         assertTrue(ShipBoard.checkCoordinatesInBounds(1, 1));
-        for (int i = 1; i <= shipBoard.SB_COLS; i++) {
-            for (int j = 1; j <= shipBoard.SB_ROWS; j++) {
+        for (int i = 1; i <= shipBoard.COLS; i++) {
+            for (int j = 1; j <= shipBoard.ROWS; j++) {
                 assertTrue(ShipBoard.checkCoordinatesInBounds(i, j));
             }
         }
