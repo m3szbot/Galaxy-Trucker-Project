@@ -75,6 +75,18 @@ public class ShipBoardAttributesTest {
         });
     }
 
+    @Test
+    void testReturnCreditsInBankNotes() {
+        assertArrayEquals(new int[]{0, 0, 0, 0, 0}, shipBoardAttributes.getCreditsInBankNotes());
+
+        shipBoardAttributes.addCredits(128);
+        assertArrayEquals(new int[]{2, 2, 1, 1, 1}, shipBoardAttributes.getCreditsInBankNotes());
+
+        shipBoardAttributes.addCredits(2);
+        assertArrayEquals(new int[]{2, 3, 0, 0, 0}, shipBoardAttributes.getCreditsInBankNotes());
+
+    }
+
     // Test addComponent attribute changes
     @Test
     void addRemovePurpleAlienCabin() throws NotPermittedPlacementException, FracturedShipBoardException, IllegalSelectionException {

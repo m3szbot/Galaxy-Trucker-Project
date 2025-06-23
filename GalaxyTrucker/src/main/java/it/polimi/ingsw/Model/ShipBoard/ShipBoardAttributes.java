@@ -402,6 +402,42 @@ public class ShipBoardAttributes implements Serializable {
         return coveredSides[side];
     }
 
+    /**
+     * Returns an array of 5 elements of the credits of the shipboard divided in banknotes.
+     *
+     * @return array of credits in banknotes of: 50, 10, 5, 2, 1 (in order).
+     */
+    public int[] getCreditsInBankNotes() {
+        int[] returned = new int[5];
+        int remainder = credits;
+        int count;
+
+        // 50
+        count = remainder / 50;
+        remainder %= 50;
+        returned[0] = count;
+
+        // 10
+        count = remainder / 10;
+        remainder %= 10;
+        returned[1] = count;
+
+        // 5
+        count = remainder / 5;
+        remainder %= 5;
+        returned[2] = count;
+
+        // 2
+        count = remainder / 2;
+        remainder %= 2;
+        returned[3] = count;
+
+        // 1
+        returned[4] = remainder;
+
+        return returned;
+    }
+
 
 }
 
