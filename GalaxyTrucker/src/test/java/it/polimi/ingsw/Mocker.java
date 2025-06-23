@@ -9,9 +9,21 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+import java.io.ByteArrayInputStream;
 import java.rmi.RemoteException;
 
-public abstract class mocker {
+public abstract class Mocker {
+
+    /**
+     * Change the input stream System.in to the stream of the input string passed as parameter to simulate user terminal input.
+     * Must be called before using the input stream.
+     *
+     * @param input
+     */
+    public static void simulateInput(String input) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        System.setIn(inputStream);
+    }
 
     /**
      * Set up a Game with gameType NORMALGAME, 1 player, GameMessenger and PlayerMessenger.

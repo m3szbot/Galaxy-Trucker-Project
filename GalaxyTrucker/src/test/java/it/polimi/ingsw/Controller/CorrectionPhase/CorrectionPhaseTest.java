@@ -1,13 +1,15 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
+import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Mocker;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.Components.SideType;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ShipBoard.Color;
+import it.polimi.ingsw.Model.IllegalSelectionException;
+import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -15,41 +17,26 @@ import java.io.InputStream;
 class CorrectionPhaseTest {
     private final InputStream originalInput = System.in;
 
-    GameInformation gameInformation;
+    Game game = Mocker.mockNormalGame1Player();
+    CorrectionPhase correctionPhase = game.getCorrectionPhase();
+    Player player = game.getGameInformation().getPlayerList().getFirst();
 
-    CorrectionPhase correctionPhase;
-    Player playerA, playerB, playerC, playerD;
+    Component smoothComponent = new Component(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth});
     Component singleComponent = new Component(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single});
     Component doubleComponent = new Component(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double});
 
     @BeforeEach
     void setUp() {
-        // set up gameInformation
-        gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
 
-        // set up GameMessenger used by Phase
-
-        // add players
-        playerA = new Player("A", Color.BLUE, gameInformation);
-        playerB = new Player("B", Color.RED, gameInformation);
-        playerC = new Player("C", Color.YELLOW, gameInformation);
-        playerD = new Player("D", Color.GREEN, gameInformation);
-        gameInformation.setMaxNumberOfPlayers(4);
-        gameInformation.addPlayer(playerA);
-        gameInformation.addPlayer(playerB);
-        gameInformation.addPlayer(playerC);
-        gameInformation.addPlayer(playerD);
-
-
-        correctionPhase = new CorrectionPhase(gameInformation);
     }
 
-    @AfterEach
-    void restoreInput() {
-        System.setIn(originalInput);
-    }
+    @Test
+    void erroneousShipBoard() throws NotPermittedPlacementException, IllegalSelectionException {
+        player.getShipBoard().addComponent(smoothComponent, 7, 8);
+        inputSimulator("7 8\n");
 
+        correctionPhase.start();
+    }
 
     /**
      * Simulates keyboard input for automated tests (inputs not permitted)
@@ -61,6 +48,11 @@ class CorrectionPhaseTest {
     void inputSimulator(String input) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
         System.setIn(inputStream);
+    }
+
+    @AfterEach
+    void restoreInput() {
+        System.setIn(originalInput);
     }
 
 
