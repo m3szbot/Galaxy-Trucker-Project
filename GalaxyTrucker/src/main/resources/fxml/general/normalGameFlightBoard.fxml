@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.TilePane?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.utils.FlightBoardController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -38,7 +37,6 @@
       <TilePane fx:id="pos18" layoutX="95.0" layoutY="97.0" prefHeight="33.0" prefWidth="35.0" />
       <TilePane fx:id="pos19" layoutX="130.0" layoutY="72.0" prefHeight="33.0" prefWidth="35.0" />
       <TilePane fx:id="pos20" layoutX="174.0" layoutY="55.0" prefHeight="33.0" prefWidth="35.0" />
-      <TilePane fx:id="stellarCredits" layoutX="208.0" layoutY="77.0" prefHeight="41.0" prefWidth="184.0" />
-      <Label fx:id="cardsRemaning" layoutX="220.0" layoutY="378.0" prefHeight="18.0" prefWidth="156.0" text="Label" />
+      <Label fx:id="cardsRemaining" layoutX="220.0" layoutY="378.0" prefHeight="18.0" prefWidth="156.0" text="Label" />
    </children>
 </Pane>

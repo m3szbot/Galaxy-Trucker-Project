@@ -17,11 +17,16 @@ import javafx.scene.image.ImageView;
 public final class ImageBuilder {
 
     private static ShipBoardController shipBoardController;
+    private static FlightBoardController flightBoardController;
 
     public static void setShipBoardController(ShipBoardController controller) {
 
         shipBoardController = controller;
 
+    }
+
+    public static void setFlightBoardController(FlightBoardController controller){
+        flightBoardController = controller;
     }
 
     public static ImageView buildCardImage(Card card){
@@ -40,12 +45,14 @@ public final class ImageBuilder {
     public static void buildShipBoardPane(ShipBoard shipBoard){
 
         shipBoardController.populateShipBoardTiles(shipBoard);
+        shipBoardController.addStellarCredits(shipBoard);
 
     }
 
     public static void buildFlightBoardPane(FlightBoard flightBoard){
 
-
+        flightBoardController.populateFlightBoard(flightBoard);
+        flightBoardController.setRemainingCards(flightBoard);
 
     }
 

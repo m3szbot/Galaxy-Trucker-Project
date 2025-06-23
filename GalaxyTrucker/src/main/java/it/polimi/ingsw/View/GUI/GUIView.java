@@ -25,7 +25,16 @@ import java.io.IOException;
 
 public class GUIView extends GeneralView {
 
-    private Pane shiboardPane;
+    /*
+    The idea of the methods is the following. The methods create a node which
+    contain the information passed as parameter, ready to be shown on the screen.
+    A method of the current controller is then called passing it the node as a parameter.
+    The method of the current controller then handles the node by inserting it into
+    the current fxml file.
+     */
+
+    private Pane shipBoardPane;
+    private Pane flightBoardPane;
 
     private GUIController guiController;
 
@@ -34,21 +43,27 @@ public class GUIView extends GeneralView {
 
         try {
 
-            FXMLLoader loader;
+            FXMLLoader shipBoardLoader;
+            FXMLLoader flightBoardLoader;
 
             if(gameType == GameType.NORMALGAME){
 
-                loader = new FXMLLoader(getClass().getResource("/fxml/normalGameShipBoard.fxml"));
+                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/normalGameShipBoard.fxml"));
+                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/normalGameFlightBoard.fxml"));
 
             }
             else{
 
-                loader = new FXMLLoader(getClass().getResource("/fxml/testGameShipBoard.fxml"));
+                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/testGameShipBoard.fxml"));
+                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/testGameFlightBoard.fxml"));
 
             }
 
-            shiboardPane = loader.load();
-            ImageBuilder.setShipBoardController(loader.getController());
+            shipBoardPane = shipBoardLoader.load();
+            flightBoardPane = flightBoardLoader.load();
+
+            ImageBuilder.setShipBoardController(shipBoardLoader.getController());
+            ImageBuilder.setFlightBoardController(flightBoardLoader.getController());
 
         } catch (IOException e) {
 
@@ -62,13 +77,6 @@ public class GUIView extends GeneralView {
         this.guiController = controller;
     }
 
-    /*
-    The idea of the methods is the following. The methods create a node which
-    contain the information passed as parameter, ready to be shown on the screen.
-    A method of the current controller is then called passing it the node as a parameter.
-    The method of the current controller then handles the node by inserting it into
-    the current fxml file.
-     */
 
     @Override
     public void printMessage(DataContainer dataContainer) {
@@ -99,7 +107,7 @@ public class GUIView extends GeneralView {
     public void printShipboard(ShipBoard shipBoard) {
 
         ImageBuilder.buildShipBoardPane(shipBoard);
-        guiController.refreshShipBoard(shiboardPane);
+        guiController.refreshShipBoard(shipBoardPane);
 
     }
 
@@ -113,7 +121,8 @@ public class GUIView extends GeneralView {
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
 
-
+        ImageBuilder.buildFlightBoardPane(flightBoard);
+        guiController.refreshFlightBoard(flightBoardPane);
 
     }
 
@@ -159,6 +168,12 @@ public class GUIView extends GeneralView {
 
     @Override
     public void printFlightBoard(DataContainer dataContainer) {
+
+        if(dataContainer.getFlightBoard() == null){
+            throw new IllegalArgumentException("The DC does not contain a flight board");
+        } else{
+            printFlightBoard(dataContainer.getFlightBoard());
+        }
 
     }
 }
