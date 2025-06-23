@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
@@ -9,20 +10,12 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.io.ByteArrayInputStream;
 import java.rmi.RemoteException;
 
 public abstract class Mocker {
 
-    /**
-     * Change the input stream System.in to the stream of the input string passed as parameter to simulate user terminal input.
-     * Must be called before using the input stream.
-     *
-     * @param input
-     */
-    public static void simulateInput(String input) {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        System.setIn(inputStream);
+    public static void simulateClientInput(String input) {
+        ClientInputManager.setUserInput(input);
     }
 
     /**
