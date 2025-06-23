@@ -6,14 +6,13 @@ import it.polimi.ingsw.View.TUI.TUIView;
 import java.io.Serializable;
 
 public class Player implements Serializable {
+    // The color associated with the player
+    private final Color color;
+    // The player's ship board, representing their ship in the game
+    private final ShipBoard shipBoard;
     // The nickname of the player
     private String nickName;
-    // The color associated with the player
-    private Color color;
-    // The player's ship board, representing their ship in the game
-    private ShipBoard shipBoard;
-
-    private boolean disconnected;
+    private boolean connected;
 
     /**
      * Constructor for the Player class.
@@ -27,15 +26,15 @@ public class Player implements Serializable {
         this.nickName = nickName;
         this.shipBoard = new ShipBoard(gameInformation.getGameType());
         this.color = color;
-        this.disconnected = false;
+        this.connected = true;
     }
 
-    public void disconnect(){
-        disconnected = true;
+    public void disconnect() {
+        connected = false;
     }
 
-    public boolean getConnectionStatus(){
-        return disconnected;
+    public boolean getIsConnected() {
+        return connected;
     }
 
     /**
@@ -107,9 +106,6 @@ public class Player implements Serializable {
         return shipBoard;
     }
 
-    public void setShipBoard(ShipBoard shipBoard) {
-        this.shipBoard = shipBoard;
-    }
 }
 
 

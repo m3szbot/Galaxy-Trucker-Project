@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// TODO players with shipBoards (goods, exposed links, lost components)
 class ScoreCounterTest {
     // 2 public methods: constructor, getPlayerScore
     // add players to gameInformation.flightBoard

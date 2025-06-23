@@ -105,7 +105,7 @@ public class GameMessenger {
      */
     public void disconnectPlayer(Player player) {
 
-        if (!player.getConnectionStatus()) {
+        if (player.getIsConnected()) {
 
             gameInformation.disconnectPlayerInGameInformation(player);
 
