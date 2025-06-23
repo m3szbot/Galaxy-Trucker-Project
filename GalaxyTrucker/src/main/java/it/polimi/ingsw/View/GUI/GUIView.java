@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.View.GUI.utils.FlightBoardController;
 import it.polimi.ingsw.View.GUI.utils.ImageBuilder;
 import it.polimi.ingsw.View.GeneralView;
 import javafx.fxml.FXMLLoader;
@@ -61,9 +62,11 @@ public class GUIView extends GeneralView {
 
             shipBoardPane = shipBoardLoader.load();
             flightBoardPane = flightBoardLoader.load();
+            FlightBoardController flightBoardController = flightBoardLoader.getController();
+            flightBoardController.setUpTilesMap(gameType);
 
             ImageBuilder.setShipBoardController(shipBoardLoader.getController());
-            ImageBuilder.setFlightBoardController(flightBoardLoader.getController());
+            ImageBuilder.setFlightBoardController(flightBoardController);
 
         } catch (IOException e) {
 

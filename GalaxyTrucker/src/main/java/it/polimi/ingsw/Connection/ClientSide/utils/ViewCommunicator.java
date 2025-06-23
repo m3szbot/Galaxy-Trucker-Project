@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Connection.ClientSide.utils;
 
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.GameInformation.GameType;
@@ -19,6 +20,7 @@ public class ViewCommunicator {
     private ViewType viewType;
     private GeneralView view;
     private GeneralGUIController generalGUIController;
+    private ConnectionType connectionType;
 
     public ViewCommunicator(ViewType viewType) {
 
@@ -34,6 +36,14 @@ public class ViewCommunicator {
 
         }
 
+    }
+
+    public void setConnectionType(ConnectionType connectionType){
+        this.connectionType = connectionType;
+    }
+
+    public ConnectionType getConnectionType(){
+        return connectionType;
     }
 
     public ViewType getViewType(){

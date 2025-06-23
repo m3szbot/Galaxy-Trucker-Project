@@ -1,6 +1,7 @@
 package it.polimi.ingsw.View.GUI;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ViewCommunicator;
+import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import javafx.application.Application;
@@ -52,8 +53,9 @@ public class GUILoader extends Application {
             primaryStage.show();
 
             primaryStage.setOnCloseRequest(event -> {
-
-                socketDataExchanger.closeResources();
+                if(viewCommunicator.getConnectionType() == ConnectionType.SOCKET) {
+                    socketDataExchanger.closeResources();
+                }
                 System.out.println("Application closed");
                 Platform.exit(); //stops the application thread
                 System.exit(0); //forces all the threads to end

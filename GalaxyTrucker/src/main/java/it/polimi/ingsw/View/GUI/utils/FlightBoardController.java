@@ -1,6 +1,7 @@
 package it.polimi.ingsw.View.GUI.utils;
 
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -22,11 +23,36 @@ public class FlightBoardController {
 
     private Map<Integer, TilePane> positionMap = new HashMap<>();
 
+    private GameType gameType;
+
     public void initialize(){
 
         for(int i = 1; i <= 18; i++){
             TilePane tilePane = (TilePane) pane.lookup("#pos" + i);
             positionMap.put(i, tilePane);
+        }
+
+    }
+
+    public void setUpTilesMap(GameType gameType){
+
+        this.gameType = gameType;
+
+        if(gameType == GameType.TESTGAME){
+
+            for(int i = 1; i <= 18; i++){
+                TilePane tilePane = (TilePane) pane.lookup("#pos" + i);
+                positionMap.put(i, tilePane);
+            }
+
+        }
+        else{
+
+            for(int i = 1; i <= 24; i++){
+                TilePane tilePane = (TilePane) pane.lookup("#pos" + i);
+                positionMap.put(i, tilePane);
+            }
+
         }
 
     }
@@ -37,6 +63,29 @@ public class FlightBoardController {
             //TODO: CHANGE THE CORRISPONDANCE
 
             int pos = flightBoard.getPlayerTile(player);
+
+            if(gameType == GameType.NORMALGAME){
+
+                while(pos <= 0){
+                    pos += 24;
+                }
+
+                while(pos > 24){
+                    pos -= 24;
+                }
+
+            }
+            else{
+
+                while(pos <= 0){
+                    pos += 18;
+                }
+
+                while(pos > 18){
+                    pos -= 18;
+                }
+            }
+
             TilePane tilePane = positionMap.get(pos);
 
             // Creo il triangolino indicatore
