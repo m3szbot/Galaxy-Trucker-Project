@@ -30,8 +30,10 @@ public class ShipBoard implements Serializable {
     public static final int SB_ROWS = 12;
     public static final int SB_CENTER_COL = 7;
     public static final int SB_CENTER_ROW = 7;
+
+    // components in componentMatrix in [FIRST_REAL_COL/ROW, LAST_REAL_COL/ROW] (included)
+
     // the first column and row that can contain components
-    // (components in [FIRST_REAL...MAX - FIRST_REAL (included!)])
     public static final int SB_FIRST_REAL_COL = 3;
     public static final int SB_FIRST_REAL_ROW = 4;
     // last INCLUDED! column/row on the shipboard
@@ -383,14 +385,6 @@ public class ShipBoard implements Serializable {
             System.err.println("Error: coordinates out of bounds in getComponents()");
 
         return componentMatrix[getRealIndex(visibleCol)][getRealIndex(visibleRow)];
-    }
-
-    public int getMatrixRows() {
-        return componentMatrix.length;
-    }
-
-    public int getMatrixCols() {
-        return componentMatrix[0].length;
     }
 
     /**

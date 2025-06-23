@@ -15,7 +15,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class ShipBoardController{
+public class ShipBoardController {
 
     public static final double TILE_SIZE = 79.8;
 
@@ -24,6 +24,59 @@ public class ShipBoardController{
 
     @FXML
     private GridPane gridPane;
+
+    public void populateShipBoardTiles(ShipBoard shipBoard) {
+
+        int rows = ShipBoard.SB_ROWS;
+        int cols = ShipBoard.SB_COLS;
+        Component[][] shipStructure = shipBoard.getComponentMatrix();
+
+        int indexRow = 3;
+        int indexColumn = 2;
+
+        for (int i = indexRow; i < rows - indexRow; i++) {
+
+            for (int j = indexColumn; j < cols - indexColumn; j++) {
+
+                Component component = shipStructure[i][j];
+
+                if (component != null) {
+
+                    int[] numbers;
+                    Color[] colors;
+
+                    if (component.getComponentName().equals("Storage")) {
+
+                        numbers = ((Storage) component).getGoods();
+                        colors = new Color[]{Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE};
+
+
+                    } else if (component.getComponentName().equals("Battery")) {
+
+                        numbers = new int[]{((Battery) component).getBatteryPower()};
+                        colors = new Color[]{Color.GREEN};
+
+                    } else if (component.getComponentName().equals("Cabin")) {
+
+                        numbers = new int[]{((Cabin) component).getCrewMembers()};
+                        colors = new Color[]{Color.WHITE};
+
+                    } else {
+
+                        numbers = null;
+                        colors = null;
+
+                    }
+
+                    AnchorPane cellPane = createTileWithIndicators(new Image(component.getImagePath()), numbers, colors);
+                    gridPane.add(cellPane, i - 3, j - 2);
+
+                }
+
+            }
+        }
+
+    }
 
     private AnchorPane createTileWithIndicators(Image componentImagePath, int[] numbers, Color[] colors) {
 
@@ -75,63 +128,6 @@ public class ShipBoardController{
         cellPane.getChildren().add(imageView);
 
         return cellPane;
-    }
-
-    public void populateShipBoardTiles(ShipBoard shipBoard){
-
-        int rows = shipBoard.getMatrixRows();
-        int cols = shipBoard.getMatrixCols();
-        Component[][] shipStructure = shipBoard.getComponentMatrix();
-
-        int indexRow = 3;
-        int indexColumn = 2;
-
-        for(int i = indexRow; i < rows - indexRow; i++){
-
-            for(int j = indexColumn; j < cols - indexColumn; j++){
-
-                Component component = shipStructure[i][j];
-
-                if(component != null){
-
-                    int[] numbers;
-                    Color[] colors;
-
-                    if(component.getComponentName().equals("Storage")){
-
-                        numbers = ((Storage)component).getGoods();
-                        colors = new Color[]{Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE};
-
-
-
-                    }
-                    else if(component.getComponentName().equals("Battery")){
-
-                        numbers = new int[]{((Battery)component).getBatteryPower()};
-                        colors = new Color[]{Color.GREEN};
-
-                    }
-                    else if(component.getComponentName().equals("Cabin")){
-
-                        numbers = new int[]{((Cabin)component).getCrewMembers()};
-                        colors = new Color[]{Color.WHITE};
-
-                    }
-                    else{
-
-                        numbers = null;
-                        colors = null;
-
-                    }
-
-                    AnchorPane cellPane = createTileWithIndicators(new Image(component.getImagePath()), numbers, colors);
-                    gridPane.add(cellPane, i - 3, j - 2);
-
-                }
-
-            }
-        }
-
     }
 
 }

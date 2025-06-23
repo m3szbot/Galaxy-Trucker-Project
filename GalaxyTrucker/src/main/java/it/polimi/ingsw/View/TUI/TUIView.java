@@ -78,27 +78,23 @@ public class TUIView extends GeneralView {
      */
     public void printShipboard(ShipBoard shipBoard) {
         // row and column to print indexes in
-        int indexRow = 3;
-        int indexColumn = 2;
+        int indexRow = ShipBoard.SB_FIRST_REAL_ROW - 1;
+        int indexColumn = ShipBoard.SB_FIRST_REAL_COL - 1;
         // Print shipboard in:
         // col: 4-10
         // row: 5-9
-
-        //  shipboard number of rows and cols
-        int rows = shipBoard.getMatrixRows();
-        int cols = shipBoard.getMatrixCols();
 
         Component[][] shipStructure = shipBoard.getComponentMatrix();
         boolean[][] validPositions = shipBoard.getValidityMatrix();
         List<String> cellLines;
 
         // cycle rows
-        for (int i = indexRow; i < rows - indexRow; i++) {
+        for (int i = indexRow; i <= ShipBoard.SB_LAST_REAL_ROW; i++) {
             //Printing every line singularly, this way we can obtain a table form
             for (int line = 0; line < COMPONENT_LINES; line++) {
 
                 // cycle columns
-                for (int j = indexColumn; j < cols - indexColumn; j++) {
+                for (int j = indexColumn; j <= ShipBoard.SB_LAST_REAL_COL; j++) {
                     // print index row
                     if (i == indexRow && j != indexColumn) {
                         cellLines = getIndexCell(j + 1);
@@ -190,21 +186,17 @@ public class TUIView extends GeneralView {
         // col: 4-10
         // row: 5-9
 
-        //  shipboard number of rows and cols
-        int rows = shipBoard.getMatrixRows();
-        int cols = shipBoard.getMatrixCols();
-
         Component[][] shipStructure = shipBoard.getComponentMatrix();
         boolean[][] validPositions = shipBoard.getValidityMatrix();
         List<String> cellLines;
 
         // cycle rows
-        for (int i = indexRow; i < rows - indexRow; i++) {
+        for (int i = indexRow; i < ShipBoard.SB_ROWS; i++) {
             //Printing every line singularly, this way we can obtain a table form
             for (int line = 0; line < COMPONENT_LINES; line++) {
 
                 // cycle columns
-                for (int j = indexColumn; j < cols - indexColumn; j++) {
+                for (int j = indexColumn; j < ShipBoard.SB_COLS; j++) {
                     // print index row
                     if (i == indexRow && j != indexColumn) {
                         cellLines = getIndexCell(j + 1);
