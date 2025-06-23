@@ -137,6 +137,13 @@ public class GUIView extends GeneralView {
     @Override
     public void printShipboard(DataContainer dataContainer) {
 
+        if(dataContainer.getShipBoard() == null){
+            throw new IllegalArgumentException("The DC does not contain a shipboard");
+        }
+        else{
+            printShipboard(dataContainer.getShipBoard());
+        }
+
     }
 
     @Override
