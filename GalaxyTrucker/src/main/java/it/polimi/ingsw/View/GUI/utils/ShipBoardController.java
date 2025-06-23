@@ -25,6 +25,9 @@ public class ShipBoardController {
     @FXML
     private GridPane gridPane;
 
+    @FXML
+    private TilePane stellarCredits;
+
     public void populateShipBoardTiles(ShipBoard shipBoard) {
 
         Component[][] shipStructure = shipBoard.getComponentMatrix();
@@ -70,6 +73,10 @@ public class ShipBoardController {
             }
         }
 
+    }
+
+    public void addStellarCredits(ShipBoard shipBoard){
+        //TODO
     }
 
     private AnchorPane createTileWithIndicators(Image componentImagePath, int[] numbers, Color[] colors) {
