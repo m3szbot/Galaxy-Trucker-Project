@@ -19,7 +19,8 @@ class CorrectionPhaseTest {
 
     CorrectionPhase correctionPhase;
     Player playerA, playerB, playerC, playerD;
-    Component singleComponent, doubleComponent;
+    Component singleComponent = new Component(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single});
+    Component doubleComponent = new Component(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double});
 
     @BeforeEach
     void setUp() {
@@ -40,8 +41,6 @@ class CorrectionPhaseTest {
         gameInformation.addPlayer(playerC);
         gameInformation.addPlayer(playerD);
 
-        singleComponent = new Component(new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single});
-        doubleComponent = new Component(new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double});
 
         correctionPhase = new CorrectionPhase(gameInformation);
     }

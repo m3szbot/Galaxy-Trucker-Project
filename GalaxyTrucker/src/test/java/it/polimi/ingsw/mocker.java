@@ -1,15 +1,15 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
-import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
+import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.rmi.RemoteException;
 
 public abstract class mocker {
 
@@ -20,29 +20,26 @@ public abstract class mocker {
      */
     public static Game mockNormalGame1Player() {
         // find and keep correct setup order
+        // setup Game
         int gameCode = 0;
         Game game = new Game(gameCode);
         game.setGameType(GameType.NORMALGAME);
+        game.setNumberOfPlayers(1);
+
+        // add 1 player
         Player player1 = new Player("Player1", Color.BLUE, game.getGameInformation());
         game.addPlayer(player1, true);
-        game.setNumberOfPlayers(1);
 
 
         // setup messengers
         ClientMessenger.addGame(gameCode, game.getGameInformation());
-
-        Socket clientSocket = new Socket();
-
-        // TODO mock connection
+        ClientInfo clientInfo = new ClientInfo();
+        clientInfo.setViewType(ViewType.TUI);
+        clientInfo.setGameCode(gameCode);
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            outputStream.flush();
-
-            SocketDataExchanger sde = new SocketDataExchanger(clientSocket, inputStream, outputStream);
-            ClientMessenger.getGameMessenger(gameCode).addPlayer(player1, sde);
-        } catch (Exception e) {
-
+            VirtualClient virtualClient = new VirtualClient(clientInfo);
+            ClientMessenger.getGameMessenger(gameCode).addPlayer(player1, virtualClient);
+        } catch (RemoteException ex) {
         }
 
         game.setUpPhases();
