@@ -74,7 +74,10 @@ public class GameMessenger {
      * @return PlayerMessenger associated to the given player.
      */
     public PlayerMessenger getPlayerMessenger(Player player) {
-        return playerMessengerMap.get(player);
+        if (playerMessengerMap.containsKey(player))
+            return playerMessengerMap.get(player);
+        else
+            throw new IllegalArgumentException("Player not connected, cannot get playerMessenger.");
     }
 
 
