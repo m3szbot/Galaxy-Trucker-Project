@@ -162,8 +162,8 @@ public class CorrectionThread implements Runnable {
                 // only ask player if alien could be set on the given component
                 if ((shipBoardAttributes.getHumanCrewMembers() > 2) && (shipBoard.getComponentMatrix()[i][j] instanceof Cabin) &&
                         (// check for purple or brown alien conditions (alien not present + support nearby)
-                                (!shipBoardAttributes.getAlien(CrewType.Purple) && shipBoard.checkForAlienSupport(i, j, CrewType.Purple)) ||
-                                        (!shipBoardAttributes.getAlien(CrewType.Brown) && shipBoard.checkForAlienSupport(i, j, CrewType.Brown))
+                                (!shipBoardAttributes.getPurpleAlien() && shipBoard.checkForAlienSupport(i, j, CrewType.Purple)) ||
+                                        (!shipBoardAttributes.getBrownAlien() && shipBoard.checkForAlienSupport(i, j, CrewType.Brown))
                         )) {
                     // alien can be selected
                     playerMessenger.printShipboard(shipBoard);

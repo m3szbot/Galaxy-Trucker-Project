@@ -1074,16 +1074,26 @@ public class ShipBoard implements Serializable {
             throw new IllegalSelectionException("Cannot change crew type from human: no humans would be left.");
         }
 
-        // change only if needed
+        // change crewtype only if needed
         if (!originalCrewType.equals(crewType)) {
-            // alien checks
-            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple) || crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Brown)) {
-                if (shipBoardAttributes.getAlien(crewType))
-                    throw new IllegalSelectionException("Cannot change crew to alien: the alien is already present elsewhere.");
+            // purple alien check
+            if (crewType.equals(CrewType.Purple)) {
+                if (shipBoardAttributes.getPurpleAlien())
+                    throw new IllegalSelectionException("Cannot change crew to alien: a purple alien is already present elsewhere.");
 
                 if (!checkForAlienSupport(col, row, crewType))
-                    throw new IllegalSelectionException("Cannot change crew to alien: no alien support nearby.");
+                    throw new IllegalSelectionException("Cannot change crew to alien: no purple alien support nearby.");
             }
+
+            // brown alien check
+            else if (crewType.equals(CrewType.Brown)) {
+                if (shipBoardAttributes.getBrownAlien())
+                    throw new IllegalSelectionException("Cannot change crew to alien: a brown alien is already present elsewhere.");
+
+                if (!checkForAlienSupport(col, row, crewType))
+                    throw new IllegalSelectionException("Cannot change crew to alien: no brown alien support nearby.");
+            }
+
 
             // all conditions met to change crew type
             ((Cabin) component).setCrewType(crewType);

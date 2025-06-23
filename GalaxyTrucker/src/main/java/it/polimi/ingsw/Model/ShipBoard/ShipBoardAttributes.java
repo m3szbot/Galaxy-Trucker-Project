@@ -17,16 +17,16 @@ public class ShipBoardAttributes implements Serializable {
     // cannot have shipboard as attribute - circular reference
     // All attributes must be Serializable or transient
 
-    // STATIC SHIP ATTRIBUTES
+    private final GameType gameType;
+
     // covered sides of the ship
     // [FRONT, RIGHT, BACK, LEFT]
     boolean[] coveredSides;
-    private GameType gameType;
     // driving power of single engines
     private int singleEnginePower;
     // firepower of single cannons
     private float singleCannonPower;
-    // DYNAMIC SHIP ATTRIBUTES, INVENTORY
+
     // available battery power
     private int remainingBatteries; // Ship's battery power
     // driving power of double engines (only available if battery is consumed!)
@@ -121,18 +121,6 @@ public class ShipBoardAttributes implements Serializable {
         return brownAlien;
     }
 
-    /**
-     * @return true if the given alien type is present, false otherwise (for human too).
-     * @author Boti
-     */
-    public boolean getAlien(CrewType crewType) {
-        if (crewType.equals(CrewType.Purple))
-            return purpleAlien;
-        if (crewType.equals(CrewType.Brown))
-            return brownAlien;
-        else
-            return false;
-    }
 
     public int[] getGoods() {
         return goods;
@@ -160,19 +148,6 @@ public class ShipBoardAttributes implements Serializable {
         return credits;
     }
 
-    /**
-     * Update every shipBoardAttribute attribute.
-     * To use when shipBoard is fractured.
-     * For normal updates use ComponentVisitor.
-     */
-    void updateShipBoardAttributes(ShipBoard shipBoard) throws NoHumanCrewLeftException {
-        updateCoveredSides(shipBoard);
-        updateCannons(shipBoard);
-        updateEngines(shipBoard);
-        updateRemainingBatteries(shipBoard);
-        updateCabinsAlienSupports(shipBoard);
-        updateGoods(shipBoard);
-    }
 
     /**
      * Scan the shipboard for shields and update coveredSides.

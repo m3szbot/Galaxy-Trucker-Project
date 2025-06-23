@@ -21,6 +21,7 @@ public class ShipBoardAttributesTest {
     SideType[] universalSidesSpecialRight = new SideType[]{SideType.Universal, SideType.Special, SideType.Universal, SideType.Universal};
     SideType[] universalSidesSpecialBack = new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal};
     SideType[] universalSidesSpecialLeft = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Special};
+    SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
 
     @BeforeEach
     void setUp() {
@@ -96,7 +97,7 @@ public class ShipBoardAttributesTest {
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             shipBoard.setCrewType(7, 7, CrewType.Brown);
         });
         assertTrue(shipBoardAttributes.getPurpleAlien());
@@ -122,7 +123,7 @@ public class ShipBoardAttributesTest {
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, true));
         shipBoard.setCrewType(7, 7, CrewType.Purple);
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             shipBoard.setCrewType(7, 7, CrewType.Brown);
         });
         assertTrue(shipBoardAttributes.getPurpleAlien());
@@ -144,7 +145,7 @@ public class ShipBoardAttributesTest {
         shipBoard.addComponent(7, 8, new AlienSupport(singleSides, false));
         shipBoard.setCrewType(7, 7, CrewType.Brown);
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalSelectionException.class, () -> {
             shipBoard.setCrewType(7, 7, CrewType.Purple);
         });
         assertFalse(shipBoardAttributes.getPurpleAlien());
@@ -359,5 +360,39 @@ public class ShipBoardAttributesTest {
         assertEquals(0, shipBoardAttributes.getRemainingRedSlots());
     }
 
+    @Test
+    void setDestroyedComponents() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            shipBoardAttributes.setDestroyedComponents(-1);
+        });
+        shipBoardAttributes.setDestroyedComponents(10);
+        assertEquals(10, shipBoardAttributes.getDestroyedComponents());
+    }
+
+    @Test
+    void testGameAliens() throws NotPermittedPlacementException, IllegalSelectionException {
+        shipBoard = new ShipBoard(GameType.TESTGAME);
+        shipBoardAttributes = shipBoard.getShipBoardAttributes();
+
+        shipBoard.addComponent(new Cabin(universalSides, CrewType.Human, 2), 7, 6);
+        shipBoard.addComponent(new AlienSupport(universalSides, true), 6, 6);
+        shipBoard.addComponent(new AlienSupport(universalSides, false), 8, 6);
+
+        assertThrows(IllegalStateException.class, () -> {
+            shipBoard.setCrewType(7, 6, CrewType.Purple);
+        });
+        assertThrows(IllegalStateException.class, () -> {
+            shipBoard.setCrewType(7, 6, CrewType.Brown);
+        });
+
+    }
+
+    @Test
+    void testNoHumanCrewLeftException() throws NoHumanCrewLeftException, IllegalSelectionException {
+        shipBoard.removeCrewMember(7, 7);
+        assertThrows(NoHumanCrewLeftException.class, () -> {
+            shipBoard.removeCrewMember(7, 7);
+        });
+    }
 
 }
