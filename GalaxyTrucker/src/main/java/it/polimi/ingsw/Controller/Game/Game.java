@@ -24,8 +24,6 @@ public class Game implements Runnable, Serializable {
     private EvaluationPhase evaluationPhase;
     private int numberOfJoinedPlayers;
     private String creator;
-
-
     public Game(int gameCode) {
 
         this.gameCode = gameCode;
@@ -35,6 +33,26 @@ public class Game implements Runnable, Serializable {
         numberOfJoinedPlayers = 0;
 
 
+    }
+
+    public InitializationPhase getInitializationPhase() {
+        return initializationPhase;
+    }
+
+    public AssemblyPhase getAssemblyPhase() {
+        return assemblyPhase;
+    }
+
+    public CorrectionPhase getCorrectionPhase() {
+        return correctionPhase;
+    }
+
+    public FlightPhase getFlightPhase() {
+        return flightPhase;
+    }
+
+    public EvaluationPhase getEvaluationPhase() {
+        return evaluationPhase;
     }
 
     public void setUpPhases() {
