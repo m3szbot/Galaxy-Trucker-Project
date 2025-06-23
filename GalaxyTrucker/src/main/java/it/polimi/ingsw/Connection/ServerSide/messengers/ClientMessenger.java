@@ -16,25 +16,25 @@ import java.util.Map;
  * @author carlo
  */
 
-public class ClientMessenger {
+public abstract class ClientMessenger {
 
     private static Map<Integer, GameMessenger> gameMessengerMap = new HashMap<>();
     private static Server centralServer;
     private static Map<String, PlayerLobbyMessenger> playersInLobbyMessengerMap = new HashMap<>();
 
-    public static void addPlayerInLobby(String nickName, SocketDataExchanger socketDataExchanger){
+    public static void addPlayerInLobby(String nickName, SocketDataExchanger socketDataExchanger) {
         playersInLobbyMessengerMap.put(nickName, new PlayerLobbyMessenger(socketDataExchanger, nickName));
     }
 
-    public static void addPlayerInLobby(String nickname, ClientRemoteInterface virtualClient){
+    public static void addPlayerInLobby(String nickname, ClientRemoteInterface virtualClient) {
         playersInLobbyMessengerMap.put(nickname, new PlayerLobbyMessenger(virtualClient, nickname));
     }
 
-    public static PlayerLobbyMessenger getPlayerLobbyMessenger(String nickname){
+    public static PlayerLobbyMessenger getPlayerLobbyMessenger(String nickname) {
         return playersInLobbyMessengerMap.get(nickname);
     }
 
-    public static void removePlayerLobbyMessenger(String nickname){
+    public static void removePlayerLobbyMessenger(String nickname) {
 
         playersInLobbyMessengerMap.remove(nickname);
     }
@@ -42,10 +42,11 @@ public class ClientMessenger {
     /**
      * when a new game is started, addGame must be called to add the gameMessenger for
      * the game
+     *
      * @param gameCode of the added game
      */
 
-    public static void addGame(int gameCode, GameInformation gameInformation){
+    public static void addGame(int gameCode, GameInformation gameInformation) {
 
         gameMessengerMap.put(gameCode, new GameMessenger(gameCode, gameInformation));
 
@@ -64,11 +65,11 @@ public class ClientMessenger {
      * @return gameMessenger of the current game
      */
 
-    public static GameMessenger getGameMessenger(int gameCode){
+    public static GameMessenger getGameMessenger(int gameCode) {
         return gameMessengerMap.get(gameCode);
     }
 
-    public static void endGame(int gameCode){
+    public static void endGame(int gameCode) {
         gameMessengerMap.remove(gameCode);
     }
 
