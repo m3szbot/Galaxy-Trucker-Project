@@ -33,10 +33,17 @@ public class ShipBoard implements Serializable {
 
     // components in componentMatrix in [FIRST_REAL_COL/ROW, LAST_REAL_COL/ROW] (included)
 
-    // the first column and row that can contain components
+    /*
+    Cycle to iterate componentMatrix:
+    for (int realCol = SB_FIRST_REAL_COL; realCol <= SB_LAST_REAL_COL; realCol++) {
+            for (int realRow = SB_FIRST_REAL_ROW; realRow <= SB_LAST_REAL_ROW; realRow++) {
+     */
+
+    // the first real column and row that can contain components
     public static final int SB_FIRST_REAL_COL = 3;
     public static final int SB_FIRST_REAL_ROW = 4;
-    // last INCLUDED! column/row on the shipboard
+
+    // the last real column and row that can contain components (included!)
     public static final int SB_LAST_REAL_COL = 9;
     public static final int SB_LAST_REAL_ROW = 8;
 
