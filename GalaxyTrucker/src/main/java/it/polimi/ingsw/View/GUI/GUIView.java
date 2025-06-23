@@ -38,12 +38,12 @@ public class GUIView extends GeneralView {
 
             if(gameType == GameType.NORMALGAME){
 
-                loader = new FXMLLoader(getClass().getResource("/fxml/normalGameFlightBoard.fxml"));
+                loader = new FXMLLoader(getClass().getResource("/fxml/normalGameShipBoard.fxml"));
 
             }
             else{
 
-                loader = new FXMLLoader(getClass().getResource("/fxml/testGameFlightBoard.fxml"));
+                loader = new FXMLLoader(getClass().getResource("/fxml/testGameShipBoard.fxml"));
 
             }
 
