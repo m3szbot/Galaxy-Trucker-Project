@@ -69,6 +69,7 @@ public class ClientInfo implements Serializable {
 
     public void setConnectionType(ConnectionType connectionType) {
         this.connectionType = connectionType;
+        viewCommunicator.setConnectionType(connectionType);
     }
 
     public int getGameCode() {
