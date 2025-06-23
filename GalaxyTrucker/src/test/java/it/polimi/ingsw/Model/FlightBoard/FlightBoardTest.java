@@ -339,4 +339,22 @@ class FlightBoardTest {
             flightViewTUI.printMessage(dataContainer);
         }
     }
+
+    @Test
+    void getPlayerOrderPlayerNotInGame() {
+        assertFalse(flightBoard.isInFlight(playerA));
+        assertThrows(NoSuchElementException.class, () -> flightBoard.getPlayerOrder(playerA));
+    }
+
+    @Test
+    void voluntarilyGiveUpPlayerNotInGame() {
+        assertFalse(flightBoard.isInFlight(playerA));
+        assertThrows(NoSuchElementException.class, () -> flightBoard.voluntarilyGiveUpPlayer(playerA));
+    }
+
+    @Test
+    void addNegativeGoods() {
+        flightBoard.addGoods(new int[]{0, 0, 0, 0});
+        assertThrows(IllegalArgumentException.class, () -> flightBoard.addGoods(new int[]{0, 0, 0, -1}));
+    }
 }
