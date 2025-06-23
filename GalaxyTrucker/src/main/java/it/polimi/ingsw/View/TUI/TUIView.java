@@ -121,7 +121,10 @@ public class TUIView extends GeneralView {
             }
         }
         // end of components
-        System.out.println(String.format("Destroyed components: %d\n", shipBoard.getShipBoardAttributes().getDestroyedComponents()));
+        // print credits
+        System.out.printf("Cosmic credits: %d$\n", shipBoard.getShipBoardAttributes().getCredits());
+        // print destroyed components
+        System.out.printf("Destroyed components: %d\n%n", shipBoard.getShipBoardAttributes().getDestroyedComponents());
 
     }
 
