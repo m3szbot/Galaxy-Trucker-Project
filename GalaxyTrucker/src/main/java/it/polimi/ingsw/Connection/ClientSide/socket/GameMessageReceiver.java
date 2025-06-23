@@ -52,7 +52,7 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
                 ClientInputManager.unblockInput();
                 break;
             } catch (Exception e) {
-                System.out.println("Unexpected error in receiver");
+                System.err.println("Unexpected error in receiver");
                 e.printStackTrace();
             }
 

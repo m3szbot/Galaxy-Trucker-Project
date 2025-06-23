@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="it.polimi.ingsw.View.GUI.CorrectionControllers.CorrectionGUIController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="1200.0" prefWidth="1000.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.CorrectionControllers.CorrectionGUIController">
+   <children>
+      <AnchorPane fx:id="shipBoardPane" layoutX="54.0" layoutY="65.0" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #2c003e;" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="322.0" layoutY="24.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="SHIPBOARD" />
+      <TextArea fx:id="console" editable="false" layoutX="79.0" layoutY="759.0" prefHeight="400.0" prefWidth="600.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="298.0" layoutY="704.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="CONSOLE" />
+      <Label layoutX="878.0" layoutY="380.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text" />
+      <TextField fx:id="playerInputField" layoutX="1001.0" layoutY="376.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d" />
+      <Button fx:id="button" layoutX="1028.0" layoutY="403.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text" />
+   </children>
 </AnchorPane>

@@ -82,6 +82,9 @@ public class GeneralGUIController {
             node.setLayoutX((rootPane.getWidth() - node.prefWidth(-1)) / 2);
             node.setLayoutY((rootPane.getHeight() - node.prefHeight(-1)) / 2);
 
+
+
+
             GUIController controller = loader.getController();
             ((GUIView)guiView).setGuiController(controller);
 

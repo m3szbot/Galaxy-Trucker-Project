@@ -76,7 +76,64 @@ public class ShipBoardController {
     }
 
     public void addStellarCredits(ShipBoard shipBoard){
-        //TODO
+
+        int stellarCreditsArray[] = shipBoard.getShipBoardAttributes().getCreditsInBankNotes();
+
+        HBox hBox = new HBox(8);
+        hBox.setPrefWidth(299);
+        hBox.setPrefHeight(53);
+        hBox.setStyle("-fx-padding: 5; -fx-alignment: center-left;");
+
+        for (int i = 0; i < 5; i++) {
+
+            Image image;
+
+            switch (i){
+                case 0 -> {
+
+                    image = new Image("/Polytechnic/cardboard/cardboard-9.png");
+
+                }
+                case 1 -> {
+
+                    image = new Image("/Polytechnic/cardboard/cardboard-8.png");
+                }
+                case 2 -> {
+
+                    image = new Image("/Polytechnic/cardboard/cardboard-7.png");
+                }
+                case 3 -> {
+
+                    image = new Image("/Polytechnic/cardboard/cardboard-6.png");
+                }
+                case 4 -> {
+
+                    image = new Image("/Polytechnic/cardboard/cardboard-10.png");
+                }
+                default -> {
+                    image = null;
+                    System.err.println("Cosmic credit image in shipboard controller has not been correctly initialized");
+                }
+            }
+
+            ImageView imageView = new ImageView(image);
+
+            imageView.setFitWidth(20);
+            imageView.setFitHeight(20);
+            imageView.setPreserveRatio(true);
+
+            Label label = new Label(String.valueOf(stellarCreditsArray[i]));
+            label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+
+            HBox imgBox = new HBox(3);
+            imgBox.getChildren().addAll(imageView, label);
+            imgBox.setStyle("-fx-alignment: center;");
+
+            hBox.getChildren().add(imgBox);
+        }
+
+        stellarCredits.getChildren().add(hBox);
+
     }
 
     private AnchorPane createTileWithIndicators(Image componentImagePath, int[] numbers, Color[] colors) {

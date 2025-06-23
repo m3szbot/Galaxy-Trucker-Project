@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="it.polimi.ingsw.View.GUI.FlightControllers.FlightGUIController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.FlightControllers.FlightGUIController">
+   <children>
+      <AnchorPane fx:id="shipBoardPane" layoutX="44.0" layoutY="55.0" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #2c003e;" />
+      <AnchorPane fx:id="flightBoardPane" layoutX="44.0" layoutY="691.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #2c003e;" />
+      <Label alignment="CENTER" layoutX="312.0" layoutY="14.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="SHIPBOARD" />
+      <Label alignment="CENTER" layoutX="312.0" layoutY="655.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="FLIGHTBOARD" />
+      <AnchorPane fx:id="cardPane" layoutX="860.0" layoutY="133.0" prefHeight="400.0" prefWidth="250.0" style="-fx-background-color: #2c003e;" />
+      <Label alignment="CENTER" layoutX="929.0" layoutY="69.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="CURRENT CARD" />
+      <TextArea fx:id="console" editable="false" layoutX="742.0" layoutY="640.0" prefHeight="400.0" prefWidth="600.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;" />
+      <Label alignment="CENTER" layoutX="929.0" layoutY="571.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="CONSOLE" />
+      <Label layoutX="1183.0" layoutY="537.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text" />
+      <TextField fx:id="playerInputField" layoutX="1306.0" layoutY="532.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d" />
+      <Button fx:id="button" layoutX="1333.0" layoutY="559.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text" />
+   </children>
 </AnchorPane>
