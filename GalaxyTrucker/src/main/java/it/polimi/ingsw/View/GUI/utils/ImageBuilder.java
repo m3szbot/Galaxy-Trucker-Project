@@ -2,6 +2,7 @@ package it.polimi.ingsw.View.GUI.utils;
 
 import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,6 +40,12 @@ public final class ImageBuilder {
     public static void buildShipBoardPane(ShipBoard shipBoard){
 
         shipBoardController.populateShipBoardTiles(shipBoard);
+
+    }
+
+    public static void buildFlightBoardPane(FlightBoard flightBoard){
+
+
 
     }
 
