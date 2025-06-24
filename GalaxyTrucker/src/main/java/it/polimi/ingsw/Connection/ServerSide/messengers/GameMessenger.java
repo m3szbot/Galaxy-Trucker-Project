@@ -71,7 +71,9 @@ public class GameMessenger {
     }
 
     /**
-     * @return PlayerMessenger associated to the given player.
+     * Attention: always check if null before using playerMessenger, to avoid NullPointerException!
+     *
+     * @return PlayerMessenger associated to the given player, or null if the player is not connected.
      */
     public PlayerMessenger getPlayerMessenger(Player player) {
         if (playerMessengerMap.containsKey(player))
