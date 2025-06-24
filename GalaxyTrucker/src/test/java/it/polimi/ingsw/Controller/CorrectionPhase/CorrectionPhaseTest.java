@@ -28,9 +28,9 @@ class CorrectionPhaseTest {
 
     @Test
     void shipBoardWith2Errors() throws NotPermittedPlacementException, IllegalSelectionException {
+        // test removing 2 components
         shipBoard.addComponent(smoothComponent, 7, 6);
         shipBoard.addComponent(smoothComponent, 7, 8);
-        // TODO multiple input does not work
         Mocker.simulateClientInput("7 6\n7 8\n");
         correctionPhase.start();
     }
@@ -44,11 +44,13 @@ class CorrectionPhaseTest {
 
     @Test
     void selectCrewType() throws NotPermittedPlacementException, IllegalSelectionException {
+        // test alien selected 2x, no support nearby, wrong inputs until trials exhausted (5)
         shipBoard.addComponent(6, 7, new AlienSupport(universalSides, true));
         shipBoard.addComponent(8, 7, new AlienSupport(universalSides, false));
         shipBoard.addComponent(6, 6, new Cabin(universalSides, CrewType.Human, 2));
         shipBoard.addComponent(8, 6, new Cabin(universalSides, CrewType.Human, 2));
-        Mocker.simulateClientInput("Brown\nPurple\nHuman\nBrown\n");
+        shipBoard.addComponent(9, 7, new Cabin(universalSides, CrewType.Human, 2));
+        Mocker.simulateClientInput("Brown\nPurple\npurple\n!\n\na\n1\nbrown");
         correctionPhase.start();
 
     }
