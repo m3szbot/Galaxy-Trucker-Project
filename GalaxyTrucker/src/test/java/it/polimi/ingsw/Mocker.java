@@ -53,4 +53,36 @@ public abstract class Mocker {
 
         return game;
     }
+
+    public static Game mockNormalGame2Players() {
+        // find and keep correct setup order
+        // setup Game
+        int gameCode = 1;
+        Game game = new Game(gameCode);
+        game.setGameType(GameType.NORMALGAME);
+        game.setNumberOfPlayers(2);
+
+        // add 1 player
+        Player player1 = new Player("Player1", Color.BLUE, game.getGameInformation());
+        Player player2 = new Player("Player2", Color.RED, game.getGameInformation());
+        game.addPlayer(player1, true);
+        game.addPlayer(player2, false);
+
+
+        // setup messengers
+        ClientMessenger.addGame(gameCode, game.getGameInformation());
+        ClientInfo clientInfo = new ClientInfo();
+        clientInfo.setViewType(ViewType.TUI);
+        clientInfo.setGameCode(gameCode);
+        try {
+            VirtualClient virtualClient = new VirtualClient(clientInfo);
+            ClientMessenger.getGameMessenger(gameCode).addPlayer(player1, virtualClient);
+            ClientMessenger.getGameMessenger(gameCode).addPlayer(player2, virtualClient);
+        } catch (RemoteException ex) {
+        }
+
+        game.setUpPhases();
+
+        return game;
+    }
 }
