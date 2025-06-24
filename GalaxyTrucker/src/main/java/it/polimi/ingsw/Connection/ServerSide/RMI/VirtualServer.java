@@ -37,6 +37,14 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
 
     }
 
+    /**
+     *
+     * @param virtualClient
+     * @param clientInfo
+     * @return true if the joining phase has been done correctly, false otherwise
+     * @throws RemoteException
+     */
+
     @Override
     public boolean makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException {
 

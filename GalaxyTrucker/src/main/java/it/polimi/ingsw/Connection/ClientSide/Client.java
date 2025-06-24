@@ -65,6 +65,7 @@ public class Client {
         }
 
         System.out.println("Disconnected");
+        System.exit(0);
 
     }
 

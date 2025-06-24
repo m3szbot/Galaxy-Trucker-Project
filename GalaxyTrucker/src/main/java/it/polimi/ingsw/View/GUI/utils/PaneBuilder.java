@@ -48,12 +48,20 @@ public final class PaneBuilder {
 
     public static void buildShipBoardPane(ShipBoard shipBoard){
 
+        if(shipBoardController == null){
+            throw new IllegalArgumentException("Shipboard controller is null!");
+        }
+
         shipBoardController.populateShipBoardTiles(shipBoard);
         shipBoardController.addStellarCredits(shipBoard);
 
     }
 
     public static void buildFlightBoardPane(FlightBoard flightBoard){
+
+        if(flightBoardController == null){
+            throw new IllegalArgumentException("Flightboard controller is null!");
+        }
 
         flightBoardController.populateFlightBoard(flightBoard);
         flightBoardController.setRemainingCards(flightBoard);

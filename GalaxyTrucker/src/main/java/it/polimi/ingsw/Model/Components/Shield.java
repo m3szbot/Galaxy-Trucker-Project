@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Arrays;
@@ -20,6 +21,7 @@ public class Shield extends Component {
         coveredSides = new boolean[]{false, false, false, false};
     }
 
+    @JsonIgnore
     @JsonCreator
     public Shield(@JsonProperty("sides") SideType[] sides, @JsonProperty("coveredSide1") int coveredSide1,
                   @JsonProperty("coveredSide2") int coveredSide2) {

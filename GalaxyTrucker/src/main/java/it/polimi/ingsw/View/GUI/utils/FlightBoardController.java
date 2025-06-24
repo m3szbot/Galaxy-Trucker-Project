@@ -86,6 +86,7 @@ public class FlightBoardController {
 
             TilePane tilePane = positionMap.get(pos);
 
+            // Creo il triangolino indicatore
             Polygon triangle = new Polygon();
             triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 0.0);
 

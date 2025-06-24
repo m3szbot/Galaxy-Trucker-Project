@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class Cannon extends Component {
     public Cannon() {
     }
 
+    @JsonIgnore
     @JsonCreator
     public Cannon(@JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
         super(sides);

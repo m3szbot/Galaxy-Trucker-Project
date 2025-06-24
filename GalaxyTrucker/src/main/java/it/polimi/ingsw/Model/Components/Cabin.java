@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 
@@ -18,6 +19,7 @@ public class Cabin extends Component {
     public Cabin() {
     }
 
+    @JsonIgnore
     @JsonCreator
     public Cabin(@JsonProperty("sides") SideType[] sides, @JsonProperty("crewType") CrewType jsonCrewType, @JsonProperty("numberOfCurrentInhabitants") int jsonNumberOfCurrentInhabitants) {
         super(sides);

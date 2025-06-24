@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class Engine extends Component {
     public Engine() {
     }
 
+    @JsonIgnore
     @JsonCreator
     public Engine(@JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
         super(sides);

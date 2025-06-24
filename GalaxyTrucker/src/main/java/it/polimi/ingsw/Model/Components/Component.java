@@ -1,9 +1,6 @@
 package it.polimi.ingsw.Model.Components;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,6 +50,7 @@ public class Component implements Visitable, Serializable {
      *
      * @param sides
      */
+    @JsonIgnore
     @JsonCreator
     public Component(@JsonProperty("sides") SideType[] sides) {
         this.rotations = 0;
