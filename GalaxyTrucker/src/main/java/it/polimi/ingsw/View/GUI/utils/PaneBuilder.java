@@ -40,6 +40,9 @@ public final class PaneBuilder {
     public static ImageView buildComponentImage(Component component){
         Image componentImage = new Image(component.getImagePath());
         ImageView componentImageView = new ImageView(componentImage);
+
+        componentImageView.setRotate(90 * component.getRotations());
+
         return componentImageView;
     }
 
