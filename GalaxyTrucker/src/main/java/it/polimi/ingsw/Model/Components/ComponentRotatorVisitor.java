@@ -74,6 +74,7 @@ public class ComponentRotatorVisitor implements ComponentVisitor<Void, RuntimeEx
      * Rotates the side of the passed component 90 degrees to the right.
      */
     private void rotateSides(Component component) {
+        component.incrementRotations();
         // shift SideType array to the right
         SideType[] sidesCopy = component.getAllSides();
         SideType last = sidesCopy[sidesCopy.length - 1];

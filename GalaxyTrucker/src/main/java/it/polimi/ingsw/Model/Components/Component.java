@@ -34,27 +34,59 @@ import java.util.List;
 
 public class Component implements Visitable, Serializable {
 
+    private String imagePath;
+    private int rotations;
+
     private SideType front;
     private SideType right;
     private SideType back;
     private SideType left;
-    protected String imagePath;
+
 
     // rotate using visitor
 
     public Component() {
     }
 
-    public String getImagePath(){
-        return imagePath;
-    }
-
+    /**
+     * Constructor without image paths (TUI, testing).
+     *
+     * @param sides
+     */
     @JsonCreator
     public Component(@JsonProperty("sides") SideType[] sides) {
+        this.rotations = 0;
         this.front = sides[0];
         this.right = sides[1];
         this.back = sides[2];
         this.left = sides[3];
+    }
+
+    /**
+     * Constructor with image paths (GUI, final game).
+     *
+     * @param sides
+     */
+    @JsonCreator
+    public Component(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides) {
+        this.imagePath = imagePath;
+        this.rotations = rotations;
+        this.front = sides[0];
+        this.right = sides[1];
+        this.back = sides[2];
+        this.left = sides[3];
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public int getRotations() {
+        return rotations;
+    }
+
+    public void incrementRotations() {
+        rotations++;
     }
 
     public void setSides(SideType[] sides) {
