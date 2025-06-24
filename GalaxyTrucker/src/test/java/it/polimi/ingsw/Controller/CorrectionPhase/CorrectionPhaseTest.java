@@ -7,7 +7,6 @@ import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CorrectionPhaseTest {
@@ -19,10 +18,6 @@ class CorrectionPhaseTest {
     Component smoothComponent = new Component(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth});
     SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
 
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @Test
     void shipBoardWith1Error() throws NotPermittedPlacementException, IllegalSelectionException {

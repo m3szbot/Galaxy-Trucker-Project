@@ -41,7 +41,7 @@ public class EvaluationPhase extends Phase {
 
         // suspend main thread so that players have time to read the leaderboard
         Sleeper.sleepXSeconds(30);
-        
+
         // end of evaluationPhase
         // end of game
         gameMessenger.endGameToAll();
@@ -103,6 +103,11 @@ public class EvaluationPhase extends Phase {
 
         // sort players based on credits in descending order
         creditsList.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        // no players on flightboard
+        if (creditsList.isEmpty()) {
+            return "No players on the flightBoard.\n";
+        }
 
         // create message string
         StringBuilder result = new StringBuilder();

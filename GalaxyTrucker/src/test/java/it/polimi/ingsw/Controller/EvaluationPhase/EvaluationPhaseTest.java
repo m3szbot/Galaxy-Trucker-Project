@@ -1,58 +1,32 @@
 package it.polimi.ingsw.Controller.EvaluationPhase;
 
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
+import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Mocker;
 import it.polimi.ingsw.Model.IllegalSelectionException;
-import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
-import org.junit.jupiter.api.BeforeEach;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import org.junit.jupiter.api.Test;
 
 class EvaluationPhaseTest {
-    GameInformation gameInformation;
+    Game game = Mocker.mockNormalGame1Player();
+    EvaluationPhase evaluationPhase = game.getEvaluationPhase();
+    Player player = game.getGameInformation().getPlayerList().getFirst();
+    ShipBoard shipBoard = player.getShipBoard();
 
-    FlightBoard flightBoard;
-    EvaluationPhase evaluationPhase;
-
-    @BeforeEach
-    void setUp() throws IllegalSelectionException {
-        // set up gameInformation
-        gameInformation = new GameInformation();
-        gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
-
-        // set up GameMessenger used by Phase
-
-        // add players
-        Player playerA, playerB, playerC, playerD;
-        playerA = new Player("A", Color.BLUE, gameInformation);
-        playerB = new Player("B", Color.RED, gameInformation);
-        playerC = new Player("C", Color.YELLOW, gameInformation);
-        playerD = new Player("D", Color.GREEN, gameInformation);
-        gameInformation.addPlayer(playerA);
-        gameInformation.addPlayer(playerB);
-        gameInformation.addPlayer(playerC);
-        gameInformation.addPlayer(playerD);
-
-        // set up flightBoard
-        flightBoard = gameInformation.getFlightBoard();
-        flightBoard.addPlayer(playerA, flightBoard.getStartingTiles().getFirst());
-        flightBoard.addPlayer(playerB, flightBoard.getStartingTiles().getFirst());
-        flightBoard.addPlayer(playerC, flightBoard.getStartingTiles().getFirst());
-        flightBoard.addPlayer(playerD, flightBoard.getStartingTiles().getFirst());
-
-
-        // set up evaluationPhase
-        evaluationPhase = new EvaluationPhase(gameInformation);
+    @Test
+    void testNoPlayersOnFlightBoard() {
+        try {
+            evaluationPhase.start();
+        } catch (Exception e) {
+        }
     }
 
-    /**
-     * player points: finish order + least exposed links (2)
-     * tests base case: empty ships, only finish order set
-     * timeout (15s)
-     */
     @Test
-    public void start() {
-
+    void test1PlayerOnFlightBoard() throws IllegalSelectionException {
+        game.getGameInformation().getFlightBoard().addPlayer(player, 1);
+        try {
+            evaluationPhase.start();
+        } catch (Exception e) {
+        }
     }
 }
