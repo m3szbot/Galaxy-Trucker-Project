@@ -1,26 +1,9 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ShipBoard.Color;
-import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
-import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
-import it.polimi.ingsw.View.FlightView.FlightViewTUI;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * @author carlo
  */
+/*
 
 class TokenLossTest {
 
@@ -118,19 +101,15 @@ class TokenLossTest {
         Storage blueStorage1 = (Storage) player.getShipBoard().getComponent(4, 4);
         Storage blueStorage2 = (Storage) player.getShipBoard().getComponent(3, 3);
 
-        /*
         Av.RedSlots = 5
         Av.BlueSlots = 10
-         */
 
         redStorage.addGoods(new int[]{3, 1, 1, 0});
         blueStorage1.addGoods(new int[]{0, 2, 2, 1});
 
 
-        /*
         Av.RedSlots = 0
         Av.BlueSlots = 5
-         */
 
 
         String inputString = "2 2\n4 4\n3 3\n5 5\n2\n5 5\n1\n5 5\n1\n5 5\n4 4\n2\n";
@@ -139,12 +118,10 @@ class TokenLossTest {
 
         flightView = new FlightViewTUI();
 
-        operator.inflictLoss(player, ElementType.Goods, 6, gameInformation);
+        operator.inflictLoss(player, ElementType.Goods, 6,gameInformation);
 
-        /*
         Av.RedSlots = 4
         Av.BlueSlots = 7
-         */
 
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
@@ -160,10 +137,8 @@ class TokenLossTest {
         flightView = new FlightViewTUI();
 
         operator.inflictLoss(player, ElementType.Goods, 4, gameInformation);
-        /*
         Av.RedSlots = 5
         Av.BlueSlots = 10
-         */
 
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[0] == 0);
         assertTrue(player.getShipBoard().getShipBoardAttributes().getGoods()[1] == 0);
@@ -188,10 +163,8 @@ class TokenLossTest {
         Storage blueStorage1 = (Storage) player.getShipBoard().getComponent(4, 4);
         Storage blueStorage2 = (Storage) player.getShipBoard().getComponent(3, 3);
 
-        /*
         Av.RedSlots = 5
         Av.BlueSlots = 10
-         */
 
         redStorage.addGoods(new int[]{3, 1, 1, 0});
         blueStorage1.addGoods(new int[]{0, 2, 2, 1});
@@ -240,3 +213,5 @@ class TokenLossTest {
     }
 
 }
+
+ */

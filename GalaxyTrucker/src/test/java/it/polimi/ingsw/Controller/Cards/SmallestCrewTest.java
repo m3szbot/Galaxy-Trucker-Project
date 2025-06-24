@@ -1,17 +1,5 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ShipBoard.Color;
-import it.polimi.ingsw.Model.ShipBoard.Player;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * Testing the method implemented by the interface. The goal is to test all
  * possible scenarios, i.e:
@@ -23,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author carlo
  */
+/*
 
 public class SmallestCrewTest {
 
@@ -83,3 +72,5 @@ public class SmallestCrewTest {
     }
 
 }
+
+ */

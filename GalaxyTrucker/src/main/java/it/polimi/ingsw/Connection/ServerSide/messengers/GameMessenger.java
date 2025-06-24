@@ -71,13 +71,15 @@ public class GameMessenger {
     }
 
     /**
-     * Attention: always check if null before using playerMessenger, to avoid NullPointerException!
      *
      * @return PlayerMessenger associated to the given player, or null if the player is not connected.
      */
     public PlayerMessenger getPlayerMessenger(Player player) {
-        if (!playerMessengerMap.containsKey(player))
-            System.err.printf("Attention! PlayerMessenger is null for %s\n", player.getColouredNickName());
+
+        if(!playerMessengerMap.containsKey(player)){
+            System.err.println("Error: The player messenger of " + player.getColouredNickName() + " doesn't exist.");
+            return null;
+        }
 
         return playerMessengerMap.get(player);
 
