@@ -47,11 +47,10 @@ public class FlightPhase extends Phase {
             for (Player player : flightBoard.getPlayerOrderList()) {
 
                 playerMessenger = gameMessenger.getPlayerMessenger(player);
-
-                playerMessenger.printMessage("Your shipboard:\n");
-
-                playerMessenger.printShipboard(player.getShipBoard());
-
+                if (gameMessenger.checkPlayerMessengerPresence(player)) {
+                    playerMessenger.printMessage("Your shipboard:\n");
+                    playerMessenger.printShipboard(player.getShipBoard());
+                }
             }
 
             Sleeper.sleepXSeconds(3);

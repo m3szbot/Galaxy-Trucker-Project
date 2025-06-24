@@ -71,12 +71,13 @@ public class GameMessenger {
     }
 
     /**
+     * Always check playerMessenger (player connection) after calling! (checkPlayerMessengerPresence)
      *
      * @return PlayerMessenger associated to the given player, or null if the player is not connected.
      */
     public PlayerMessenger getPlayerMessenger(Player player) {
 
-        if(!playerMessengerMap.containsKey(player)){
+        if (!playerMessengerMap.containsKey(player)) {
             System.err.println("Error: a dummy player messenger has been created for " + player.getNickName());
             System.err.println("This means that the player has been disconnected and the controller of the current" +
                     " phase wrongly asked to get the player messenger of the disconnected player");

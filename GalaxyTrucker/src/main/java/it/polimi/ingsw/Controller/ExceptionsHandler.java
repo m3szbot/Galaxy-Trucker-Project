@@ -34,8 +34,7 @@ public final class ExceptionsHandler {
     public static void handleNoHumanCrewLeftException(GameMessenger gameMessenger, Player player, FlightBoard flightBoard) {
         PlayerMessenger playerMessenger = gameMessenger.getPlayerMessenger(player);
 
-        if (playerMessenger != null) {
-            // print player messages
+        if (gameMessenger.checkPlayerMessengerPresence(player)) {
             playerMessenger.printMessage("\nYou have lost all human crew and have been eliminated from the flight.");
             playerMessenger.printMessage("You are now spectating.");
             playerMessenger.printMessage("(your shipboard will be evaluated after the flight ends)");
@@ -66,9 +65,14 @@ public final class ExceptionsHandler {
 
         // eliminate players
         for (Player player : playerList) {
-            gameMessenger.getPlayerMessenger(player).printMessage("\nYou have been lapped and eliminated from the flight.");
-            gameMessenger.getPlayerMessenger(player).printMessage("You are now spectating.");
-            gameMessenger.getPlayerMessenger(player).printMessage("(your shipboard will be evaluated after the flight ends)");
+            PlayerMessenger playerMessenger = gameMessenger.getPlayerMessenger(player);
+
+            if (gameMessenger.checkPlayerMessengerPresence(player)) {
+                playerMessenger.printMessage("\nYou have been lapped and eliminated from the flight.");
+                playerMessenger.printMessage("You are now spectating.");
+                playerMessenger.printMessage("(your shipboard will be evaluated after the flight ends)");
+            }
+
             flightBoard.eliminatePlayer(player);
         }
 
