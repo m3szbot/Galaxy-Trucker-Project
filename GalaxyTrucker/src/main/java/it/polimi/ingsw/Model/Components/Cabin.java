@@ -26,7 +26,7 @@ public class Cabin extends Component {
     }
 
     @JsonCreator
-    public Cabin(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("crewType") CrewType jsonCrewType, @JsonProperty("numberOfCurrentInhabitants") int jsonNumberOfCurrentInhabitants) {
+    public Cabin(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("crewType") CrewType jsonCrewType, @JsonProperty("numberOfCurrentInhabitants") int jsonNumberOfCurrentInhabitants) {
         super(imagePath, rotations, sides);
         this.crewType = jsonCrewType;
         this.numberOfCurrentInhabitants = jsonNumberOfCurrentInhabitants;

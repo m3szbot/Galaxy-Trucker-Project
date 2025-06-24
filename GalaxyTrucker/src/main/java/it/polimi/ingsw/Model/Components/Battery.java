@@ -23,7 +23,7 @@ public class Battery extends Component {
     }
 
     @JsonCreator
-    public Battery(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("numberOfCurrentBatteries") int numberOfCurrentBatteries) {
+    public Battery(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("numberOfCurrentBatteries") int numberOfCurrentBatteries) {
         super(imagePath, rotations, sides);
         this.numberOfCurrentBatteries = numberOfCurrentBatteries;
     }

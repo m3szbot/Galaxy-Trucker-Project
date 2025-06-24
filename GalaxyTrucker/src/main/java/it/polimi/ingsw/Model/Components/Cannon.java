@@ -29,7 +29,7 @@ public class Cannon extends Component {
     }
 
     @JsonCreator
-    public Cannon(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
+    public Cannon(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
         super(imagePath, rotations, sides);
         this.single = single;
 

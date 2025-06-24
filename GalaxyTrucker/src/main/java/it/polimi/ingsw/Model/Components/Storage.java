@@ -27,7 +27,7 @@ public class Storage extends Component {
     }
 
     @JsonCreator
-    public Storage(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("isRed") boolean isRed, @JsonProperty("numberOfMaximumElements") int numberOfMaximumElements) {
+    public Storage(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("isRed") boolean isRed, @JsonProperty("numberOfMaximumElements") int numberOfMaximumElements) {
 
         super(imagePath, rotations, sides);
         this.isRed = isRed;

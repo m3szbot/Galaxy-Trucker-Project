@@ -34,7 +34,7 @@ public class Engine extends Component {
     }
 
     @JsonCreator
-    public Engine(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
+    public Engine(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
         super(imagePath, rotations, sides);
         this.single = single;
 

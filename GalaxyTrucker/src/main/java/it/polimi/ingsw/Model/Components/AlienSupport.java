@@ -24,7 +24,7 @@ public class AlienSupport extends Component {
     }
 
     @JsonCreator
-    public AlienSupport(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("purple") boolean purple) {
+    public AlienSupport(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("purple") boolean purple) {
         super(imagePath, rotations, sides);
         this.purple = purple;
     }

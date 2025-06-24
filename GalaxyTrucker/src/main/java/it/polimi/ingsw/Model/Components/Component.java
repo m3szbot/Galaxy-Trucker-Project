@@ -68,7 +68,7 @@ public class Component implements Visitable, Serializable {
      * @param sides
      */
     @JsonCreator
-    public Component(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides) {
+    public Component(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides) {
         this.imagePath = imagePath;
         this.rotations = rotations;
         this.front = sides[0];

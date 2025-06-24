@@ -38,7 +38,7 @@ public class Shield extends Component {
     }
 
     @JsonCreator
-    public Shield(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("coveredSide1") int coveredSide1,
+    public Shield(@JsonProperty("imagePath") String imagePath, @JsonProperty("rotations") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("coveredSide1") int coveredSide1,
                   @JsonProperty("coveredSide2") int coveredSide2) {
         super(imagePath, rotations, sides);
         coveredSides = new boolean[]{false, false, false, false};
