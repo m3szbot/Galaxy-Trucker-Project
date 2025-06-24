@@ -3,6 +3,7 @@ package it.polimi.ingsw.Model.Components;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComponentRotatorVisitorTest {
 
@@ -16,14 +17,31 @@ class ComponentRotatorVisitorTest {
     void visitComponent() {
         Component component = new Component(differentSides1);
         assertArrayEquals(differentSides1, component.getAllSides());
+        assertEquals(0, component.getRotations());
+
         component.accept(new ComponentRotatorVisitor());
         assertArrayEquals(differentSides2, component.getAllSides());
+        assertEquals(1, component.getRotations());
+
         component.accept(new ComponentRotatorVisitor());
         assertArrayEquals(differentSides3, component.getAllSides());
+        assertEquals(2, component.getRotations());
+
         component.accept(new ComponentRotatorVisitor());
         assertArrayEquals(differentSides4, component.getAllSides());
+        assertEquals(3, component.getRotations());
+
         component.accept(new ComponentRotatorVisitor());
         assertArrayEquals(differentSides1, component.getAllSides());
+        assertEquals(0, component.getRotations());
+
+        component.accept(new ComponentRotatorVisitor());
+        assertArrayEquals(differentSides2, component.getAllSides());
+        assertEquals(1, component.getRotations());
+
+        component.accept(new ComponentRotatorVisitor());
+        assertArrayEquals(differentSides3, component.getAllSides());
+        assertEquals(2, component.getRotations());
     }
 
     @Test

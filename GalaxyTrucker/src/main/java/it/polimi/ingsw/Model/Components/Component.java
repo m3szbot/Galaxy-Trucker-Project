@@ -85,8 +85,11 @@ public class Component implements Visitable, Serializable {
         return rotations;
     }
 
+    /**
+     * Increment rotations by one (values from 0 to 3).
+     */
     public void incrementRotations() {
-        rotations++;
+        rotations = (rotations + 1) % 4;
     }
 
     public void setSides(SideType[] sides) {
