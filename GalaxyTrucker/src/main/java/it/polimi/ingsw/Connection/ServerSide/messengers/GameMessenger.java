@@ -76,10 +76,11 @@ public class GameMessenger {
      * @return PlayerMessenger associated to the given player, or null if the player is not connected.
      */
     public PlayerMessenger getPlayerMessenger(Player player) {
-        if (playerMessengerMap.containsKey(player))
-            return playerMessengerMap.get(player);
-        else
-            throw new IllegalArgumentException("Player not connected, cannot get playerMessenger.");
+        if (!playerMessengerMap.containsKey(player))
+            System.err.printf("Attention! PlayerMessenger is null for %s\n", player.getColouredNickName());
+
+        return playerMessengerMap.get(player);
+
     }
 
 

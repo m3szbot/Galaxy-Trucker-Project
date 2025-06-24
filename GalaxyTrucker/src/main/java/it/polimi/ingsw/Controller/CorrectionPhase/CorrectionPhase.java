@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Controller.Phase;
 import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -76,11 +77,12 @@ public class CorrectionPhase extends Phase {
             Player player = playerList.get(i);
             // remove erroneous shipboard
             if (player.getShipBoard().isErroneous()) {
-
-                if (gameMessenger.checkPlayerMessengerPresence(player)) {
+                
+                PlayerMessenger playerMessenger = gameMessenger.getPlayerMessenger(player);
+                if (playerMessenger != null) {
                     // print player messages - only if connected!
-                    gameMessenger.getPlayerMessenger(player).printMessage("\nYou didn't correct the errors in your shipboard and have been eliminated from the flight.");
-                    gameMessenger.getPlayerMessenger(player).printMessage("You are now spectating.");
+                    playerMessenger.printMessage("\nYou didn't correct the errors in your shipboard and have been eliminated from the flight.");
+                    playerMessenger.printMessage("You are now spectating.");
                 }
 
                 // notify all
