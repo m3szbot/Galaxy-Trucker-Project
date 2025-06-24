@@ -78,10 +78,9 @@ public class CorrectionPhase extends Phase {
             // remove erroneous shipboard
             if (player.getShipBoard().isErroneous()) {
 
-                PlayerMessenger playerMessenger = gameMessenger.getPlayerMessenger(player);
-
-                if (gameMessenger.checkPlayerMessengerPresence(player)) {
-                    // print player messages - only if connected!
+                // print player messages only if connected!
+                if (gameInformation.getPlayerList().contains(player)) {
+                    PlayerMessenger playerMessenger = gameMessenger.getPlayerMessenger(player);
                     playerMessenger.printMessage("\nYou didn't correct the errors in your shipboard and have been eliminated from the flight.");
                     playerMessenger.printMessage("You are now spectating.");
                 }
