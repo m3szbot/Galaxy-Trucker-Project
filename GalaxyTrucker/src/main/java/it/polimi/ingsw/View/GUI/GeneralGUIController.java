@@ -46,12 +46,12 @@ public class GeneralGUIController {
             }
             case Flight -> {
 
-                loadPhaseGUI("/fxml/FlightView/FlightView.fxml", guiView);
+                loadPhaseGUI("/fxml/FlightView/Flight.fxml", guiView);
 
             }
             case Evaluation -> {
 
-                loadPhaseGUI("/fxml/EvaluationView/EvaluationView.fxml", guiView);
+                loadPhaseGUI("/fxml/EvaluationView/Evaluation.fxml", guiView);
 
             }
             default -> {
