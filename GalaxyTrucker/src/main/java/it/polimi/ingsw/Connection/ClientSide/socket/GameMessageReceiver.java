@@ -108,16 +108,19 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
         } catch (NoSuchMethodException e1) {
             running.set(false);
             System.err.printf("Critical error while accessing view method: method %s not found\n", methodName);
+            e1.printStackTrace();
             System.out.println("You have been disconnected");
             ClientInputManager.unblockInput();
         } catch (IllegalAccessException e2) {
             running.set(false);
             System.err.printf("Critical error while accessing view method: method %s does not have access to the definition of the specified class\n", methodName);
+            e2.printStackTrace();
             System.out.println("You have been disconnected");
             ClientInputManager.unblockInput();
         } catch (InvocationTargetException e3) {
             running.set(false);
             System.err.printf("Critical error while accessing view method: the method invoked %s did not behave correctly\n", methodName);
+            e3.printStackTrace();
             System.out.println("You have been disconnected");
             ClientInputManager.unblockInput();
         }

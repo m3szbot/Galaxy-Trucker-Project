@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.View.GUI.utils.FXUtil;
 import it.polimi.ingsw.View.GUI.utils.FlightBoardController;
 import it.polimi.ingsw.View.GUI.utils.PaneBuilder;
 import it.polimi.ingsw.View.GeneralView;
@@ -34,25 +35,24 @@ public class GUIView extends GeneralView {
     the current fxml file.
      */
 
-    private Pane shipBoardPane;
-    private Pane flightBoardPane;
-
     private GUIController guiController;
+
+    private Pane shipBoardPane;
+    private Pane flighBoardPane;
 
     public void setGameType(GameType gameType){
 
+        FXMLLoader shipBoardLoader;
+        FXMLLoader flightBoardLoader;
+
         try {
 
-            FXMLLoader shipBoardLoader;
-            FXMLLoader flightBoardLoader;
-
-            if(gameType == GameType.NORMALGAME){
+            if (gameType == GameType.NORMALGAME) {
 
                 shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/normalGameShipBoard.fxml"));
                 flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/normalGameFlightBoard.fxml"));
 
-            }
-            else{
+            } else {
 
                 shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/testGameShipBoard.fxml"));
                 flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/testGameFlightBoard.fxml"));
@@ -60,18 +60,18 @@ public class GUIView extends GeneralView {
             }
 
             shipBoardPane = shipBoardLoader.load();
-            flightBoardPane = flightBoardLoader.load();
+            flighBoardPane = flightBoardLoader.load();
+
             FlightBoardController flightBoardController = flightBoardLoader.getController();
             flightBoardController.setUpTilesMap(gameType);
 
             PaneBuilder.setShipBoardController(shipBoardLoader.getController());
             PaneBuilder.setFlightBoardController(flightBoardController);
-
-        } catch (IOException e) {
-
-            System.err.println("Error while setting up ship board pane");
-
+        }catch (IOException e){
+            System.err.println("Error while loading fxml files in GUIView");
         }
+
+
 
     }
 
@@ -101,30 +101,43 @@ public class GUIView extends GeneralView {
     @Override
     public void printComponent(Component component) {
 
-        guiController.refreshComponent(PaneBuilder.buildComponentImage(component));
+        FXUtil.runOnFXThread(() -> {
+            guiController.refreshComponent(PaneBuilder.buildComponentImage(component));
+        });
 
     }
 
     @Override
     public void printShipboard(ShipBoard shipBoard) {
 
-        PaneBuilder.buildShipBoardPane(shipBoard);
-        guiController.refreshShipBoard(shipBoardPane);
+        FXUtil.runOnFXThread(() -> {
+
+            PaneBuilder.buildShipBoardPane(shipBoard);
+            guiController.refreshShipBoard(shipBoardPane);
+
+        });
 
     }
 
     @Override
     public void printCard(Card card) {
 
-        guiController.refreshCard(PaneBuilder.buildCardImage(card));
+        FXUtil.runOnFXThread(() -> {
+            guiController.refreshCard(PaneBuilder.buildCardImage(card));
+        });
+
 
     }
 
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
 
-        PaneBuilder.buildFlightBoardPane(flightBoard);
-        guiController.refreshFlightBoard(flightBoardPane);
+        FXUtil.runOnFXThread(() -> {
+
+            PaneBuilder.buildFlightBoardPane(flightBoard);
+            guiController.refreshFlightBoard(flighBoardPane);
+
+        });
 
     }
 

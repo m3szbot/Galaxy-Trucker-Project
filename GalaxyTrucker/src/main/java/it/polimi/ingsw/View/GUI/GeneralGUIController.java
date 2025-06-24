@@ -41,7 +41,7 @@ public class GeneralGUIController {
             }
             case Correction -> {
 
-                loadPhaseGUI("/fxml/CorrectionView/CorrectionView.fxml", guiView);
+                loadPhaseGUI("/fxml/CorrectionView/Correction.fxml", guiView);
 
             }
             case Flight -> {
