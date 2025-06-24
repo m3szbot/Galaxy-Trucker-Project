@@ -48,14 +48,14 @@ public class GUIView extends GeneralView {
 
             if(gameType == GameType.NORMALGAME){
 
-                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/normalGameShipBoard.fxml"));
-                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/normalGameFlightBoard.fxml"));
+                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/normalGameShipBoard.fxml"));
+                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/normalGameFlightBoard.fxml"));
 
             }
             else{
 
-                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/testGameShipBoard.fxml"));
-                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/testGameFlightBoard.fxml"));
+                shipBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/testGameShipBoard.fxml"));
+                flightBoardLoader = new FXMLLoader(getClass().getResource("/fxml/general/testGameFlightBoard.fxml"));
 
             }
 
