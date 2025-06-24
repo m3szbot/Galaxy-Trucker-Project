@@ -100,6 +100,7 @@ public class GameInformation implements Serializable {
         Blow[] blows = new Blow[0];
         Blow blow;
         String cardName, elementType;
+        String imagePath;
         JsonNode tempValues;
 
         for (JsonNode node : rootNode) {
@@ -118,6 +119,7 @@ public class GameInformation implements Serializable {
                 blowType = getSafeElementType(node, "blowType");
                 requirementType = getSafeElementType(node, "requirementType");
                 lossType = getSafeElementType(node, "lossType");
+
 
                 tempValues = node.get("goods");
 
