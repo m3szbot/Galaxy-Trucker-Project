@@ -66,7 +66,7 @@ public class ShipBoardController {
 
                     }
 
-                    AnchorPane cellPane = createTileWithIndicators(new Image(component.getImagePath()), numbers, colors);
+                    AnchorPane cellPane = createTileWithIndicators(new Image(component.getImagePath()), numbers, colors, component.getRotations());
 
 
                     // NORMALGAME
@@ -89,13 +89,14 @@ public class ShipBoardController {
 
     }
 
-    private AnchorPane createTileWithIndicators(Image componentImagePath, int[] numbers, Color[] colors) {
+    private AnchorPane createTileWithIndicators(Image componentImagePath, int[] numbers, Color[] colors, int rotations) {
 
         AnchorPane cellPane = new AnchorPane();
         cellPane.setPrefSize(TILE_SIZE, TILE_SIZE);
 
         // component image
         ImageView imageView = new ImageView(componentImagePath);
+        imageView.setRotate(90 * rotations);
         imageView.setFitWidth(TILE_SIZE);
         imageView.setFitHeight(TILE_SIZE);
         imageView.setPreserveRatio(true);
