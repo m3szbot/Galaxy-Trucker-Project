@@ -11,6 +11,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Game handler which handles the game if the player chooses to use
+ * the rmi protocol
+ *
+ * @author carlo
+ */
+
 public class RMIGameHandler {
 
     private ClientInfo clientInfo;
@@ -65,7 +72,10 @@ public class RMIGameHandler {
             pinger.start();
 
             virtualServer.registerClient(InetAddress.getLocalHost().getHostAddress());
-            virtualServer.makePlayerJoin(virtualClient, clientInfo);
+
+            if(!virtualServer.makePlayerJoin(virtualClient, clientInfo)){
+                 return;
+            }
 
             while(virtualClient.isInGame() && serverConnected.get());
 

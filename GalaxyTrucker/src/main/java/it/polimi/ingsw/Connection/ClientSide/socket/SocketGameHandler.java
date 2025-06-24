@@ -10,6 +10,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * Game handles for the socket protocol
+ *
+ * @author carlo
+ */
+
 public class SocketGameHandler {
 
     private GameStarter gameStarter = new GameStarter();

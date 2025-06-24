@@ -6,9 +6,9 @@ import it.polimi.ingsw.Connection.ViewType;
 import java.util.Scanner;
 
 /**
- * Class that handles the first phase of the client
- * lifecycle. It stores the client information into the
- * clientInfo bean.
+ * Class which handles the client inserting config information.
+ * When the start method of the class is running the client is
+ * no yet connected to the server.
  *
  * @author carlo
  */

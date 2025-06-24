@@ -27,6 +27,7 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
     private GeneralView currentView;
     private boolean inGame;
     private ViewCommunicator viewCommunicator;
+    private String command;
 
     public VirtualClient(ClientInfo clientInfo) throws RemoteException {
 
@@ -126,6 +127,9 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
     }
 
     public void sendCommand(String command) throws RemoteException {
-        //nothing for now
+        this.command = command;
+    }
+    public String getCommand() throws RemoteException{
+        return command;
     }
 }

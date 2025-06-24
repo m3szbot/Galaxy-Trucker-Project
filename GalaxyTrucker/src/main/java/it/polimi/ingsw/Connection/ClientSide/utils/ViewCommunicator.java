@@ -11,7 +11,8 @@ import it.polimi.ingsw.View.GeneralView;
 import it.polimi.ingsw.View.TUI.TUIView;
 
 /**
- * Class which contains the information about the player's view.
+ * Class which contains the information about the player's view, and which
+ * offers set up methods.
  *
  * @author carlo
  */
@@ -61,6 +62,12 @@ public class ViewCommunicator {
     public void setGeneralGUIController(GeneralGUIController generalGUIController){
         this.generalGUIController = generalGUIController;
     }
+
+    /**
+     * method which changes the GUI interface accordingly to the gamePhase passed as
+     * parameter.
+     * @param gamePhase
+     */
 
     public void setGamePhase(GamePhase gamePhase) {
 

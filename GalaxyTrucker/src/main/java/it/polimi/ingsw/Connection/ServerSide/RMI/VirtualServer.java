@@ -8,6 +8,13 @@ import it.polimi.ingsw.Connection.ServerSide.utils.GameJoinerThread;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * Remote class which offers remote methods that are invoked by the client when
+ * connecting to the server through rmi protocol
+ *
+ * @author carlo
+ */
+
 public class VirtualServer extends UnicastRemoteObject implements ServerRemoteInterface{
 
     private Server centralServer;
@@ -31,19 +38,38 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
     }
 
     @Override
-    public void makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException {
+    public boolean makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException {
+
+        GameJoinerThread gameJoinerThread = new GameJoinerThread(centralServer, virtualClient, clientInfo.getNickname());
 
         if(centralServer.checkNickname(clientInfo.getNickname())){
 
             virtualClient.printPreJoinMessage("A player connected to the server already has your nickname, please reconnect using a new one");
-            return;
+            return false;
 
         }
         else{
-            (new GameJoinerThread(centralServer, virtualClient, clientInfo.getNickname())).start();
+
+            gameJoinerThread.start();
+        }
+
+        try {
+
+            gameJoinerThread.join();
+
+        }catch (InterruptedException e){
+            System.err.println("Game joiner thread was abnormally interrupted");
         }
 
         virtualClient.setInGame(true);
+
+        if(virtualClient.getCommand() != null){
+            if(virtualClient.getCommand().equals("kicked")){
+                return false;
+            }
+        }
+
+        return true;
 
     }
 

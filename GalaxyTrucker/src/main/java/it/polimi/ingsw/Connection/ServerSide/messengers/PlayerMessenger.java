@@ -23,6 +23,7 @@ import java.rmi.RemoteException;
  * Used for player specific controller communications.
  * Implements both socket and RMI method calls.
  *
+ * @author carlo, boti
  */
 public class PlayerMessenger implements ViewServerInvokableMethods, ClientServerInvokableMethods {
     // lock - multiple threads can send messages at the same time

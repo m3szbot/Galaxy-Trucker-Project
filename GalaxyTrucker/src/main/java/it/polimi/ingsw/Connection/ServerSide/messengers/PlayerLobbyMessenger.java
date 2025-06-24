@@ -166,5 +166,12 @@ public class PlayerLobbyMessenger {
        if(connectionType == ConnectionType.SOCKET) {
            socketDataExchanger.closeResources();
        }
+       else{
+           try {
+               virtualClient.sendCommand("kicked");
+           } catch (RemoteException e) {
+               System.err.println("Error while communicating through rmi protocol with " + nickName);
+           }
+       }
     }
 }

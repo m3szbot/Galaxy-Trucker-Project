@@ -4,8 +4,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Class responsible for managing user input in GUI. It is
- * therefore used only if the player chooses the GUI
+ * Class responsible for managing user input. It is
  *
  * @author carlo
  */

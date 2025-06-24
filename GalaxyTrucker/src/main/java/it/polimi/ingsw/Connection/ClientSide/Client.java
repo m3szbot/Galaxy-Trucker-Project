@@ -13,12 +13,8 @@ import it.polimi.ingsw.View.GUI.GUILoader;
 import javafx.application.Application;
 
 /**
- * Client class. The client lifecycle is composed of
- * three phases. The welcoming phase consists in asking
- * the client config information that are necessary for the
- * correct communication with the server during the next phases.
- * The joining phase consists in making the client join a game.
- * And the gaming phase consist in the client playing.
+ * Client class. The client first enters config information and then
+ * enters the lobby of the game where he will be able to join the game.
  *
  * @author carlo
  */

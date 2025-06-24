@@ -79,12 +79,12 @@ public class GameInformation implements Serializable {
             setUpCards();
 
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to set up components");
+            throw new IllegalStateException("Failed to set up cards");
         }
         try {
             setUpComponents();
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to set up cards");
+            throw new IllegalStateException("Failed to set up components");
         }
         setUpFlightBoard();
     }

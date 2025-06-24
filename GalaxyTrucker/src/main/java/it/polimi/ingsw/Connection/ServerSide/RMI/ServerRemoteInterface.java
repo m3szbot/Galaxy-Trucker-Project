@@ -6,11 +6,18 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Interface which defines the remote methods which the server offers
+ * to the client when communicating through rmi protocol.
+ *
+ * @author carlo
+ */
+
 public interface ServerRemoteInterface extends Remote {
 
     public void registerClient(String ipAddress) throws RemoteException;
 
-    public void makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException;
+    public boolean makePlayerJoin(ClientRemoteInterface virtualClient, ClientInfo clientInfo) throws RemoteException;
 
     public boolean isAlive() throws RemoteException;
 

@@ -9,6 +9,13 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Interface which defines the methods that can be called by the server
+ * and which run on the client. This of course happens with rmi protocol
+ *
+ * @author carlo
+ */
+
 public interface ClientRemoteInterface extends Remote {
 
     public void printMessage(String message) throws RemoteException;
@@ -40,4 +47,6 @@ public interface ClientRemoteInterface extends Remote {
     public void setGameType(String gameType) throws RemoteException;
 
     public void sendCommand(String command) throws RemoteException;
+
+    public String getCommand() throws RemoteException;
 }

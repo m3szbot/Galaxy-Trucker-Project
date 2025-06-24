@@ -6,7 +6,9 @@ import it.polimi.ingsw.Connection.ServerSide.socket.SocketDataExchanger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Class that handles the client playing the game.
+ * Class that handles the client playing the game through socket
+ * protocol. It encapsulates the 2 main threads which send and
+ * receive information to/from the server.
  *
  * @author carlo
  */
