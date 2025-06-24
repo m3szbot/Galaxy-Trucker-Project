@@ -137,7 +137,7 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web88.jpg",
     "rotations": 0,
     "single": true,
     "sides": [
@@ -149,7 +149,7 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web90.jpg",
     "rotations": 0,
     "single": true,
     "sides": [
@@ -161,8 +161,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web73.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -173,7 +173,7 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web84.jpg",
     "rotations": 0,
     "single": true,
     "sides": [
@@ -185,8 +185,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web78.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -197,7 +197,7 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web85.jpg",
     "rotations": 0,
     "single": true,
     "sides": [
@@ -209,8 +209,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web74.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -221,8 +221,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web79.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -233,7 +233,7 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web89.jpg",
     "rotations": 0,
     "single": true,
     "sides": [
@@ -245,7 +245,7 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web80.jpg",
     "rotations": 0,
     "single": true,
     "sides": [
@@ -257,8 +257,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web87.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Single",
@@ -269,8 +269,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web75.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -281,8 +281,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web83.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Single",
@@ -293,8 +293,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web72.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -305,8 +305,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web86.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -317,8 +317,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web82.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -329,8 +329,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web77.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -341,8 +341,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web93.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Smooth",
@@ -353,8 +353,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web92.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Smooth",
@@ -365,8 +365,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web95.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Smooth",
@@ -377,8 +377,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web94.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Smooth",
@@ -389,8 +389,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web100.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Smooth",
@@ -401,8 +401,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web98.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Smooth",
@@ -413,8 +413,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web96.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Single",
@@ -425,7 +425,7 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web99.jpg",
     "rotations": 0,
     "single": false,
     "sides": [
@@ -437,8 +437,8 @@
   },
   {
     "name": "Engine",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web97.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Double",
@@ -449,8 +449,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web113.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -461,8 +461,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web125.jpg",
+    "rotations": 2,
     "single": true,
     "sides": [
       "Smooth",
@@ -473,8 +473,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web112.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -485,8 +485,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web107.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -497,8 +497,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web118.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -509,8 +509,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web109.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -521,8 +521,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web105.jpg",
+    "rotations": 2,
     "single": true,
     "sides": [
       "Smooth",
@@ -533,8 +533,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web103.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -545,8 +545,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web106.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -557,8 +557,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web110.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -569,8 +569,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web104.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -581,8 +581,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web120.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -593,8 +593,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web116.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Single",
@@ -605,8 +605,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web114.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -617,8 +617,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web121.jpg",
+    "rotations": 2,
     "single": true,
     "sides": [
       "Smooth",
@@ -629,8 +629,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web123.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Double",
@@ -641,8 +641,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web122.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Single",
@@ -653,8 +653,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web101.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -665,8 +665,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web111.jpg",
+    "rotations": 3,
     "single": true,
     "sides": [
       "Smooth",
@@ -677,8 +677,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web108.jpg",
+    "rotations": 2,
     "single": true,
     "sides": [
       "Smooth",
@@ -689,8 +689,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web119.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -701,8 +701,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web102.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -713,8 +713,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web115.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Single",
@@ -725,8 +725,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web117.jpg",
+    "rotations": 2,
     "single": true,
     "sides": [
       "Smooth",
@@ -737,8 +737,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web124.jpg",
+    "rotations": 1,
     "single": true,
     "sides": [
       "Smooth",
@@ -749,8 +749,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web135.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Smooth",
@@ -761,8 +761,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web129.jpg",
+    "rotations": 2,
     "single": false,
     "sides": [
       "Smooth",
@@ -773,8 +773,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web130.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Smooth",
@@ -785,8 +785,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web126.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Smooth",
@@ -797,8 +797,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web131.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Single",
@@ -809,8 +809,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web128.jpg",
+    "rotations": 3,
     "single": false,
     "sides": [
       "Smooth",
@@ -821,8 +821,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web127.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Smooth",
@@ -833,8 +833,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web133.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Smooth",
@@ -845,8 +845,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web134.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Double",
@@ -857,8 +857,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web132.jpg",
+    "rotations": 2,
     "single": false,
     "sides": [
       "Smooth",
@@ -869,8 +869,8 @@
   },
   {
     "name": "Cannon",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web136.jpg",
+    "rotations": 1,
     "single": false,
     "sides": [
       "Smooth",
@@ -1618,7 +1618,7 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web149.jpg",
     "rotations": 0,
     "coveredSide1": 0,
     "coveredSide2": 1,
@@ -1631,7 +1631,7 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web155.jpg",
     "rotations": 0,
     "coveredSide1": 0,
     "coveredSide2": 1,
@@ -1644,7 +1644,7 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web156.jpg",
     "rotations": 0,
     "coveredSide1": 0,
     "coveredSide2": 1,
@@ -1657,7 +1657,7 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web152.jpg",
     "rotations": 0,
     "coveredSide1": 0,
     "coveredSide2": 1,
@@ -1670,7 +1670,7 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web153.jpg",
     "rotations": 0,
     "coveredSide1": 0,
     "coveredSide2": 1,
@@ -1683,8 +1683,8 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web151.jpg",
+    "rotations": 1,
     "coveredSide1": 3,
     "coveredSide2": 0,
     "sides": [
@@ -1696,7 +1696,7 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web154.jpg",
     "rotations": 0,
     "coveredSide1": 0,
     "coveredSide2": 1,
@@ -1709,8 +1709,8 @@
   },
   {
     "name": "Shield",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web150.jpg",
+    "rotations": 1,
     "coveredSide1": 3,
     "coveredSide2": 0,
     "sides": [
@@ -1722,7 +1722,7 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web140.jpg",
     "rotations": 0,
     "purple": false,
     "sides": [
@@ -1734,7 +1734,7 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web141.jpg",
     "rotations": 0,
     "purple": false,
     "sides": [
@@ -1746,8 +1746,8 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web137.jpg",
+    "rotations": 2,
     "purple": false,
     "sides": [
       "Smooth",
@@ -1758,8 +1758,8 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web142.jpg",
+    "rotations": 1,
     "purple": false,
     "sides": [
       "Smooth",
@@ -1770,7 +1770,7 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web139.jpg",
     "rotations": 0,
     "purple": false,
     "sides": [
@@ -1782,8 +1782,8 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web138.jpg",
+    "rotations": 2,
     "purple": false,
     "sides": [
       "Smooth",
@@ -1794,8 +1794,8 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web144.jpg",
+    "rotations": 2,
     "purple": true,
     "sides": [
       "Smooth",
@@ -1806,7 +1806,7 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web147.jpg",
     "rotations": 0,
     "purple": true,
     "sides": [
@@ -1818,8 +1818,8 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web143.jpg",
+    "rotations": 2,
     "purple": true,
     "sides": [
       "Smooth",
@@ -1830,7 +1830,7 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web145.jpg",
     "rotations": 0,
     "purple": true,
     "sides": [
@@ -1842,8 +1842,8 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
-    "rotations": 0,
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web148.jpg",
+    "rotations": 1,
     "purple": true,
     "sides": [
       "Smooth",
@@ -1854,7 +1854,7 @@
   },
   {
     "name": "AlienSupport",
-    "imagePath": "/Polytechnic/tiles/",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web146.jpg",
     "rotations": 0,
     "purple": true,
     "sides": [
