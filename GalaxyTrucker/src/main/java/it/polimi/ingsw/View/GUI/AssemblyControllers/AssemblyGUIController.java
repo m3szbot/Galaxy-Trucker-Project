@@ -56,7 +56,7 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
     private void processInput(String input) {
         input = input.toLowerCase();
         if(input.equals("show deck")){
-            openDeckChoicePopup();
+            FXUtil.runOnFXThread(this::openDeckChoicePopup);
         }
     }
 
