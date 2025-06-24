@@ -6,6 +6,7 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -13,11 +14,21 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.rmi.RemoteException;
 
 public abstract class Mocker {
+    private static Thread inputThread;
+
 
     public static void simulateClientInput(String input) {
-        new Thread(() -> {
+        inputThread = new Thread(() -> {
             ClientInputManager.setTestInput(input);
-        }).start();
+        });
+        inputThread.start();
+    }
+
+    public static void endInputThread() {
+        ClientInputManager.endTestInput();
+        Sleeper.sleepXSeconds(1);
+        if (inputThread.isAlive())
+            throw new IllegalStateException("Input thread didn't terminate.");
     }
 
     /**

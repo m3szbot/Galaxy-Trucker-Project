@@ -45,13 +45,21 @@ public class CorrectionThread implements Runnable {
             return;
         }
 
+        // errors not corrected, end thread
+        if (player.getShipBoard().isErroneous()) {
+            playerMessenger.printMessage("You failed to correct your shipboard and will be eliminated.");
+            Sleeper.sleepXSeconds(2);
+            return;
+        }
+
         // errors corrected
-        playerMessenger.printMessage("There are no errors in your shipboard.\n");
+        playerMessenger.printMessage("There are no errors in your shipboard.");
 
         // select crew types
         try {
             selectCrewTypes();
         } catch (PlayerDisconnectedException e) {
+            gameMessenger.disconnectPlayer(player);
             return;
         }
 
@@ -74,7 +82,7 @@ public class CorrectionThread implements Runnable {
 
         // controls
         boolean isErroneous = shipBoard.isErroneous();
-        int errorTrials = shipBoard.getErrorCount() + 5;
+        int errorTrials = shipBoard.getErrorCount() + 3;
 
         // correct errors
         while (isErroneous && errorTrials > 0) {
