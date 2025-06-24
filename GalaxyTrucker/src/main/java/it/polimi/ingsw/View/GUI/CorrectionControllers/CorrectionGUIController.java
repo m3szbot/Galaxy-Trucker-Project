@@ -23,10 +23,6 @@ public class CorrectionGUIController extends GUIController implements PlayerInpu
     @FXML
     Button button;
 
-    @FXML
-    AnchorPane flightBoardPane;
-
-
     public void initialize(){
 
         button.setOnAction(actionEvent -> setUserInput(playerInputField.getText()));
@@ -61,10 +57,7 @@ public class CorrectionGUIController extends GUIController implements PlayerInpu
 
     public void refreshFlightBoard(Node node){
 
-        FXUtil.runOnFXThread(() -> {
-            flightBoardPane.getChildren().clear();
-            flightBoardPane.getChildren().add(node);
-        });
+        //useless in this phase
 
     }
 }
