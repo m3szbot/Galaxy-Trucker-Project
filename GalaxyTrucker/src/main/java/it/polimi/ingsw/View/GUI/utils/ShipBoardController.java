@@ -144,6 +144,7 @@ public class ShipBoardController {
     public void addStellarCredits(ShipBoard shipBoard) {
 
         int stellarCreditsArray[] = shipBoard.getShipBoardAttributes().getCreditsInBankNotes();
+        stellarCredits.getChildren().clear();
 
         HBox hBox = new HBox(8);
         hBox.setPrefWidth(299);
@@ -189,7 +190,7 @@ public class ShipBoardController {
             imageView.setPreserveRatio(true);
 
             Label label = new Label(String.valueOf(stellarCreditsArray[i]));
-            label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+            label.setStyle("-fx-font-size: 14px; -fx-text-fill: yellow;");
 
             HBox imgBox = new HBox(3);
             imgBox.getChildren().addAll(imageView, label);
