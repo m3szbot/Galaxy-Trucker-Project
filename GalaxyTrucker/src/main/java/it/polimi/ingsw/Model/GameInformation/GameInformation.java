@@ -124,6 +124,7 @@ public class GameInformation implements Serializable {
                 blowType = getSafeElementType(node, "blowType");
                 requirementType = getSafeElementType(node, "requirementType");
                 lossType = getSafeElementType(node, "lossType");
+                imagePath = node.get("imagePath").asText();
 
 
                 tempValues = node.get("goods");
@@ -220,7 +221,7 @@ public class GameInformation implements Serializable {
 
                 }
 
-                tmpList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredits(gainedCredits).buildRequirementNumber(requirementNumber).buildLossNumber(lossNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).getBuiltCard());
+                tmpList.add(cardBuilder.buildCardLevel(cardLevel).buildCardName(cardName).buildBlowType(blowType).buildRequirementType(requirementType).buildLossType(lossType).buildDaysLost(daysLost).buildGainedCredits(gainedCredits).buildRequirementNumber(requirementNumber).buildLossNumber(lossNumber).buildGoods(goods).buildBlows(blows).buildPlanets(planet1, planet2, planet3, planet4).buildCardImage(imagePath).getBuiltCard());
 
             }
 
