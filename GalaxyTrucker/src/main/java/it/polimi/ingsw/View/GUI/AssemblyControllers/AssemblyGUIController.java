@@ -1,21 +1,14 @@
 package it.polimi.ingsw.View.GUI.AssemblyControllers;
 
-import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
-import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
-import it.polimi.ingsw.Model.Components.Component;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.View.GUI.GUIController;
 import it.polimi.ingsw.View.GUI.PlayerInputSetter;
 import it.polimi.ingsw.View.GUI.utils.FXUtil;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -23,15 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class AssemblyGUIController extends GUIController implements PlayerInputSetter {
+public class AssemblyGUIController extends GUIController implements PlayerInputSetter {
     String input;
     private HBox deckContainer;
 

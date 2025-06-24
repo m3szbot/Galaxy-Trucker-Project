@@ -3,7 +3,7 @@ package it.polimi.ingsw.View.GUI.AssemblyControllers;
 import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;
 
-public abstract class ShowDeckPopUpController {
+public class ShowDeckPopUpController {
     @FXML
     private HBox imageContainer;
 
