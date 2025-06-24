@@ -20,6 +20,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -50,6 +51,7 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
     @FXML private Button Tile1T, Tile2T, Tile3T, Tile4T;
 
     @FXML private AnchorPane flightBoardPane;
+    @FXML private AnchorPane root;
 
 
 
@@ -68,6 +70,15 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
             processInput(input);
         });
 
+        root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            playerInputField.requestFocus();
+        });
+
+        playerInputField.setOnKeyPressed(event -> {
+            if (event.getCode().toString().equals("ENTER")) {
+                button.fire();
+            }
+        });
     }
 
     public void refreshConsole(String message){
