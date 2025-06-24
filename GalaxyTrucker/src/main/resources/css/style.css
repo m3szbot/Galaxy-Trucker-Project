@@ -1,0 +1,24 @@
+
+@font-face {
+    font-family: 'Tomorrow';
+    src: url('/fonts/Tomorrow/Tomorrow-BoldItalic.ttf');
+}
+
+.title{
+    font-family: 'Tomorrow', sans-serif;
+    color: #FFDD33; /* Space Yellow */
+    background-color: #000000; /* Deep space */
+    font-weight: 600;
+    text-shadow: 0 0 5px #FFDD33, 0 0 10px #FFDD33;
+    -fx-font-size: 90px;
+}
+
+.glow-text {
+    color: #FFDD33;
+    text-shadow:
+            0 0 5px #FFDD33,
+            0 0 10px #FFDD33,
+            0 0 20px #FFAA00,
+            0 0 40px #FF8800;
+}
+

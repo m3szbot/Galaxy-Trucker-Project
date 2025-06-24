@@ -1,69 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.AssemblyControllers.AssemblyViewGUI">
+<?import javafx.scene.image.Image?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-image: url('/Polytechnic/Imgs/image_5.png');" stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.AssemblyControllers.AssemblyGUIController">
    <children>
-      <ImageView fx:id="shipBoardScheme" fitHeight="325.0" fitWidth="472.0" layoutX="7.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-         </image>
-      </ImageView>
-      <ImageView fx:id="inUseComponent" fitHeight="57.0" fitWidth="58.0" layoutX="28.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-         </image>
-      </ImageView>
-      <Button fx:id="rotate" layoutX="476.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#rotateInput" prefHeight="31.0" prefWidth="110.0" style="-fx-background-color: purple;" text="Rotate" />
-      <Button fx:id="draw" layoutX="476.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#drawInput" prefHeight="31.0" prefWidth="110.0" style="-fx-background-color: purple;" text="Draw" />
-      <Button fx:id="choose" layoutX="476.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#choiceInput" prefHeight="31.0" prefWidth="110.0" style="-fx-background-color: purple;" text="Choose " />
-      <Button fx:id="turn" layoutX="476.0" layoutY="110.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="110.0" style="-fx-background-color: purple;" text="Turn Hourglass" />
-      <Button fx:id="nineseven" blendMode="LIGHTEN" layoutX="321.0" layoutY="138.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="eightfive" blendMode="LIGHTEN" layoutX="261.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="57.0" prefWidth="59.0" />
-      <Button fx:id="tenseven" blendMode="LIGHTEN" layoutX="381.0" layoutY="137.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="57.0" prefWidth="57.0" />
-      <Button fx:id="ninesix" blendMode="LIGHTEN" layoutX="321.0" layoutY="78.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="57.0" prefWidth="57.0" />
-      <Button fx:id="eightsix" blendMode="LIGHTEN" layoutX="261.0" layoutY="79.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="58.0" />
-      <Button fx:id="sevensix" blendMode="LIGHTEN" layoutX="203.0" layoutY="78.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="sixsix" blendMode="LIGHTEN" layoutX="144.0" layoutY="78.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="57.0" prefWidth="57.0" />
-      <Button fx:id="fivesix" blendMode="LIGHTEN" layoutX="85.0" layoutY="78.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="57.0" prefWidth="57.0" />
-      <Button fx:id="sixeight" blendMode="LIGHTEN" layoutX="144.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="seveneight" blendMode="LIGHTEN" layoutX="203.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="eighteight" blendMode="LIGHTEN" layoutX="262.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="58.0" prefWidth="57.0" />
-      <Button fx:id="nineeight" blendMode="LIGHTEN" layoutX="321.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="teneight" blendMode="LIGHTEN" layoutX="381.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="fourseven" blendMode="LIGHTEN" layoutX="24.0" layoutY="138.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="58.0" />
-      <Button fx:id="fiveseven" blendMode="LIGHTEN" layoutX="85.0" layoutY="138.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="sixseven" blendMode="LIGHTEN" layoutX="144.0" layoutY="138.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="sevenseven" blendMode="LIGHTEN" layoutX="203.0" layoutY="138.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="eightseven" blendMode="LIGHTEN" layoutX="262.0" layoutY="138.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="sixfive" blendMode="LIGHTEN" layoutX="144.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="58.0" prefWidth="57.0" />
-      <Button fx:id="ninenine" blendMode="LIGHTEN" layoutX="321.0" layoutY="255.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="57.0" prefWidth="57.0" />
-      <Button fx:id="eightnine" blendMode="LIGHTEN" layoutX="262.0" layoutY="256.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="sixnine" blendMode="LIGHTEN" layoutX="144.0" layoutY="257.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="fivenine" blendMode="LIGHTEN" layoutX="85.0" layoutY="256.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="fournine" blendMode="LIGHTEN" layoutX="25.0" layoutY="256.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="fiveeight" blendMode="LIGHTEN" layoutX="84.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="57.0" />
-      <Button fx:id="foureight" blendMode="LIGHTEN" layoutX="25.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="56.0" prefWidth="56.0" />
-      <Button fx:id="tennine" blendMode="LIGHTEN" layoutX="381.0" layoutY="255.0" mnemonicParsing="false" onMouseClicked="#placeInput" opacity="0.3" prefHeight="57.0" prefWidth="57.0" />
-      <ImageView fx:id="booked2" fitHeight="57.0" fitWidth="58.0" layoutX="390.0" layoutY="17.0" onMouseClicked="#placeBookedInput" pickOnBounds="true" preserveRatio="true">
-         <image>
-         </image>
-      </ImageView>
-      <ImageView fx:id="booked1" fitHeight="57.0" fitWidth="63.0" layoutX="327.0" layoutY="17.0" onMouseClicked="#placeBookedInput" pickOnBounds="true" preserveRatio="true">
-         <image>
-         </image>
-      </ImageView>
-      <ProgressBar fx:id="hourglass" layoutX="11.0" layoutY="376.0" prefWidth="200.0" progress="0.0">
-         <effect>
-            <Glow level="0.66" />
-         </effect></ProgressBar>
-      <Text layoutX="11.0" layoutY="372.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HourGlass" textAlignment="CENTER" wrappingWidth="200.0" />
-      <Button fx:id="show" layoutX="476.0" layoutY="145.0" mnemonicParsing="false" onMouseClicked="#showInput" prefHeight="31.0" prefWidth="110.0" style="-fx-background-color: purple;" text="Show Deck" />
-      <Button fx:id="book" layoutX="476.0" layoutY="180.0" mnemonicParsing="false" onMouseClicked="#bookInput" prefHeight="31.0" prefWidth="110.0" style="-fx-background-color: purple;" text="Book" />
-      <Button fx:id="finish" layoutX="476.0" layoutY="362.0" mnemonicParsing="false" onMouseClicked="#endInput" prefHeight="31.0" prefWidth="110.0" style="-fx-background-color: purple;" text="Finish" />
+      <TextArea fx:id="console" editable="false" layoutX="985.0" layoutY="535.0" prefHeight="200.0" prefWidth="559.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;" />
+      <AnchorPane fx:id="shipBoardPane" layoutX="375.0" layoutY="257.0" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #2c003e;" />
+      <TextField fx:id="playerInputField" alignment="CENTER" layoutX="1180.0" layoutY="760.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d" />
+      <Button fx:id="button" layoutX="1212.0" layoutY="789.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text" />
+      <Text fill="#ffd001" layoutX="918.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title glow-text" text="Assembly Phase"> </Text>
 
+      <ImageView fitHeight="360" fitWidth="360" layoutX="1552.0" layoutY="711.0">
+
+         <image>
+            <Image url="/Polytechnic/Imgs/image.png" />
+         </image>
+
+      </ImageView>
+      <ImageView fitHeight="360" fitWidth="360" layoutX="6.0" layoutY="713.0">
+
+         <image>
+            <Image url="/Polytechnic/Imgs/image_6.png" />
+         </image>
+
+      </ImageView>
+
+      <AnchorPane fx:id="currentComponent" layoutX="1161.0" layoutY="299.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E52B50;" />
    </children>
 </AnchorPane>
