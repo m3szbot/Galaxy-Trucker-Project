@@ -49,6 +49,7 @@ public class ShipBoard implements Serializable {
 
     // final Object: reference cannot be changed (but state/elements can change)
     private final GameType gameType;
+    private final Color color;
     private final ShipBoardAttributes shipBoardAttributes;
     // Matrix representing the ship's component layout
     private final Component[][] componentMatrix;
@@ -76,8 +77,9 @@ public class ShipBoard implements Serializable {
      * @param gameType The type of game being played.
      * @author Giacomo
      */
-    public ShipBoard(GameType gameType) {
+    public ShipBoard(GameType gameType, Color color) {
         this.gameType = gameType;
+        this.color = color;
         this.shipBoardAttributes = new ShipBoardAttributes(this);
         this.componentMatrix = new Component[COLS][ROWS];
         this.validityMatrix = new boolean[COLS][ROWS];
@@ -156,7 +158,7 @@ public class ShipBoard implements Serializable {
     }
 
     private void addStarterCabin() {
-        Component starterCabin = new Cabin(new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal}, CrewType.Human, 2);
+        Component starterCabin = Cabin.getStarterCabin(color);
         try {
             addComponent(CENTER_COL, CENTER_ROW, starterCabin);
         } catch (NotPermittedPlacementException | IllegalSelectionException e) {
@@ -766,7 +768,7 @@ public class ShipBoard implements Serializable {
             throw new IllegalArgumentException("bfsShipBoardMapper cannot start from empty cell.");
 
         // create new shipboard
-        ShipBoard tmpShipboard = new ShipBoard(gameType);
+        ShipBoard tmpShipboard = new ShipBoard(gameType, color);
 
         // remove center cabin added by shipboard constructor, if current mapping is not starting from center cabin
         if (realCol != getRealIndex(CENTER_COL) || realRow != getRealIndex(CENTER_ROW)) {

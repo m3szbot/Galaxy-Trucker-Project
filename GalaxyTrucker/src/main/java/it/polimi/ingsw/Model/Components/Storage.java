@@ -26,6 +26,14 @@ public class Storage extends Component {
         this.numberOfMaximumElements = numberOfMaximumElements;
     }
 
+    @JsonCreator
+    public Storage(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("isRed") boolean isRed, @JsonProperty("numberOfMaximumElements") int numberOfMaximumElements) {
+
+        super(imagePath, rotations, sides);
+        this.isRed = isRed;
+        this.numberOfMaximumElements = numberOfMaximumElements;
+    }
+
     public String getComponentName() {
         return "Storage";
     }

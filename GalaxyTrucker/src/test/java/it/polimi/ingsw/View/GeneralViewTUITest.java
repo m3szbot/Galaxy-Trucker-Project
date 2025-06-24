@@ -44,7 +44,7 @@ class GeneralViewTUITest {
 
     @Test
     public void printPrefilledShipboard() throws NotPermittedPlacementException {
-        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
+        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME, Color.RED);
         shipBoard.preBuildShipBoard();
         shipBoard.getShipBoardAttributes().addCredits(13);
         shipBoard.getShipBoardAttributes().destroyComponents(11);
@@ -70,26 +70,26 @@ class GeneralViewTUITest {
 
     @Test
     public void printFullShipboard() {
-        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
+        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME, Color.RED);
         generalViewTUI.printFullShipboard(shipBoard);
     }
 
     @Test
     public void printFullTestGameShipboard() {
-        ShipBoard shipBoard = new ShipBoard(GameType.TESTGAME);
+        ShipBoard shipBoard = new ShipBoard(GameType.TESTGAME, Color.RED);
         generalViewTUI.printFullShipboard(shipBoard);
     }
 
     @Test
     public void printEmptyTestShipboard() {
-        ShipBoard shipBoard = new ShipBoard(GameType.TESTGAME);
+        ShipBoard shipBoard = new ShipBoard(GameType.TESTGAME, Color.RED);
         dataContainer.setShipBoard(shipBoard);
         generalViewTUI.printShipboard(dataContainer);
     }
 
     @Test
     public void printEmptyShipboard() {
-        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME);
+        ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME, Color.RED);
         dataContainer.setShipBoard(shipBoard);
         generalViewTUI.printShipboard(dataContainer);
     }

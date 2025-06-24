@@ -46,12 +46,12 @@ public class ShipBoardTest {
 
     @BeforeEach
     void setUp() {
-        shipBoard = new ShipBoard(GameType.NORMALGAME);
+        shipBoard = new ShipBoard(GameType.NORMALGAME, Color.RED);
     }
 
     @Test
     void TestSetupTestGameShipboard() {
-        shipBoard = new ShipBoard(GameType.TESTGAME);
+        shipBoard = new ShipBoard(GameType.TESTGAME, Color.RED);
         assertNotNull(shipBoard.getComponent(ShipBoard.CENTER_COL, ShipBoard.CENTER_ROW));
         assertFalse(shipBoard.isErroneous());
         generalViewTUI.printShipboard(shipBoard);
@@ -583,7 +583,7 @@ public class ShipBoardTest {
 
     @Test
     void preBuildShipBoardTestGame() {
-        shipBoard = new ShipBoard(GameType.TESTGAME);
+        shipBoard = new ShipBoard(GameType.TESTGAME, Color.RED);
 
         shipBoard.preBuildShipBoard();
         generalViewTUI.printShipboard(shipBoard);
@@ -591,7 +591,7 @@ public class ShipBoardTest {
 
     @Test
     void testAliensInTestGame() throws NotPermittedPlacementException, IllegalSelectionException {
-        shipBoard = new ShipBoard(GameType.TESTGAME);
+        shipBoard = new ShipBoard(GameType.TESTGAME, Color.RED);
         shipBoard.addComponent(7, 8, new AlienSupport(universalSides, true));
         assertThrows(IllegalStateException.class, () -> {
             shipBoard.addComponent(8, 8, new Cabin(universalSides, CrewType.Purple, 1));

@@ -22,6 +22,12 @@ public class Battery extends Component {
         this.numberOfCurrentBatteries = numberOfCurrentBatteries;
     }
 
+    @JsonCreator
+    public Battery(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("numberOfCurrentBatteries") int numberOfCurrentBatteries) {
+        super(imagePath, rotations, sides);
+        this.numberOfCurrentBatteries = numberOfCurrentBatteries;
+    }
+
     @JsonProperty("numberOfCurrentBatteries")
     public void setNumberOfCurrentBatteries(int numberOfCurrentBatteries) {
         this.numberOfCurrentBatteries = numberOfCurrentBatteries;

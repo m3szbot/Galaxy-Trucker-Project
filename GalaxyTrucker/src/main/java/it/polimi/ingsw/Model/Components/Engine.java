@@ -33,6 +33,21 @@ public class Engine extends Component {
         }
     }
 
+    @JsonCreator
+    public Engine(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
+        super(imagePath, rotations, sides);
+        this.single = single;
+
+        // check special sides
+        if (Arrays.stream(sides).filter(sideType -> sideType.equals(SideType.Special)).count() != 1)
+            throw new IllegalArgumentException("Engines must have exactly 1 special side.");
+
+        // rotate until engine is facing backwards
+        while (this.getBack() != SideType.Special) {
+            this.accept(new ComponentRotatorVisitor());
+        }
+    }
+
     @Override
     public String getComponentName() {
         return "Engine";

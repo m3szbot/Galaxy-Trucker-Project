@@ -37,6 +37,14 @@ public class Shield extends Component {
         coveredSides[coveredSide2] = true;
     }
 
+    @JsonCreator
+    public Shield(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("coveredSide1") int coveredSide1,
+                  @JsonProperty("coveredSide2") int coveredSide2) {
+        super(imagePath, rotations, sides);
+        coveredSides = new boolean[]{false, false, false, false};
+        setCoveredSides(coveredSide1, coveredSide2);
+    }
+
     @Override
     public String getComponentName() {
         return "Shield";

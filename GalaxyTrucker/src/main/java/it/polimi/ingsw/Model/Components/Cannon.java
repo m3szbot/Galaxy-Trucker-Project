@@ -28,6 +28,16 @@ public class Cannon extends Component {
             throw new IllegalArgumentException("Cannons must have exactly 1 special side.");
     }
 
+    @JsonCreator
+    public Cannon(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("single") boolean single) {
+        super(imagePath, rotations, sides);
+        this.single = single;
+
+        // check special sides
+        if (Arrays.stream(sides).filter(sideType -> sideType.equals(SideType.Special)).count() != 1)
+            throw new IllegalArgumentException("Cannons must have exactly 1 special side.");
+    }
+
     @Override
     public String getComponentName() {
         return "Cannon";

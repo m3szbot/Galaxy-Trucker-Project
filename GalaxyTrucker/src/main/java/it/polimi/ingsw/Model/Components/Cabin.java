@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.Model.ShipBoard.Color;
 
 /**
  * Class that represent the cabin component
@@ -22,6 +23,39 @@ public class Cabin extends Component {
         super(sides);
         this.crewType = jsonCrewType;
         this.numberOfCurrentInhabitants = jsonNumberOfCurrentInhabitants;
+    }
+
+    @JsonCreator
+    public Cabin(@JsonProperty("imagePath") String imagePath, @JsonProperty("nRot") int rotations, @JsonProperty("sides") SideType[] sides, @JsonProperty("crewType") CrewType jsonCrewType, @JsonProperty("numberOfCurrentInhabitants") int jsonNumberOfCurrentInhabitants) {
+        super(imagePath, rotations, sides);
+        this.crewType = jsonCrewType;
+        this.numberOfCurrentInhabitants = jsonNumberOfCurrentInhabitants;
+    }
+
+    public static Cabin getStarterCabin(Color color) {
+        SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
+
+        String imagePath;
+        switch (color) {
+            case RED -> {
+                imagePath = "/Polytechnic/tiles/GT-new_tiles_16_for web52.jpg";
+            }
+            case YELLOW -> {
+                imagePath = "/Polytechnic/tiles/GT-new_tiles_16_for web61.jpg";
+            }
+            case GREEN -> {
+                imagePath = "/Polytechnic/tiles/GT-new_tiles_16_for web34.jpg";
+            }
+            case BLUE -> {
+                imagePath = "/Polytechnic/tiles/GT-new_tiles_16_for web33.jpg";
+            }
+            default -> {
+                imagePath = null;
+            }
+        }
+
+        Cabin starter = new Cabin(imagePath, 0, universalSides, CrewType.Human, 2);
+        return starter;
     }
 
     public CrewType getCrewType() {

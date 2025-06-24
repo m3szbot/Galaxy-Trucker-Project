@@ -24,7 +24,7 @@ public class Player implements Serializable {
      */
     public Player(String nickName, Color color, GameInformation gameInformation) {
         this.nickName = nickName;
-        this.shipBoard = new ShipBoard(gameInformation.getGameType());
+        this.shipBoard = new ShipBoard(gameInformation.getGameType(), color);
         this.color = color;
         this.connected = true;
     }

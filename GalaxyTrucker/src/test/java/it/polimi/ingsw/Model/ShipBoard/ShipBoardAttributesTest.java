@@ -26,7 +26,7 @@ public class ShipBoardAttributesTest {
     @BeforeEach
     void setUp() {
         gameInformation.setUpGameInformation(GameType.NORMALGAME, 4);
-        shipBoard = new ShipBoard(gameInformation.getGameType());
+        shipBoard = new ShipBoard(gameInformation.getGameType(), Color.RED);
         shipBoardAttributes = shipBoard.getShipBoardAttributes();
     }
 
@@ -371,7 +371,7 @@ public class ShipBoardAttributesTest {
 
     @Test
     void testGameAliens() throws NotPermittedPlacementException, IllegalSelectionException {
-        shipBoard = new ShipBoard(GameType.TESTGAME);
+        shipBoard = new ShipBoard(GameType.TESTGAME, Color.RED);
         shipBoardAttributes = shipBoard.getShipBoardAttributes();
 
         shipBoard.addComponent(new Cabin(universalSides, CrewType.Human, 2), 7, 6);
