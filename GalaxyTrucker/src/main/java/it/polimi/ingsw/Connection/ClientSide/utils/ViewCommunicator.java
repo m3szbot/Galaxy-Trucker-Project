@@ -54,13 +54,15 @@ public class ViewCommunicator {
 
     public void setGameType(GameType gameType){
 
-        FXUtil.runOnFXThread(() -> {
 
             if(viewType == ViewType.GUI) {
-                ((GUIView) view).setGameType(gameType);
+
+                FXUtil.runOnFXThread(() -> {
+                    ((GUIView) view).setGameType(gameType);
+
+                });
             }
 
-        });
 
     }
 
