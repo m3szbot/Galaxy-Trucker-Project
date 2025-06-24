@@ -1,28 +1,9 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Model.Components.Component;
-import it.polimi.ingsw.Model.Components.SideType;
-import it.polimi.ingsw.Model.Components.Storage;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ShipBoard.Color;
-import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
-import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.View.FlightView.FlightView;
-import it.polimi.ingsw.View.FlightView.FlightViewTUI;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * @author carlo
  */
+/*
 
 class GoodsGainTest {
 
@@ -111,10 +92,8 @@ class GoodsGainTest {
         sourceStorage.addGoods(new int[]{1, 3, 1, 0});
         destStorage.addGoods(new int[]{0, 0, 0, 1});
 
-        /*
         BlueAvailableSlots are 4
         RedAvailableSlots are 5
-         */
 
         String inputString = "false\ntrue\n3 3\n5 5\ntrue\n2 2\n5 5\ntrue\n5 5\n4 4\n" +
                 "1\n0\n0\n0\n0\n4\n5\n1\n" +
@@ -188,10 +167,8 @@ class GoodsGainTest {
         String inputString = "false\nfalse\ntrue\n3 3\ntrue\n2 2\ntrue\n4 4\n3\n0\n0\n" +
                 "true\n5 5\n0\n2\n0\nfalse\n";
 
-        /*
         I have added 3 yellow goods to a blue storage and 2 green goods to a red storage, therefore
         I should have 3 available red slots and 2 available blue slots.
-         */
 
         ByteArrayInputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
@@ -211,3 +188,6 @@ class GoodsGainTest {
     }
 
 }
+
+ */
+

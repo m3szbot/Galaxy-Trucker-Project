@@ -71,13 +71,17 @@ public class GameMessenger {
     }
 
     /**
-     * Attention: always check if null before using playerMessenger, to avoid NullPointerException!
      *
      * @return PlayerMessenger associated to the given player, or null if the player is not connected.
      */
     public PlayerMessenger getPlayerMessenger(Player player) {
-        if (!playerMessengerMap.containsKey(player))
-            System.err.printf("Attention! PlayerMessenger is null for %s\n", player.getColouredNickName());
+
+        if(!playerMessengerMap.containsKey(player)){
+            System.err.println("Error: a dummy player messenger has been created for " + player.getNickName());
+            System.err.println("This means that the player has been disconnected and the controller of the current" +
+                    " phase wrongly asked to get the player messenger of the disconnected player");
+            return new DummyPlayerMessenger(player, null, -1);
+        }
 
         return playerMessengerMap.get(player);
 

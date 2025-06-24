@@ -1,19 +1,23 @@
-/*package it.polimi.ingsw.View.GUI.AssemblyControllers;
+package it.polimi.ingsw.View.GUI.AssemblyControllers;
 
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Controller.FlightPhase.Cards.Card;
 import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.View.GUI.GeneralGUIController;
-import it.polimi.ingsw.View.GeneralView;
+import it.polimi.ingsw.View.GUI.GUIController;
+import it.polimi.ingsw.View.GUI.PlayerInputSetter;
+import it.polimi.ingsw.View.GUI.utils.FXUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -26,65 +30,85 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-// TODO: implement
 public abstract class AssemblyGUIController extends GUIController implements PlayerInputSetter {
-    private transient AtomicReference<String> userInput;
     String input;
+    private HBox deckContainer;
 
     // Declatation of FXML elements
     @FXML
-            private ImageView inUseComponent;
+            private TextArea console;
     @FXML
-            private ImageView booked1;
+            private AnchorPane shipBoardPane;
     @FXML
-            private ImageView booked2;
+            private TextField playerInputField;
     @FXML
-            private ImageView flightBoard;
+            private Button button;
+    @FXML
+            private AnchorPane currentComponent;
 
     @FXML private Button Tile1, Tile2, Tile3, Tile4;
     @FXML private Button Tile1T, Tile2T, Tile3T, Tile4T;
 
+    @FXML private AnchorPane flightBoardPane;
 
 
-    AssemblyViewGUI(AtomicReference<String> userInput) {
-        this.userInput = userInput;
+
+    private void processInput(String input) {
+        input = input.toLowerCase();
+        if(input.equals("show deck")){
+            openDeckChoicePopup();
+        }
     }
 
-    public String getFXML(){
-        return "/fxml/AssemblyView/AssemblyView.fxml";
+    public void initialize(){
+
+        button.setOnAction(actionEvent -> {
+            String input = playerInputField.getText();
+            setUserInput(input);
+            processInput(input);
+        });
+
     }
 
-    @FXML
-    public void drawInput(ActionEvent event){
-        input = "draw";
-        sendData(input);
-    }
-    @FXML
-    public void placeInput(ActionEvent event){
-        input = "place";
-        sendData(input);
-        //... logica rinoscimento id e place
+    public void refreshConsole(String message){
+
+        FXUtil.runOnFXThread(() -> console.appendText(message + "\n"));
+
     }
 
-    @FXML
-    public void rotateInput(ActionEvent event){
-        input = "rotate";
-        sendData(input);
+    public void refreshShipBoard(Node node){
+
+        FXUtil.runOnFXThread(() -> {
+            shipBoardPane.getChildren().clear();
+            shipBoardPane.getChildren().add(node);
+        });
+
     }
 
-   @Override
-    public void printComponent(Component component) {
-       // String imdAddress = component.getImgAddress();
-      //  Image img = new Image(imdAddress);
-       // inUseComponent.setImage(img);
+    public void refreshComponent(Node node){
+
+        FXUtil.runOnFXThread(() -> {
+            currentComponent.getChildren().clear();
+            currentComponent.getChildren().add(node);
+        });
+
     }
 
-    @FXML
-    public void choiceInput(ActionEvent event){
-        input = "choice";
-        sendData(input);
+    public void refreshFlightBoard(Node node){
+
+        //useless in this phase
+
     }
 
+    public void refreshCard(Node node){
+
+        FXUtil.runOnFXThread(() -> {
+            deckContainer.getChildren().add(node);
+        });
+
+    }
+
+    /*
     public void printUncovered(List<Component> components){
         openChoicePopup(components);
     }
@@ -130,6 +154,7 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
             ex.printStackTrace();
         }
     }
+    */
 
     public void openDeckChoicePopup(){
         try{
@@ -139,7 +164,7 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
             HBox container = (HBox) popupRoot.lookup("#imageContainer");
 
             Stage popupStage = new Stage();
-            sendData("Show deck");
+            popupStage.setTitle("Deck choice");
             popupStage.setScene(new Scene(popupRoot));
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
@@ -154,8 +179,9 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
                 imageView.setCursor(Cursor.HAND);
 
                 imageView.setOnMouseClicked(event -> {
-                    sendData(String.valueOf(index));
+                    setUserInput(String.valueOf(index));
                     popupStage.close();
+                    openShowDeckPopup();
                 });
 
                 container.getChildren().add(imageView);
@@ -168,104 +194,58 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
         }
     }
 
-    public void openShowDeckPopup(List<Card> cards){
+    public void openShowDeckPopup(){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/showDeckPopUp.fxml"));
             AnchorPane popupRoot = loader.load();
-            HBox container = (HBox) popupRoot.lookup("#imageContainer");
+
+            ShowDeckPopUpController controller = loader.getController();
+            deckContainer = controller.getImageContainer();
 
             Stage popupStage = new Stage();
             popupStage.setTitle("Show deck");
             popupStage.setScene(new Scene(popupRoot));
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
-            for (int i = 0; i < cards.size(); i++) {
-                final int index = i;
-
-                Image image = new Image(getClass().getResource(cards.get(i).getImgAddress()).toExternalForm());
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(100);
-                imageView.setFitHeight(100);
-                imageView.setPreserveRatio(true);
-                imageView.setCursor(Cursor.HAND);
-
-                container.getChildren().add(imageView);
-            }
-
             Button closeButton = (Button) popupRoot.lookup("#closeButton");
             closeButton.setOnAction(e -> {
-                sendData("yes");
+                setUserInput("yes");
                 popupStage.close();
+                deckContainer.getChildren().clear();
             });
             popupStage.show();
         }catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-
-    @FXML
-    public void showInput(ActionEvent event){
-        input = "show";
-        sendData(input);
-    }
-
-    @FXML
-    public void placeBookedInput(ActionEvent event){
-        input = "place booked";
-        sendData(input);
-        if(event.getSource() == booked1){
-            input = String.valueOf(0);
-            sendData(input);
-        }else{
-            input = String.valueOf(1);
-            sendData(input);
-        }
-    }
-
-    @FXML
-    public void bookInput(ActionEvent event){
-        input = "book";
-        sendData(input);
-    }
-
-    @FXML
-    public void endInput(ActionEvent event){
-        input = "end";
-        sendData(input);
-    }
-
-    public void positionChoicePopUp(FlightBoard fly){
+/*
+    public void openPositionChoicePopUp(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/PositionChoicePopUp.fxml"));
         flightBoard.setImage(fly.getImgAddress()).toExternalForm();
 
         if(fly.getImgAddress().equals("src/main/resources/Polytechnic/cardboard/cardboard-5.png")){
             //TODO creation of starting position tiles
             Tile1.setOnMouseClicked(event -> {
-                sendData("7");
+                setUserInput("7");
             });
             Tile2.setOnMouseClicked(event -> {
-                sendData("4");
+                setUserInput("4");
             });
             Tile3.setOnMouseClicked(event -> {
-                sendData("2");
+                setUserInput("2");
             });
             Tile4.setOnMouseClicked(event -> {
-                sendData("1");
+                setUserInput("1");
             });
+
         }else{
             //TODO creation of starting position tiles in TestGame
-            Tile1T.setOnMouseClicked(event -> {sendData("5");});
-            Tile2T.setOnMouseClicked(event -> {sendData("3");});
-            Tile3T.setOnMouseClicked(event -> {sendData("2");});
-            Tile4T.setOnMouseClicked(event -> {sendData("1");});
+            Tile1T.setOnMouseClicked(event -> {setUserInput("5");});
+            Tile2T.setOnMouseClicked(event -> {setUserInput("3");});
+            Tile3T.setOnMouseClicked(event -> {setUserInput("2");});
+            Tile4T.setOnMouseClicked(event -> {setUserInput("1");});
         }
-
     }
 
-    public void sendData(String playerInput){
-        ClientInputManager.setUserInput(playerInput);
-    }
-
-
-}
 */
+}

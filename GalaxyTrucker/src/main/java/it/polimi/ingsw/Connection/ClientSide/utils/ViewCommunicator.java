@@ -2,7 +2,6 @@ package it.polimi.ingsw.Connection.ClientSide.utils;
 
 import it.polimi.ingsw.Connection.ConnectionType;
 import it.polimi.ingsw.Connection.ViewType;
-import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.View.GUI.GUIView;
@@ -70,11 +69,6 @@ public class ViewCommunicator {
             FXUtil.runOnFXThread(() -> {
                 generalGUIController.setPhaseGUI(gamePhase, view);
             });
-
-            if(gamePhase != GamePhase.Lobby){
-                //letting the GUI configure itself (may not be necessary, to test).
-                Sleeper.sleepXSeconds(3);
-            }
 
         }
     }

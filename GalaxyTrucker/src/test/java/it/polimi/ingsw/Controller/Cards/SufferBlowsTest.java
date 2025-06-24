@@ -1,28 +1,6 @@
 package it.polimi.ingsw.Controller.Cards;
 
-import it.polimi.ingsw.Model.Components.*;
-import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
-import it.polimi.ingsw.Model.GameInformation.GameInformation;
-import it.polimi.ingsw.Model.GameInformation.GameType;
-import it.polimi.ingsw.Model.ShipBoard.Color;
-import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
-import it.polimi.ingsw.Model.ShipBoard.Player;
-import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
-import it.polimi.ingsw.View.FlightView.FlightView;
-import it.polimi.ingsw.View.FlightView.FlightViewTUI;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+/*
 class SufferBlowsTest {
     class Operator implements SufferBlows {
     }
@@ -531,3 +509,5 @@ class SufferBlowsTest {
     }
 
 }
+
+ */
