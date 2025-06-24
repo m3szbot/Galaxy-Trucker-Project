@@ -13,6 +13,14 @@ import javafx.scene.shape.Polygon;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controller of the flightBoard fxml file. Its role is to
+ * correctly set up the flight board pane according to the model
+ * received from the server
+ *
+ * @author carlo
+ */
+
 public class FlightBoardController {
 
     @FXML
@@ -24,15 +32,6 @@ public class FlightBoardController {
     private Map<Integer, TilePane> positionMap = new HashMap<>();
 
     private GameType gameType;
-
-    public void initialize(){
-
-        for(int i = 1; i <= 18; i++){
-            TilePane tilePane = (TilePane) pane.lookup("#pos" + i);
-            positionMap.put(i, tilePane);
-        }
-
-    }
 
     public void setUpTilesMap(GameType gameType){
 
@@ -60,7 +59,6 @@ public class FlightBoardController {
     public void populateFlightBoard(FlightBoard flightBoard){
 
         for (Player player : flightBoard.getPlayerOrderList()) {
-            //TODO: CHANGE THE CORRISPONDANCE
 
             int pos = flightBoard.getPlayerTile(player);
 
@@ -88,7 +86,6 @@ public class FlightBoardController {
 
             TilePane tilePane = positionMap.get(pos);
 
-            // Creo il triangolino indicatore
             Polygon triangle = new Polygon();
             triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 0.0);
 

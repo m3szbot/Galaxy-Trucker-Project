@@ -163,6 +163,8 @@ public class PlayerLobbyMessenger {
     }
 
     public void cleanResources(){
-            socketDataExchanger.closeResources();
+       if(connectionType == ConnectionType.SOCKET) {
+           socketDataExchanger.closeResources();
+       }
     }
 }

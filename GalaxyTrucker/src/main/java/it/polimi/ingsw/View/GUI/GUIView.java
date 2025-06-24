@@ -7,7 +7,7 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import it.polimi.ingsw.View.GUI.utils.FlightBoardController;
-import it.polimi.ingsw.View.GUI.utils.ImageBuilder;
+import it.polimi.ingsw.View.GUI.utils.PaneBuilder;
 import it.polimi.ingsw.View.GeneralView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
@@ -41,7 +41,6 @@ public class GUIView extends GeneralView {
 
     public void setGameType(GameType gameType){
 
-
         try {
 
             FXMLLoader shipBoardLoader;
@@ -65,8 +64,8 @@ public class GUIView extends GeneralView {
             FlightBoardController flightBoardController = flightBoardLoader.getController();
             flightBoardController.setUpTilesMap(gameType);
 
-            ImageBuilder.setShipBoardController(shipBoardLoader.getController());
-            ImageBuilder.setFlightBoardController(flightBoardController);
+            PaneBuilder.setShipBoardController(shipBoardLoader.getController());
+            PaneBuilder.setFlightBoardController(flightBoardController);
 
         } catch (IOException e) {
 
@@ -102,14 +101,14 @@ public class GUIView extends GeneralView {
     @Override
     public void printComponent(Component component) {
 
-        guiController.refreshComponent(ImageBuilder.buildComponentImage(component));
+        guiController.refreshComponent(PaneBuilder.buildComponentImage(component));
 
     }
 
     @Override
     public void printShipboard(ShipBoard shipBoard) {
 
-        ImageBuilder.buildShipBoardPane(shipBoard);
+        PaneBuilder.buildShipBoardPane(shipBoard);
         guiController.refreshShipBoard(shipBoardPane);
 
     }
@@ -117,14 +116,14 @@ public class GUIView extends GeneralView {
     @Override
     public void printCard(Card card) {
 
-        guiController.refreshCard(ImageBuilder.buildCardImage(card));
+        guiController.refreshCard(PaneBuilder.buildCardImage(card));
 
     }
 
     @Override
     public void printFlightBoard(FlightBoard flightBoard) {
 
-        ImageBuilder.buildFlightBoardPane(flightBoard);
+        PaneBuilder.buildFlightBoardPane(flightBoard);
         guiController.refreshFlightBoard(flightBoardPane);
 
     }

@@ -46,6 +46,7 @@ public class Client {
             GUIThread.setDaemon(false);
             GUIThread.start();
 
+            //pause to let the GUI configure itself and open
             Sleeper.sleepXSeconds(3);
 
         }

@@ -8,13 +8,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * Utility class which build the image for each relevant element
+ * Utility class which build the pane/imageView for each relevant element
  * of the game
  *
  * @author carlo
  */
 
-public final class ImageBuilder {
+public final class PaneBuilder {
 
     private static ShipBoardController shipBoardController;
     private static FlightBoardController flightBoardController;
@@ -36,6 +36,7 @@ public final class ImageBuilder {
         return cardImageView;
     }
 
+    //to update to handle the rotation of the components
     public static ImageView buildComponentImage(Component component){
         Image componentImage = new Image(component.getImagePath());
         ImageView componentImageView = new ImageView(componentImage);

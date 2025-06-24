@@ -15,6 +15,13 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Class used by the server to communicate with the client
+ * through RMI protocol.
+ *
+ * @author carlo
+ */
+
 public class VirtualClient extends UnicastRemoteObject implements ClientRemoteInterface {
 
     private GeneralView currentView;

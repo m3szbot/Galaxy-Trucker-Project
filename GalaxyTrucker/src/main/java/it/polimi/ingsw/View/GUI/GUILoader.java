@@ -13,6 +13,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Main class for the GUI.
+ *
+ * @author carlo
+ */
+
 public class GUILoader extends Application {
 
     public static ViewCommunicator viewCommunicator;
@@ -58,7 +64,7 @@ public class GUILoader extends Application {
                 }
                 System.out.println("Application closed");
                 Platform.exit(); //stops the application thread
-                System.exit(0); //forces all the threads to end
+                System.exit(0); //forces all the other active threads to end
             });
 
         } catch (IOException e) {
