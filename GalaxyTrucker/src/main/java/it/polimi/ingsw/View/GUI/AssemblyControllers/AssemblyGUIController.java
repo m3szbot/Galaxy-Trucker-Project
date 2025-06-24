@@ -192,7 +192,7 @@ public abstract class AssemblyGUIController extends GUIController implements Pla
                 imageView.setOnMouseClicked(event -> {
                     setUserInput(String.valueOf(index));
                     popupStage.close();
-                    openShowDeckPopup();
+                    FXUtil.runOnFXThread(() -> openShowDeckPopup());
                 });
 
                 container.getChildren().add(imageView);
