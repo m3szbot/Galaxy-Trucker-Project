@@ -13,7 +13,7 @@ public final class ClientInputManager {
 
     private static AtomicReference<String> userInput = new AtomicReference<>(null);
     // default timeout value
-    private static long timeOut;
+    private static long timeOut = 1000;
 
     public static void unblockInput() {
         userInput.set("unblock");
