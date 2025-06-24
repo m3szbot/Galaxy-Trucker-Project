@@ -77,9 +77,14 @@ public class GameInformation implements Serializable {
         setMaxNumberOfPlayers(maxNumberOfPlayers);
         try {
             setUpCards();
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to set up components");
+        }
+        try {
             setUpComponents();
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to set up cards/components");
+            throw new IllegalStateException("Failed to set up cards");
         }
         setUpFlightBoard();
     }
