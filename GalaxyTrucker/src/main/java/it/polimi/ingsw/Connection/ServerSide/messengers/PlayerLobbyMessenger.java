@@ -126,7 +126,13 @@ public class PlayerLobbyMessenger {
         }
         else{
 
+            try {
 
+                virtualClient.setGameType(gameType.toString());
+
+            } catch (RemoteException e) {
+                System.err.println("Error while communicating with " + nickName + " through socket protocol");
+            }
 
         }
 

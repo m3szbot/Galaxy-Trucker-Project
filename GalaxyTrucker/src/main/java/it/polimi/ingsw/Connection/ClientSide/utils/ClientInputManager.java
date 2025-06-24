@@ -13,7 +13,7 @@ public final class ClientInputManager {
 
     private static AtomicReference<String> userInput = new AtomicReference<>(null);
     // default timeout value
-    private static long timeOut = 1000;
+    private static long timeOut;
 
     public static void unblockInput() {
         userInput.set("unblock");
@@ -54,6 +54,29 @@ public final class ClientInputManager {
 
     public static void setUserInput(String input) {
         userInput.set(input);
+    }
+
+    /**
+     * Separates the current input on newlines and sets the current line as the userInput until it is taken,
+     * then it sets the next line.
+     *
+     * @param input separated with newlines.
+     * @author Boti
+     */
+    public static void setTestInput(String input) {
+        String[] lines = input.split("\\r?\\n");
+
+        for (String line : lines) {
+            // wait until input is taken
+            while (userInput.get() != null) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                }
+            }
+            // set input when previous was taken
+            userInput.set(line);
+        }
     }
 
 }

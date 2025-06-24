@@ -15,7 +15,9 @@ import java.rmi.RemoteException;
 public abstract class Mocker {
 
     public static void simulateClientInput(String input) {
-        ClientInputManager.setUserInput(input);
+        new Thread(() -> {
+            ClientInputManager.setTestInput(input);
+        }).start();
     }
 
     /**
