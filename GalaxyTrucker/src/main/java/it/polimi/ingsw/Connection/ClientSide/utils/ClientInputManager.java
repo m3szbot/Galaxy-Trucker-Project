@@ -12,27 +12,21 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ClientInputManager {
 
     private static AtomicReference<String> userInput = new AtomicReference<>(null);
-    private static long timeOut;
+    // default timeout value
+    private static long timeOut = 1000;
 
-
-    public static void setUserInput(String input){
-        userInput.set(input);
-    }
-
-
-
-    public static void unblockInput(){
+    public static void unblockInput() {
         userInput.set("unblock");
     }
 
-    public static void setTimeOut(long playerInputTimeOut){
+    public static void setTimeOut(long playerInputTimeOut) {
         timeOut = playerInputTimeOut;
     }
 
     public static String getUserInput() throws TimeoutException {
         long temp = timeOut;
 
-        while(true) {
+        while (true) {
             if (userInput.get() != null) {
 
                 return userInput.getAndSet(null);
@@ -43,11 +37,11 @@ public final class ClientInputManager {
                     Thread.sleep(100);
                     temp -= 100;
 
-                    if(temp == 60000){
+                    if (temp == 60000) {
                         System.out.println("Warning: 1 minute left before you are being considered inactive, please enter an input");
                     }
 
-                    if(temp < 0){
+                    if (temp < 0) {
                         throw new TimeoutException();
                     }
 
@@ -56,6 +50,10 @@ public final class ClientInputManager {
                 }
             }
         }
+    }
+
+    public static void setUserInput(String input) {
+        userInput.set(input);
     }
 
 }
