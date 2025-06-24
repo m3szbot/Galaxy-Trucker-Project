@@ -69,7 +69,7 @@ public class ViewCommunicator {
             FXUtil.runOnFXThread(() -> {
                 generalGUIController.setPhaseGUI(gamePhase, view);
             });
-            
+
         }
     }
 

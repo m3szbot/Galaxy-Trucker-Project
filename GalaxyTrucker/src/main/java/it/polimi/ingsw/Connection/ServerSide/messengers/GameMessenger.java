@@ -77,8 +77,10 @@ public class GameMessenger {
     public PlayerMessenger getPlayerMessenger(Player player) {
 
         if(!playerMessengerMap.containsKey(player)){
-            System.err.println("Error: The player messenger of " + player.getColouredNickName() + " doesn't exist.");
-            return null;
+            System.err.println("Error: a dummy player messenger has been created for " + player.getNickName());
+            System.err.println("This means that the player has been disconnected and the controller of the current" +
+                    " phase wrongly asked to get the player messenger of the disconnected player");
+            return new DummyPlayerMessenger(player, null, -1);
         }
 
         return playerMessengerMap.get(player);
