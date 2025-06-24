@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.Components;
 //not finished
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -17,6 +18,7 @@ public class AlienSupport extends Component {
     public AlienSupport() {
     }
 
+    @JsonIgnore
     @JsonCreator
     public AlienSupport(@JsonProperty("sides") SideType[] sides, @JsonProperty("purple") boolean purple) {
         super(sides);

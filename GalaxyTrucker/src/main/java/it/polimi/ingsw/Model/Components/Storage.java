@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -18,6 +19,7 @@ public class Storage extends Component {
     public Storage() {
     }
 
+    @JsonIgnore
     @JsonCreator
     public Storage(@JsonProperty("sides") SideType[] sides, @JsonProperty("isRed") boolean isRed, @JsonProperty("numberOfMaximumElements") int numberOfMaximumElements) {
 

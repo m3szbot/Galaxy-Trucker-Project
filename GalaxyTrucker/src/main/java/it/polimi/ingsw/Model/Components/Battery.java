@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -16,6 +17,7 @@ public class Battery extends Component {
     public Battery() {
     }
 
+    @JsonIgnore
     @JsonCreator
     public Battery(@JsonProperty("sides") SideType[] sides, @JsonProperty("numberOfCurrentBatteries") int numberOfCurrentBatteries) {
         super(sides);
