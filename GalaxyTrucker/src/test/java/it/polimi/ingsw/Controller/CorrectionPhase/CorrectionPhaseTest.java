@@ -97,7 +97,7 @@ class CorrectionPhaseTest {
         shipBoard.addComponent(6, 6, new Cabin(universalSides, CrewType.Human, 2));
         shipBoard.addComponent(8, 6, new Cabin(universalSides, CrewType.Human, 2));
         shipBoard.addComponent(9, 7, new Cabin(universalSides, CrewType.Human, 2));
-        Mocker.simulateClientInput("Brown\nPurple\npurple\n!\n\na\n1\nbrown");
+        Mocker.simulateClientInput("Brown\nPurple\npurple\n!\n\na\n1\nhuman\nbrown");
         correctionPhase.start();
 
         assertEquals(1, flightBoard.getPlayerOrderList().size());
