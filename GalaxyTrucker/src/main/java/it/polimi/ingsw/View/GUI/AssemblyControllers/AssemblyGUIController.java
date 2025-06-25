@@ -46,7 +46,7 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
     private void processInput(String input) {
         input = input.trim().toLowerCase();
-        if(input.equals("show")){
+        if(input.equals("show") && gameType.equals(GameType.NORMALGAME)){
             FXUtil.runOnFXThread(this::openDeckChoicePopup);
         }
     }
