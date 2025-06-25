@@ -61,10 +61,17 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         //Explanation of the card
 
-        message = "The player with the lowest crew count will lose " + daysLost + " days.\n" +
-                "The player with the lowest activated engine power will lose" + lossNumber + " crew members.\n" +
-                "The player with the lowest activated fire power will be shot at.\n" +
-                "Choose wisely!\n";
+        if (cardLevel == 1) {
+            message = "The player with the lowest crew count will lose " + daysLost + " days.\n" +
+                    "The player with the lowest activated engine power will lose" + lossNumber + " crew members.\n" +
+                    "The player with the lowest activated fire power will be shot at.\n" +
+                    "Choose wisely!\n";
+        } else {
+            message = "The player with the lowest fire power will lose " + daysLost + " days.\n" +
+                    "The player with the lowest activated engine power will lose" + lossNumber + " goods.\n" +
+                    "The player with the lowest crew count will be shot at.\n" +
+                    "Choose wisely!\n";
+        }
         ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         //letting the players choose their firePower, from the leader backwards
@@ -141,20 +148,57 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         }
 
-        //giving the various penalties to players
 
         //calculating player with the lowest inhabitant number
 
         lowestInhabitantNumberPlayer = calculateSmallestCrew(gameInformation);
 
+        //giving the various penalties to players
+
         //lowest inhabitants
         if (gameInformation.checkPlayerConnectivity(lowestInhabitantNumberPlayer) && gameInformation.getFlightBoard().isInFlight(lowestInhabitantNumberPlayer)) {
 
-            changePlayerPosition(lowestInhabitantNumberPlayer, -daysLost, gameInformation.getFlightBoard());
+            PlayerFlightInputHandler.startPlayerTurn(lowestInhabitantNumberPlayer);
 
-            message = "Player " + lowestInhabitantNumberPlayer.getColouredNickName() + " lost " + daysLost +
-                    " flight days as he has the lowest number of inhabitants!";
+            message = "It's " + lowestInhabitantNumberPlayer.getColouredNickName() + "'s turn.\n";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            if (cardLevel == 1) {
+
+                changePlayerPosition(lowestInhabitantNumberPlayer, -daysLost, gameInformation.getFlightBoard());
+
+                message = "Player " + lowestInhabitantNumberPlayer.getColouredNickName() + " lost " + daysLost +
+                        " flight days as he has the lowest number of inhabitants!";
+                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            } else {
+
+                try {
+                    message = "Player " + lowestInhabitantNumberPlayer.getColouredNickName() + " is getting shot at!\n";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    hit(lowestInhabitantNumberPlayer, blows, blowType, gameInformation);
+
+                } catch (PlayerDisconnectedException e) {
+
+                    PlayerFlightInputHandler.removePlayer(lowestInhabitantNumberPlayer);
+
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).disconnectPlayer(lowestInhabitantNumberPlayer);
+
+                } catch (NoHumanCrewLeftException e) {
+
+                    message = "Player " + lowestInhabitantNumberPlayer.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    gameInformation.getFlightBoard().eliminatePlayer(lowestInhabitantNumberPlayer);
+
+                }
+
+            }
+
+            if (PlayerFlightInputHandler.checkInputThreadActivity(lowestInhabitantNumberPlayer)) {
+                PlayerFlightInputHandler.endPlayerTurn(lowestInhabitantNumberPlayer);
+            }
 
         }
 
@@ -174,11 +218,23 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestEnginePowerPlayer);
                 playerMessenger.printMessage(message);
 
-                message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " will lose " + lossNumber +
-                        " crew members as he has the weakest engine power!";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                if (cardLevel == 1) {
 
-                inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
+                    message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " will lose " + lossNumber +
+                            " crew members as he has the weakest engine power!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
+
+                } else {
+
+                    message = "Player " + weakestEnginePowerPlayer.getColouredNickName() + " will lose " + lossNumber +
+                            " goods as he has the weakest engine power!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    inflictLoss(weakestEnginePowerPlayer, lossType, lossNumber, gameInformation);
+
+                }
 
             } catch (NoHumanCrewLeftException e) {
 
@@ -220,10 +276,22 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                 playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
                 playerMessenger.printMessage(message);
 
-                message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " is getting shot at!\n";
-                ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+                if (cardLevel == 1) {
 
-                hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
+                    message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " is getting shot at!\n";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                    hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
+
+                } else {
+
+                    changePlayerPosition(weakestFirePowerPlayer, -daysLost, gameInformation.getFlightBoard());
+
+                    message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " lost " + daysLost +
+                            " flight days as he has the lowest number of inhabitants!";
+                    ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+                }
 
             } catch (NoHumanCrewLeftException e) {
 
