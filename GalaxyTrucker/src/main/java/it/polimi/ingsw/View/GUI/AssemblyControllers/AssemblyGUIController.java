@@ -37,9 +37,6 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
     @FXML
             private AnchorPane currentComponent;
 
-    @FXML private Button Tile1, Tile2, Tile3, Tile4;
-    @FXML private Button Tile1T, Tile2T, Tile3T, Tile4T;
-
     @FXML private AnchorPane flightBoardPane;
     @FXML private AnchorPane root;
 

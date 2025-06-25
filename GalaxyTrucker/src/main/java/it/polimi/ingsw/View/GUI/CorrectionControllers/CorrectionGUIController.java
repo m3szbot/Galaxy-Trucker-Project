@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 public class CorrectionGUIController extends GUIController implements PlayerInputSetter {
@@ -23,9 +24,25 @@ public class CorrectionGUIController extends GUIController implements PlayerInpu
     @FXML
     Button button;
 
+    @FXML
+    private AnchorPane root;
+
     public void initialize(){
 
-        button.setOnAction(actionEvent -> setUserInput(playerInputField.getText()));
+        button.setOnAction(actionEvent -> {
+            setUserInput(playerInputField.getText());
+            playerInputField.clear();}
+        );
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            playerInputField.requestFocus();
+        });
+
+        playerInputField.setOnKeyPressed(event -> {
+            if (event.getCode().toString().equals("ENTER")) {
+                button.fire();
+            }
+        });
 
     }
 
