@@ -1,10 +1,20 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Mocker;
+import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
+import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AssemblyPhaseTest {
-    AssemblyPhase ass;
-    Player gecky;
 /*
     @BeforeEach
     public void  createGameInformation(){
@@ -38,4 +48,69 @@ public class AssemblyPhaseTest {
 
     }
 */
+    Game game = Mocker.mockNormalGame1Player();
+    AssemblyPhase assemblyPhase = game.getAssemblyPhase();
+    Player player = assemblyPhase.getGameInformation().getPlayerList().get(0);
+
+
+    @Test
+    public void bookComponent() {
+        assemblyPhase.start();
+        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+        Mocker.simulateClientInput("draw");
+        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersBookedComponents().get(player));
+        Mocker.simulateClientInput("book");
+        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersBookedComponents().get(player));
+        Mocker.simulateClientInput("place booked");
+        Mocker.simulateClientInput("0");
+        Mocker.simulateClientInput("67 67");
+        try {
+            wait(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Test
+    public void testComponentPlacing() {
+        assemblyPhase.start();
+        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+        Mocker.simulateClientInput("draw");
+        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+        Mocker.simulateClientInput("place");
+        Mocker.simulateClientInput("45 67");
+        try {
+            wait(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+        Mocker.simulateClientInput("place");
+        Mocker.simulateClientInput("6 6");
+        try {
+            wait(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+        Mocker.simulateClientInput("place");
+        Mocker.simulateClientInput("7 6");
+        try {
+            wait(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        assertNotNull(player.getShipBoard().getComponent(7, 6));
+        try {
+            wait(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+    }
+
+
+
 }
