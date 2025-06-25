@@ -42,6 +42,11 @@ public final class PaneBuilder {
         ImageView componentImageView = new ImageView(componentImage);
 
         componentImageView.setRotate(90 * component.getRotations());
+        componentImageView.setFitWidth(200);
+        componentImageView.setFitHeight(200);
+        componentImageView.setPreserveRatio(true);
+        componentImageView.setSmooth(true);
+        componentImageView.setCache(true);
 
         return componentImageView;
     }

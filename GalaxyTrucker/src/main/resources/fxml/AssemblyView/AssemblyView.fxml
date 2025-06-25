@@ -14,7 +14,7 @@
       <AnchorPane fx:id="shipBoardPane" layoutX="375.0" layoutY="257.0" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #2c003e;" />
       <TextField fx:id="playerInputField" alignment="CENTER" layoutX="1180.0" layoutY="760.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d" />
       <Button fx:id="button" layoutX="1212.0" layoutY="789.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text" />
-      <!--<Text fill="#ffd001" layoutX="918.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0"  text="Assembly Phase"> </Text> -styleClass="title"-->
+      <Text fill="#ffd001" layoutX="918.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Assembly Phase"> </Text>
 
       <ImageView fitHeight="360" fitWidth="360" layoutX="1552.0" layoutY="711.0">
 
@@ -25,11 +25,11 @@
       </ImageView>
       <ImageView fitHeight="360" fitWidth="360" layoutX="6.0" layoutY="713.0">
 
-                  <image>
-                     <Image url="/Polytechnic/Imgs/image_6.png" />
-                  </image>
+                            <image>
+                               <Image url="/Polytechnic/Imgs/image_6.png" />
+                            </image>
 
-      </ImageView>
-      <AnchorPane fx:id="currentComponent" layoutX="1161.0" layoutY="299.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E52B50;" />
-   </children>
-</AnchorPane>
+                </ImageView>
+                <AnchorPane fx:id="currentComponent" layoutX="1161.0" layoutY="299.0" prefHeight="200.0" prefWidth="200.0" style=" -fx-border-color: #ffd93d; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-effect: dropshadow(gaussian, #ffd93d, 20, 0.8, 0, 0);" />
+             </children>
+          </AnchorPane>
