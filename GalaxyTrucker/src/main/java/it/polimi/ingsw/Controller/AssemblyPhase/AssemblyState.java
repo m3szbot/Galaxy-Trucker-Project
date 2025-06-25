@@ -111,10 +111,15 @@ public class AssemblyState extends GameState {
                 break;
 
             case "show":
-                actionTaken = true;
-                assemblyThread.setState(new ShowDeckState(assemblyProtocol, playerMessenger, player));
-                break;
-
+                if(assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
+                    actionTaken = true;
+                    assemblyThread.setState(new ShowDeckState(assemblyProtocol, playerMessenger, player));
+                    break;
+                }else{
+                    playerMessenger.printMessage("You are not allowed to see the cards in testgame mode");
+                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                    break;
+                }
             case "book":
                 actionTaken = true;
                 if (!assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {

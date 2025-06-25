@@ -95,7 +95,7 @@ public class FlightGUIController extends GUIController implements PlayerInputSet
     }
 
     public String getBackgroundImage() {
-        return null;
+        return "/Polytechnic/Imgs/image_9.png";
     }
 
 
