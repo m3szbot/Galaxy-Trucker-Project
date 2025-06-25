@@ -77,5 +77,9 @@ public class FlightGUIController extends GUIController implements PlayerInputSet
 
     }
 
+    public String getBackgroundImage() {
+        return null;
+    }
+
 
 }

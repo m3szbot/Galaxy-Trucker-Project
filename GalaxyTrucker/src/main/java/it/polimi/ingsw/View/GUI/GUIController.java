@@ -15,4 +15,6 @@ public abstract class GUIController {
 
     public abstract void refreshFlightBoard(Node node);
 
+    public abstract String getBackgroundImage();
+
 }

@@ -2,10 +2,15 @@ package it.polimi.ingsw.View.GUI;
 
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.View.GeneralView;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
@@ -60,39 +65,52 @@ public class GeneralGUIController {
         }
 
     }
-    private void loadPhaseGUI(String fxmlPath, GeneralView guiView){
 
+    private void loadPhaseGUI(String fxmlPath, GeneralView guiView) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Node node = loader.load();
-
-            rootPane.getChildren().clear();
-
-            rootPane.getChildren().add(node);
-
-            //centering everything
-
-            rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-                node.setLayoutX((newVal.doubleValue() - node.prefWidth(-1)) / 2);
-            });
-            rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
-                node.setLayoutY((newVal.doubleValue() - node.prefHeight(-1)) / 2);
-            });
-
-            node.setLayoutX((rootPane.getWidth() - node.prefWidth(-1)) / 2);
-            node.setLayoutY((rootPane.getHeight() - node.prefHeight(-1)) / 2);
-
-
-
-
+            AnchorPane content = loader.load();
             GUIController controller = loader.getController();
-            ((GUIView)guiView).setGuiController(controller);
 
-        } catch (IOException e) {
-            System.err.println("Error while loading the fxml file at path: " + fxmlPath);
-            e.printStackTrace();
+            double baseW = 1920;
+            double baseH = 1080;
+
+            Group scaled = new Group(content);
+            StackPane wrapper = new StackPane(scaled);
+            StackPane.setAlignment(scaled, Pos.CENTER);
+
+
+            AnchorPane.setTopAnchor(wrapper,    0.0);
+            AnchorPane.setBottomAnchor(wrapper, 0.0);
+            AnchorPane.setLeftAnchor(wrapper,   0.0);
+            AnchorPane.setRightAnchor(wrapper,  0.0);
+
+            rootPane.getChildren().setAll(wrapper);
+
+
+            rootPane.setStyle(
+                    "-fx-background-image: url('" + controller.getBackgroundImage() + "');" +
+                            "-fx-background-size: cover;" +
+                            "-fx-background-repeat: no-repeat;" +
+                            "-fx-background-position: center center;"
+            );
+
+
+            ChangeListener<Number> listener = (obs, o, n) -> {
+                double sX = wrapper.getWidth()  / baseW;
+                double sY = wrapper.getHeight() / baseH;
+                double s  = Math.min(sX, sY);
+                scaled.setScaleX(s);
+                scaled.setScaleY(s);
+            };
+            wrapper.widthProperty().addListener(listener);
+            wrapper.heightProperty().addListener(listener);
+            listener.changed(null, null, null);
+
+            ((GUIView) guiView).setGuiController(controller);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
-
-
 }

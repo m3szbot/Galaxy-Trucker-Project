@@ -60,5 +60,9 @@ public class CorrectionGUIController extends GUIController implements PlayerInpu
         //useless in this phase
 
     }
+
+    public String getBackgroundImage() {
+        return null;
+    }
 }
 

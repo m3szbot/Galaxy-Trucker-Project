@@ -55,5 +55,9 @@ public class EvaluationGUIController extends GUIController implements PlayerInpu
         //not used
 
     }
+
+    public String getBackgroundImage() {
+        return null;
+    }
 }
 

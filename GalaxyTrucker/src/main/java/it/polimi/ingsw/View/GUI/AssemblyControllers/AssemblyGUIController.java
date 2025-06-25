@@ -56,6 +56,7 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
         button.setOnAction(actionEvent -> {
             String input = playerInputField.getText();
+            playerInputField.clear();
             setUserInput(input);
             processInput(input);
         });
@@ -69,6 +70,7 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
                 button.fire();
             }
         });
+
     }
 
     public void refreshConsole(String message){
@@ -218,6 +220,10 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
         }catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public String getBackgroundImage(){
+        return("/Polytechnic/Imgs/image_5.png");
     }
 /*
     public void openPositionChoicePopUp(){
