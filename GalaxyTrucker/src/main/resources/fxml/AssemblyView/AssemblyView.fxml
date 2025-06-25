@@ -17,18 +17,18 @@
       <!--<Text fill="#ffd001" layoutX="918.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0"  text="Assembly Phase"> </Text> -styleClass="title"-->
 
       <ImageView fitHeight="360" fitWidth="360" layoutX="1552.0" layoutY="711.0">
-<!--
+
          <image>
             <Image url="/Polytechnic/Imgs/image.png" />
          </image>
--->
+
       </ImageView>
       <ImageView fitHeight="360" fitWidth="360" layoutX="6.0" layoutY="713.0">
-<!--
+
                   <image>
                      <Image url="/Polytechnic/Imgs/image_6.png" />
                   </image>
--->
+
       </ImageView>
       <AnchorPane fx:id="currentComponent" layoutX="1161.0" layoutY="299.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E52B50;" />
    </children>

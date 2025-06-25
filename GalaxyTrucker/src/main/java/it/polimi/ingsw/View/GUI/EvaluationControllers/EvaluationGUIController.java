@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class EvaluationGUIController extends GUIController implements PlayerInputSetter {
 
@@ -16,6 +18,8 @@ public class EvaluationGUIController extends GUIController implements PlayerInpu
 
     @FXML
     Button button;
+
+    @FXML private AnchorPane root;
 
 
     public void initialize(){

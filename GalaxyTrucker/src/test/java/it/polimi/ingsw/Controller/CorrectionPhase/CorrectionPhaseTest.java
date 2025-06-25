@@ -125,7 +125,6 @@ class CorrectionPhaseTest {
 
     @Test
     void timeoutDuringCrewSelection() throws NotPermittedPlacementException, IllegalSelectionException {
-        // test alien selected 2x, no support nearby, wrong inputs until trials exhausted (5)
         shipBoard.addComponent(6, 7, new AlienSupport(universalSides, true));
         shipBoard.addComponent(8, 7, new AlienSupport(universalSides, false));
         shipBoard.addComponent(6, 6, new Cabin(universalSides, CrewType.Human, 2));
