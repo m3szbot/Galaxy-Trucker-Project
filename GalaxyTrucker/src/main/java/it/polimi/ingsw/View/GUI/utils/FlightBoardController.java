@@ -58,6 +58,12 @@ public class FlightBoardController {
 
     public void populateFlightBoard(FlightBoard flightBoard){
 
+        //clearing the flightboard
+
+        for(TilePane tilePane: positionMap.values()){
+            tilePane.getChildren().clear();
+        }
+
         for (Player player : flightBoard.getPlayerOrderList()) {
 
             int pos = flightBoard.getPlayerTile(player);
@@ -92,7 +98,6 @@ public class FlightBoardController {
 
             triangle.setFill(Color.valueOf(player.getColor().toString()));
 
-            tilePane.getChildren().clear();
             tilePane.getChildren().add(triangle);
         }
     }

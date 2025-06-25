@@ -93,8 +93,9 @@ public class GUIView extends GeneralView {
 
     @Override
     public void printMessage(String message) {
-
-        guiController.refreshConsole(message);
+        FXUtil.runOnFXThread(() -> {
+            guiController.refreshConsole(message);
+        });
 
     }
 

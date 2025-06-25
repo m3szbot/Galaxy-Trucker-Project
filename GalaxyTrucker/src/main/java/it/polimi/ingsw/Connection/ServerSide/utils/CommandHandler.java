@@ -31,6 +31,9 @@ public final class CommandHandler {
             case "public-message"->{
                 return (new ChatUtil(playerMessenger)).startPublicMessageHandler();
             }
+            case "refresh" -> {
+                return (new ShipBoardRefresher()) .start(playerMessenger);
+            }
             default -> {
                 return "repeat";
             }
