@@ -22,6 +22,9 @@ public class ShipBoardTest {
     // components sides
     SideType[] smoothSides = new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth};
     SideType[] smoothSidesUniversalRight = new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth};
+    SideType[] smoothSidesUniversalLeft = new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Universal};
+    SideType[] smoothSidesUniversalFront = new SideType[]{SideType.Universal, SideType.Smooth, SideType.Smooth, SideType.Smooth};
+    SideType[] smoothSidesUniversalBack = new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Universal, SideType.Smooth};
     SideType[] singleSides = new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Single};
     SideType[] doubleSides = new SideType[]{SideType.Double, SideType.Double, SideType.Double, SideType.Double};
     SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
@@ -1056,6 +1059,46 @@ public class ShipBoardTest {
 
         assertEquals(1, shipBoard.getShipBoardAttributes().getSingleCannonPower());
 
+    }
+
+    @Test
+    void testDisconnectedSmoothCabin() throws NotPermittedPlacementException, IllegalSelectionException {
+        // 2 cabins with components attached but not connected
+        shipBoard.addComponent(6, 7, new Component(smoothSidesUniversalRight));
+        shipBoard.addComponent(6, 8, new Cabin(smoothSides, CrewType.Human, 2));
+
+        generalViewTUI.printShipboard(shipBoard);
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.checkFracturedShipBoard();
+        });
+    }
+
+    @Test
+    void test2DisconnectedCabinWithConnectionsError() throws NotPermittedPlacementException, IllegalSelectionException {
+        // 2 cabins with components attached but not connected
+        shipBoard.addComponent(6, 7, new Component(smoothSidesUniversalRight));
+        shipBoard.addComponent(6, 8, new Cabin(smoothSidesUniversalLeft, CrewType.Human, 2));
+        shipBoard.addComponent(5, 8, new Component(smoothSidesUniversalRight));
+
+        generalViewTUI.printShipboard(shipBoard);
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.checkFracturedShipBoard();
+        });
+    }
+
+    @Test
+    void test3DisconnectedCabinWithConnectionsError() throws NotPermittedPlacementException, IllegalSelectionException {
+        // 2 cabins with components attached but not connected
+        shipBoard.addComponent(6, 7, new Component(smoothSidesUniversalRight));
+        shipBoard.addComponent(6, 8, new Cabin(smoothSidesUniversalLeft, CrewType.Human, 2));
+        shipBoard.addComponent(5, 8, new Component(smoothSidesUniversalRight));
+        shipBoard.addComponent(5, 7, new Cabin(smoothSidesUniversalLeft, CrewType.Human, 2));
+        shipBoard.addComponent(4, 7, new Component(smoothSidesUniversalRight));
+
+        generalViewTUI.printShipboard(shipBoard);
+        assertThrows(FracturedShipBoardException.class, () -> {
+            shipBoard.checkFracturedShipBoard();
+        });
     }
 
     @Test
