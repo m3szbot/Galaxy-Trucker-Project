@@ -5,11 +5,10 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.EvaluationControllers.EvaluationGUIController">
+<AnchorPane fx:id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.EvaluationControllers.EvaluationGUIController">
    <children>
-      <TextArea fx:id="console" editable="false" layoutX="100.0" layoutY="200.0" prefHeight="400.0" prefWidth="600.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;" />
-      <Label alignment="CENTER" layoutX="344.0" layoutY="153.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="CONSOLE" />
-      <Button fx:id="button" layoutX="376.0" layoutY="643.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="QUIT" />
+      <TextArea fx:id="console" editable="false" layoutX="665.0" layoutY="341.0" prefHeight="400.0" prefWidth="600.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;" />
+      <Label alignment="CENTER" layoutX="909.0" layoutY="310.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="CONSOLE" />
+      <Button fx:id="button" layoutX="941.0" layoutY="784.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="QUIT" />
    </children>
 </AnchorPane>

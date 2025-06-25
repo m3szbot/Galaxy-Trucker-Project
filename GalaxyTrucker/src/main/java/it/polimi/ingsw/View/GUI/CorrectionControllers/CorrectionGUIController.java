@@ -79,7 +79,7 @@ public class CorrectionGUIController extends GUIController implements PlayerInpu
     }
 
     public String getBackgroundImage() {
-        return null;
+        return "/Polytechnic/Imgs/correction_background.png";
     }
 }
 

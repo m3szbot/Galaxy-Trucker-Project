@@ -62,7 +62,7 @@ public class EvaluationGUIController extends GUIController implements PlayerInpu
     }
 
     public String getBackgroundImage() {
-        return null;
+        return "/Polytechnic/Imgs/evaluation_background.png";
     }
 }
 
