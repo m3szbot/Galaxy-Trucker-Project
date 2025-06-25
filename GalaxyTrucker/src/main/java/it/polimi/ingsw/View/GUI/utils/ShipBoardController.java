@@ -86,7 +86,7 @@ public class ShipBoardController {
                         // skip first and last columns (no components)
                         if (realCol >= ShipBoard.FIRST_REAL_COL + 1 && realCol <= ShipBoard.LAST_REAL_COL - 1)
                             // gridCol 0 - visibleCol 5 - realCol 4
-                            gridPane.add(cellPane, realCol - ShipBoard.FIRST_REAL_COL - 1, realRow - ShipBoard.FIRST_REAL_ROW);
+                            gridPane.add(cellPane, realCol - ShipBoard.FIRST_REAL_COL - 1, realRow - ShipBoard.FIRST_REAL_ROW - 1);
                     }
 
                 }
@@ -103,7 +103,7 @@ public class ShipBoardController {
 
         // component image
         ImageView imageView = new ImageView(componentImagePath);
-        imageView.setRotate(90 * rotations);
+        imageView.setRotate(90 *  rotations);
         imageView.setFitWidth(TILE_SIZE);
         imageView.setFitHeight(TILE_SIZE);
         imageView.setPreserveRatio(true);
