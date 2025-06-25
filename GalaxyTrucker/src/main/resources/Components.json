@@ -882,7 +882,7 @@
   {
     "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web43.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "crewType": "Human",
     "numberOfCurrentInhabitants": 2,
     "sides": [
@@ -921,7 +921,7 @@
   {
     "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web48.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "crewType": "Human",
     "numberOfCurrentInhabitants": 2,
     "sides": [
@@ -934,7 +934,7 @@
   {
     "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web37.jpg",
-    "rotations": 3,
+    "rotations": 1,
     "crewType": "Human",
     "numberOfCurrentInhabitants": 2,
     "sides": [
@@ -947,7 +947,7 @@
   {
     "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web49.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "crewType": "Human",
     "numberOfCurrentInhabitants": 2,
     "sides": [
@@ -986,7 +986,7 @@
   {
     "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web50.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "crewType": "Human",
     "numberOfCurrentInhabitants": 2,
     "sides": [
@@ -1090,7 +1090,7 @@
   {
     "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web44.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "crewType": "Human",
     "numberOfCurrentInhabitants": 2,
     "sides": [
@@ -1116,7 +1116,7 @@
   {
     "name": "Storage",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web67.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "isRed": true,
     "numberOfMaximumElements": 1,
     "sides": [
@@ -1206,8 +1206,21 @@
   },
   {
     "name": "Storage",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web70.jpg",
+    "rotations": 0,
+    "isRed": true,
+    "numberOfMaximumElements": 2,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Double"
+    ]
+  },
+  {
+    "name": "Storage",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web18.jpg",
-    "rotations": 3,
+    "rotations": 1,
     "isRed": false,
     "numberOfMaximumElements": 2,
     "sides": [
@@ -1246,7 +1259,7 @@
   {
     "name": "Storage",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web26.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "isRed": false,
     "numberOfMaximumElements": 2,
     "sides": [
@@ -1272,7 +1285,7 @@
   {
     "name": "Storage",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web19.jpg",
-    "rotations": 3,
+    "rotations": 1,
     "isRed": false,
     "numberOfMaximumElements": 2,
     "sides": [
@@ -1311,26 +1324,13 @@
   {
     "name": "Storage",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web25.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "isRed": false,
     "numberOfMaximumElements": 2,
     "sides": [
       "Single",
       "Double",
       "Universal",
-      "Double"
-    ]
-  },
-  {
-    "name": "Storage",
-    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web70.jpg",
-    "rotations": 0,
-    "isRed": true,
-    "numberOfMaximumElements": 2,
-    "sides": [
-      "Smooth",
-      "Smooth",
-      "Smooth",
       "Double"
     ]
   },
@@ -1376,7 +1376,7 @@
   {
     "name": "Storage",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web32.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "isRed": false,
     "numberOfMaximumElements": 3,
     "sides": [
@@ -1402,7 +1402,7 @@
   {
     "name": "Storage",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web31.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "isRed": false,
     "numberOfMaximumElements": 3,
     "sides": [
@@ -1439,7 +1439,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web11.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "numberOfCurrentBatteries": 2,
     "sides": [
       "Smooth",
@@ -1451,7 +1451,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web7.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "numberOfCurrentBatteries": 2,
     "sides": [
       "Double",
@@ -1463,7 +1463,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web3.jpg",
-    "rotations": 3,
+    "rotations": 1,
     "numberOfCurrentBatteries": 2,
     "sides": [
       "Smooth",
@@ -1475,7 +1475,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web5.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "numberOfCurrentBatteries": 2,
     "sides": [
       "Smooth",
@@ -1499,7 +1499,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web.jpg",
-    "rotations": 3,
+    "rotations": 1,
     "numberOfCurrentBatteries": 2,
     "sides": [
       "Smooth",
@@ -1511,7 +1511,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web6.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "numberOfCurrentBatteries": 2,
     "sides": [
       "Single",
@@ -1559,7 +1559,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web13.jpg",
-    "rotations": 3,
+    "rotations": 1,
     "numberOfCurrentBatteries": 3,
     "sides": [
       "Smooth",
@@ -1571,7 +1571,7 @@
   {
     "name": "Battery",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web12.jpg",
-    "rotations": 3,
+    "rotations": 1,
     "numberOfCurrentBatteries": 3,
     "sides": [
       "Smooth",
@@ -1759,7 +1759,7 @@
   {
     "name": "AlienSupport",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web142.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "purple": false,
     "sides": [
       "Smooth",
@@ -1771,7 +1771,7 @@
   {
     "name": "AlienSupport",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web139.jpg",
-    "rotations": 0,
+    "rotations": 2,
     "purple": false,
     "sides": [
       "Smooth",
@@ -1843,7 +1843,7 @@
   {
     "name": "AlienSupport",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web148.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "purple": true,
     "sides": [
       "Smooth",

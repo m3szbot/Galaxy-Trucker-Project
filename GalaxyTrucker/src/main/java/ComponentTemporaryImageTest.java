@@ -24,34 +24,31 @@ public class ComponentTemporaryImageTest extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
 
         List<Component> componentList = getJSONComponents();
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
 
-        for(Component component: componentList){
+        for (Component component : componentList) {
 
             HBox hBox = new HBox(10);
             hBox.setAlignment(Pos.CENTER_LEFT);
 
-            System.out.println("Component: " + component.getComponentName() +
-                    " | Image: " + component.getImagePath() +
-                    " | rotations: " + component.getRotations());
+            System.out.println(component.getImagePath() + " | rotations: " + component.getRotations());
             ComponentVisitor<String, RuntimeException> visitor = new ComponentStringGetterVisitor();
             String componentString = component.accept(visitor);
             System.out.printf(componentString);
 
             Image image = new Image(component.getImagePath());
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(50);
+            imageView.setFitWidth(100);
+            imageView.setFitHeight(100);
             imageView.setPreserveRatio(true);
             imageView.setRotate(90 * component.getRotations());
 
             // label nome
-            Label label = new Label(component.getComponentName() + " | rot: " + component.getRotations() +
-                    " | imagePath: " + component.getImagePath());
+            Label label = new Label(component.getImagePath() + " | rotations: " + component.getRotations());
 
             hBox.getChildren().addAll(imageView, label);
             root.getChildren().add(hBox);
@@ -67,7 +64,7 @@ public class ComponentTemporaryImageTest extends Application {
 
     }
 
-    private List<Component> getJSONComponents(){
+    private List<Component> getJSONComponents() {
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -93,7 +90,7 @@ public class ComponentTemporaryImageTest extends Application {
 
             );
 
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Error while reading components from the JSON file");
             return null;
         }
