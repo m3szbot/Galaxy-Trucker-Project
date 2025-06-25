@@ -150,5 +150,16 @@ class CorrectionPhaseTest {
         assertEquals(1, flightBoard.getPlayerOrderList().size());
     }
 
+    @Test
+    void timeoutDuringFracturedShipBoardWithNoErrors() throws NotPermittedPlacementException, IllegalSelectionException {
+        shipBoard.addComponent(6, 7, new Component(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth}));
+        shipBoard.addComponent(6, 8, new Cabin(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Universal}, CrewType.Human, 2));
+        shipBoard.addComponent(5, 8, new Component(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth}));
+
+        correctionPhase.start();
+
+        assertEquals(0, flightBoard.getPlayerOrderList().size());
+    }
+
 
 }
