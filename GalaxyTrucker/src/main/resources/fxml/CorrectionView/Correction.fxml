@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="1080.0" prefWidth="1000.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.CorrectionControllers.CorrectionGUIController">
+<AnchorPane fx:id="root" prefHeight="1080.0" prefWidth="1000.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.CorrectionControllers.CorrectionGUIController">
    <children>
       <AnchorPane fx:id="shipBoardPane" layoutX="50.0" layoutY="30.0" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #2c003e;" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="324.0" layoutY="-2.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="SHIPBOARD" />
