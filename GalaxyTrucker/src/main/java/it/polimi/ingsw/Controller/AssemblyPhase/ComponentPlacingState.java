@@ -74,91 +74,91 @@ public class ComponentPlacingState extends GameState {
                 String message = "Not valid format!";
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-            }
+            }else {
+                // valid coordinates
+                try {
+                    int num1 = Integer.parseInt(parts[0]);
+                    int num2 = Integer.parseInt(parts[1]);
 
-            // valid coordinates
-            try {
-                int num1 = Integer.parseInt(parts[0]);
-                int num2 = Integer.parseInt(parts[1]);
-
-                // coordinates out of bounds
-                if (!ShipBoard.checkCoordinatesInBounds(num1, num2)) {
-                    String message = "Placing position out of bounds!";
-                    playerMessenger.printMessage(message);
-                    if (booked) {
-                        try {
-                            assemblyProtocol.bookComponent(player);
-                        } catch (IllegalSelectionException e) {
-                            playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
-                        }
-                    }
-                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-                }
-
-                // coordinates in bounds
-                else {
-                    // component in hand
-                    if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
-                        ShipBoard playerShipboard = player.getShipBoard();
-                        // TODO delete checks, NotPermittedPlacement checked by shipboard
-                        // coordinate selected has neighbours
-                        if (playerShipboard.checkNotEmptyNeighbors(ShipBoard.getRealIndex(num1), ShipBoard.getRealIndex(num2))) {
+                    // coordinates out of bounds
+                    if (!ShipBoard.checkCoordinatesInBounds(num1, num2)) {
+                        String message = "Placing position out of bounds!";
+                        playerMessenger.printMessage(message);
+                        if (booked) {
                             try {
-                                playerShipboard.addComponent(assemblyProtocol.getPlayersInHandComponents().get(player), num1, num2);
-                                // component is removed from hand (not put back into lists or booked)
-                                assemblyProtocol.removePlacedComponentFromHand(player);
-                                // get new component
+                                assemblyProtocol.bookComponent(player);
+                            } catch (IllegalSelectionException e) {
+                                playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
+                            }
+                        }
+                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                    }
+
+                    // coordinates in bounds
+                    else {
+                        // component in hand
+                        if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
+                            ShipBoard playerShipboard = player.getShipBoard();
+                            // TODO delete checks, NotPermittedPlacement checked by shipboard
+                            // coordinate selected has neighbours
+                            if (playerShipboard.checkNotEmptyNeighbors(ShipBoard.getRealIndex(num1), ShipBoard.getRealIndex(num2))) {
                                 try {
-                                    assemblyProtocol.newComponent(player);
-                                } catch (IllegalSelectionException e) {
-                                    playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
-                                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                                    playerShipboard.addComponent(assemblyProtocol.getPlayersInHandComponents().get(player), num1, num2);
+                                    // component is removed from hand (not put back into lists or booked)
+                                    assemblyProtocol.removePlacedComponentFromHand(player);
+                                    // get new component
+                                    try {
+                                        assemblyProtocol.newComponent(player);
+                                    } catch (IllegalSelectionException e) {
+                                        playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
+                                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                                    }
+                                }
+                                // not permitted placement
+                                catch (NotPermittedPlacementException e) {
+                                    String message = "Your are not allowed to place your component here";
+                                    playerMessenger.printMessage(message);
+                                    if (booked) {
+                                        try {
+                                            assemblyProtocol.bookComponent(player);
+                                        } catch (IllegalSelectionException er) {
+                                            playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
+                                        }
+                                    }
+                                }
+                                // coordinates out of bounds (already checked)
+                                catch (IllegalSelectionException e) {
+                                    playerMessenger.printMessage("I have seen a lot of strange things during my journey across the galaxy, but it's the first time that i see a ship taking off without a crew");
                                 }
                             }
-                            // not permitted placement
-                            catch (NotPermittedPlacementException e) {
-                                String message = "Your are not allowed to place your component here";
+                            // coordinate selected doesn't have neighbours
+                            else {
+                                String message = "You can't place your component here, it would float in the air";
                                 playerMessenger.printMessage(message);
                                 if (booked) {
                                     try {
                                         assemblyProtocol.bookComponent(player);
-                                    } catch (IllegalSelectionException er) {
+                                    } catch (IllegalSelectionException e) {
                                         playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
                                     }
                                 }
                             }
-                            // coordinates out of bounds (already checked)
-                            catch (IllegalSelectionException e) {
-                                playerMessenger.printMessage("I have seen a lot of strange things during my journey across the galaxy, but it's the first time that i see a ship taking off without a crew");
-                            }
+                            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                         }
-                        // coordinate selected doesn't have neighbours
+                        // no component in hand
                         else {
-                            String message = "You can't place your component here, it would float in the air";
+                            String message = "Your hand is empty";
                             playerMessenger.printMessage(message);
-                            if (booked) {
-                                try {
-                                    assemblyProtocol.bookComponent(player);
-                                } catch (IllegalSelectionException e) {
-                                    playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
-                                }
-                            }
+                            assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                         }
-                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-                    }
-                    // no component in hand
-                    else {
-                        String message = "Your hand is empty";
-                        playerMessenger.printMessage(message);
-                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     }
                 }
-            }
-            // cannot parse coordinates
-            catch (NumberFormatException e) {
-                String message = "Not valid format!";
-                playerMessenger.printMessage(message);
-                assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                // cannot parse coordinates
+                catch (NumberFormatException e) {
+                    String message = "Not valid format!";
+                    playerMessenger.printMessage(message);
+                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
+                }
             }
         }
     }
