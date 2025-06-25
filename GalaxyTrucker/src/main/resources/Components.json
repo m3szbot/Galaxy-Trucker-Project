@@ -46,7 +46,7 @@
   {
     "name": "Component",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web58.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "sides": [
       "Single",
       "Double",
@@ -79,7 +79,7 @@
   {
     "name": "Component",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web60.jpg",
-    "rotations": 1,
+    "rotations": 3,
     "sides": [
       "Double",
       "Double",
