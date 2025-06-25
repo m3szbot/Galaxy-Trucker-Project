@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.CorrectionPhase;
 
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Mocker;
 import it.polimi.ingsw.Model.Components.*;
@@ -8,7 +9,6 @@ import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.NotPermittedPlacementException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,11 +33,6 @@ class CorrectionPhaseTest {
         flightBoard = game.getGameInformation().getFlightBoard();
 
         flightBoard.addPlayer(player, 1);
-    }
-
-    @AfterEach
-    void tearDown() {
-        Mocker.endInputThread();
     }
 
     @Test
@@ -84,6 +79,10 @@ class CorrectionPhaseTest {
     @Test
     void timeoutDuringErrorCorrectionWithError() throws NotPermittedPlacementException, IllegalSelectionException {
         shipBoard.addComponent(smoothComponent, 7, 8);
+
+        // no input for timeout
+        assertNull(ClientInputManager.getSimulatedInput());
+
         correctionPhase.start();
 
         assertEquals(0, flightBoard.getPlayerOrderList().size());
@@ -130,6 +129,33 @@ class CorrectionPhaseTest {
         shipBoard.addComponent(6, 6, new Cabin(universalSides, CrewType.Human, 2));
         shipBoard.addComponent(8, 6, new Cabin(universalSides, CrewType.Human, 2));
         shipBoard.addComponent(9, 7, new Cabin(universalSides, CrewType.Human, 2));
+
+        // no input for timeout
+        assertNull(ClientInputManager.getSimulatedInput());
+
+        correctionPhase.start();
+
+        assertEquals(0, flightBoard.getPlayerOrderList().size());
+    }
+
+    @Test
+    void fracturedShipBoardWithNoErrors() throws NotPermittedPlacementException, IllegalSelectionException {
+        shipBoard.addComponent(6, 7, new Component(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth}));
+        shipBoard.addComponent(6, 8, new Cabin(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Universal}, CrewType.Human, 2));
+        shipBoard.addComponent(5, 8, new Component(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth}));
+
+        Mocker.simulateClientInput("0\n");
+        correctionPhase.start();
+
+        assertEquals(1, flightBoard.getPlayerOrderList().size());
+    }
+
+    @Test
+    void timeoutDuringFracturedShipBoardWithNoErrors() throws NotPermittedPlacementException, IllegalSelectionException {
+        shipBoard.addComponent(6, 7, new Component(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth}));
+        shipBoard.addComponent(6, 8, new Cabin(new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Universal}, CrewType.Human, 2));
+        shipBoard.addComponent(5, 8, new Component(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Smooth, SideType.Smooth}));
+
         correctionPhase.start();
 
         assertEquals(0, flightBoard.getPlayerOrderList().size());

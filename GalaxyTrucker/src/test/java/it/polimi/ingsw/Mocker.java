@@ -6,7 +6,6 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
-import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -16,7 +15,6 @@ import java.rmi.RemoteException;
 public abstract class Mocker {
     private static Thread inputThread;
 
-
     public static void simulateClientInput(String input) {
         inputThread = new Thread(() -> {
             ClientInputManager.setTestInput(input);
@@ -24,19 +22,15 @@ public abstract class Mocker {
         inputThread.start();
     }
 
-    public static void endInputThread() {
-        ClientInputManager.endTestInput();
-        Sleeper.sleepXSeconds(1);
-        if (inputThread.isAlive())
-            throw new IllegalStateException("Input thread didn't terminate.");
-    }
-
     /**
      * Set up a Game with gameType NORMALGAME, 1 player, GameMessenger and PlayerMessenger.
+     * Reset simulatedInput.
      *
      * @return
      */
     public static Game mockNormalGame1Player() {
+        resetInputSimulation();
+
         // find and keep correct setup order
         // setup Game
         int gameCode = 0;
@@ -62,10 +56,31 @@ public abstract class Mocker {
 
         game.setUpPhases();
 
+        // set timeout to 1 sec
+        ClientInputManager.setTimeOut(1000);
+
         return game;
     }
 
+    private static void resetInputSimulation() {
+        if (inputThread != null) {
+            ClientInputManager.endTestInput();
+
+            try {
+                // wait for previous input simulator thread to finish
+                inputThread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)
+            throw new IllegalStateException("The previous input simulation didn't finish yet.");
+    }
+
     public static Game mockNormalGame2Players() {
+        resetInputSimulation();
+
         // find and keep correct setup order
         // setup Game
         int gameCode = 1;

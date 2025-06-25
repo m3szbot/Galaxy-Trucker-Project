@@ -37,11 +37,6 @@ public class MockerTest {
         game1.run();
     }
 
-    @Test
-    void testShutDownInput() {
-        Mocker.simulateClientInput("a\n");
-        Mocker.endInputThread();
-    }
 
     @Test
     void testInput() throws PlayerDisconnectedException {
@@ -54,13 +49,15 @@ public class MockerTest {
 
     @Test
     void testInputReset() throws PlayerDisconnectedException {
+        Mocker.mockNormalGame1Player();
         Mocker.simulateClientInput("a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n");
         Sleeper.sleepXSeconds(1);
         assertTrue(ClientInputManager.getTestRunning());
         assertEquals("a", ClientInputManager.getSimulatedInput());
 
 
-        Mocker.endInputThread();
+        // input should be reset when creating a new mocked game
+        Mocker.mockNormalGame1Player();
         Sleeper.sleepXSeconds(1);
         assertFalse(ClientInputManager.getTestRunning());
         assertEquals(null, ClientInputManager.getSimulatedInput());
