@@ -35,7 +35,7 @@ public interface FirePowerChoice {
 
         }
 
-        if (forwardDoubleCannons + notForwardDoubleCannons > 0 && player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() > 0) {
+        if ((forwardDoubleCannons + notForwardDoubleCannons) > 0 && player.getShipBoard().getShipBoardAttributes().getRemainingBatteries() > 0) {
 
             //player can increase firePower
 
