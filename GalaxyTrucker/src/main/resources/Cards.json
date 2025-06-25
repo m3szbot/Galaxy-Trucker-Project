@@ -413,15 +413,15 @@
     "blowType": "CannonBlow",
     "blows": [
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": true
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
@@ -445,15 +445,15 @@
     "blowType": "CannonBlow",
     "blows": [
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": true
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
@@ -503,15 +503,15 @@
     "blowType": "Meteorite",
     "blows": [
       {
-        "direction": 2,
+        "direction": 0,
         "big": true
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": true
       }
     ],
@@ -523,11 +523,11 @@
     "blowType": "Meteorite",
     "blows": [
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
@@ -539,7 +539,7 @@
         "big": false
       },
       {
-        "direction": 0,
+        "direction": 2,
         "big": false
       }
     ],
@@ -551,7 +551,7 @@
     "blowType": "Meteorite",
     "blows": [
       {
-        "direction": 2,
+        "direction": 0,
         "big": true
       },
       {
@@ -571,23 +571,23 @@
     "blowType": "Meteorite",
     "blows": [
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 3,
+        "direction": 1,
         "big": true
       },
       {
-        "direction": 3,
+        "direction": 1,
         "big": false
       },
       {
-        "direction": 3,
+        "direction": 1,
         "big": false
       }
     ],
@@ -599,19 +599,19 @@
     "blowType": "Meteorite",
     "blows": [
       {
-        "direction": 2,
-        "big": true
-      },
-      {
-        "direction": 2,
+        "direction": 0,
         "big": true
       },
       {
         "direction": 0,
+        "big": true
+      },
+      {
+        "direction": 2,
         "big": false
       },
       {
-        "direction": 0,
+        "direction": 2,
         "big": false
       },
       {
@@ -627,23 +627,23 @@
     "blowType": "Meteorite",
     "blows": [
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 2,
+        "direction": 0,
         "big": false
       },
       {
-        "direction": 1,
+        "direction": 3,
         "big": true
       },
       {
-        "direction": 1,
+        "direction": 3,
         "big": false
       },
       {
-        "direction": 1,
+        "direction": 3,
         "big": false
       }
     ],

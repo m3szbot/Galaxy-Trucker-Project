@@ -243,13 +243,13 @@ public interface SufferBlows {
     private String directionSolver(int direction) {
 
         if (direction == 0) {
-            return "back";
-        } else if (direction == 1) {
-            return "left";
-        } else if (direction == 2) {
             return "front";
-        } else if (direction == 3) {
+        } else if (direction == 1) {
             return "right";
+        } else if (direction == 2) {
+            return "back";
+        } else if (direction == 3) {
+            return "left";
         } else {
             return null;
         }
