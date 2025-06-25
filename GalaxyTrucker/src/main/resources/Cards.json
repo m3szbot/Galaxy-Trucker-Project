@@ -64,7 +64,7 @@
   {
     "level": 2,
     "cardName": "AbandonedShip",
-    "daysLost": 1,
+    "daysLost": 2,
     "lossType": "CrewMember",
     "lossNumber": 5,
     "gainedCredits": 8,
@@ -82,9 +82,9 @@
     "requirementType": "CrewMember",
     "requirementNumber": 5,
     "goods": [
-      2,
       0,
-      0,
+      1,
+      1,
       0
     ],
     "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0119.jpg"
@@ -96,9 +96,9 @@
     "requirementType": "CrewMember",
     "requirementNumber": 6,
     "goods": [
+      2,
       0,
-      1,
-      1,
+      0,
       0
     ],
     "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0120.jpg"
@@ -470,6 +470,7 @@
   {
     "level": 1,
     "cardName": "Smugglers",
+    "daysLost": 1,
     "requirementType": "FirePower",
     "lossType": "Goods",
     "requirementNumber": 4,
@@ -485,6 +486,7 @@
   {
     "level": 2,
     "cardName": "Smugglers",
+    "daysLost": 1,
     "requirementType": "FirePower",
     "lossType": "Goods",
     "requirementNumber": 8,
@@ -652,11 +654,45 @@
   {
     "level": 1,
     "cardName": "CombatZone",
+    "daysLost": 3,
+    "lossType": "CrewMember",
+    "lossNumber": 2,
+    "blows": [
+      {
+        "direction": 2,
+        "big": false
+      },
+      {
+        "direction": 2,
+        "big": true
+      }
+    ],
     "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0116.jpg"
   },
   {
     "level": 2,
     "cardName": "CombatZone",
+    "daysLost": 4,
+    "lossType": "Goods",
+    "lossNumber": 3,
+    "blows": [
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 3,
+        "big": false
+      },
+      {
+        "direction": 1,
+        "big": true
+      },
+      {
+        "direction": 2,
+        "big": true
+      }
+    ],
     "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0116.jpg"
   }
 ]
