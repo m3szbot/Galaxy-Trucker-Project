@@ -1051,13 +1051,13 @@
   {
     "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web37.jpg",
-    "rotations": 1,
+    "rotations": 0,
     "crewType": "Human",
     "numberOfCurrentInhabitants": 2,
     "sides": [
-      "Smooth",
-      "Smooth",
       "Single",
+      "Single",
+      "Double",
       "Double"
     ]
   },
