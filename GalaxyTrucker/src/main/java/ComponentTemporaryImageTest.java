@@ -50,10 +50,12 @@ public class ComponentTemporaryImageTest extends Application {
             imageView.setRotate(90 * component.getRotations());
 
             // label nome
-            Label label = new Label(component.getComponentName() + " | rot: " + component.getRotations() +
+            Label label1 = new Label(component.getComponentName() + " | rot: " + component.getRotations() +
                     " | imagePath: " + component.getImagePath());
 
-            hBox.getChildren().addAll(imageView, label);
+            Label label2 = new Label(componentString);
+
+            hBox.getChildren().addAll(imageView, label1, label2);
             root.getChildren().add(hBox);
         }
 
