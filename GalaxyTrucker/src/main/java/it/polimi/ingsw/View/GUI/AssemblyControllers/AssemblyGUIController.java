@@ -43,8 +43,8 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
 
     private void processInput(String input) {
-        input = input.toLowerCase();
-        if(input.equals("show deck")){
+        input = input.trim().toLowerCase();
+        if(input.equals("show")){
             FXUtil.runOnFXThread(this::openDeckChoicePopup);
         }
     }
@@ -169,9 +169,9 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 1; i < 4; i++) {
                 int index = i;
-                Image image = new Image(getClass().getResource("/Polytechnic.cards.GT-cards_II_IT_0121.jpg").toExternalForm());
+                Image image = new Image(getClass().getResource("/Polytechnic/cards/GT-cards_II_IT_0121.jpg").toExternalForm());
                 ImageView imageView = new ImageView(image);
                 imageView.setFitWidth(100);
                 imageView.setFitHeight(100);
@@ -187,6 +187,7 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
                 container.getChildren().add(imageView);
             }
 
+            popupStage.toFront();
             popupStage.show();
 
         } catch (IOException ex) {
@@ -213,6 +214,7 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
                 popupStage.close();
                 deckContainer.getChildren().clear();
             });
+            popupStage.toFront();
             popupStage.show();
         }catch (IOException ex) {
             ex.printStackTrace();
