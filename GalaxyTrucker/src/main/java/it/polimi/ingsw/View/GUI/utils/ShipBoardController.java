@@ -33,6 +33,8 @@ public class ShipBoardController {
 
         Component[][] shipStructure = shipBoard.getComponentMatrix();
 
+        gridPane.getChildren().clear();
+
         for (int realCol = ShipBoard.FIRST_REAL_COL; realCol <= ShipBoard.LAST_REAL_COL; realCol++) {
             for (int realRow = ShipBoard.FIRST_REAL_ROW; realRow <= ShipBoard.LAST_REAL_ROW; realRow++) {
 
@@ -96,7 +98,7 @@ public class ShipBoardController {
 
         // component image
         ImageView imageView = new ImageView(componentImagePath);
-        imageView.setRotate(90 * rotations);
+        imageView.setRotate(90 *  rotations);
         imageView.setFitWidth(TILE_SIZE);
         imageView.setFitHeight(TILE_SIZE);
         imageView.setPreserveRatio(true);
