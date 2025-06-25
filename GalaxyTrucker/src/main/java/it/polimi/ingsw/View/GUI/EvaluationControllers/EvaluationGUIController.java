@@ -22,6 +22,7 @@ public class EvaluationGUIController extends GUIController implements PlayerInpu
 
         button.setOnAction(e -> {
             Platform.exit();
+            System.exit(0);
         });
 
     }

@@ -234,9 +234,11 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                         if (isCommand(input)) {
                             String result = CommandHandler.executeCommand(input, this);
+
                             if (result.equals("unblocked")) {
                                 return "unblocked";
                             }
+
                         } else if (input.equals("inactivity")) {
 
                             System.out.println("Player " + player.getColouredNickName() + " was kicked because of inactivity");
@@ -299,6 +301,9 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
                 return true;
             }
             case "public-message" -> {
+                return true;
+            }
+            case "refresh" -> {
                 return true;
             }
             default -> {

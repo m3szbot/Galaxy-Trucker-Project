@@ -75,6 +75,11 @@ public class GUIView extends GeneralView {
 
     }
 
+    private String stripAnsiCodes(String message) {
+        String ansiRegex = "\u001B\\[[0-9;]*m";
+        return message.replaceAll(ansiRegex, "");
+    }
+
     public void setGuiController(GUIController controller) {
         this.guiController = controller;
     }
@@ -94,7 +99,7 @@ public class GUIView extends GeneralView {
     @Override
     public void printMessage(String message) {
         FXUtil.runOnFXThread(() -> {
-            guiController.refreshConsole(message);
+            guiController.refreshConsole(stripAnsiCodes(message));
         });
 
     }
