@@ -440,7 +440,7 @@ public class ShipBoard implements Serializable {
                 // if component is present, check for errors
                 if (component != null) {
                     // check if connected to a neighbor
-                    if (!checkConnectedToNeighbor(realCol, realRow)) {
+                    if (!checkConnectedToAnyNeighbor(realCol, realRow)) {
                         errorsMatrix[realCol][realRow] = true;
                     }
 
@@ -490,7 +490,7 @@ public class ShipBoard implements Serializable {
      * @return true if component is connected to at least 1 neighbor, false if not.
      * @author Boti
      */
-    private boolean checkConnectedToNeighbor(int realCol, int realRow) {
+    private boolean checkConnectedToAnyNeighbor(int realCol, int realRow) {
         Component current = componentMatrix[realCol][realRow];
         Component temp;
 
@@ -657,7 +657,7 @@ public class ShipBoard implements Serializable {
      * @throws FracturedShipBoardException if the shipboard is fractured.
      * @author Boti
      */
-    private void checkFracturedShipBoard() throws FracturedShipBoardException {
+    public void checkFracturedShipBoard() throws FracturedShipBoardException {
         // map possible valid shipboards
         List<ShipBoard> validShipBoardsList = possibleShipBoardsMapper();
 
@@ -810,6 +810,7 @@ public class ShipBoard implements Serializable {
             neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    isConnector(currentComp.getFront()) &&
                     checkCompatibleJunction(currentComp.getFront(), neighborComp.getBack())) {
                 tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);
@@ -821,6 +822,7 @@ public class ShipBoard implements Serializable {
             neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    isConnector(currentComp.getBack()) &&
                     checkCompatibleJunction(currentComp.getBack(), neighborComp.getFront())) {
                 tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);
@@ -832,6 +834,7 @@ public class ShipBoard implements Serializable {
             neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    isConnector(currentComp.getLeft()) &&
                     checkCompatibleJunction(currentComp.getLeft(), neighborComp.getRight())) {
                 tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);
@@ -843,6 +846,7 @@ public class ShipBoard implements Serializable {
             neighborComp = getRealComponent(neighborCoord.getCol(), neighborCoord.getRow());
             // check not yet visited connected neighbor
             if (!visited.contains(neighborCoord) && neighborComp != null &&
+                    isConnector(currentComp.getRight()) &&
                     checkCompatibleJunction(currentComp.getRight(), neighborComp.getLeft())) {
                 tmpShipboard.componentMatrix[neighborCoord.getCol()][neighborCoord.getRow()] = neighborComp;
                 visited.add(neighborCoord);

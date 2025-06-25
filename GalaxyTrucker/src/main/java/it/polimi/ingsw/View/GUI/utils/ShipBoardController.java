@@ -34,6 +34,7 @@ public class ShipBoardController {
         Component[][] shipStructure = shipBoard.getComponentMatrix();
 
         gridPane.getChildren().clear();
+        boolean hasIndicators;
 
         for (int realCol = ShipBoard.FIRST_REAL_COL; realCol <= ShipBoard.LAST_REAL_COL; realCol++) {
             for (int realRow = ShipBoard.FIRST_REAL_ROW; realRow <= ShipBoard.LAST_REAL_ROW; realRow++) {
@@ -49,26 +50,30 @@ public class ShipBoardController {
 
                         numbers = ((Storage) component).getGoods();
                         colors = new Color[]{Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE};
+                        hasIndicators = true;
 
 
                     } else if (component.getComponentName().equals("Battery")) {
 
                         numbers = new int[]{((Battery) component).getBatteryPower()};
                         colors = new Color[]{Color.GREEN};
+                        hasIndicators = true;
 
                     } else if (component.getComponentName().equals("Cabin")) {
 
                         numbers = new int[]{((Cabin) component).getCrewMembers()};
                         colors = new Color[]{Color.WHITE};
+                        hasIndicators = true;
 
                     } else {
 
                         numbers = null;
                         colors = null;
+                        hasIndicators = false;
 
                     }
 
-                    AnchorPane cellPane = createTileWithIndicators(new Image(component.getImagePath()), numbers, colors, component.getRotations());
+                    AnchorPane cellPane = createTileWithIndicators(new Image(component.getImagePath()), numbers, colors, component.getRotations(), hasIndicators);
 
 
                     // NORMALGAME
@@ -81,7 +86,7 @@ public class ShipBoardController {
                         // skip first and last columns (no components)
                         if (realCol >= ShipBoard.FIRST_REAL_COL + 1 && realCol <= ShipBoard.LAST_REAL_COL - 1)
                             // gridCol 0 - visibleCol 5 - realCol 4
-                            gridPane.add(cellPane, realCol - ShipBoard.FIRST_REAL_COL - 1, realRow - ShipBoard.FIRST_REAL_ROW - 1);
+                            gridPane.add(cellPane, realCol - ShipBoard.FIRST_REAL_COL - 1, realRow - ShipBoard.FIRST_REAL_ROW);
                     }
 
                 }
@@ -91,23 +96,26 @@ public class ShipBoardController {
 
     }
 
-    private AnchorPane createTileWithIndicators(Image componentImagePath, int[] numbers, Color[] colors, int rotations) {
+    private AnchorPane createTileWithIndicators(Image componentImagePath, int[] numbers, Color[] colors, int rotations, boolean hasIndicators) {
 
         AnchorPane cellPane = new AnchorPane();
         cellPane.setPrefSize(TILE_SIZE, TILE_SIZE);
 
         // component image
         ImageView imageView = new ImageView(componentImagePath);
-        imageView.setRotate(90 *  rotations);
+        imageView.setRotate(90 * rotations);
         imageView.setFitWidth(TILE_SIZE);
         imageView.setFitHeight(TILE_SIZE);
         imageView.setPreserveRatio(true);
         AnchorPane.setTopAnchor(imageView, 0.0);
         AnchorPane.setLeftAnchor(imageView, 0.0);
 
+
         // VBox for the indicators
-        if (numbers != null && colors != null && numbers.length == colors.length && numbers.length > 0) {
-            VBox indicatorsBox = new VBox(5); // spacing tra indicatori
+
+        if (hasIndicators) {
+
+            VBox indicatorsBox = new VBox(5);
             indicatorsBox.setPadding(new Insets(5));
             indicatorsBox.setAlignment(Pos.TOP_LEFT);
             AnchorPane.setTopAnchor(indicatorsBox, 2.0);
@@ -124,7 +132,7 @@ public class ShipBoardController {
 
                 //number on the side
                 Label numberLabel = new Label(String.valueOf(numbers[i]));
-                numberLabel.setTextFill(Color.BLACK);
+                numberLabel.setTextFill(Color.ORANGE);
                 numberLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 11;");
 
                 //formatting the hbox
@@ -135,11 +143,11 @@ public class ShipBoardController {
             }
 
             //putting teh vbox on the top of the image
+            cellPane.getChildren().add(imageView);
             cellPane.getChildren().add(indicatorsBox);
+        } else {
+            cellPane.getChildren().add(imageView);
         }
-
-        //Adding the image to the background
-        cellPane.getChildren().add(imageView);
 
         return cellPane;
     }
