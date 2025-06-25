@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ClientInputManager {
 
     private static AtomicReference<String> userInput = new AtomicReference<>(null);
-    // default timeout value
+    // default timeout value: 1 sec
     private static long timeOut = 1000;
 
     // used for input simulation
