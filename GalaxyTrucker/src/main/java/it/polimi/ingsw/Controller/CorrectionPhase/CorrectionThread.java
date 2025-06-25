@@ -59,6 +59,7 @@ public class CorrectionThread implements Runnable {
         try {
             selectCrewTypes();
         } catch (PlayerDisconnectedException e) {
+            // disconnect player and end player thread
             gameMessenger.disconnectPlayer(player);
             return;
         }
