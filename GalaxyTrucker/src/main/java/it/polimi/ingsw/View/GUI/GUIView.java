@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.Components.Component;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+import it.polimi.ingsw.View.GUI.AssemblyControllers.AssemblyGUIController;
 import it.polimi.ingsw.View.GUI.utils.FXUtil;
 import it.polimi.ingsw.View.GUI.utils.FlightBoardController;
 import it.polimi.ingsw.View.GUI.utils.PaneBuilder;
@@ -39,11 +40,13 @@ public class GUIView extends GeneralView {
 
     private Pane shipBoardPane;
     private Pane flighBoardPane;
+    private GameType gameType;
 
     public void setGameType(GameType gameType){
 
         FXMLLoader shipBoardLoader;
         FXMLLoader flightBoardLoader;
+        this.gameType = gameType;
 
         try {
 
@@ -82,6 +85,9 @@ public class GUIView extends GeneralView {
 
     public void setGuiController(GUIController controller) {
         this.guiController = controller;
+        if(guiController instanceof AssemblyGUIController){
+            ((AssemblyGUIController)guiController).setGameType(gameType);
+        }
     }
 
 

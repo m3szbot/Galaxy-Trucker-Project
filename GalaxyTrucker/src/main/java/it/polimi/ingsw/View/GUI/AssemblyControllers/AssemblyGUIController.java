@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View.GUI.AssemblyControllers;
 
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.View.GUI.GUIController;
 import it.polimi.ingsw.View.GUI.PlayerInputSetter;
 import it.polimi.ingsw.View.GUI.utils.FXUtil;
@@ -39,6 +40,7 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
     @FXML private AnchorPane flightBoardPane;
     @FXML private AnchorPane root;
+    private GameType gameType;
 
 
 
@@ -47,6 +49,10 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
         if(input.equals("show")){
             FXUtil.runOnFXThread(this::openDeckChoicePopup);
         }
+    }
+
+    public void setGameType(GameType gameType){
+        this.gameType = gameType;
     }
 
     public void initialize(){
