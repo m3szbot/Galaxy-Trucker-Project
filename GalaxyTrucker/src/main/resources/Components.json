@@ -946,6 +946,19 @@
   },
   {
     "name": "Cabin",
+    "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web38.jpg",
+    "rotations": 3,
+    "crewType": "Human",
+    "numberOfCurrentInhabitants": 2,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
     "imagePath": "/Polytechnic/tiles/GT-new_tiles_16_for web49.jpg",
     "rotations": 3,
     "crewType": "Human",
