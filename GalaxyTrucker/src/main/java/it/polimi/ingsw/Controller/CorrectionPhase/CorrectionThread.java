@@ -52,6 +52,28 @@ public class CorrectionThread implements Runnable {
             return;
         }
 
+
+        // check for fracture (multiple disconnected parts with cabins)
+        try {
+            player.getShipBoard().checkFracturedShipBoard();
+        } catch (FracturedShipBoardException e) {
+            // shipboard fractured
+            try {
+                ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
+
+            } catch (PlayerDisconnectedException ex) {
+                // disconnect player and end player thread
+                gameMessenger.disconnectPlayer(player);
+                return;
+
+            } catch (NoHumanCrewLeftException ex) {
+                // force player to give up and end player thread
+                ExceptionsHandler.handleNoHumanCrewLeftException(gameMessenger, player, gameInformation.getFlightBoard());
+                return;
+            }
+        }
+        // potential fracture handled
+
         // errors corrected
         playerMessenger.printMessage("There are no errors in your shipboard.");
 
