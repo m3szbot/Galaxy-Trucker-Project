@@ -105,9 +105,11 @@ public class ShipBoardController {
         AnchorPane.setTopAnchor(imageView, 0.0);
         AnchorPane.setLeftAnchor(imageView, 0.0);
 
+        VBox indicatorsBox = new VBox(5);
+
         // VBox for the indicators
+
         if (numbers != null && colors != null && numbers.length == colors.length && numbers.length > 0) {
-            VBox indicatorsBox = new VBox(5); // spacing tra indicatori
             indicatorsBox.setPadding(new Insets(5));
             indicatorsBox.setAlignment(Pos.TOP_LEFT);
             AnchorPane.setTopAnchor(indicatorsBox, 2.0);
@@ -124,7 +126,7 @@ public class ShipBoardController {
 
                 //number on the side
                 Label numberLabel = new Label(String.valueOf(numbers[i]));
-                numberLabel.setTextFill(Color.BLACK);
+                numberLabel.setTextFill(Color.ORANGE);
                 numberLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 11;");
 
                 //formatting the hbox
@@ -135,11 +137,12 @@ public class ShipBoardController {
             }
 
             //putting teh vbox on the top of the image
-            cellPane.getChildren().add(indicatorsBox);
+            cellPane.getChildren().add(imageView);
         }
 
         //Adding the image to the background
-        cellPane.getChildren().add(imageView);
+
+        cellPane.getChildren().add(indicatorsBox);
 
         return cellPane;
     }
