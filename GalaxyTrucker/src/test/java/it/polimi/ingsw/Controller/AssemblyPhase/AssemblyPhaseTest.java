@@ -53,6 +53,20 @@ public class AssemblyPhaseTest {
     Player player = assemblyPhase.getGameInformation().getPlayerList().get(0);
 
 
+    @BeforeEach
+    void setup() {
+        game = Mocker.mockNormalGame1Player();
+        assemblyPhase = game.getAssemblyPhase();
+    }
+
+    @Test
+    void drawPlaceEnd() {
+        Mocker.simulateClientInput("draw\nplace\n7 8\nend\n1\n");
+
+        assemblyPhase.start();
+    }
+
+
     @Test
     public void bookComponent() {
         assemblyPhase.start();
