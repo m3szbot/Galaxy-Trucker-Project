@@ -1,10 +1,31 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Mocker;
 import it.polimi.ingsw.Model.ShipBoard.Player;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AssemblyPhaseTest {
     AssemblyPhase ass;
     Player gecky;
+
+    Game game;
+    AssemblyPhase assemblyPhase;
+
+    @BeforeEach
+    void setup() {
+        game = Mocker.mockNormalGame1Player();
+        assemblyPhase = game.getAssemblyPhase();
+    }
+
+    @Test
+    void drawPlaceEnd() {
+        Mocker.simulateClientInput("draw\nplace\n7 8\nend\n1\n");
+
+        assemblyPhase.start();
+    }
+
 /*
     @BeforeEach
     public void  createGameInformation(){
