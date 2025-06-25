@@ -111,8 +111,10 @@ public interface SufferBlows {
                     //If it finds a component that could be hit
                     coords[1] = i;
                     coords[0] = roll;
+                    break;
 
                 }
+
             }
 
         }
@@ -125,7 +127,9 @@ public interface SufferBlows {
                 if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(roll)) != null) {
                     coords[1] = roll;
                     coords[0] = i;
+                    break;
                 }
+
             }
 
         }
@@ -138,7 +142,9 @@ public interface SufferBlows {
                 if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(roll), ShipBoard.getVisibleIndex(i)) != null) {
                     coords[1] = i;
                     coords[0] = roll;
+                    break;
                 }
+
             }
 
         }
@@ -151,7 +157,9 @@ public interface SufferBlows {
                 if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(roll)) != null) {
                     coords[1] = roll;
                     coords[0] = i;
+                    break;
                 }
+
             }
 
         }
