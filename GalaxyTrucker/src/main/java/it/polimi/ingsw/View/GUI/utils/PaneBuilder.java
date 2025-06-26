@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 /**
  * Utility class which build the pane/imageView for each relevant element
@@ -29,11 +30,19 @@ public final class PaneBuilder {
         flightBoardController = controller;
     }
 
-    public static ImageView buildCardImage(Card card){
+    public static StackPane buildCardImage(Card card){
 
         Image cardImage = new Image(card.getCardImage());
         ImageView cardImageView = new ImageView(cardImage);
-        return cardImageView;
+        StackPane wrapper = new StackPane(cardImageView);
+        wrapper.setStyle("""
+        -fx-border-color: #007FFF;
+        -fx-border-width: 2px;
+        -fx-border-style: solid;
+        -fx-border-radius: 0;
+        -fx-background-radius: 0;
+    """);
+        return wrapper;
     }
 
     //to update to handle the rotation of the components
