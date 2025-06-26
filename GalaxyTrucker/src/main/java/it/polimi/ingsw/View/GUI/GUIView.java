@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.util.List;
 
 //TODO
 
@@ -42,10 +43,8 @@ public class GUIView extends GeneralView {
     private Pane flighBoardPane;
     private GameType gameType;
 
-    /**
-     * Set up the game type and the panes accordingly.
-     * @param gameType
-     */
+    private ShipBoard playerShipBoard;
+    private List<ShipBoard> possibleShipBoards;
 
     public void setGameType(GameType gameType) {
 
@@ -124,6 +123,21 @@ public class GUIView extends GeneralView {
 
     @Override
     public void printShipboard(ShipBoard shipBoard) {
+        /*
+        TODO
+        // fracture prints new possible shipboards
+        if (!shipBoard.equals(playerShipBoard)) {
+            // add possible shipboard to list
+            possibleShipBoards.add(shipBoard);
+        } else {
+            // original shipboard received, no fracture/fracture is over
+            if (!possibleShipBoards.isEmpty()) {
+                possibleShipBoards = new ArrayList<>();
+
+            }
+        }
+
+         */
 
         FXUtil.runOnFXThread(() -> {
 

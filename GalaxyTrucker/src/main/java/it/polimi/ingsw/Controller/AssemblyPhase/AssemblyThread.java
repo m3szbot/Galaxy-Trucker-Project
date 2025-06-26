@@ -13,6 +13,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * {@code AssemblyThread} manages the entire assembly phase for a single player,
+ * including state transitions, user input handling, and communication.
+ * Each player has their own thread during this phase.
+ */
 public class AssemblyThread implements Runnable {
     private final GameInformation gameInformation;
     private final Player associatedPlayer;
@@ -32,7 +37,15 @@ public class AssemblyThread implements Runnable {
     private AtomicBoolean blocked = new AtomicBoolean(false);
     private AtomicBoolean disconnected = new AtomicBoolean(false);
 
-
+    /**
+     * Constructs an {@code AssemblyThread} for a specific player.
+     *
+     * @param gameInformation     the game information shared across all players
+     * @param player              the player associated with this thread
+     * @param assemblyProtocol    the shared assembly protocol logic
+     * @param running             a flag controlling the loop of the assembly phase
+     * @param latch               a countdown latch used to coordinate thread termination
+     */
     public AssemblyThread(GameInformation gameInformation, Player player, AssemblyProtocol assemblyProtocol, AtomicBoolean running, CountDownLatch latch) {
         this.gameInformation = gameInformation;
         this.associatedPlayer = player;
@@ -86,6 +99,14 @@ public class AssemblyThread implements Runnable {
         return isfinished;
     }
 
+    /**
+     * Runs the assembly logic for the player:
+     * - Initializes state
+     * - Starts a separate input thread
+     * - Enters a loop to manage state and input
+     * - Handles final position choice
+     * - Ensures cleanup on termination
+     */
     @Override
     public void run() {
         try {

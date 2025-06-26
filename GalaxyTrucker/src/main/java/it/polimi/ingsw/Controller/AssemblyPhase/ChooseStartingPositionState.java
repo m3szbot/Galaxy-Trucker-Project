@@ -8,18 +8,32 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@code ChooseStartingPositionState} handles the state in which a player must choose
+ * a starting position on the flight board. It ensures input validation and updates the board.
+ */
 public class ChooseStartingPositionState extends GameState {
     // inherited attributes: assemblyProtocol, playerMessenger, player
     Boolean actionTaken;
     List<Integer> tiles;
 
     /**
-     * Constructor inherited from GameState.
+     * Constructs a new {@code ChooseStartingPositionState}.
+     *
+     * @param assemblyProtocol the shared assembly protocol logic
+     * @param playerMessenger  the messenger for communicating with the player
+     * @param player           the player who is choosing the starting position
      */
     public ChooseStartingPositionState(AssemblyProtocol assemblyProtocol, PlayerMessenger playerMessenger, Player player) {
         super(assemblyProtocol, playerMessenger, player);
     }
 
+    /**
+     * Called when the player enters this state.
+     * Displays the current flight board and prompts the player to choose a starting tile.
+     *
+     * @param assemblyThread the thread managing the current player's assembly phase
+     */
     @Override
     public void enter(AssemblyThread assemblyThread) {
         assemblyThread.getAmIChoosing().set(true);
@@ -38,6 +52,14 @@ public class ChooseStartingPositionState extends GameState {
         playerMessenger.printMessage(builder.toString());
     }
 
+    /**
+     * Handles the player's input to select a starting tile.
+     * Validates the input and attempts to place the player on the selected tile.
+     * On success, transitions to {@code AssemblingEndState}; otherwise, re-prompts the user.
+     *
+     * @param input           the input string from the player
+     * @param assemblyThread  the thread managing the current player's assembly phase
+     */
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {
         if (actionTaken) return;
