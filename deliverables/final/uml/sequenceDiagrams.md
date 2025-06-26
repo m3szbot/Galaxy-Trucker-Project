@@ -20,6 +20,12 @@ The 'makePlayerJoin' method returns false if the nickname of the client is alrea
 
 ![sequence diagram component placing](images/SequenceDiagramPlaceComponent.png)
 
-## Choose component from the covered list
+We have implemented the game-state pattern in the assembly phase. From the starting state of assemblyState we analise the inputs of the client and we move to the various states.
+
+The componentPlacingStates asks for the coordinates where the client wants to put his component. It handles user's input performing several checks to validate the provided coordinates and then calls the appropriate methods on the shipboard to update it.
+
+## Choose component from the uncovered list
 
 ![sequence diagram component choice](images/SequenceDiagramChooseComponent.png)
+
+"Choose" updates the state to componentPlacingState. The server provides the list of available components in the uncoveredComponents list of the assemblyProtocol and after controlling the validity of the input puts the chosen in player's hand.
