@@ -24,7 +24,7 @@ class GeneralViewTUITest {
      */
     GameInformation gameInformation;
     DataContainer dataContainer;
-    GeneralView generalViewTUI;
+    TUIView generalViewTUI;
     Random randomizer;
 
     SideType[] universalSides = new SideType[]{SideType.Universal, SideType.Universal, SideType.Universal, SideType.Universal};
