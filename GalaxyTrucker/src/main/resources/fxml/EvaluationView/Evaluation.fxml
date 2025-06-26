@@ -5,6 +5,10 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -12,8 +16,26 @@
 <AnchorPane fx:id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.EvaluationControllers.EvaluationGUIController">
    <children>
       <TextArea fx:id="console" editable="false" layoutX="603.0" layoutY="341.0" prefHeight="400.0" prefWidth="720.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d; -fx-font-size: 18px" />
-      <Label alignment="CENTER" layoutX="909.0" layoutY="310.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="CONSOLE" />
+      <Label alignment="CENTER" layoutX="909.0" layoutY="310.0" prefHeight="32.0" prefWidth="113.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;" text="Scoreboard" />
       <Button fx:id="button" layoutX="941.0" layoutY="784.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="QUIT" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="56.0" layoutX="557.0" layoutY="822.0" opacity="0.34" stroke="BLACK" strokeType="INSIDE" width="811.0">
+         <fill>
+            <LinearGradient endX="0.48218527315914483" endY="1.0" startX="0.48456057007125897">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.8775834441184998" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="0.6104928255081177" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
       <Text layoutX="664.0" layoutY="840.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All those moments will be lost in time, like tears in rain... Time to die... " wrappingWidth="603.20654296875">
          <font>
             <Font name="Helvetica Neue Bold" size="18.0" />
@@ -24,7 +46,7 @@
             <Font name="Helvetica Neue Bold" size="18.0" />
          </font>
       </Text>
-      <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="890.0" layoutY="897.0" pickOnBounds="true" preserveRatio="true" >
+      <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="890.0" layoutY="897.0" pickOnBounds="true" preserveRatio="true">
 
          <image>
             <Image url="/Polytechnic/Imgs/image2.png" />

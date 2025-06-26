@@ -22,6 +22,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * {@code AssemblyGUIController} is the JavaFX controller for the assembly phase GUI.
+ * It manages user interaction, input dispatching, popup management for deck selection,
+ * and GUI updates for the player's shipboard and selected components.
+ */
 public class AssemblyGUIController extends GUIController implements PlayerInputSetter {
     String input;
     private HBox deckContainer;
@@ -43,7 +48,11 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
     private GameType gameType;
 
 
-
+    /**
+     * Processes special user inputs such as "show".
+     *
+     * @param input the input text to process
+     */
     private void processInput(String input) {
         input = input.trim().toLowerCase();
         if(input.equals("show") && gameType.equals(GameType.NORMALGAME)){
@@ -51,10 +60,19 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
         }
     }
 
+    /**
+     * Sets the current game type for this session.
+     *
+     * @param gameType the current {@link GameType}
+     */
     public void setGameType(GameType gameType){
         this.gameType = gameType;
     }
 
+    /**
+     * Initializes the controller, wiring event handlers for the input field and button.
+     * Called automatically after the FXML is loaded.
+     */
     public void initialize(){
 
         button.setOnAction(actionEvent -> {
@@ -76,12 +94,22 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
     }
 
+    /**
+     * Appends a message to the console in a thread-safe way.
+     *
+     * @param message the message to display
+     */
     public void refreshConsole(String message){
 
         FXUtil.runOnFXThread(() -> console.appendText(message + "\n"));
 
     }
 
+    /**
+     * Replaces the current shipboard content with a new node.
+     *
+     * @param node the visual representation of the shipboard
+     */
     public void refreshShipBoard(Node node){
 
         FXUtil.runOnFXThread(() -> {
@@ -91,6 +119,11 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
     }
 
+    /**
+     * Replaces the current displayed component with a new one.
+     *
+     * @param node the node to be shown as current component
+     */
     public void refreshComponent(Node node){
 
         FXUtil.runOnFXThread(() -> {
@@ -100,12 +133,22 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
     }
 
+    /**
+     * Not used in this phase. Reserved for future use or compliance with interface.
+     *
+     * @param node unused
+     */
     public void refreshFlightBoard(Node node){
 
         //useless in this phase
 
     }
 
+    /**
+     * Adds a card node to the deck container.
+     *
+     * @param node the card node to be displayed
+     */
     public void refreshCard(Node node){
 
         FXUtil.runOnFXThread(() -> {
@@ -114,54 +157,10 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
 
     }
 
-    /*
-    public void printUncovered(List<Component> components){
-        openChoicePopup(components);
-    }
-
-    private void openChoicePopup(List<Component> components) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/componentChoicePopUp.fxml"));
-
-            AnchorPane popupRoot = loader.load();
-
-            ScrollPane scrollPane = (ScrollPane) popupRoot.lookup("#scrollPane");
-            VBox container = (VBox) popupRoot.lookup("#dynamicContainer");
-
-            Stage popupStage = new Stage();
-            sendData("Choose your component");
-            popupStage.setScene(new Scene(popupRoot));
-            popupStage.initModality(Modality.APPLICATION_MODAL);
-
-            //I dynamically add the components to the popup
-            for (int i = 0; i < components.size(); i++) {
-                int index = i;
-
-                ImageView imageView = new ImageView(new Image(getClass().getResource(components.get(i).getImgAddress()).toExternalForm()));
-                imageView.setFitWidth(50);
-                imageView.setFitHeight(50);
-                imageView.setPreserveRatio(true);
-
-                VBox wrapper = new VBox(imageView);
-                wrapper.setPadding(new Insets(10));
-                wrapper.setStyle("-fx-cursor: hand;");
-                wrapper.setOnMouseClicked(event -> {
-                    sendData(String.valueOf(index));
-                    popupStage.close();
-                });
-
-                container.getChildren().add(wrapper);
-
-            }
-
-            popupStage.show();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-    */
-
+    /**
+     * Opens a popup that allows the player to choose a deck to consult.
+     * When a deck is selected, it closes and opens the deck viewer.
+     */
     public void openDeckChoicePopup(){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/deckChoicePopUp.fxml"));
@@ -201,6 +200,10 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
         }
     }
 
+    /**
+     * Opens a popup to display the selected deck’s contents.
+     * Allows the player to close it once finished consulting.
+     */
     public void openShowDeckPopup(){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/showDeckPopUp.fxml"));
@@ -227,37 +230,13 @@ public class AssemblyGUIController extends GUIController implements PlayerInputS
         }
     }
 
+    /**
+     * Returns the relative path to the background image used in the assembly view.
+     *
+     * @return the background image path
+     */
     public String getBackgroundImage(){
         return("/Polytechnic/Imgs/image_5.png");
     }
-/*
-    public void openPositionChoicePopUp(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AssemblyView/PositionChoicePopUp.fxml"));
-        flightBoard.setImage(fly.getImgAddress()).toExternalForm();
 
-        if(fly.getImgAddress().equals("src/main/resources/Polytechnic/cardboard/cardboard-5.png")){
-            //TODO creation of starting position tiles
-            Tile1.setOnMouseClicked(event -> {
-                setUserInput("7");
-            });
-            Tile2.setOnMouseClicked(event -> {
-                setUserInput("4");
-            });
-            Tile3.setOnMouseClicked(event -> {
-                setUserInput("2");
-            });
-            Tile4.setOnMouseClicked(event -> {
-                setUserInput("1");
-            });
-
-        }else{
-            //TODO creation of starting position tiles in TestGame
-            Tile1T.setOnMouseClicked(event -> {setUserInput("5");});
-            Tile2T.setOnMouseClicked(event -> {setUserInput("3");});
-            Tile3T.setOnMouseClicked(event -> {setUserInput("2");});
-            Tile4T.setOnMouseClicked(event -> {setUserInput("1");});
-        }
-    }
-
-*/
 }

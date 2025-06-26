@@ -6,6 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.AssemblyControllers.AssemblyGUIController">
    <children>
       <TextArea fx:id="console" editable="false" layoutX="985.0" layoutY="533.0" prefHeight="240.0" prefWidth="720.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d; -fx-font-size: 18px" />
@@ -14,18 +15,18 @@
       <Button fx:id="button" layoutX="1299.0" layoutY="807.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text" />
 
       <ImageView fitHeight="360" fitWidth="360" layoutX="1552.0" layoutY="711.0">
-<!--
+
          <image>
             <Image url="/Polytechnic/Imgs/image.png" />
          </image>
--->
+
       </ImageView>
       <ImageView fitHeight="360" fitWidth="360" layoutX="6.0" layoutY="713.0">
-<!--
+
                                 <image>
                                    <Image url="/Polytechnic/Imgs/image_6.png" />
                                 </image>
--->
+
                     </ImageView>
                     <AnchorPane fx:id="currentComponent" layoutX="1243.0" layoutY="299.0" prefHeight="200.0" prefWidth="200.0" style=" -fx-border-color: #ffd93d; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-effect: dropshadow(gaussian, #ffd93d, 20, 0.8, 0, 0);" />
                  </children>
