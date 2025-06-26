@@ -48,7 +48,7 @@ public interface SufferBlows {
                 //Pause before each blow
                 Sleeper.sleepXSeconds(1);
 
-                componentCoordinates = findHitComponent(player, blow, componentCoordinates);
+                findHitComponent(player, blow, componentCoordinates);
 
                 if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
 
@@ -90,7 +90,7 @@ public interface SufferBlows {
         }
     }
 
-    private int[] findHitComponent(Player player, Blow blow, int[] coords) {
+    private void findHitComponent(Player player, Blow blow, int[] coords) {
 
         int rows = ShipBoard.ROWS;
         int cols = ShipBoard.COLS;
@@ -163,8 +163,6 @@ public interface SufferBlows {
             }
 
         }
-
-        return coords;
 
     }
 

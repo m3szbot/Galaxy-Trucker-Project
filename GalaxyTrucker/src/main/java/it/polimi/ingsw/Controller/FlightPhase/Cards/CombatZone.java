@@ -13,7 +13,7 @@ import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Class that represent the card combat
+ * Class that represents the card combat zone
  *
  * @author carlo
  */
