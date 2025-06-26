@@ -42,7 +42,7 @@ public class GUIView extends GeneralView {
     private Pane flighBoardPane;
     private GameType gameType;
 
-    public void setGameType(GameType gameType){
+    public void setGameType(GameType gameType) {
 
         FXMLLoader shipBoardLoader;
         FXMLLoader flightBoardLoader;
@@ -70,26 +70,19 @@ public class GUIView extends GeneralView {
 
             PaneBuilder.setShipBoardController(shipBoardLoader.getController());
             PaneBuilder.setFlightBoardController(flightBoardController);
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Error while loading fxml files in GUIView");
         }
 
 
-
-    }
-
-    private String stripAnsiCodes(String message) {
-        String ansiRegex = "\u001B\\[[0-9;]*m";
-        return message.replaceAll(ansiRegex, "");
     }
 
     public void setGuiController(GUIController controller) {
         this.guiController = controller;
-        if(guiController instanceof AssemblyGUIController){
-            ((AssemblyGUIController)guiController).setGameType(gameType);
+        if (guiController instanceof AssemblyGUIController) {
+            ((AssemblyGUIController) guiController).setGameType(gameType);
         }
     }
-
 
     @Override
     public void printMessage(DataContainer dataContainer) {
@@ -108,6 +101,11 @@ public class GUIView extends GeneralView {
             guiController.refreshConsole(stripAnsiCodes(message));
         });
 
+    }
+
+    private String stripAnsiCodes(String message) {
+        String ansiRegex = "\u001B\\[[0-9;]*m";
+        return message.replaceAll(ansiRegex, "");
     }
 
     @Override
@@ -153,10 +151,6 @@ public class GUIView extends GeneralView {
 
     }
 
-    @Override
-    public void printFullShipboard(ShipBoard shipBoard) {
-        //used only for testng by boti
-    }
 
     @Override
     public void printComponent(DataContainer dataContainer) {
@@ -173,10 +167,9 @@ public class GUIView extends GeneralView {
     @Override
     public void printShipboard(DataContainer dataContainer) {
 
-        if(dataContainer.getShipBoard() == null){
+        if (dataContainer.getShipBoard() == null) {
             throw new IllegalArgumentException("The DC does not contain a shipboard");
-        }
-        else{
+        } else {
             printShipboard(dataContainer.getShipBoard());
         }
 
@@ -196,9 +189,9 @@ public class GUIView extends GeneralView {
     @Override
     public void printFlightBoard(DataContainer dataContainer) {
 
-        if(dataContainer.getFlightBoard() == null){
+        if (dataContainer.getFlightBoard() == null) {
             throw new IllegalArgumentException("The DC does not contain a flight board");
-        } else{
+        } else {
             printFlightBoard(dataContainer.getFlightBoard());
         }
 

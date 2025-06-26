@@ -71,13 +71,13 @@ class GeneralViewTUITest {
     @Test
     public void printFullShipboard() {
         ShipBoard shipBoard = new ShipBoard(GameType.NORMALGAME, Color.RED);
-        generalViewTUI.printFullShipboard(shipBoard);
+        ((TUIView) generalViewTUI).printFullShipboard(shipBoard);
     }
 
     @Test
     public void printFullTestGameShipboard() {
         ShipBoard shipBoard = new ShipBoard(GameType.TESTGAME, Color.RED);
-        generalViewTUI.printFullShipboard(shipBoard);
+        ((TUIView) generalViewTUI).printFullShipboard(shipBoard);
     }
 
     @Test
