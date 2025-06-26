@@ -63,7 +63,6 @@ public class ShipBoard implements Serializable {
     private int centerCabinCol;
     private int centerCabinRow;
 
-
     /**
      * Constructs a ShipStructure instance.
      * Initializes the ship's structure matrix and determines valid component placement

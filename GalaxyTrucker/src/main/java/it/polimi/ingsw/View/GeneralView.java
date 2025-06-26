@@ -25,8 +25,6 @@ public abstract class GeneralView implements ViewServerInvokableMethods {
 
     public abstract void printFlightBoard(FlightBoard flightBoard);
 
-    public abstract void printFullShipboard(ShipBoard shipBoard);
-
     public abstract void printComponent(DataContainer dataContainer);
 
     public abstract void printShipboard(DataContainer dataContainer);

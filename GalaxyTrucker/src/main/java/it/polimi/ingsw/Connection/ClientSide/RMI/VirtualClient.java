@@ -49,7 +49,7 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
 
     }
 
-    public String getString() throws RemoteException {
+    public String getString() throws RemoteException{
 
         try {
 
