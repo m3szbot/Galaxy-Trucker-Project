@@ -300,35 +300,7 @@ public class GameInformation implements Serializable {
     /**
      * Creates component list and shuffles it.
      */
-    private void setUpComponents() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
 
-        // Serve ad ignorare le proprietà(campi) sconosciuti degli oggetti json con campi aggiuntivi
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        // Explicit registration of all subtypes
-        mapper.registerSubtypes(
-                AlienSupport.class,
-                Battery.class,
-                Cabin.class,
-                Cannon.class,
-                Component.class,
-                Engine.class,
-                Shield.class,
-                Storage.class
-        );
-
-        componentList = mapper.readValue(new File("src/main/resources/Components.json"),
-                mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
-        );
-
-        // filter out aliens for TESTGAME
-        if (gameType.equals(GameType.TESTGAME))
-            componentList = componentList.stream().filter(c -> !(c instanceof AlienSupport)).collect(Collectors.toList());
-
-        Collections.shuffle(componentList);
-
-    }
 
     /**
      * creates the flight board based on the game type
