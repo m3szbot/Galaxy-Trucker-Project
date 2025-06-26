@@ -19,7 +19,7 @@ public class GameStarter {
 
     /**
      * Starts the handler that handles the player communication with
-     * the server during the game
+     * the server during the game.
      *
      * @param clientInfo
      */

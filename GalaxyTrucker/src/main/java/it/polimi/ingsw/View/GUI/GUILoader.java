@@ -14,7 +14,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * Main class for the GUI.
+ * Main class for the GUI. When the GUI is closed, the all other threads are
+ * also terminated.
  *
  * @author carlo
  */

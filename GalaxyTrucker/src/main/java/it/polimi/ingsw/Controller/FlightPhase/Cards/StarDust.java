@@ -12,9 +12,10 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 //check that the count external junctions method in shipBoard does what it is supposed to do
 
 /**
- * class that represent the card StarDust.
+ * Class that represents the card StarDust.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class StarDust extends Card implements Movable {

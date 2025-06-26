@@ -8,8 +8,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+
+/**
+ * Controller of the evaluation gui during evaluation phase.
+ *
+ * @author carlo
+ */
 
 public class EvaluationGUIController extends GUIController implements PlayerInputSetter {
 

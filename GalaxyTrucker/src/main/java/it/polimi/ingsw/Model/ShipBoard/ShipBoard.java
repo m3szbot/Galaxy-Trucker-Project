@@ -39,6 +39,7 @@ public class ShipBoard implements Serializable {
             for (int realRow = ShipBoard.FIRST_REAL_ROW; realRow <= ShipBoard.LAST_REAL_ROW; realRow++) {
      */
 
+
     // the first real column and row that can contain components
     public static final int FIRST_REAL_COL = 3;
     public static final int FIRST_REAL_ROW = 4;

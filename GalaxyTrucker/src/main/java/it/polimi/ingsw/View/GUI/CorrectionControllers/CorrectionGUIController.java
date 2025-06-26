@@ -11,6 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * Controller of the controller gui during the controller phase
+ *
+ * @author carlo 
+ */
+
 public class CorrectionGUIController extends GUIController implements PlayerInputSetter {
     @FXML
     AnchorPane shipBoardPane;

@@ -3,8 +3,8 @@ package it.polimi.ingsw.Controller.FlightPhase.Cards;
 /**
  * Class that is used to initialize a card following the builder
  * pattern. Every class representing a card takes it as an input
- * for initialization. Used to create a card with recursive calls like
- * cardBuilder.buildCardLevel(cardLevel).eccetera.getBuiltCard();
+ * for initialization.
+ * Used to create a card with recursive calls.
  *
  * @author carlo
  */

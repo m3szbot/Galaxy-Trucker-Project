@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Class that contains all the gameMessenger. For each game there is
  * a gameMessenger associated with it, which is used to communicate with
- * the client
+ * the players.
  *
  * @author carlo
  */
@@ -22,6 +22,13 @@ public abstract class ClientMessenger {
     private static Server centralServer;
     private static Map<String, PlayerLobbyMessenger> playersInLobbyMessengerMap = new HashMap<>();
 
+    /**
+     * Creates a new playerLobbyMessenger for the nickname passed as parameter. The playerLobbyMessenger
+     * is then used by the server to communicate with that specific player while in lobby.
+     * @param nickName
+     * @param socketDataExchanger
+     */
+
     public static void addPlayerInLobby(String nickName, SocketDataExchanger socketDataExchanger) {
         playersInLobbyMessengerMap.put(nickName, new PlayerLobbyMessenger(socketDataExchanger, nickName));
     }
@@ -30,9 +37,21 @@ public abstract class ClientMessenger {
         playersInLobbyMessengerMap.put(nickname, new PlayerLobbyMessenger(virtualClient, nickname));
     }
 
+    /**
+     *
+     * @param nickname
+     * @return playerLobbyMessenger of the player with the nickname passed as parameter
+     */
+
     public static PlayerLobbyMessenger getPlayerLobbyMessenger(String nickname) {
         return playersInLobbyMessengerMap.get(nickname);
     }
+
+    /**
+     * To use when the player enters a game, this because during the game the server uses another
+     * messenger to communicate with the player.
+     * @param nickname
+     */
 
     public static void removePlayerLobbyMessenger(String nickname) {
 
@@ -40,8 +59,8 @@ public abstract class ClientMessenger {
     }
 
     /**
-     * when a new game is started, addGame must be called to add the gameMessenger for
-     * the game
+     * Create the gameMessenger associated with the game passed as parameter. The
+     * gameMessenger contains all the messengers of the players in game.
      *
      * @param gameCode of the added game
      */
@@ -68,6 +87,11 @@ public abstract class ClientMessenger {
     public static GameMessenger getGameMessenger(int gameCode) {
         return gameMessengerMap.get(gameCode);
     }
+
+    /**
+     * Removes the gameMessenger associated with the gameCode passed as parameters
+     * @param gameCode
+     */
 
     public static void endGame(int gameCode) {
         gameMessengerMap.remove(gameCode);

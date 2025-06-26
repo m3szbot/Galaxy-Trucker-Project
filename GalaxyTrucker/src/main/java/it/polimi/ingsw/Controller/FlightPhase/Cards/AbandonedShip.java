@@ -12,9 +12,10 @@ import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card abandonedShip
+ * class that represents the card abandonedShip
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class AbandonedShip extends Card implements Movable, TokenLoss, CreditsGain {

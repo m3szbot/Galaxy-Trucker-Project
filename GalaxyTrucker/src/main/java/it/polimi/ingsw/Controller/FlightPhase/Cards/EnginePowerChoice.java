@@ -8,10 +8,11 @@ import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Interface that defines a default method which let the player choose
- * its engine power.
+ * Interface that defines a default method which lets the player choose
+ * their engine power.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public interface EnginePowerChoice {
@@ -21,6 +22,7 @@ public interface EnginePowerChoice {
      * @param player target player
      * @return enginePower chosen.
      * @author Carlo
+     * @author Ludo
      */
 
     default int chooseEnginePower(Player player, GameInformation gameInformation) throws PlayerDisconnectedException {

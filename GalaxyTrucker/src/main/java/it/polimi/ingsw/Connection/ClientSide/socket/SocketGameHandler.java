@@ -26,6 +26,11 @@ public class SocketGameHandler {
 
     }
 
+    /**
+     * Method which starts the handler. The nickname is sent to the server
+     * to check if it is available or not, and, if available the game starter is executed.
+     * After the game starter has finished execution, network resources are freed.
+     */
 
     public void start() {
 
@@ -44,7 +49,7 @@ public class SocketGameHandler {
 
         try {
 
-            socketDataExchanger = setUpConnection(serverSocket);
+            socketDataExchanger = setUpStreams(serverSocket);
 
         } catch (IOException e) {
             System.err.println("Error while setting up streams");
@@ -65,6 +70,12 @@ public class SocketGameHandler {
         clientInfo.getDataExchanger().closeResources();
 
     }
+
+    /**
+     *
+     * @param socketDataExchanger
+     * @return true if the nickname is repeated, false otherwise.
+     */
 
     private boolean isNickNameRepeated(SocketDataExchanger socketDataExchanger){
 
@@ -90,8 +101,14 @@ public class SocketGameHandler {
 
     }
 
+    /**
+     * Setups the streams and pack them inside a class.
+     * @param serverSocket
+     * @return a class which contains all the streams beautifully packed and which offers methods to communicate
+     * @throws IOException
+     */
 
-    private SocketDataExchanger setUpConnection(Socket serverSocket) throws IOException{
+    private SocketDataExchanger setUpStreams(Socket serverSocket) throws IOException{
 
         SocketDataExchanger dataExchanger;
 

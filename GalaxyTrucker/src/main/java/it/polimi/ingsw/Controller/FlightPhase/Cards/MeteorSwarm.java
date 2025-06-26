@@ -14,9 +14,10 @@ import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Class that represent the card meteorswarm
+ * Class that represents the card meteor swarm
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class MeteorSwarm extends Card implements SufferBlows {

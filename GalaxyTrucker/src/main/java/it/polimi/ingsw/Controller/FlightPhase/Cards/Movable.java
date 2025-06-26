@@ -4,8 +4,8 @@ import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Interface that defines a default method which move the player
- * position on the flight board
+ * Interface that defines a default method which moves the player's
+ * position on the flight board.
  *
  * @author carlo
  */

@@ -22,9 +22,8 @@ public abstract class Card implements Serializable {
      * the method which is responsible for resolving the card.
      *
      * @return nothing
-     * @parameters array of players, the flightBoard to move the player for the
-     * lost days, the flightview which is responsible for the view part of the
-     * MVC.
+     * @parameters gameInformation, from which all the data structures
+     * needed to resolve the cards are taken.
      */
 
     public abstract void resolve(GameInformation gameInformation);

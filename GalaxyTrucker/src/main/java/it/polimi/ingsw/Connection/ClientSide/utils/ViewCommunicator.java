@@ -48,9 +48,11 @@ public class ViewCommunicator {
         return connectionType;
     }
 
-    public ViewType getViewType(){
-        return viewType;
-    }
+    /**
+     * Set up the gameType of the GUIView, as different type of fxml files
+     * will be selected based on it.
+     * @param gameType
+     */
 
     public void setGameType(GameType gameType){
 
@@ -65,6 +67,11 @@ public class ViewCommunicator {
 
 
     }
+
+    /**
+     * Set up the general gui controller
+     * @param generalGUIController
+     */
 
     public void setGeneralGUIController(GeneralGUIController generalGUIController){
         this.generalGUIController = generalGUIController;

@@ -26,6 +26,12 @@ public class FoeShipBoardPrinter {
 
     }
 
+    /**
+     * @return 'repeat' if the loop inside the getPlayerInput method of the messenger has to be repeated,
+     * 'unblocked' if the call must be unblocked (for example for thread termination).
+     * @throws PlayerDisconnectedException
+     */
+
     public String start() throws PlayerDisconnectedException {
 
         Player foe = null;

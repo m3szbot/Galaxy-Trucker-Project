@@ -13,9 +13,9 @@ public final class CommandHandler {
 
     /**
      *
-     * @param command
-     * @param playerMessenger
-     * @return true if the command was correct and executed
+     * @param command entered by the player
+     * @param playerMessenger of the player
+     * @return 'repeat' or 'unblocked'
      * @throws PlayerDisconnectedException
      */
     public static String executeCommand(String command, PlayerMessenger playerMessenger) throws PlayerDisconnectedException {

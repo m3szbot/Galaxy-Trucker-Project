@@ -10,7 +10,7 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import java.io.Serializable;
 
 /**
- * Bean class that contains all the possible object that the server
+ * Bean class that contains all the possible information that the server
  * could send to the client. Before sending information to the client
  * you must set his dataContainer accordingly.
  */

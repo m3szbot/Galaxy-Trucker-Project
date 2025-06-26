@@ -9,10 +9,11 @@ import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Interface that define a default method which handles a player being
- * inflicted a loss in terms of crew members or goods.
+ * Interface that defines a default method which handles a player being
+ * inflicted a loss.
  *
  * @author carlo
+ * @author Ludo
  */
 
 //Player can lose the game if the inhabitants are 0.
@@ -21,10 +22,17 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 public interface TokenLoss {
 
     /**
-     * @param player   target player
-     * @param lossType can be either inhabitants or goods
-     * @param quantity quantity of the loss
-     * @author Carlo
+     * Default method that uses three main private methods to inflict a loss on a player,
+     * either of crew members, goods or batteries.
+     *
+     * @param player
+     * @param lossType
+     * @param quantity
+     * @param gameInformation
+     * @throws NoHumanCrewLeftException
+     * @throws PlayerDisconnectedException
+     * @author Ludo
+     * @author carlo
      */
 
     default void inflictLoss(Player player, ElementType lossType, int quantity, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {

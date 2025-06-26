@@ -24,6 +24,13 @@ public class ChatUtil {
 
     }
 
+    /**
+     *
+     * @return 'repeat' if the loop inside the getPlayerInput method of the messenger has to be repeated,
+     * 'unblocked' if the call must be unblocked (for example for thread termination).
+     * @throws PlayerDisconnectedException
+     */
+
     public String startPrivateMessageHandler() throws PlayerDisconnectedException {
 
         Player targetPlayer = null;
@@ -87,6 +94,12 @@ public class ChatUtil {
 
         return "repeat";
     }
+
+    /**
+     * @return 'repeat' if the loop inside the getPlayerInput method of the messenger has to be repeated,
+     * 'unblocked' if the call must be unblocked (for example for thread termination).
+     * @throws PlayerDisconnectedException
+     */
 
     public String startPublicMessageHandler() throws PlayerDisconnectedException {
 

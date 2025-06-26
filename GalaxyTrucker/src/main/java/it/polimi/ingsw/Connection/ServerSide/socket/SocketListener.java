@@ -88,6 +88,13 @@ public class SocketListener implements Runnable {
 
     }
 
+    /**
+     * Set up the streams needed for communication and pack them into the object which is returned
+     * @param clientSocket
+     * @return SocketDataExchanger, an object encapsulating all the information needed for exchanging information
+     * @throws IOException
+     */
+
     private SocketDataExchanger setUpStreams(Socket clientSocket) throws IOException{
 
 
@@ -99,6 +106,12 @@ public class SocketListener implements Runnable {
         return new SocketDataExchanger(clientSocket, inputStream, outputStream);
 
     }
+
+    /**
+     *
+     * @param socketDataExchanger
+     * @return the player nickname
+     */
 
     private String getPlayerNickname(SocketDataExchanger socketDataExchanger){
 

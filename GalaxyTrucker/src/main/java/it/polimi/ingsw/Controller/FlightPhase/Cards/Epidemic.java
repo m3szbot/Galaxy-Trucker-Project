@@ -15,9 +15,10 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import java.util.List;
 
 /**
- * class that represent the card epidemic
+ * class that represents the card epidemic.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Epidemic extends Card {

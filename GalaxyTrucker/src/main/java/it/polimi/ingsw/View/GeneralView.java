@@ -8,7 +8,9 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 /**
  * Abstract class that defines the signature of all the method that will be overridden
- * by the TUIView and the gui controllers.
+ * by the TUIView and GUIView. All the methods have the same purpose, which is that of printing
+ * the passed parameter in case of a TUI implementation or passing the parameter packed as a Node
+ * to the guiController of the current phase in case of GUI implementation.
  */
 
 public abstract class GeneralView implements ViewServerInvokableMethods {
