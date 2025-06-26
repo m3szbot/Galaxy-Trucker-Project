@@ -299,12 +299,14 @@ public class GameInformation implements Serializable {
 
     /**
      * Creates component list and shuffles it.
+     *
+     * @author Ludo
      */
 
     private void setUpComponents() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        // Serve ad ignorare le proprietà(campi) sconosciuti degli oggetti json con campi aggiuntivi
+        // Needed to ignore unknown fields on the json
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         // Explicit registration of all subtypes
@@ -323,7 +325,7 @@ public class GameInformation implements Serializable {
                 mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
         );
 
-        // filter out aliens for TESTGAME
+        // filter out aliens for TEST GAME
         if (gameType.equals(GameType.TESTGAME))
             componentList = componentList.stream().filter(c -> !(c instanceof AlienSupport)).collect(Collectors.toList());
 
