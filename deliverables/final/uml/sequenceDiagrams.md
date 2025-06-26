@@ -15,3 +15,11 @@ The 'SocketGameHandler' class is istanciated and used directly by the 'Client' c
 The 'RMIGameHandler' class is istanciated and used directly by the 'Client' class.
 
 The 'makePlayerJoin' method returns false if the nickname of the client is already in use, true otherwise. False is returned immediately after the control and immediately ends the client execution, while true is returned after the client has joined a game, i.e, after the lobby phase is ended.  
+
+## Component placing on the shipboard
+
+![sequence diagram component placing](image/Sequence Diagram_ Place component.png)
+
+## Choose component from the covered list
+
+![sequence diagram component choice](image/Sequence Diagram_ Choose Component.png)
