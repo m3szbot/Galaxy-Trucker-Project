@@ -12,9 +12,10 @@ import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card smugglers
+ * Class that represents the card smugglers.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Smugglers extends AttackStatesSetting implements Movable, GoodsGain, TokenLoss, FirePowerChoice {

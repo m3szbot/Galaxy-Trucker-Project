@@ -15,6 +15,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  * Class representing the card pirates.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Pirates extends AttackStatesSetting implements SufferBlows, CreditsGain, Movable, FirePowerChoice {

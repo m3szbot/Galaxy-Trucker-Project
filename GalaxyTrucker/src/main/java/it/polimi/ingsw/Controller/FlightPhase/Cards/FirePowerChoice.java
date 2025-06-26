@@ -7,6 +7,13 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+/**
+ * Interface that defines a default method to choose a player's firepower.
+ *
+ * @author carlo
+ * @author Ludo
+ */
+
 public interface FirePowerChoice {
 
 
@@ -14,6 +21,7 @@ public interface FirePowerChoice {
      * @param player target player
      * @return firePower of the player
      * @author Carlo
+     * @author Ludo
      */
 
 

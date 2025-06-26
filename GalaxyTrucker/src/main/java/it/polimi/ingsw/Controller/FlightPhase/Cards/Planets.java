@@ -11,9 +11,10 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card planets
+ * Class that represents the card planets.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Planets extends Card implements GoodsGain, Movable {

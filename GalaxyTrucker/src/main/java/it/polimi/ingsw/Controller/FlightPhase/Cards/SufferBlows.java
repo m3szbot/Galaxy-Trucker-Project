@@ -16,24 +16,29 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 /**
- * Interface that define a default method which handles a player
- * being hit by a sequence of blows of a certain type.
+ * Interface that defines a default method which handles a player
+ * being hit by a sequence of blows of a given type.
  *
  * @author carlo
+ * @author Ludo
  */
-
-//Check that the remove method in shipboard does everything else, including checking if the ship was destroyed
-//in 2 different pieces. REMEMBER THIS
 
 public interface SufferBlows {
 
-    /**
-     * @param player   player that is being hit
-     * @param blows    array of blows that is hitting the player
-     * @param blowType type of blow
-     * @author Carlo
-     */
 
+    /**
+     * Default method that goes through all the blows, handling the possible scenarios.
+     * It uses a boolean to ascertain that a component was hit and destroyed.
+     *
+     * @param player
+     * @param blows
+     * @param blowType
+     * @param gameInformation
+     * @throws PlayerDisconnectedException
+     * @throws NoHumanCrewLeftException
+     * @author Ludo
+     * @author carlo
+     */
     default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
 
         int[] componentCoordinates = new int[2];
@@ -89,6 +94,14 @@ public interface SufferBlows {
             }
         }
     }
+
+    /**
+     * Method used to find a possible component to hit by the incoming blow.
+     *
+     * @param player
+     * @param blow
+     * @param coords
+     */
 
     private void findHitComponent(Player player, Blow blow, int[] coords) {
 

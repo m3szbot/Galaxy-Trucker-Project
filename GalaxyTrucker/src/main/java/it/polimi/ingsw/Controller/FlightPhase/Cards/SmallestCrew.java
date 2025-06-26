@@ -5,20 +5,22 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Interface that defines a default method which return
- * the player with the smallest crew members. If there are
- * ties, then the player which is most forward in the flight board
+ * Interface that defines a default method which returns
+ * the player with the smallest crew. If there are
+ * ties, the first of the tied players in the flight board
  * is selected.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public interface SmallestCrew {
 
     /**
      * @param gameInformation flight board of the current game
-     * @return the player with the smallest number of inhabitants on the ship
+     * @return the player with the smallest crew on the ship
      * @author Carlo
+     * @author Ludo
      */
 
     default Player calculateSmallestCrew(GameInformation gameInformation) {

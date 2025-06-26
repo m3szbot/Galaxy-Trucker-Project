@@ -11,9 +11,10 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card abandonedStation
+ * class that represents the card abandonedStation
  *
  * @author carlo
+ * @author Ludo
  */
 
 //check that the adding of requirementNumber doesn't compromise json file

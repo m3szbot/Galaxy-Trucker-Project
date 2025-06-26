@@ -3,7 +3,7 @@ package it.polimi.ingsw.Controller.FlightPhase.Cards;
 import java.io.Serializable;
 
 /**
- * Enumeration to express the element type
+ * Enumeration to express the element type used in game.
  *
  * @author carlo
  */

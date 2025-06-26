@@ -16,6 +16,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  * Class that represents the card combat zone
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movable, TokenLoss, EnginePowerChoice, FirePowerChoice {

@@ -13,6 +13,7 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
  * by the cards that attack the player one after the other in sequence
  *
  * @author carlo
+ * @author Ludo
  */
 
 public abstract class AttackStatesSetting extends Card implements FirePowerChoice {

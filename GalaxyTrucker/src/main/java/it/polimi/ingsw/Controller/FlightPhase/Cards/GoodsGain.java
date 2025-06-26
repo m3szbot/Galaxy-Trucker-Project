@@ -8,18 +8,23 @@ import it.polimi.ingsw.Model.IllegalSelectionException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Interface that define a method which handles a player receiving
- * a certain amount of goods
+ * Interface that defines a method which handles a player receiving
+ * a given amount of goods.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public interface GoodsGain {
 
     /**
+     * The method calls three private methods to handle all 3 possible actions to be
+     * taken by a player when given some goods: discarding, moving and placing.
+     *
      * @param player indicates the target player
      * @param goods  goods to give to the target player
      * @author Carlo
+     * @author Ludo
      */
 
     default void giveGoods(Player player, int[] goods, GameInformation gameInformation) throws PlayerDisconnectedException {

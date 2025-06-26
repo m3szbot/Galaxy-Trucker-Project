@@ -12,9 +12,10 @@ import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card slavers
+ * Class that represents the card slavers.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Slavers extends AttackStatesSetting implements CreditsGain, Movable, TokenLoss, FirePowerChoice {

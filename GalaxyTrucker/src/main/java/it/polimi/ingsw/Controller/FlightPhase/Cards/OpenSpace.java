@@ -11,9 +11,10 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * class that represent the card openspace
+ * class that represents the card open space.
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class OpenSpace extends Card implements Movable, EnginePowerChoice {

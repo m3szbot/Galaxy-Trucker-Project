@@ -3,8 +3,8 @@ package it.polimi.ingsw.Controller.FlightPhase.Cards;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 /**
- * Interface that define a default method which give to the selected player
- * the passed number of credits
+ * Interface that defines a default method which gives the
+ * given number of credits to the selected player.
  *
  * @author carlo
  */

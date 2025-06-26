@@ -9,6 +9,14 @@ import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
+/**
+ * Class of the flight phase of the game.
+ *
+ * @author Ludo
+ * @author carlo
+ * @author boti
+ */
+
 public class FlightPhase extends Phase {
 
     public FlightPhase(GameInformation gameInformation) {
