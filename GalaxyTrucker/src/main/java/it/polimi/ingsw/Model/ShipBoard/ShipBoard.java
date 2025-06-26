@@ -305,6 +305,7 @@ public class ShipBoard implements Serializable {
         // NORMALGAME
         if (gameType.equals(GameType.NORMALGAME)) {
             try {
+                /*
                 this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, true), 7, 8);
                 this.addComponent(new AlienSupport(universalSides, false), 6, 8);
 
@@ -337,6 +338,37 @@ public class ShipBoard implements Serializable {
                 this.addComponent(new Shield(new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Smooth}, 2, 3), 5, 6);
                 this.addComponent(new Engine(new SideType[]{SideType.Universal, SideType.Universal, SideType.Special, SideType.Universal}, false), 6, 9);
                 addComponent(new Cannon(new SideType[]{SideType.Universal, SideType.Special, SideType.Smooth, SideType.Universal}, false), 10, 9);
+                */
+                this.addComponent(new Engine("/Polytechnic/tiles/GT-new_tiles_16_for web95.jpg", 3 ,new SideType[]{SideType.Single, SideType.Smooth, SideType.Special, SideType.Smooth}, false), 5, 9);
+                this.addComponent(new Engine("/Polytechnic/tiles/GT-new_tiles_16_for web96.jpg",0,new SideType[]{SideType.Single, SideType.Single, SideType.Special, SideType.Single}, false), 7, 8);
+                this.addComponent(new Engine("/Polytechnic/tiles/GT-new_tiles_16_for web76.jpg", 0,new SideType[]{SideType.Double, SideType.Smooth, SideType.Special, SideType.Smooth}, true), 8, 9);
+                this.addComponent(new Engine("/Polytechnic/tiles/GT-new_tiles_16_for web77.jpg", 2,new SideType[]{SideType.Double, SideType.Smooth, SideType.Special, SideType.Smooth}, true), 9, 9);
+
+                this.addComponent(new Battery("/Polytechnic/tiles/GT-new_tiles_16_for web17.jpg",3,new SideType[]{SideType.Single, SideType.Smooth, SideType.Smooth, SideType.Smooth}, 3), 6, 9);
+                this.addComponent(new Battery("/Polytechnic/tiles/GT-new_tiles_16_for web6.jpg",2,new SideType[]{SideType.Universal, SideType.Single, SideType.Single, SideType.Single}, 2), 5, 8);
+                this.addComponent(new Battery("/Polytechnic/tiles/GT-new_tiles_16_for web4.jpg",2,new SideType[]{SideType.Double, SideType.Single, SideType.Double, SideType.Single}, 2), 8, 8);
+                this.addComponent(new Battery("/Polytechnic/tiles/GT-new_tiles_16_for web2.jpg",1,new SideType[]{SideType.Double, SideType.Smooth, SideType.Smooth, SideType.Universal}, 2), 10, 8);
+                this.addComponent(new Battery("/Polytechnic/tiles/GT-new_tiles_16_for web3.jpg",1,new SideType[]{SideType.Smooth, SideType.Universal, SideType.Double, SideType.Single}, 2), 6, 6);
+
+                this.addComponent(new Cannon("/Polytechnic/tiles/GT-new_tiles_16_for web113.jpg", 0, new SideType[]{SideType.Double, SideType.Single, SideType.Special, SideType.Smooth}, true), 4, 8);
+                this.addComponent(new Cannon("/Polytechnic/tiles/GT-new_tiles_16_for web130.jpg",1,new SideType[]{SideType.Smooth, SideType.Special, SideType.Universal, SideType.Double}, false), 10, 7);
+
+                this.addComponent(new Storage("/Polytechnic/tiles/GT-new_tiles_16_for web64.jpg",1,new SideType[]{SideType.Universal, SideType.Single, SideType.Single, SideType.Single}, true, 1), 6, 8);
+                this.addComponent(new Storage("/Polytechnic/tiles/GT-new_tiles_16_for web66.jpg",1,new SideType[]{SideType.Universal, SideType.Double, SideType.Double, SideType.Double}, true, 1), 8, 6);
+                this.addComponent(new Storage("/Polytechnic/tiles/GT-new_tiles_16_for web68.jpg",3,new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Single, SideType.Smooth}, true, 2), 8, 5);
+                this.addComponent(new Storage("/Polytechnic/tiles/GT-new_tiles_16_for web26.jpg",3,new SideType[]{SideType.Smooth, SideType.Universal, SideType.Universal, SideType.Smooth}, false, 2), 4, 7);
+
+                this.addComponent(new Component("/Polytechnic/tiles/GT-new_tiles_16_for web53.jpg",2,new SideType[]{SideType.Smooth, SideType.Single, SideType.Universal, SideType.Universal}), 9, 8);
+                this.addComponent(new Component("/Polytechnic/tiles/GT-new_tiles_16_for web55.jpg",3,new SideType[]{SideType.Universal, SideType.Single, SideType.Universal, SideType.Single}), 8, 7);
+
+                this.addComponent(new Cabin("/Polytechnic/tiles/GT-new_tiles_16_for web47.jpg",3,new SideType[]{SideType.Double, SideType.Double, SideType.Smooth, SideType.Universal}, CrewType.Human, 2), 9, 7);
+                this.addComponent(new Cabin("/Polytechnic/tiles/GT-new_tiles_16_for web36.jpg",0,new SideType[]{SideType.Single, SideType.Single, SideType.Single, SideType.Double}, CrewType.Human, 2), 5, 7);
+
+                this.addComponent(new Shield("/Polytechnic/tiles/GT-new_tiles_16_for web154.jpg",1, new SideType[]{SideType.Double, SideType.Single, SideType.Double, SideType.Single}, 2, 3), 6, 7);
+                this.addComponent(new Shield("/Polytechnic/tiles/GT-new_tiles_16_for web153.jpg",0,new SideType[]{SideType.Smooth, SideType.Double, SideType.Double, SideType.Double}, 0, 1), 7, 6);
+
+                this.addComponent(new AlienSupport("/Polytechnic/tiles/GT-new_tiles_16_for web146.jpg",0,new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Double, SideType.Universal}, true), 9, 6);
+                this.addComponent(new AlienSupport("/Polytechnic/tiles/GT-new_tiles_16_for web140.jpg",0,new SideType[]{SideType.Smooth, SideType.Universal, SideType.Single, SideType.Smooth}, false), 5, 6);
 
             } catch (NotPermittedPlacementException | IllegalSelectionException e) {
                 throw new IllegalStateException("The prebuilt shipboard has illegal placements.");
