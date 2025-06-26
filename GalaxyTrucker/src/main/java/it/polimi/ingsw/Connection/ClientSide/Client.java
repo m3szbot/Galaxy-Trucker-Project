@@ -14,7 +14,7 @@ import javafx.application.Application;
 
 /**
  * Client class. The client first enters config information and then
- * enters the lobby of the game where he will be able to join the game.
+ * enters the lobby where he will be able to join or create a game.
  *
  * @author carlo
  */

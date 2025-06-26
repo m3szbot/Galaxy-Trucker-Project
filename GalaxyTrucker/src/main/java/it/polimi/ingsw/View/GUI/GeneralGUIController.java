@@ -7,9 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
@@ -65,6 +63,13 @@ public class GeneralGUIController {
         }
 
     }
+
+    /**
+     * Loads the interface of the fxml passed as parameter by putting it
+     * into the anchor pane of the general fxml file. It also scales everything up.
+     * @param fxmlPath
+     * @param guiView
+     */
 
     private void loadPhaseGUI(String fxmlPath, GeneralView guiView) {
         try {

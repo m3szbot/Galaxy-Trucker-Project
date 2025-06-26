@@ -42,6 +42,11 @@ public class GUIView extends GeneralView {
     private Pane flighBoardPane;
     private GameType gameType;
 
+    /**
+     * Set up the game type and the panes accordingly.
+     * @param gameType
+     */
+
     public void setGameType(GameType gameType) {
 
         FXMLLoader shipBoardLoader;

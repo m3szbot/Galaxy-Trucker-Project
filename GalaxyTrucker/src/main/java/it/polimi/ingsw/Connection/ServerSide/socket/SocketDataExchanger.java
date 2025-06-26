@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
- * Class that encapsulate the exchanging of data with socket
+ * Class that encapsulate the exchanging of data with socket. It
+ * is used by both the server and the client.
  *
  * @author carlo
  */
@@ -22,10 +22,6 @@ public class SocketDataExchanger {
         this.clientSocket = clientSocket;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
-    }
-
-    public void setSocketTimeOut(int millisecond) throws SocketException {
-        clientSocket.setSoTimeout(millisecond);
     }
 
     public String getString() throws IOException {
@@ -65,6 +61,13 @@ public class SocketDataExchanger {
     Important: if the resources are closed after a write failure, the stream is corrupted and therefore
     most likely an exception will be thrown on the corrupted one. On the other hand, if they are closed
     after a read failure no exception are thrown.
+     */
+
+    /**
+     * Method which closes the network resources contained in the exchanger.
+     * Important: if the resources are closed after a write failure, the stream is corrupted and therefore
+     * most likely an exception will be thrown on the corrupted one. On the other hand, if they are closed
+     * after a read failure no exception are thrown.
      */
 
     public void closeResources(){

@@ -70,6 +70,10 @@ public class Server {
 
     }
 
+    /**
+     * Starts the two listening threads on RMI or Socket.
+     */
+
     public void start() {
         try {
             System.out.printf("Server started with IP:\n%s\n", InetAddress.getLocalHost().getHostAddress());
@@ -82,19 +86,41 @@ public class Server {
 
     }
 
+    /**
+     *
+     * @param gameCode
+     * @return the game with the game code passed as parameter
+     * @throws IndexOutOfBoundsException
+     */
+
     public Game getGame(int gameCode) throws IndexOutOfBoundsException {
 
         return games.get(gameCode);
 
     }
 
+    /**
+     *
+     * @return the port number of the server
+     */
+
     public int getPort() {
         return portNumber;
     }
 
+    /**
+     *
+     * @return the current game code.
+     */
+
     public int getCurrentGameCode() {
         return gameCode;
     }
+
+    /**
+     *
+     * @return the current color. The colors are looped.
+     */
 
     public Color getCurrentColor() {
 
@@ -120,13 +146,29 @@ public class Server {
         }
     }
 
+    /**
+     *
+     * @return the current starting game
+     */
+
     public Game getCurrentStartingGame() {
         return currentStartingGame;
     }
 
+    /**
+     *
+     * @return the lock which is used to join a game. The lock forbid a player
+     * to join a game if another one is already doing so.
+     */
+
     public ReentrantLock getLock() {
         return lock;
     }
+
+    /**
+     * Adds the player passed as parameter to the current starting game
+     * @param player
+     */
 
     public void addPlayerToCurrentStartingGame(Player player) {
 
@@ -149,11 +191,23 @@ public class Server {
        }
     }
 
+    /**
+     * Adds the nickname passed as parameter to the nickname list of the server. The nickname
+     * list contains the nickname of all the players currently connected.
+     * @param nickName
+     */
+
     public void addNickName(String nickName){
         synchronized (nicknameList) {
             nicknameList.add(nickName);
         }
     }
+
+    /**
+     * Removes a nickname from the nickname list
+     * @param nickname
+     * @throws IllegalArgumentException
+     */
 
     public void removeNickName(String nickname) throws IllegalArgumentException{
         synchronized (nicknameList) {
@@ -174,6 +228,10 @@ public class Server {
         currentStartingGame.changeGameState(GameState.Starting);
 
     }
+
+    /**
+     * Starts the current starting game. To be called only if the current starting game is full
+     */
 
     public void startCurrentGame() {
 

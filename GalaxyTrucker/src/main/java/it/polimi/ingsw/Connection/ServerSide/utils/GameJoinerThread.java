@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Class which contains all the logic regarding the joining of a game by the player.
+ * Class which contains all the logic regarding the joining of a game by the player, i.e, the lobby.
  * During this phase, a timeout of 60 seconds is set and a maximum of 5 input failures in a row
  * is permitted. If those constraints are violated the player is kicked out (disconnected).
  *

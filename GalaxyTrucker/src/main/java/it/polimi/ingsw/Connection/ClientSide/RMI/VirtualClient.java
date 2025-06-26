@@ -113,10 +113,7 @@ public class VirtualClient extends UnicastRemoteObject implements ClientRemoteIn
         this.inGame = inGame;
     }
 
-    @Override
-    public boolean isAlive() throws RemoteException {
-        return true;
-    }
+
 
     public void unblockUserInput() throws RemoteException {
         ClientInputManager.unblockInput();

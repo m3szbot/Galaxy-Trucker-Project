@@ -11,7 +11,7 @@ import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 
 /**
  * A playerMessenger which does nothing. Its only purpose is to prevent
- * the server from crashing in case the server get the playerMessenger of
+ * the server from crashing in case the server gets the playerMessenger of
  * a disconnected player.
  *
  * @author carlo

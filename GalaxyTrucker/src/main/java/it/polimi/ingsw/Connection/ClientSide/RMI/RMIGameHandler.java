@@ -26,6 +26,12 @@ public class RMIGameHandler {
         this.clientInfo = clientInfo;
     }
 
+    /**
+     * The method starts the handler. After the player joined the game the handler will
+     * continue to be executed until the server connection is lost or the game is finished. Note
+     * that the player could also be kicked out because of inactivity.
+     */
+
     public void start(){
 
         ServerRemoteInterface virtualServer;

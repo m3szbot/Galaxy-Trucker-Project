@@ -18,13 +18,29 @@ public final class ClientInputManager {
     // used for input simulation
     private static AtomicBoolean testRunning = new AtomicBoolean(false);
 
+    /**
+     * Unblock the input by setting it manually
+     */
+
     public static void unblockInput() {
         userInput.set("unblock");
     }
 
+    /**
+     * set up the timeout in milliseconds. During the lobby the timeout is 1 minute,
+     * while during the game 5 minutes. A warning is sent when 1 minute is left.
+     * @param playerInputTimeOut
+     */
+
     public static void setTimeOut(long playerInputTimeOut) {
         timeOut = playerInputTimeOut;
     }
+
+    /**
+     * Method which return the user input. It is a blocking method and can be unblocked if needed.
+     * @return the user input
+     * @throws TimeoutException
+     */
 
     public static String getUserInput() throws TimeoutException {
         long temp = timeOut;
@@ -54,6 +70,11 @@ public final class ClientInputManager {
             }
         }
     }
+
+    /**
+     * Sets the user input, which unblock the getUserInput method.
+     * @param input
+     */
 
     public static void setUserInput(String input) {
         userInput.set(input);

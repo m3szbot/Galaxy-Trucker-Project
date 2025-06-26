@@ -60,6 +60,12 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
 
     }
 
+    /***
+     * Method which recognized the command or, if not recognized, call the method of the
+     * view which name correspond to the command parameter
+     * @param command to be executed
+     * @param dataContainer containing all the information sent by the server
+     */
 
     private void executeCommand(String command, DataContainer dataContainer) {
         if (command.equals("setGamePhase")) {
@@ -77,17 +83,33 @@ public class GameMessageReceiver implements Runnable, ClientServerInvokableMetho
         }
     }
 
+    /**
+     * Sets the game phase of the game.
+     * @param gamePhase
+     */
+
     public void setGamePhase(GamePhase gamePhase) {
 
         viewCommunicator.setGamePhase(gamePhase);
 
     }
 
+    /**
+     * Ends the game. It causes the termination of the messageReceiver thread and
+     * of the messageSender thread.
+     */
+
     public void endGame() {
         running.set(false);
         System.out.println("The game has ended");
         ClientInputManager.unblockInput();
     }
+
+    /**
+     * Method which invoke the method of the current view, which name is contained in the command
+     * attribute of the container
+     * @param container
+     */
 
     private void callView(DataContainer container) {
 
