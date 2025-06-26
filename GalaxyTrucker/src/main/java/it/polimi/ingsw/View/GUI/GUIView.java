@@ -81,6 +81,12 @@ public class GUIView extends GeneralView {
 
     }
 
+    /**
+     * Set up the controller of the current phase. The method is called every time a phase
+     * switch happen.
+     * @param controller
+     */
+
     public void setGuiController(GUIController controller) {
         this.guiController = controller;
         if (guiController instanceof AssemblyGUIController) {
@@ -106,6 +112,14 @@ public class GUIView extends GeneralView {
         });
 
     }
+
+    /**
+     * removes from the string passed as parameters the ansi codes. This is because the player
+     * nickname is printed with colors on the TUI and therefore the string containing it also
+     * contains andi code.
+     * @param message
+     * @return the message without any ansi code in it.
+     */
 
     private String stripAnsiCodes(String message) {
         String ansiRegex = "\u001B\\[[0-9;]*m";

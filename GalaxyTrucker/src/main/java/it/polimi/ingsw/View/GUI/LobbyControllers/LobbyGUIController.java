@@ -12,6 +12,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * Controller of the Lobby gui during gui phase
+ *
+ * @author carlo
+ */
+
 public class LobbyGUIController extends GUIController implements PlayerInputSetter {
 
     @FXML

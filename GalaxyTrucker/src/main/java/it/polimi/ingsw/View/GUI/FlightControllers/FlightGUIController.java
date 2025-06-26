@@ -11,6 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * Controller of the flight gui during flight phase
+ *
+ * @author carlo
+ */
+
 public class FlightGUIController extends GUIController implements PlayerInputSetter {
 
     @FXML
