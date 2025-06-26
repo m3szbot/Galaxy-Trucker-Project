@@ -18,8 +18,8 @@ The 'makePlayerJoin' method returns false if the nickname of the client is alrea
 
 ## Component placing on the shipboard
 
-![sequence diagram component placing](image/Sequence Diagram_ Place component.png)
+![sequence diagram component placing](image/SequenceDiagramPlaceComponent.png)
 
 ## Choose component from the covered list
 
-![sequence diagram component choice](image/Sequence Diagram_ Choose Component.png)
+![sequence diagram component choice](image/SequenceDiagramChooseComponent.png)
