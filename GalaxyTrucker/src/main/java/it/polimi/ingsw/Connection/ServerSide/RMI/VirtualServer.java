@@ -69,8 +69,6 @@ public class VirtualServer extends UnicastRemoteObject implements ServerRemoteIn
             System.err.println("Game joiner thread was abnormally interrupted");
         }
 
-        virtualClient.setInGame(true);
-
         if(virtualClient.getCommand() != null){
             if(virtualClient.getCommand().equals("kicked")){
                 return false;

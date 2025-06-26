@@ -74,13 +74,14 @@ public class PlayerLobbyMessenger {
        else{
 
            try{
-               String input = virtualClient.getString();
-               if(input.equals("inactivity")){
-                   throw new TimeoutException();
-               }
-               return input;
+
+               return virtualClient.getString();
            }
            catch (RemoteException e){
+
+               if(e.getMessage().contains("inactivity")){
+                   throw new TimeoutException();
+               }
 
                System.err.println("Error while obtaining data from " + nickName + ": " +
                        "a disconnection probably occurred");
@@ -108,6 +109,19 @@ public class PlayerLobbyMessenger {
         }
     }
 
+    public void joinGame(){
+        if(connectionType == ConnectionType.SOCKET){
+            sendCommand("joined");
+        }
+        else{
+            try {
+                virtualClient.setInGame(true);
+            } catch (RemoteException e) {
+                System.err.println("Error while communicating with " + nickName + " through rmi protocol");
+            }
+        }
+    }
+
     public void sendGameType(GameType gameType){
 
         if(connectionType == ConnectionType.SOCKET){
@@ -131,7 +145,7 @@ public class PlayerLobbyMessenger {
                 virtualClient.setGameType(gameType.toString());
 
             } catch (RemoteException e) {
-                System.err.println("Error while communicating with " + nickName + " through socket protocol");
+                System.err.println("Error while communicating with " + nickName + " through rmi protocol");
             }
 
         }

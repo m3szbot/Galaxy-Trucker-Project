@@ -41,6 +41,10 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     private boolean disconnectedFlag = false;
     private int gameCode;
     private boolean inLobby = true;
+    //use to maintain a history of the printed shipboard, it is necessary for the previous command
+    private ShipBoard[] lastShipBoards = new ShipBoard[10];
+    private int lastShipBoardIndex = -1;
+    private boolean isBrowsingShipBoardHistory = false;
 
     /**
      * Add socket player.
@@ -275,7 +279,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
                 } catch (RemoteException e) {
 
-                    if (e.getMessage().equals("inactivity")) {
+                    if (e.getMessage().contains("inactivity")) {
 
                         System.out.println("Player " + player.getColouredNickName() + " was kicked because of inactivity");
                     } else {
@@ -292,18 +296,17 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
         }
     }
 
+    public ShipBoard[] getLastShipBoards() {
+        return lastShipBoards;
+    }
+
+    public int getLastShipBoardIndex() {
+        return lastShipBoardIndex;
+    }
+
     public boolean isCommand(String command) {
         switch (command) {
-            case "show-shipboard" -> {
-                return true;
-            }
-            case "private-message" -> {
-                return true;
-            }
-            case "public-message" -> {
-                return true;
-            }
-            case "refresh" -> {
+            case "show-shipboard", "private-message", "public-message", "refresh-shipboard" -> {
                 return true;
             }
             default -> {
@@ -395,6 +398,13 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
     @Override
     public synchronized void printShipboard(ShipBoard shipBoard) {
 
+        if(!isBrowsingShipBoardHistory){
+
+            lastShipBoardIndex = (lastShipBoardIndex + 1) % 10;
+            //lastShipBoards[lastShipBoardIndex] = shipBoard.clone();
+
+        }
+
         if (disconnectedFlag) {
             return;
         }
@@ -420,6 +430,10 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
         }
 
+    }
+
+    public void setBrowsingShipBoardHistory(boolean val){
+        isBrowsingShipBoardHistory = val;
     }
 
     @Override

@@ -345,7 +345,7 @@ public class GameJoinerThread extends Thread {
         }
 
         playerLobbyMessenger.printMessage(message);
-        playerLobbyMessenger.sendCommand("joined");
+        playerLobbyMessenger.joinGame(); //timeout is now set to 5 minute
         playerLobbyMessenger.sendGameType(centralServer.getCurrentStartingGame().getGameInformation().getGameType());
 
         if (centralServer.getCurrentStartingGame().isFull()) {

@@ -19,6 +19,7 @@ public final class CommandHandler {
      * @throws PlayerDisconnectedException
      */
     public static String executeCommand(String command, PlayerMessenger playerMessenger) throws PlayerDisconnectedException {
+
         switch (command){
             case "show-shipboard" ->{
                 return (new FoeShipBoardPrinter(playerMessenger)).start();
@@ -31,9 +32,19 @@ public final class CommandHandler {
             case "public-message"->{
                 return (new ChatUtil(playerMessenger)).startPublicMessageHandler();
             }
-            case "refresh" -> {
+            case "refresh-shipboard" -> {
                 return (new ShipBoardRefresher()) .start(playerMessenger);
             }
+            /*
+            case "shipboard-history" -> {
+                playerMessenger.setBrowsingShipBoardHistory(true);
+                String returnVal = (new ShipBoardHistoryChoice()).choose(playerMessenger);
+                playerMessenger.setBrowsingShipBoardHistory(false);
+                return returnVal;
+
+            }
+
+             */
             default -> {
                 return "repeat";
             }
