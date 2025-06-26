@@ -13,6 +13,6 @@
       <Label layoutX="810.0" layoutY="443.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text" />
       <TextField fx:id="playerInputField" layoutX="933.0" layoutY="438.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d" />
       <Text layoutX="828.0" layoutY="363.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #ffd93d; -fx-font-weight: bold; -fx-font-size: 36px;" text="Galaxy Trucker" />
-      <TextArea fx:id="logTextArea" editable="false" layoutX="685.0" layoutY="504.0" prefHeight="200.0" prefWidth="559.0" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d;" />
+      <TextArea fx:id="logTextArea" editable="false" layoutX="602.0" layoutY="504.0" prefHeight="240" prefWidth="720" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d; -fx-font-size: 18px" />
    </children>
 </AnchorPane>
