@@ -19,9 +19,10 @@ class FlightPhaseTest {
 
     @BeforeEach
     void setup() throws IllegalSelectionException {
-        game = Mocker.mockNormalGame1Player();
+        Mocker.mockNormalGame1Player();
+        game = Mocker.getGame();
         flightPhase = game.getFlightPhase();
-        player = game.getGameInformation().getPlayerList().getFirst();
+        player = Mocker.getFirstPlayer();
         flightBoard = game.getGameInformation().getFlightBoard();
         flightBoard.addPlayer(player, 1);
 

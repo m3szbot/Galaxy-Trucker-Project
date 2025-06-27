@@ -12,20 +12,26 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MockerTest {
-    // prints some text
-    Game game1 = Mocker.mockNormalGame1Player();
-    Player player1 = game1.getGameInformation().getPlayerList().getFirst();
-    PlayerMessenger playerMessenger1 = ClientMessenger.getGameMessenger(game1.getGameCode()).getPlayerMessenger(player1);
-
-    Game game2 = Mocker.mockNormalGame2Players();
-    Player player2 = game2.getGameInformation().getPlayerList().get(1);
-    PlayerMessenger playerMessenger2 = ClientMessenger.getGameMessenger(game2.getGameCode()).getPlayerMessenger(player2);
 
     @Test
-    void checkSetup() {
+    void checkSetup1Player() {
+        Mocker.mockNormalGame1Player();
+        Game game1 = Mocker.getGame();
+        Player player1 = game1.getGameInformation().getPlayerList().getFirst();
+        PlayerMessenger playerMessenger1 = ClientMessenger.getGameMessenger(game1.getGameCode()).getPlayerMessenger(player1);
+
         assertEquals(1, game1.getGameInformation().getPlayerList().size());
         assertNotNull(player1);
         assertNotNull(playerMessenger1);
+
+    }
+
+    @Test
+    void checkSetup2Players() {
+        Mocker.mockNormalGame2Players();
+        Game game2 = Mocker.getGame();
+        Player player2 = game2.getGameInformation().getPlayerList().get(1);
+        PlayerMessenger playerMessenger2 = ClientMessenger.getGameMessenger(game2.getGameCode()).getPlayerMessenger(player2);
 
         assertEquals(2, game2.getGameInformation().getPlayerList().size());
         assertNotNull(player2);
@@ -34,12 +40,22 @@ public class MockerTest {
 
     @Test
     void testRun() {
+        Mocker.mockNormalGame1Player();
+        Game game1 = Mocker.getGame();
+        Player player1 = game1.getGameInformation().getPlayerList().getFirst();
+        PlayerMessenger playerMessenger1 = ClientMessenger.getGameMessenger(game1.getGameCode()).getPlayerMessenger(player1);
+
         game1.run();
     }
 
 
     @Test
     void testInput() throws PlayerDisconnectedException {
+        Mocker.mockNormalGame1Player();
+        Game game1 = Mocker.getGame();
+        Player player1 = game1.getGameInformation().getPlayerList().getFirst();
+        PlayerMessenger playerMessenger1 = ClientMessenger.getGameMessenger(game1.getGameCode()).getPlayerMessenger(player1);
+
         Mocker.simulateClientInput("banana\napple\ncake\n");
 
         assertEquals("banana", playerMessenger1.getPlayerString());

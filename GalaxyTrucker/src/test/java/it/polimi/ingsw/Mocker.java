@@ -6,6 +6,7 @@ import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 import it.polimi.ingsw.Model.ShipBoard.Player;
@@ -14,6 +15,20 @@ import java.rmi.RemoteException;
 
 public abstract class Mocker {
     private static Thread inputThread;
+    private static Game game;
+
+
+    public static Game getGame() {
+        return game;
+    }
+
+    public static GameInformation getGameInformation() {
+        return game.getGameInformation();
+    }
+
+    public static Player getFirstPlayer() {
+        return game.getGameInformation().getPlayerList().getFirst();
+    }
 
     public static void simulateClientInput(String input) {
         inputThread = new Thread(() -> {
@@ -28,7 +43,7 @@ public abstract class Mocker {
      *
      * @return
      */
-    public static Game mockNormalGame1Player() {
+    public static void mockNormalGame1Player() {
         resetInputSimulation();
 
         // find and keep correct setup order
@@ -59,7 +74,7 @@ public abstract class Mocker {
         // set timeout to 1 sec
         ClientInputManager.setTimeOut(1000);
 
-        return game;
+        Mocker.game = game;
     }
 
     private static void resetInputSimulation() {
@@ -78,7 +93,7 @@ public abstract class Mocker {
             throw new IllegalStateException("The previous input simulation didn't finish yet.");
     }
 
-    public static Game mockNormalGame2Players() {
+    public static void mockNormalGame2Players() {
         resetInputSimulation();
 
         // find and keep correct setup order
@@ -112,6 +127,6 @@ public abstract class Mocker {
         // set timeout to 1 sec
         ClientInputManager.setTimeOut(1000);
 
-        return game;
+        Mocker.game = game;
     }
 }

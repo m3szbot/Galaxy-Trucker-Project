@@ -26,9 +26,10 @@ class CorrectionPhaseTest {
 
     @BeforeEach
     void setUp() throws IllegalSelectionException {
-        game = Mocker.mockNormalGame1Player();
+        Mocker.mockNormalGame1Player();
+        game = Mocker.getGame();
         correctionPhase = game.getCorrectionPhase();
-        player = game.getGameInformation().getPlayerList().getFirst();
+        player = Mocker.getFirstPlayer();
         shipBoard = player.getShipBoard();
         flightBoard = game.getGameInformation().getFlightBoard();
 

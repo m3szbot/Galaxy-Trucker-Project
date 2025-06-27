@@ -50,9 +50,10 @@ public class AssemblyPhaseTest {
 
     @BeforeEach
     void setup() {
-        game = Mocker.mockNormalGame1Player();
+        Mocker.mockNormalGame1Player();
+        game = Mocker.getGame();
         assemblyPhase = game.getAssemblyPhase();
-        player = game.getGameInformation().getPlayerList().getFirst();
+        player = Mocker.getFirstPlayer();
     }
 
     @Test
