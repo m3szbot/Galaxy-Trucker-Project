@@ -49,7 +49,7 @@ public abstract class Phase {
                     show-shipboard: to see the shipboard of another player
                     private-message: to send a message to only one player of the game
                     public-message: to send a message to all the players currently connected to the game
-                    refresh: to refresh your shipboard""";
+                    refresh-shipboard: to refresh your shipboard""";
             gameMessenger.sendMessageToAll(bannerMessage);
 
         } else {

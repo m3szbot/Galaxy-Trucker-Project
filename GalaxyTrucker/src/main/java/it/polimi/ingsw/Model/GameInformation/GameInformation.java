@@ -18,8 +18,8 @@ import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,9 +94,14 @@ public class GameInformation implements Serializable {
      */
     private void setUpCards() throws IOException {
         // create all cards
+
+        InputStream inputStream = getClass().getResourceAsStream("/Cards.json");
+        if (inputStream == null) {
+            throw new IllegalStateException("Cards.json was not found in the class path!");
+        }
         List<Card> tmpList = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(new File("src/main/resources/Cards.json"));
+        JsonNode rootNode = objectMapper.readTree(inputStream);
         CardBuilder cardBuilder = new CardBuilder();
 
         ElementType blowType, requirementType, lossType;
@@ -321,9 +326,16 @@ public class GameInformation implements Serializable {
                 Storage.class
         );
 
-        componentList = mapper.readValue(new File("src/main/resources/Components.json"),
+        InputStream inputStream = getClass().getResourceAsStream("/Components.json");
+        if (inputStream == null) {
+            throw new IllegalStateException("Components.json was not found in the class path!");
+        }
+
+        componentList = mapper.readValue(
+                inputStream,
                 mapper.getTypeFactory().constructCollectionType(List.class, Component.class)
         );
+
 
         // filter out aliens for TEST GAME
         if (gameType.equals(GameType.TESTGAME))
