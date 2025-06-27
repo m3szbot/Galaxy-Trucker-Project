@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Class that represent a battery
+ * Class that represents a battery
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Battery extends Component {

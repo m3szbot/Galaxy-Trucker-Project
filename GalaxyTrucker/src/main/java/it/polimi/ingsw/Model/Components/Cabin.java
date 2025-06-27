@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.Model.ShipBoard.Color;
 
 /**
- * Class that represent the cabin component
+ * Class that represents the cabin component
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Cabin extends Component {

@@ -10,6 +10,7 @@ import java.util.Arrays;
  * Class that represents an Engine
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Engine extends Component {

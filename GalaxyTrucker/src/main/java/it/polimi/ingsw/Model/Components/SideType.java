@@ -9,6 +9,7 @@ import java.io.Serializable;
  * Enum that represents the side of a component
  *
  * @author carlo
+ * @author Ludo
  */
 
 
