@@ -88,7 +88,7 @@ public class AssemblyState extends GameState {
                     if (assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
                         if (assemblyProtocol.getHourGlass().getState() == 2) {
                             // TODO change?
-                            message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
+                            message = "To do the final turn of the hourglass finish assembling first";
                             playerMessenger.printMessage(message);
                         } else {
                             message = "Turn the hourglass";
