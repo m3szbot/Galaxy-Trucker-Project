@@ -9,7 +9,7 @@ import java.io.Serializable;
 import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.*;
 
 /**
- * Class to manage the static attributes and dynamic inventory of a ShipBoard.
+ * Class to manage the attributes (goods, batteries etc.) of a shipboard.
  *
  * @author Giacomo, Boti
  */
@@ -138,6 +138,9 @@ public class ShipBoardAttributes implements Serializable {
         return destroyedComponents;
     }
 
+    /**
+     * Set the destroyed component count to count.
+     */
     void setDestroyedComponents(int count) {
         if (count < 0)
             throw new IllegalArgumentException("Cannot destroy negative number of components");
@@ -344,12 +347,20 @@ public class ShipBoardAttributes implements Serializable {
         destroyedComponents += count;
     }
 
+    /**
+     * Add the given credits to the current credit count.
+     *
+     * @param credits
+     */
     public void addCredits(int credits) {
         if (credits < 0)
             throw new IllegalArgumentException("Cannot add negative credits.");
         this.credits += credits;
     }
 
+    /**
+     * Remove the given credit count from the current credit count.
+     */
     public void removeCredits(int credits) {
         if (credits < 0)
             throw new IllegalArgumentException("Cannot remove negative credits");

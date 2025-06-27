@@ -5,6 +5,9 @@ import it.polimi.ingsw.View.TUI.TUIView;
 
 import java.io.Serializable;
 
+/**
+ * The class representing a player in the game.
+ */
 public class Player implements Serializable {
     // The color associated with the player
     private final Color color;
@@ -29,10 +32,16 @@ public class Player implements Serializable {
         this.connected = true;
     }
 
+    /**
+     * Set the connection status to false of the player.
+     */
     public void disconnect() {
         connected = false;
     }
 
+    /**
+     * @return the connection status of the player.
+     */
     public boolean getIsConnected() {
         return connected;
     }
@@ -40,9 +49,6 @@ public class Player implements Serializable {
     /**
      * Used by the server (nickname is an identifier, without the color code - assigned only for the game).
      * Uncoloured nickname is the id of the client.
-     *
-     * @return the player's nickname (without the color strings).
-     * @author Giacomo
      */
     public String getNickName() {
         return nickName;
@@ -89,8 +95,6 @@ public class Player implements Serializable {
     }
 
     /**
-     * Returns the player's color.
-     *
      * @return The color associated with the player.
      * @author Giacomo
      */
@@ -99,7 +103,7 @@ public class Player implements Serializable {
     }
 
     /**
-     * @return shipBoard
+     * @return the player's shipboard.
      * @author Boti
      */
     public ShipBoard getShipBoard() {

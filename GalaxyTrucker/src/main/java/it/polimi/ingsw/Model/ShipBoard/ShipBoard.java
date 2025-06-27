@@ -11,13 +11,13 @@ import java.util.*;
  * Shipboard used to create and store the player's ship and it's attributes.
  * <p>
  * Indexes:
- * Player uses visible indexes [1...12] (center: 7-7)
- * Shipboard uses real indexes shifted by -1 [0...11] (center: 6-6)
+ * Player uses visible indexes [1...12] (center: 7-7),
+ * Shipboard uses real indexes shifted by -1 [0...11] (center: 6-6).
  * <p>
- * RealIndex = VisibleIndex - 1
+ * RealIndex = VisibleIndex - 1.
  * <p>
  * Matrix structure:
- * Shipboard[cols][rows]
+ * Shipboard[cols][rows].
  *
  * @author Giacomo, Boti
  */
@@ -158,6 +158,9 @@ public class ShipBoard implements Serializable {
 
     }
 
+    /**
+     * Add the starter cabin to a new shipboard.
+     */
     private void addStarterCabin() {
         Component starterCabin = Cabin.getStarterCabin(color);
         try {
@@ -427,10 +430,16 @@ public class ShipBoard implements Serializable {
             throw new IllegalStateException("The prebuilt shipboard has errors.");
     }
 
+    /**
+     * @return the valid positions matrix.
+     */
     public boolean[][] getValidityMatrix() {
         return validityMatrix;
     }
 
+    /**
+     * @return the erroneous components matrix.
+     */
     public boolean[][] getErrorsMatrix() {
         return errorsMatrix;
     }
@@ -940,6 +949,9 @@ public class ShipBoard implements Serializable {
         return componentMatrix[realCol][realRow];
     }
 
+    /**
+     * @return the shipBoardAttributes of the shipBoard.
+     */
     public ShipBoardAttributes getShipBoardAttributes() {
         return shipBoardAttributes;
     }
@@ -996,6 +1008,9 @@ public class ShipBoard implements Serializable {
         return count;
     }
 
+    /**
+     * @return the matrix of the components of the shipboard.
+     */
     public Component[][] getComponentMatrix() {
         return componentMatrix;
     }
