@@ -33,21 +33,20 @@ public class FlightBoardController {
 
     private GameType gameType;
 
-    public void setUpTilesMap(GameType gameType){
+    public void setUpTilesMap(GameType gameType) {
 
         this.gameType = gameType;
 
-        if(gameType == GameType.TESTGAME){
+        if (gameType == GameType.TESTGAME) {
 
-            for(int i = 1; i <= 18; i++){
+            for (int i = 1; i <= 18; i++) {
                 TilePane tilePane = (TilePane) pane.lookup("#pos" + i);
                 positionMap.put(i, tilePane);
             }
 
-        }
-        else{
+        } else {
 
-            for(int i = 1; i <= 24; i++){
+            for (int i = 1; i <= 24; i++) {
                 TilePane tilePane = (TilePane) pane.lookup("#pos" + i);
                 positionMap.put(i, tilePane);
             }
@@ -56,38 +55,25 @@ public class FlightBoardController {
 
     }
 
-    public void populateFlightBoard(FlightBoard flightBoard){
+    public void populateFlightBoard(FlightBoard flightBoard) {
 
         //clearing the flightboard
 
-        for(TilePane tilePane: positionMap.values()){
+        for (TilePane tilePane : positionMap.values()) {
             tilePane.getChildren().clear();
         }
 
         for (Player player : flightBoard.getPlayerOrderList()) {
 
             int pos = flightBoard.getPlayerTile(player);
+            int tiles = flightBoard.getNumberOfTiles();
 
-            if(gameType == GameType.NORMALGAME){
-
-                while(pos <= 0){
-                    pos += 24;
-                }
-
-                while(pos > 24){
-                    pos -= 24;
-                }
-
+            while (pos <= 0) {
+                pos += tiles;
             }
-            else{
 
-                while(pos <= 0){
-                    pos += 18;
-                }
-
-                while(pos > 18){
-                    pos -= 18;
-                }
+            while (pos > tiles) {
+                pos -= tiles;
             }
 
             TilePane tilePane = positionMap.get(pos);
@@ -97,12 +83,14 @@ public class FlightBoardController {
             triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 0.0);
 
             triangle.setFill(Color.valueOf(player.getColor().toString()));
+            triangle.setStroke(Color.BLACK);
+            triangle.setStrokeWidth(1.5);
 
             tilePane.getChildren().add(triangle);
         }
     }
 
-    public void setRemainingCards(FlightBoard flightBoard){
+    public void setRemainingCards(FlightBoard flightBoard) {
         cardsRemaining.setText(flightBoard.getCardsNumber() + " cards remaining");
     }
 
