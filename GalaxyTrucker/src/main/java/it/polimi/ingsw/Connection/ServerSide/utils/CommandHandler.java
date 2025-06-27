@@ -35,16 +35,12 @@ public final class CommandHandler {
             case "refresh-shipboard" -> {
                 return (new ShipBoardRefresher()) .start(playerMessenger);
             }
-            /*
-            case "shipboard-history" -> {
-                playerMessenger.setBrowsingShipBoardHistory(true);
-                String returnVal = (new ShipBoardHistoryChoice()).choose(playerMessenger);
-                playerMessenger.setBrowsingShipBoardHistory(false);
-                return returnVal;
+            case "fractured-shipboard" -> {
+
+                return (new FracturedShipboardCommand()).showFracturedShipboard(playerMessenger);
 
             }
 
-             */
             default -> {
                 return "repeat";
             }

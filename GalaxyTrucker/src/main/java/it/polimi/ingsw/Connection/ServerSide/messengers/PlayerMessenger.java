@@ -306,7 +306,7 @@ public class PlayerMessenger implements ViewServerInvokableMethods, ClientServer
 
     public boolean isCommand(String command) {
         switch (command) {
-            case "show-shipboard", "private-message", "public-message", "refresh-shipboard" -> {
+            case "show-shipboard", "private-message", "public-message", "refresh-shipboard" , "fractured-shipboard" -> {
                 return true;
             }
             default -> {
