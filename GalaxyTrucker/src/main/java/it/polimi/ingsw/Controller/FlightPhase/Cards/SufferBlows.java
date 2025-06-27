@@ -531,14 +531,14 @@ public interface SufferBlows {
 
             message = "Player " + player.getColouredNickName() + " was hit by a " +
                     blowType.toString().toLowerCase() + " at position " +
-                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
+                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "] coming from the " + directionSolver(direction) + " !";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else if (xCoord != -1) {
 
             message = "Player " + player.getColouredNickName() + " wasn't damaged by the " +
                     blowType.toString().toLowerCase() + " that hit position " +
-                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
+                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "] coming from the " + directionSolver(direction) + " !";
             ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
         } else {
