@@ -6,6 +6,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
 import it.polimi.ingsw.Model.AssemblyModel.AssemblyProtocol;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
 import java.util.concurrent.BlockingQueue;
@@ -111,7 +112,9 @@ public class AssemblyThread implements Runnable {
     public void run() {
         try {
             setState(new AssemblyState(assemblyProtocol, playerMessenger, associatedPlayer));
-            assemblyProtocol.getHourGlass().twist(assemblyProtocol);
+            if(gameInformation.getGameType().equals(GameType.NORMALGAME)) {
+                assemblyProtocol.getHourGlass().twist(assemblyProtocol);
+            }
 
 
             // Separate thread for reading user input from the console

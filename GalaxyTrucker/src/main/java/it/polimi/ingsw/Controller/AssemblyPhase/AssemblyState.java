@@ -94,14 +94,7 @@ public class AssemblyState extends GameState {
                             assemblyProtocol.getHourGlass().twist(assemblyProtocol);
                         }
                     } else {
-                        if (assemblyProtocol.getHourGlass().getState() == 1) {
-                            message = "The hourglass is in it's final state, to finish the assembly phase you have to write 'end'";
-                            playerMessenger.printMessage(message);
-                        } else {
-                            message = "Turn the hourglass";
-                            playerMessenger.printMessage(message);
-                            assemblyProtocol.getHourGlass().twist(assemblyProtocol);
-                        }
+                        playerMessenger.printMessage("You can't use the hourglass in test game");
                     }
                 } else {
                     message = "HourGlass is already running";

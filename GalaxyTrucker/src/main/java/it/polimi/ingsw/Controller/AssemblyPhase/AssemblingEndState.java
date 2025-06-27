@@ -43,7 +43,12 @@ public class AssemblingEndState extends GameState {
         if (!assemblyThread.getRunning().get()) {
             playerMessenger.printMessage("Waiting for other players position choice");
         } else {
-            String message = "Do you want to turn the hourglass? (write ---> yes <---, or wait for other players to complete their shipboard)";
+            String message;
+            if (assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
+                message = "Do you want to turn the hourglass? (write ---> yes <---, or wait for other players to complete their shipboard)";
+            }else{
+                message = "Waiting for other players to complete their shipboard";
+            }
             playerMessenger.printMessage(message);
         }
     }
@@ -73,12 +78,7 @@ public class AssemblingEndState extends GameState {
                         hourGlass.twist(assemblyProtocol);
                     }
                 } else {
-                    if (hourGlass.getState() == 1) {
-                        playerMessenger.printMessage("Waiting for other players position choice");
-                        hourGlass.twist(assemblyProtocol);
-                    } else {
-                        hourGlass.twist(assemblyProtocol);
-                    }
+                    playerMessenger.printMessage("You can't turn the hourglass in test game");
                 }
             } else {
                 String message = "HourGlass is already running";

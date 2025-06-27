@@ -83,7 +83,9 @@ public class AssemblyPhase extends Phase {
         }
         executor.shutdownNow();
         t.interrupt();
-        assemblyProtocol.getHourGlass().stopHourglass();
+        if(assemblyProtocol.getGameType().equals(GameType.NORMALGAME)){
+            assemblyProtocol.getHourGlass().stopHourglass();
+        }
 
         message = "Assembly phase has ended";
         gameMessenger.sendMessageToAll(message);
