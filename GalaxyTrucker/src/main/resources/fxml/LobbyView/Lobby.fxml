@@ -6,13 +6,20 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
-
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController">
-   <children>
-      <Button fx:id="button" layoutX="933.0" layoutY="470.0" mnemonicParsing="false" style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text" />
-      <Label layoutX="810.0" layoutY="443.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text" />
-      <TextField fx:id="playerInputField" layoutX="933.0" layoutY="438.0" style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d" />
-      <Text layoutX="828.0" layoutY="363.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #ffd93d; -fx-font-weight: bold; -fx-font-size: 36px;" text="Galaxy Trucker" />
-      <TextArea fx:id="logTextArea" editable="false" layoutX="602.0" layoutY="504.0" prefHeight="240" prefWidth="720" style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d; -fx-font-size: 18px" />
-   </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="it.polimi.ingsw.View.GUI.LobbyControllers.LobbyGUIController">
+    <children>
+        <Button fx:id="button" layoutX="933.0" layoutY="470.0" mnemonicParsing="false"
+                style="-fx-background-color: #ffd93d; -fx-text-fill: #2c003e;" text="Send your text"/>
+        <Label layoutX="810.0" layoutY="443.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text"/>
+        <TextField fx:id="playerInputField" layoutX="933.0" layoutY="438.0"
+                   style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d"/>
+        <Text layoutX="828.0" layoutY="363.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              style="-fx-fill: #ffd93d; -fx-font-weight: bold; -fx-font-size: 36px;" text="Galaxy Trucker"/>
+        <TextArea fx:id="logTextArea" wrapText="true" editable="false" layoutX="602.0" layoutY="504.0" prefHeight="400"
+                  prefWidth="720"
+                  style="-fx-control-inner-background: #4b0082; -fx-text-fill: #ffd93d; -fx-font-size: 18px"/>
+    </children>
 </AnchorPane>
