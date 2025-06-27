@@ -96,6 +96,7 @@ public class FlightPhase extends Phase {
 
         }
 
+        Sleeper.sleepXSeconds(6);
         gameMessenger.sendMessageToAll("Flight phase has ended.\n");
 
     }
