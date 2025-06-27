@@ -423,14 +423,6 @@
       {
         "direction": 0,
         "big": false
-      },
-      {
-        "direction": null,
-        "big": false
-      },
-      {
-        "direction": null,
-        "big": false
       }
     ],
     "imagePath": "/Polytechnic/cards/GT-cards_I_IT_013.jpg"
@@ -454,14 +446,6 @@
       },
       {
         "direction": 0,
-        "big": false
-      },
-      {
-        "direction": null,
-        "big": false
-      },
-      {
-        "direction": null,
         "big": false
       }
     ],
@@ -614,10 +598,6 @@
       },
       {
         "direction": 2,
-        "big": false
-      },
-      {
-        "direction": null,
         "big": false
       }
     ],
