@@ -137,6 +137,7 @@ public class GUIView extends GeneralView {
 
     @Override
     public void printShipboard(ShipBoard shipBoard) {
+
         /*
         TODO
         // fracture prints new possible shipboards
