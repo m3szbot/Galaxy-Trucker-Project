@@ -84,7 +84,7 @@ public class FlightBoardController {
             triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 0.0);
 
             triangle.setFill(Color.valueOf(player.getColor().toString()));
-            triangle.setStroke(Color.BLACK);
+            triangle.setStroke(Color.web("#ffd93d"));
             triangle.setStrokeWidth(1.5);
 
             // add shadow

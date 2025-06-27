@@ -27,7 +27,7 @@
         <Label alignment="CENTER" layoutX="998.0" layoutY="521.0" prefHeight="32.0" prefWidth="113.0"
                style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;"
                text="CONSOLE"/>
-        <Label layoutX="996.0" layoutY="964.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text"/>
+        <Label layoutX="996.0" layoutY="964.0" style="-fx-text-fill: #ffd93d;" text="Enter your text here"/>
         <TextField fx:id="playerInputField" layoutX="972.0" layoutY="985.0"
                    style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d"/>
         <Button fx:id="button" layoutX="1004.0" layoutY="1012.0" mnemonicParsing="false"

@@ -19,7 +19,7 @@
                prefWidth="113.0"
                style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d; -fx-font-weight: bold; -fx-text-alignment: center;"
                text="CONSOLE"/>
-        <Label layoutX="1003.0" layoutY="998.0" style="-fx-text-fill: #ffd93d;" text="Enter here your text"/>
+        <Label layoutX="1003.0" layoutY="998.0" style="-fx-text-fill: #ffd93d;" text="Enter your text here"/>
         <TextField fx:id="playerInputField" layoutX="977.0" layoutY="1014.0"
                    style="-fx-background-color: #4b0082; -fx-text-fill: #ffd93d"/>
         <Button fx:id="button" layoutX="1009.0" layoutY="1043.0" mnemonicParsing="false"
