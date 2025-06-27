@@ -7,9 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
 
 /**
- * Class that represent a cannon
+ * Class that represents a cannon
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Cannon extends Component {

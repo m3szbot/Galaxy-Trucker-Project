@@ -7,9 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
 
 /**
- * Class that represent the shield component
+ * Class that represents the shield component
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class Shield extends Component {

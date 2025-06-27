@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Class that represents an alien support component
  *
  * @author carlo
+ * @author Ludo
  */
 
 public class AlienSupport extends Component {

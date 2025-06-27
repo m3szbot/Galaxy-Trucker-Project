@@ -12,6 +12,7 @@ import java.util.List;
  * SideType[0] corresponds to the front side, then rotate clockwise.
  *
  * @author carlo
+ * @author Ludo
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
