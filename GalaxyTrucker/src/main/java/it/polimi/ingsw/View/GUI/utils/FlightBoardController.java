@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
@@ -85,6 +86,14 @@ public class FlightBoardController {
             triangle.setFill(Color.valueOf(player.getColor().toString()));
             triangle.setStroke(Color.BLACK);
             triangle.setStrokeWidth(1.5);
+
+            // add shadow
+            DropShadow shadow = new DropShadow();
+            shadow.setOffsetX(0);
+            shadow.setOffsetY(0);
+            shadow.setColor(Color.BLACK);
+            shadow.setRadius(2);
+            triangle.setEffect(shadow);
 
             tilePane.getChildren().add(triangle);
         }
