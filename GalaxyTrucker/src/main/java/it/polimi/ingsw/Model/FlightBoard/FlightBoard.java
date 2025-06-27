@@ -29,7 +29,6 @@ public class FlightBoard implements Serializable {
     private List<Integer> startingTiles;
     // Goods: red yellow green blue
     private int[] goodsNumber;
-
     // playerTilesMap and playerOrderList are interlinked, contain the same players
     // position of players on the flightBoard
     private Map<Player, Integer> playerTilesMap;
@@ -41,7 +40,6 @@ public class FlightBoard implements Serializable {
     private List<Player> gaveUpList;
     // stack of adventure cards
     private Stack<Card> cardsStack;
-
     private String imagePath;
 
     /**
@@ -113,6 +111,10 @@ public class FlightBoard implements Serializable {
         if (levelOneCardCount != 0 || levelTwoCardCount != 0) {
             throw new IllegalStateException("GameType requirements not respected for flightBoard cards.");
         }
+    }
+
+    public int getNumberOfTiles() {
+        return numberOfTiles;
     }
 
     public String getImagePath() {

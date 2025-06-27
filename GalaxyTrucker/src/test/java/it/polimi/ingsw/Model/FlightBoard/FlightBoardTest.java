@@ -80,6 +80,7 @@ class FlightBoardTest {
         }
         assertEquals(4, levelOneCount);
         assertEquals(8, levelTwoCount);
+        assertEquals(24, flightBoard.getNumberOfTiles());
     }
 
     @Test
@@ -106,6 +107,7 @@ class FlightBoardTest {
         }
         assertEquals(8, levelOneCount);
         assertEquals(0, levelTwoCount);
+        assertEquals(18, flightBoard.getNumberOfTiles());
     }
 
     @Test
