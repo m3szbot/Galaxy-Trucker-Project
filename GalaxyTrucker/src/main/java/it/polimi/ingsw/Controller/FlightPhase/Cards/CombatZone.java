@@ -289,7 +289,7 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                     changePlayerPosition(weakestFirePowerPlayer, -daysLost, gameInformation.getFlightBoard());
 
                     message = "Player " + weakestFirePowerPlayer.getColouredNickName() + " lost " + daysLost +
-                            " flight days as he has the lowest number of inhabitants!";
+                            " flight days as he has the lowest fire power!";
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                 }
