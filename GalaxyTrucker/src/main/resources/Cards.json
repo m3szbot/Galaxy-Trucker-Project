@@ -1,0 +1,678 @@
+[
+  {
+    "level": 1,
+    "cardName": "OpenSpace",
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_015.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "OpenSpace",
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_016.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "OpenSpace",
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_017.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "OpenSpace",
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_018.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "OpenSpace",
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_016.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "OpenSpace",
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_017.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "OpenSpace",
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_018.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "AbandonedShip",
+    "daysLost": 1,
+    "lossType": "CrewMember",
+    "lossNumber": 3,
+    "gainedCredits": 4,
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0118.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "AbandonedShip",
+    "daysLost": 1,
+    "lossType": "CrewMember",
+    "lossNumber": 2,
+    "gainedCredits": 3,
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0117.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "AbandonedShip",
+    "daysLost": 1,
+    "lossType": "CrewMember",
+    "lossNumber": 4,
+    "gainedCredits": 6,
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0117.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "AbandonedShip",
+    "daysLost": 2,
+    "lossType": "CrewMember",
+    "lossNumber": 5,
+    "gainedCredits": 8,
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0118.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Epidemic",
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_015.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "AbandonedStation",
+    "daysLost": 1,
+    "requirementType": "CrewMember",
+    "requirementNumber": 5,
+    "goods": [
+      0,
+      1,
+      1,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0119.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "AbandonedStation",
+    "daysLost": 1,
+    "requirementType": "CrewMember",
+    "requirementNumber": 6,
+    "goods": [
+      2,
+      0,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0120.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "AbandonedStation",
+    "daysLost": 2,
+    "requirementType": "CrewMember",
+    "requirementNumber": 8,
+    "goods": [
+      0,
+      2,
+      1,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0120.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "AbandonedStation",
+    "daysLost": 1,
+    "requirementType": "CrewMember",
+    "requirementNumber": 7,
+    "goods": [
+      1,
+      1,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0119.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "Slavers",
+    "daysLost": 1,
+    "gainedCredits": 5,
+    "requirementType": "FirePower",
+    "lossType": "CrewMember",
+    "lossNumber": 3,
+    "requirementNumber": 6,
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_01.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Slavers",
+    "daysLost": 2,
+    "gainedCredits": 8,
+    "requirementType": "FirePower",
+    "lossType": "CrewMember",
+    "lossNumber": 4,
+    "requirementNumber": 7,
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_01.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "StarDust",
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_014.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "StarDust",
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_014.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "Planets",
+    "daysLost": 1,
+    "planet1": [
+      0,
+      0,
+      2,
+      0
+    ],
+    "planet2": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "planet3": [
+      0,
+      0,
+      0,
+      3
+    ],
+    "planet4": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0115.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "Planets",
+    "daysLost": 2,
+    "planet1": [
+      2,
+      0,
+      0,
+      0
+    ],
+    "planet2": [
+      1,
+      0,
+      0,
+      2
+    ],
+    "planet3": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "planet4": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0113.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "Planets",
+    "daysLost": 3,
+    "planet1": [
+      1,
+      0,
+      1,
+      3
+    ],
+    "planet2": [
+      1,
+      1,
+      0,
+      1
+    ],
+    "planet3": [
+      1,
+      0,
+      0,
+      3
+    ],
+    "planet4": [
+      1,
+      0,
+      1,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0112.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "Planets",
+    "daysLost": 3,
+    "planet1": [
+      0,
+      1,
+      1,
+      2
+    ],
+    "planet2": [
+      0,
+      2,
+      0,
+      0
+    ],
+    "planet3": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "planet4": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0114.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Planets",
+    "daysLost": 2,
+    "planet1": [
+      1,
+      1,
+      0,
+      0
+    ],
+    "planet2": [
+      0,
+      1,
+      1,
+      1
+    ],
+    "planet3": [
+      0,
+      0,
+      2,
+      0
+    ],
+    "planet4": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0114.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Planets",
+    "daysLost": 3,
+    "planet1": [
+      2,
+      0,
+      0,
+      0
+    ],
+    "planet2": [
+      0,
+      0,
+      4,
+      0
+    ],
+    "planet3": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "planet4": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0113.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Planets",
+    "daysLost": 3,
+    "planet1": [
+      0,
+      0,
+      4,
+      0
+    ],
+    "planet2": [
+      0,
+      2,
+      0,
+      0
+    ],
+    "planet3": [
+      0,
+      0,
+      0,
+      4
+    ],
+    "planet4": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0115.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Planets",
+    "daysLost": 4,
+    "planet1": [
+      3,
+      1,
+      0,
+      0
+    ],
+    "planet2": [
+      2,
+      0,
+      2,
+      0
+    ],
+    "planet3": [
+      1,
+      0,
+      0,
+      4
+    ],
+    "planet4": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0112.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "Pirates",
+    "daysLost": 1,
+    "gainedCredits": 4,
+    "requirementType": "FirePower",
+    "requirementNumber": 5,
+    "blowType": "CannonBlow",
+    "blows": [
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 0,
+        "big": true
+      },
+      {
+        "direction": 0,
+        "big": false
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_013.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Pirates",
+    "daysLost": 2,
+    "gainedCredits": 7,
+    "requirementType": "FirePower",
+    "requirementNumber": 6,
+    "blowType": "CannonBlow",
+    "blows": [
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 0,
+        "big": true
+      },
+      {
+        "direction": 0,
+        "big": false
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_013.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "Smugglers",
+    "daysLost": 1,
+    "requirementType": "FirePower",
+    "lossType": "Goods",
+    "requirementNumber": 4,
+    "lossNumber": 2,
+    "goods": [
+      0,
+      1,
+      1,
+      1
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_012.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "Smugglers",
+    "daysLost": 1,
+    "requirementType": "FirePower",
+    "lossType": "Goods",
+    "requirementNumber": 8,
+    "lossNumber": 3,
+    "goods": [
+      1,
+      2,
+      0,
+      0
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_012.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "SmallMeteorSwarm",
+    "blowType": "Meteorite",
+    "blows": [
+      {
+        "direction": 0,
+        "big": true
+      },
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 0,
+        "big": true
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0111.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "BigMeteorSwarm",
+    "blowType": "Meteorite",
+    "blows": [
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 3,
+        "big": false
+      },
+      {
+        "direction": 1,
+        "big": false
+      },
+      {
+        "direction": 2,
+        "big": false
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0110.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "SmallMeteorSwarm",
+    "blowType": "Meteorite",
+    "blows": [
+      {
+        "direction": 0,
+        "big": true
+      },
+      {
+        "direction": 3,
+        "big": false
+      },
+      {
+        "direction": 1,
+        "big": false
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_019.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "BigMeteorSwarm",
+    "blowType": "Meteorite",
+    "blows": [
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 1,
+        "big": true
+      },
+      {
+        "direction": 1,
+        "big": false
+      },
+      {
+        "direction": 1,
+        "big": false
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0111.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "BigMeteorSwarm",
+    "blowType": "Meteorite",
+    "blows": [
+      {
+        "direction": 0,
+        "big": true
+      },
+      {
+        "direction": 0,
+        "big": true
+      },
+      {
+        "direction": 2,
+        "big": false
+      },
+      {
+        "direction": 2,
+        "big": false
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0110.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "BigMeteorSwarm",
+    "blowType": "Meteorite",
+    "blows": [
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 3,
+        "big": true
+      },
+      {
+        "direction": 3,
+        "big": false
+      },
+      {
+        "direction": 3,
+        "big": false
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_019.jpg"
+  },
+  {
+    "level": 1,
+    "cardName": "CombatZone",
+    "daysLost": 3,
+    "lossType": "CrewMember",
+    "lossNumber": 2,
+    "blows": [
+      {
+        "direction": 2,
+        "big": false
+      },
+      {
+        "direction": 2,
+        "big": true
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_I_IT_0116.jpg"
+  },
+  {
+    "level": 2,
+    "cardName": "CombatZone",
+    "daysLost": 4,
+    "lossType": "Goods",
+    "lossNumber": 3,
+    "blows": [
+      {
+        "direction": 0,
+        "big": false
+      },
+      {
+        "direction": 3,
+        "big": false
+      },
+      {
+        "direction": 1,
+        "big": true
+      },
+      {
+        "direction": 2,
+        "big": true
+      }
+    ],
+    "imagePath": "/Polytechnic/cards/GT-cards_II_IT_0116.jpg"
+  }
+]

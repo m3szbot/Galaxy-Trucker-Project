@@ -1,0 +1,46 @@
+package it.polimi.ingsw.Connection.ServerSide.RMI;
+
+import java.net.MalformedURLException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+
+/**
+ * Thread that listen for incoming clients with RMI
+ * protocol
+ *
+ * @author carlo
+ */
+
+public class RMIListener implements Runnable{
+
+    VirtualServer virtualServer;
+
+    public RMIListener(VirtualServer virtualServer){
+        this.virtualServer = virtualServer;
+    }
+
+    public void run(){
+
+       try {
+           LocateRegistry.createRegistry(1099);
+
+           Naming.bind("virtualServer", virtualServer);
+
+           System.out.println("Rmi listener is activated and is listening...");
+
+
+       } catch (RemoteException e) {
+           System.err.println("Errow while initializing RMI");
+       } catch (MalformedURLException e) {
+           System.err.println("Error with RMI URL");
+       } catch (AlreadyBoundException e) {
+           System.err.println("Name joiner is already bounded");
+       }
+
+
+   }
+
+
+}

@@ -1,0 +1,1707 @@
+[
+  {
+    "name": "Component",
+    "sides": [
+      "Single",
+      "Universal",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Component",
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Component",
+    "sides": [
+      "Single",
+      "Universal",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Component",
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Component",
+    "sides": [
+      "Single",
+      "Double",
+      "Universal",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Component",
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "Component",
+    "sides": [
+      "Smooth",
+      "Single",
+      "Universal",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Component",
+    "sides": [
+      "Double",
+      "Double",
+      "Universal",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Universal",
+      "Single"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Single",
+      "Double",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Special",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Special",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Special",
+      "Double"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Universal",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Single",
+      "Double",
+      "Special",
+      "Double"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Special",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Special",
+      "Single"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Single",
+      "Special",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Single",
+      "Universal",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Double",
+      "Double"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Universal",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Single",
+      "Single",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Special",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Engine",
+    "single": false,
+    "sides": [
+      "Double",
+      "Double",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Special",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Double",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Special",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Single",
+      "Special",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Special",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Double",
+      "Double",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Single",
+      "Universal",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Universal",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Special",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Single",
+      "Single",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Special",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Universal",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Special",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Single",
+      "Double",
+      "Single",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Special",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Double",
+      "Single",
+      "Double",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Special",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cannon",
+    "single": false,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Universal",
+      "Special"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Single",
+      "Double",
+      "Double",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Double",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Universal",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Single",
+      "Single",
+      "Double",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Universal",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Single",
+      "Single",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Single",
+      "Double",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Double",
+      "Double"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Single"
+    ]
+  },
+  {
+    "name": "Cabin",
+    "crewType": null,
+    "numberOfCurrentInhabitant": 0,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Double",
+      "Single"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Double",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Single",
+      "Single",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 1,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Double",
+      "Double",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Double"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Single"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Double",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Single",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Single",
+      "Double",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Double",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Single",
+      "Double",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": true,
+    "numberOfMaximumElements": 2,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Double"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Single"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Double"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Single"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Single",
+      "Double",
+      "Double"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Double"
+    ]
+  },
+  {
+    "name": "Storage",
+    "isRed": false,
+    "numberOfMaximumElements": 3,
+    "goods": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sides": [
+      "Smooth",
+      "Double",
+      "Single",
+      "Single"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Double",
+      "Double",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Double",
+      "Single"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Universal",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Single",
+      "Single",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Single",
+      "Double",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 2,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Double",
+      "Single"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Double"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Double"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Single"
+    ]
+  },
+  {
+    "name": "Battery",
+    "numberOfCurrentBatteries": 3,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Double",
+      "Single"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Universal",
+      "Single"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Double",
+      "Universal"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Double",
+      "Double"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 3,
+    "coveredSide2": 0,
+    "sides": [
+      "Single",
+      "Double",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 0,
+    "coveredSide2": 1,
+    "sides": [
+      "Single",
+      "Double",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "Shield",
+    "coveredSide1": 3,
+    "coveredSide2": 0,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Single",
+      "Single"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Single",
+      "Universal"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Single",
+      "Single"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Single"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": false,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Double",
+      "Single"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Double",
+      "Double"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [
+      "Smooth",
+      "Single",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [
+      "Smooth",
+      "Double",
+      "Single",
+      "Double"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Smooth",
+      "Universal"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Universal",
+      "Double"
+    ]
+  },
+  {
+    "name": "AlienSupport",
+    "purple": true,
+    "sides": [
+      "Smooth",
+      "Smooth",
+      "Double",
+      "Universal"
+    ]
+  }
+]

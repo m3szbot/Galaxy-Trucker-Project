@@ -1,0 +1,552 @@
+package it.polimi.ingsw.Controller.FlightPhase.Cards;
+
+import it.polimi.ingsw.Connection.ServerSide.PlayerDisconnectedException;
+import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.PlayerMessenger;
+import it.polimi.ingsw.Controller.ExceptionsHandler;
+import it.polimi.ingsw.Controller.Sleeper;
+import it.polimi.ingsw.Model.Components.Cannon;
+import it.polimi.ingsw.Model.Components.Component;
+import it.polimi.ingsw.Model.Components.SideType;
+import it.polimi.ingsw.Model.GameInformation.GameInformation;
+import it.polimi.ingsw.Model.IllegalSelectionException;
+import it.polimi.ingsw.Model.ShipBoard.FracturedShipBoardException;
+import it.polimi.ingsw.Model.ShipBoard.NoHumanCrewLeftException;
+import it.polimi.ingsw.Model.ShipBoard.Player;
+import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
+
+/**
+ * Interface that defines a default method which handles a player
+ * being hit by a sequence of blows of a given type.
+ *
+ * @author carlo
+ * @author Ludo
+ */
+
+public interface SufferBlows {
+
+
+    /**
+     * Default method that goes through all the blows, handling the possible scenarios.
+     * It uses a boolean to ascertain that a component was hit and destroyed.
+     *
+     * @param player
+     * @param blows
+     * @param blowType
+     * @param gameInformation
+     * @throws PlayerDisconnectedException
+     * @throws NoHumanCrewLeftException
+     * @author Ludo
+     * @author carlo
+     */
+    default void hit(Player player, Blow[] blows, ElementType blowType, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
+
+        int[] componentCoordinates = new int[2];
+        boolean hitFlag;
+
+        for (Blow blow : blows) {
+
+            hitFlag = false;
+
+            if (blow != null) {
+
+                //Pause before each blow
+                Sleeper.sleepXSeconds(1);
+
+                findHitComponent(player, blow, componentCoordinates);
+
+                if (componentCoordinates[0] != -1 && componentCoordinates[1] != -1) {
+
+                    //a component was hit
+
+                    if (blowType == ElementType.CannonBlow) {
+
+                        if (blow.isBig()) {
+
+                            hitFlag = bigCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                        } else {
+
+                            //player can defend itself
+                            hitFlag = smallCannonBlowHit(player, componentCoordinates[0], componentCoordinates[1], blow.getDirection(), gameInformation);
+                        }
+                    } else {
+
+                        //BlowType is Meteorite
+                        if (blow.isBig()) {
+
+                            // player can defend itself only with cannon
+                            hitFlag = bigMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                        } else {
+
+                            //blow is small
+                            hitFlag = smallMeteorBlowHit(player, blow.getDirection(), componentCoordinates[0], componentCoordinates[1], gameInformation);
+
+                        }
+                    }
+
+                }
+
+                //notifying everybody of the blow effect on the player.
+                notifyAll(player, blow.getDirection(), hitFlag, componentCoordinates[0], componentCoordinates[1], blowType, gameInformation);
+
+            }
+        }
+    }
+
+    /**
+     * Method used to find a possible component to hit by the incoming blow.
+     *
+     * @param player
+     * @param blow
+     * @param coords
+     */
+
+    private void findHitComponent(Player player, Blow blow, int[] coords) {
+
+        int rows = ShipBoard.ROWS;
+        int cols = ShipBoard.COLS;
+        int i, roll = blow.getRoll();
+
+        //Default value if there's no component to be hit in a specific row or column
+        coords[0] = -1;
+        coords[1] = -1;
+
+        //blow coming from front
+        if (blow.getDirection() == 0) {
+
+            //From visible row index 5 up to 9 (5 ->9)
+            for (i = 4; i <= rows - 3; i++) {
+
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(roll), ShipBoard.getVisibleIndex(i)) != null) {
+
+                    //If it finds a component that could be hit
+                    coords[1] = i;
+                    coords[0] = roll;
+                    break;
+
+                }
+
+            }
+
+        }
+        //blow coming from right
+        else if (blow.getDirection() == 1) {
+
+            //From visible col index 10 down to 4 (10 -> 4)
+            for (i = cols - 2; i >= 3; i--) {
+
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(roll)) != null) {
+                    coords[1] = roll;
+                    coords[0] = i;
+                    break;
+                }
+
+            }
+
+        }
+        //blow coming from back
+        else if (blow.getDirection() == 2) {
+
+            //From visible row index 9 down to 5 (9 -> 5)
+            for (i = rows - 3; i >= 4; i--) {
+
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(roll), ShipBoard.getVisibleIndex(i)) != null) {
+                    coords[1] = i;
+                    coords[0] = roll;
+                    break;
+                }
+
+            }
+
+        }
+        //blow coming from left
+        else {
+
+            //From visible col index 4 up to 10 (4 -> 10)
+            for (i = 3; i <= cols - 2; i++) {
+
+                if (player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(roll)) != null) {
+                    coords[1] = roll;
+                    coords[0] = i;
+                    break;
+                }
+
+            }
+
+        }
+
+    }
+
+    private boolean bigCannonBlowHit(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
+
+        return removeComponent(player, xCoord, yCoord, gameInformation);
+
+    }
+
+    private boolean removeComponent(Player player, int xCoord, int yCoord, GameInformation gameInformation) throws NoHumanCrewLeftException, PlayerDisconnectedException {
+
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        String message;
+
+        try {
+            player.getShipBoard().removeComponent(xCoord + 1, yCoord + 1, true);
+
+        } catch (FracturedShipBoardException e) {
+
+            ExceptionsHandler.handleFracturedShipBoardException(playerMessenger, e);
+
+        } catch (IllegalSelectionException e) {
+
+            playerMessenger.printMessage(e.getMessage());
+
+        } catch (NoHumanCrewLeftException e) {
+
+            message = "Player " + player.getColouredNickName() + " was hit at position " +
+                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+            throw new NoHumanCrewLeftException();
+
+        }
+
+        return true;
+
+    }
+
+    private boolean smallCannonBlowHit(Player player, int xCoord, int yCoord, int direction, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
+
+        String message;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        boolean hitFlag, isProtected = false;
+        ShipBoard playerShipBoard = player.getShipBoard();
+
+        try {
+
+            isProtected = playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction);
+
+        } catch (IllegalSelectionException e) {
+            playerMessenger.printMessage(e.getMessage());
+        }
+
+        if (isProtected && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
+
+            //player can defend themselves with a shield and has batteries to do so
+            message = "A small cannon blow is directed on position ["
+                    + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
+                    directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
+            playerMessenger.printMessage(message);
+
+            if (playerMessenger.getPlayerBoolean()) {
+
+                //player decides to defend themselves with shields
+                hitFlag = useBattery(player, gameInformation);
+
+            } else { //player decides to not defend themselves
+
+                hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
+            }
+
+        } else {
+
+            //Removes the component if there's no shield
+            hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
+        }
+
+        //False if not hit
+        return hitFlag;
+    }
+
+    private String directionSolver(int direction) {
+
+        if (direction == 0) {
+            return "front";
+        } else if (direction == 1) {
+            return "right";
+        } else if (direction == 2) {
+            return "back";
+        } else if (direction == 3) {
+            return "left";
+        } else {
+            return null;
+        }
+    }
+
+    //Returns
+    private boolean useBattery(Player player, GameInformation gameInformation) throws PlayerDisconnectedException {
+
+        String message;
+        PlayerMessenger playerMessenger;
+        int[] coordinates;
+
+        message = "Enter the coordinates of the battery you want to use: ";
+        playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        playerMessenger.printMessage(message);
+
+        while (true) {
+
+            coordinates = playerMessenger.getPlayerCoordinates();
+
+            try {
+                player.getShipBoard().removeBattery(coordinates[0], coordinates[1]);
+                break;
+
+            } catch (IllegalSelectionException e) {
+
+                playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                playerMessenger.printMessage(e.getMessage());
+
+            }
+
+            //If there was an exception
+            message = "Please enter new coordinates: ";
+            playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+            playerMessenger.printMessage(message);
+
+        }
+
+        return false;
+
+    }
+
+    private boolean bigMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
+
+        String message;
+        PlayerMessenger playerMessenger;
+        ShipBoard playerShipBoard = player.getShipBoard();
+        boolean hitFlag;
+
+        int[] cannonCoords = hasCannon(direction, xCoord, yCoord, player);
+
+        if (cannonCoords[0] != -1) { //player has a cannon which points toward the blow.
+
+            if (!player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(cannonCoords[0]), ShipBoard.getVisibleIndex(cannonCoords[1])).isSingle()) { //cannon is not single
+
+                if (playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
+
+                    message = "A big asteroid is directed on position ["
+                            + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
+                            directionSolver(direction) + "!\nDo you want to defend yourself with the " +
+                            "double cannon pointing towards its direction ?";
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+                    playerMessenger.printMessage(message);
+
+                    if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
+
+                        hitFlag = useBattery(player, gameInformation);
+
+                    } else { //player decide to not defend itself
+
+                        hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+                    }
+
+                } else { //player doesn't have batteries
+
+                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
+                }
+
+            } else {
+
+                //If the player has a single cannon directed towards the meteorite the blow hits
+                hitFlag = true;
+            }
+
+        } else { //player doesn't have a cannon
+
+            hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+        }
+
+        return hitFlag;
+
+    }
+
+    private int[] hasCannon(int direction, int xCoord, int yCoord, Player player) {
+
+        int[] cannonCoords = {-1, -1};
+        int rows = ShipBoard.ROWS;
+        int cols = ShipBoard.COLS;
+        int i;
+
+        if (direction == 0) { //Blow comes from the front
+
+            //Searches for the first not null component on the x column
+            for (i = rows - 1; i >= 0; i--) {
+                Component component = player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(i));
+
+                if (component != null) {
+
+                    if (component instanceof Cannon && (component.getFront() == SideType.Special)) {
+
+                        //there is a cannon that can hit the blow
+
+                        cannonCoords[0] = xCoord;
+                        cannonCoords[1] = i;
+
+                    }
+                }
+            }
+
+        } else if (direction == 1 || direction == 3) { //Blow comes from the sides
+
+            int temp;
+
+            //Searches for the first not null component on the y row
+            for (i = 0; i < cols; i++) {
+
+                temp = yCoord;
+
+                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = yCoord + 1;
+
+                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = yCoord - 1;
+
+                if (checkCannonPresenceOnSides(direction, player, cannonCoords, i, temp)) return cannonCoords;
+            }
+
+        } else {
+            //blow comes from the back
+            int temp;
+
+            //Same as direction == 0 but inverted
+            for (i = 0; i < rows; i++) {
+
+                temp = xCoord;
+
+                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = xCoord + 1;
+
+                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
+
+                temp = xCoord - 1;
+
+                if (checkCannonPresenceOnBack(player, cannonCoords, i, temp)) return cannonCoords;
+            }
+
+        }
+
+        return cannonCoords;
+    }
+
+    private boolean checkCannonPresenceOnSides(int direction, Player player, int[] cannonCoords, int i, int temp) {
+        Component component = player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(i), ShipBoard.getVisibleIndex(temp));
+
+        if (component != null) {
+
+            if (component instanceof Cannon &&
+                    ((component.getRight() == SideType.Special && direction == 1) || (component.getLeft() == SideType.Special && direction == 3))) {
+
+                cannonCoords[0] = i;
+                cannonCoords[1] = temp;
+
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    private boolean checkCannonPresenceOnBack(Player player, int[] cannonCoords, int i, int temp) {
+        Component component = player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(temp), ShipBoard.getVisibleIndex(i));
+
+        if (component != null) {
+
+            if (component instanceof Cannon && component.getBack() == SideType.Special) {
+
+                cannonCoords[0] = temp;
+                cannonCoords[1] = i;
+
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    private boolean smallMeteorBlowHit(Player player, int direction, int xCoord, int yCoord, GameInformation gameInformation) throws PlayerDisconnectedException, NoHumanCrewLeftException {
+
+        String message;
+        PlayerMessenger playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(player);
+        ShipBoard playerShipBoard = player.getShipBoard();
+        boolean hitFlag = false, isProtected = false;
+
+        //condition is true if the side of the component hit is not smooth
+        Component component = player.getShipBoard().getComponent(ShipBoard.getVisibleIndex(xCoord), ShipBoard.getVisibleIndex(yCoord));
+
+        if ((direction == 0 && component.getFront() != SideType.Smooth)
+                || (direction == 1 && component.getRight() != SideType.Smooth)
+                || (direction == 2 && component.getBack() != SideType.Smooth)
+                || (direction == 3 && component.getLeft() != SideType.Smooth)) {
+
+            try {
+
+                isProtected = playerShipBoard.getShipBoardAttributes().checkSideShieldProtected(direction);
+
+            } catch (IllegalSelectionException e) {
+                playerMessenger.printMessage(e.getMessage());
+            }
+
+            if (isProtected && playerShipBoard.getShipBoardAttributes().getRemainingBatteries() > 0) {
+
+                //player can defend themselves by using shields
+                message = "A small asteroid is directed on position ["
+                        + (xCoord + 1) + "," + (yCoord + 1) + "] from the " +
+                        directionSolver(direction) + "!\nDo you want to defend yourself with shields ?";
+                playerMessenger.printMessage(message);
+
+                if (playerMessenger.getPlayerBoolean()) { //player decides to defend themselves
+
+                    hitFlag = useBattery(player, gameInformation);
+
+                } else {
+
+                    hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
+                }
+
+            } else {
+
+                hitFlag = removeComponent(player, xCoord, yCoord, gameInformation);
+
+            }
+
+        }
+        //If side is smooth there is no damage
+        //False if not hit
+        return hitFlag;
+    }
+
+    private void notifyAll(Player player, int direction, boolean hitFlag, int xCoord, int yCoord, ElementType blowType, GameInformation gameInformation) {
+
+        String message;
+
+        if (hitFlag) {
+
+            message = "Player " + player.getColouredNickName() + " was hit by a " +
+                    blowType.toString().toLowerCase() + " at position " +
+                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        } else if (xCoord != -1) {
+
+            message = "Player " + player.getColouredNickName() + " wasn't damaged by the " +
+                    blowType.toString().toLowerCase() + " that hit position " +
+                    "[" + (xCoord + 1) + "," + (yCoord + 1) + "]!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        } else {
+
+            message = "Player " + player.getColouredNickName() + " dodged the " +
+                    blowType.toString().toLowerCase() + " coming at him from the " + directionSolver(direction) + "!";
+            ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
+
+        }
+    }
+}

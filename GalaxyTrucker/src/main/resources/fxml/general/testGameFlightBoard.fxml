@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.TilePane?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUI.utils.FlightBoardController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../Polytechnic/cardboard/cardboard-3.png" />
+         </image>
+      </ImageView>
+      <TilePane fx:id="pos1" layoutX="143.0" layoutY="88.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos2" layoutX="198.0" layoutY="72.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos3" layoutX="255.0" layoutY="62.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos4" layoutX="314.0" layoutY="62.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos6" layoutX="420.0" layoutY="89.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos5" layoutX="371.0" layoutY="72.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos7" layoutX="471.0" layoutY="121.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos8" layoutX="500.0" layoutY="184.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos9" layoutX="471.0" layoutY="239.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos10" layoutX="420.0" layoutY="266.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos11" layoutX="364.0" layoutY="283.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos18" layoutX="92.0" layoutY="121.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos17" layoutX="57.0" layoutY="168.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos16" layoutX="92.0" layoutY="233.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos15" layoutX="135.0" layoutY="266.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos14" layoutX="190.0" layoutY="283.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos13" layoutX="248.0" layoutY="293.0" prefHeight="33.0" prefWidth="35.0" />
+      <TilePane fx:id="pos12" layoutX="307.0" layoutY="293.0" prefHeight="33.0" prefWidth="35.0" />
+      <Label fx:id="cardsRemaining" layoutX="210.0" layoutY="368.0" prefHeight="18.0" prefWidth="156.0" style="-fx-text-fill: yellow;" text="Label" />
+   </children>
+</Pane>
