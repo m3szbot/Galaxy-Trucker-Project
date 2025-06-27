@@ -438,15 +438,15 @@
     "blows": [
       {
         "direction": 0,
-        "big": false
-      },
-      {
-        "direction": 0,
         "big": true
       },
       {
         "direction": 0,
         "big": false
+      },
+      {
+        "direction": 0,
+        "big": true
       }
     ],
     "imagePath": "/Polytechnic/cards/GT-cards_II_IT_013.jpg"

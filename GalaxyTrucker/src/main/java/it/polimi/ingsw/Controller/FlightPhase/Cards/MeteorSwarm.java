@@ -72,6 +72,8 @@ public class MeteorSwarm extends Card implements SufferBlows {
             try {
                 hit(player, blows, blowType, gameInformation);
 
+                playerMessenger.printShipboard(player.getShipBoard());
+
             } catch (NoHumanCrewLeftException e) {
 
                 message = "Player " + player.getColouredNickName() + " has no crew members left to continue the voyage and was eliminated!\n";

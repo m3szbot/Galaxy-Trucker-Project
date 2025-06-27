@@ -64,12 +64,12 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         if (cardLevel == 1) {
             message = "The player with the lowest crew count will lose " + daysLost + " days.\n" +
-                    "The player with the lowest activated engine power will lose" + lossNumber + " crew members.\n" +
+                    "The player with the lowest activated engine power will lose " + lossNumber + " crew members.\n" +
                     "The player with the lowest activated fire power will be shot at.\n" +
                     "Choose wisely!\n";
         } else {
             message = "The player with the lowest fire power will lose " + daysLost + " days.\n" +
-                    "The player with the lowest activated engine power will lose" + lossNumber + " goods.\n" +
+                    "The player with the lowest activated engine power will lose " + lossNumber + " goods.\n" +
                     "The player with the lowest crew count will be shot at.\n" +
                     "Choose wisely!\n";
         }
@@ -150,6 +150,12 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
         }
 
 
+        //rolling the dice for each shot and then hitting
+        for (int i = 0; i < blows.length; i++) {
+            blows[i].rollDice();
+        }
+
+
         //calculating player with the lowest inhabitant number
 
         lowestInhabitantNumberPlayer = calculateSmallestCrew(gameInformation);
@@ -179,6 +185,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     hit(lowestInhabitantNumberPlayer, blows, blowType, gameInformation);
+
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(lowestInhabitantNumberPlayer);
+                    playerMessenger.printShipboard(lowestInhabitantNumberPlayer.getShipBoard());
 
                 } catch (PlayerDisconnectedException e) {
 
@@ -256,11 +265,6 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
 
         }
 
-        //rolling the dice for each shot and then hitting
-        for (int i = 0; i < blows.length; i++) {
-            blows[i].rollDice();
-        }
-
         //lowest firepower
 
         weakestFirePowerPlayer = findWeakestFirePowerPlayer(firePowers, gameInformation.getFlightBoard());
@@ -283,6 +287,9 @@ public class CombatZone extends Card implements SmallestCrew, SufferBlows, Movab
                     ClientMessenger.getGameMessenger(gameInformation.getGameCode()).sendMessageToAll(message);
 
                     hit(weakestFirePowerPlayer, blows, blowType, gameInformation);
+
+                    playerMessenger = ClientMessenger.getGameMessenger(gameInformation.getGameCode()).getPlayerMessenger(weakestFirePowerPlayer);
+                    playerMessenger.printShipboard(weakestFirePowerPlayer.getShipBoard());
 
                 } else {
 
