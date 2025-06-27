@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -134,6 +135,15 @@ public class ShipBoardController {
                 Label numberLabel = new Label(String.valueOf(numbers[i]));
                 numberLabel.setTextFill(Color.ORANGE);
                 numberLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 11;");
+
+                // add shadow
+                DropShadow shadow = new DropShadow();
+                shadow.setOffsetX(0);
+                shadow.setOffsetY(0);
+                shadow.setRadius(2);
+                shadow.setColor(Color.BLACK);
+
+                numberLabel.setEffect(shadow);
 
                 //formatting the hbox
                 hBox.getChildren().addAll(square, numberLabel);
