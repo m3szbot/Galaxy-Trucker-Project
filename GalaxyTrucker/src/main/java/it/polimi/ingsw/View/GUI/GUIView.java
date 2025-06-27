@@ -15,7 +15,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
-import java.util.List;
 
 //TODO
 
@@ -42,9 +41,6 @@ public class GUIView extends GeneralView {
     private Pane shipBoardPane;
     private Pane flighBoardPane;
     private GameType gameType;
-
-    private ShipBoard playerShipBoard;
-    private List<ShipBoard> possibleShipBoards;
 
     public void setGameType(GameType gameType) {
 
@@ -84,6 +80,7 @@ public class GUIView extends GeneralView {
     /**
      * Set up the controller of the current phase. The method is called every time a phase
      * switch happen.
+     *
      * @param controller
      */
 
@@ -117,6 +114,7 @@ public class GUIView extends GeneralView {
      * removes from the string passed as parameters the ansi codes. This is because the player
      * nickname is printed with colors on the TUI and therefore the string containing it also
      * contains andi code.
+     *
      * @param message
      * @return the message without any ansi code in it.
      */
@@ -137,22 +135,6 @@ public class GUIView extends GeneralView {
 
     @Override
     public void printShipboard(ShipBoard shipBoard) {
-
-        /*
-        TODO
-        // fracture prints new possible shipboards
-        if (!shipBoard.equals(playerShipBoard)) {
-            // add possible shipboard to list
-            possibleShipBoards.add(shipBoard);
-        } else {
-            // original shipboard received, no fracture/fracture is over
-            if (!possibleShipBoards.isEmpty()) {
-                possibleShipBoards = new ArrayList<>();
-
-            }
-        }
-
-         */
 
         FXUtil.runOnFXThread(() -> {
 
