@@ -31,9 +31,10 @@ public class AssemblyState extends GameState {
         if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
             playerMessenger.printComponent(assemblyProtocol.getPlayersInHandComponents().get(player));
         }
-        playerMessenger.printMessage("👾AssemblyPhase: enter command:");
+        playerMessenger.printMessage("Possible commands:");
         playerMessenger.printMessage("(Place (current component) / Draw (a new component) / Choose (an uncovered component) / Show (a deck) / Rotate (current component)");
         playerMessenger.printMessage("/ Turn (the hourglass) / Book (current component and have a new one) / Place booked (component) / End (finish your assembling phase))");
+        playerMessenger.printMessage("Enter command:");
     }
 
     /**
@@ -104,11 +105,11 @@ public class AssemblyState extends GameState {
                 break;
 
             case "show":
-                if(assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
+                if (assemblyThread.getGameInformation().getGameType().equals(GameType.NORMALGAME)) {
                     actionTaken = true;
                     assemblyThread.setState(new ShowDeckState(assemblyProtocol, playerMessenger, player));
                     break;
-                }else{
+                } else {
                     playerMessenger.printMessage("You are not allowed to see the cards in testgame mode");
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                     break;
