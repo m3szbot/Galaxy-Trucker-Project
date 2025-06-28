@@ -1,4 +1,4 @@
-#Final UML Diagram
+# Final UML Diagram
 
 ![uml](images/GalaxyTruckerUML.png)
 
