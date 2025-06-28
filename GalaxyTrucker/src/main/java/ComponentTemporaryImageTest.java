@@ -1,4 +1,4 @@
-import com.fasterxml.jackson.databind.DeserializationFeature;
+/*import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.Model.Components.*;
 import javafx.application.Application;
@@ -96,3 +96,5 @@ public class ComponentTemporaryImageTest extends Application {
         }
     }
 }
+
+ */
