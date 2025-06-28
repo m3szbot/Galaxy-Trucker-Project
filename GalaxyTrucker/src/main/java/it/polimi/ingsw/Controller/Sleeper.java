@@ -34,9 +34,9 @@ public final class Sleeper {
      * Method that sleeps the current thread for the given seconds.
      * Used to delay prints.
      */
-    public static void sleepXSeconds(int seconds) {
+    public static void sleepXSeconds(double seconds) {
         try {
-            Thread.sleep(seconds * 1000L);
+            Thread.sleep((long) (seconds * 1000));
         } catch (InterruptedException e) {
             System.out.println("Thread was interrupted.");
         }

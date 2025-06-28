@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.AssemblyModel;
 
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -16,8 +17,12 @@ import java.util.concurrent.TimeUnit;
 public class HourGlass {
     private final int life = 60; // Duration of the timer in seconds
 
-    ScheduledExecutorService scheduler;
-    private int state; // Represents the current state of the hourglass
+    private ScheduledExecutorService scheduler;
+
+    // Represents the current state of the hourglass.
+    // State == 3 is the final state - no more turns
+    // updated when the hourglass finishes it's current cycle
+    private int state;
     private boolean finished; // Indicates whether the timer has completed
 
     /**
@@ -33,49 +38,50 @@ public class HourGlass {
      * The timer runs for a predefined duration and updates the state when completed.
      */
     public synchronized void twist(AssemblyProtocol assemblyProtocol) {
-        if (finished == true) { // Ensures the hourglass is not already running
+        // Hourglass currently not running
+        if (finished && state < 3) {
             finished = false;
             scheduler = Executors.newScheduledThreadPool(1);
 
+            // runnable anonymous class
             Runnable task = new Runnable() {
                 int elapsedTime = 0; // Tracks elapsed time
 
                 @Override
                 public void run() {
+                    // hourglass running
                     if (elapsedTime < life) {
                         if (elapsedTime % 15 == 0) {
-                            String message = ("Elapsed Time: " + elapsedTime + "s");
+                            String message = String.format("Elapsed time: %ds (%d/3)", elapsedTime, state + 1);
                             ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendMessageToAll(message);
 
                         }
                         elapsedTime++;
-                    } else {
-                        String message = "Time's up!";
-                        //System.out.println("Time's up!");
+                    }
+                    // hourglass finished current life
+                    else {
 
+                        String message = String.format("Time's up! (%d/3)", state + 1);
                         ClientMessenger.getGameMessenger(assemblyProtocol.getGameCode()).sendMessageToAll(message);
                         scheduler.shutdown(); // Stops the scheduler
-                        updateState(); // Updates the state of the hourglass
                         finished = true; // Resets to finished state
+                        incrementState(); // Updates the state of the hourglass
                     }
                 }
+
             };
+            // end of anonymous class
+
             // Schedules the task to run every second
             scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
-        } else {
-            //System.out.println("The HourGlass has been already twisted!");
         }
     }
 
     /**
      * Updates the state of the hourglass when the timer finishes.
      */
-    private void updateState() {
+    private void incrementState() {
         state++;
-    }
-
-    public synchronized void stopHourglass() {
-        scheduler.shutdownNow();
     }
 
     /**
@@ -87,7 +93,17 @@ public class HourGlass {
         return state;
     }
 
+    public synchronized void stopHourglass() {
+        if (scheduler != null) {
+            scheduler.shutdownNow();
+        }
+    }
+
     public synchronized boolean isFinished() {
         return finished;
+    }
+
+    public ExecutorService getScheduler() {
+        return scheduler;
     }
 }
