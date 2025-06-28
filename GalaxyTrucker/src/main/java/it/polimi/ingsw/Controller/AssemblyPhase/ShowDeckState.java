@@ -31,7 +31,7 @@ public class ShowDeckState extends GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyThread) {
-        String message = "Choose a deck from 1 to 3 writing the number:";
+        String message = "Choose a deck (1-3):";
         playerMessenger.printMessage(message);
     }
 

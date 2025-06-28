@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Connection.ClientSide.utils;
 
+import it.polimi.ingsw.Controller.Sleeper;
+
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,6 +31,7 @@ public final class ClientInputManager {
     /**
      * set up the timeout in milliseconds. During the lobby the timeout is 1 minute,
      * while during the game 5 minutes. A warning is sent when 1 minute is left.
+     *
      * @param playerInputTimeOut
      */
 
@@ -38,6 +41,7 @@ public final class ClientInputManager {
 
     /**
      * Method which return the user input. It is a blocking method and can be unblocked if needed.
+     *
      * @return the user input
      * @throws TimeoutException
      */
@@ -73,6 +77,7 @@ public final class ClientInputManager {
 
     /**
      * Sets the user input, which unblock the getUserInput method.
+     *
      * @param input
      */
 
@@ -92,12 +97,12 @@ public final class ClientInputManager {
         String[] lines = input.split("\\r?\\n");
 
         for (String line : lines) {
+            // avoid collisions
+            Sleeper.sleepXSeconds(0.1);
+
             // wait until input is taken
             while (testRunning.get() && userInput.get() != null) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                }
+                Sleeper.sleepXSeconds(0.1);
             }
 
             // input thread ended

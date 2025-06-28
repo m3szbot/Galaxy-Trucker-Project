@@ -30,13 +30,17 @@ public class PlaceBookedComponentState extends GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyThread) {
+        // if there are booked components
         if (assemblyProtocol.getPlayersBookedComponents().get(player).size() > 0) {
+            playerMessenger.printMessage("Booked components:");
             for (int i = 0; i < assemblyProtocol.getPlayersBookedComponents().get(player).size(); i++) {
                 Component component = assemblyProtocol.getPlayersBookedComponents().get(player).get(i);
                 String message = "Component " + i + ": Name: " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
                 playerMessenger.printMessage(message);
             }
-        } else {
+        }
+        // no booked components
+        else {
             playerMessenger.printMessage("You don't have any booked component");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
@@ -69,13 +73,17 @@ public class PlaceBookedComponentState extends GameState {
                     playerMessenger.printMessage(message);
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 }
-            } else {
-                String message = "Wrong input";
+            }
+            // selected index out of bounds
+            else {
+                String message = "Wrong input (enter a valid index)";
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
-        } catch (NumberFormatException e) {
-            String message = "Wrong input";
+        }
+        // input couldn't be parsed to int
+        catch (NumberFormatException e) {
+            String message = "Wrong input (enter a number)";
             playerMessenger.printMessage(message);
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }

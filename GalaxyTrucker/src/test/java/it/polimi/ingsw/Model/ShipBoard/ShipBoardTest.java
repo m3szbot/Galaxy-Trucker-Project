@@ -301,6 +301,8 @@ public class ShipBoardTest {
         assertFalse(checkCoordinatesInBounds(1, 130));
         assertFalse(checkCoordinatesInBounds(100, 1));
         assertFalse(checkCoordinatesInBounds(5, -10));
+        assertTrue(checkCoordinatesInBounds(12, 12));
+        assertTrue(checkCoordinatesInBounds(1, 1));
 
         // legal coordinates
         assertTrue(checkCoordinatesInBounds(1, 1));

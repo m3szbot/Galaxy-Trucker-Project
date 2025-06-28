@@ -99,10 +99,11 @@ public class ComponentPlacingState extends GameState {
                         // component in hand
                         if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
                             ShipBoard playerShipboard = player.getShipBoard();
-                            // TODO delete checks, NotPermittedPlacement checked by shipboard
                             // coordinate selected has neighbours
                             try {
                                 playerShipboard.addComponent(assemblyProtocol.getPlayersInHandComponents().get(player), num1, num2);
+                                // throws NotPermittedPlacement exception
+
                                 // component is removed from hand (not put back into lists or booked)
                                 assemblyProtocol.removePlacedComponentFromHand(player);
                                 // get new component
