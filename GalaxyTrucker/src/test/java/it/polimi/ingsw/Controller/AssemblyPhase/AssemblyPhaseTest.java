@@ -103,4 +103,17 @@ public class AssemblyPhaseTest {
 
         assemblyPhase.start();
     }
+
+    @Test
+    void drawComponent() {
+        StringBuilder input = new StringBuilder();
+        for (int i = 0; i < 500; i++) {
+            input.append("draw\n");
+        }
+        input.append("end\n1\n");
+
+        Mocker.simulateClientInput(input.toString());
+
+        assemblyPhase.start();
+    }
 }
