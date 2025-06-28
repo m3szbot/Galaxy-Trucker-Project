@@ -47,11 +47,9 @@ class PlayerTest {
         player = new Player("A", Color.YELLOW, gameInformation);
         System.out.println(player.getColouredNickName());
 
-        player = new Player("A", null, gameInformation);
-        System.out.println(player.getColouredNickName());
 
         assertThrows(IllegalStateException.class, () -> {
-            new Player(null, null, gameInformation);
+            new Player("a", null, gameInformation);
         });
     }
 }
