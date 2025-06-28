@@ -35,6 +35,8 @@ class GameInformationTest {
 
         assertEquals(3, gameInformation.getMaxNumberOfPlayers());
         assertEquals(player, gameInformation.getPlayerList().getFirst());
+        assertTrue(gameInformation.getDisconnectedPlayerList().isEmpty());
+        assertTrue(gameInformation.checkPlayerConnectivity(player));
     }
 
 
@@ -133,8 +135,16 @@ class GameInformationTest {
         assertNotNull(gameInformation.getPlayerList());
         assertNotNull(gameInformation.getPlayerList().get(0));
         assertEquals(player2, gameInformation.getPlayerList().get(0));
+        assertEquals(2, gameInformation.getDisconnectedPlayerList().size());
+        assertTrue(gameInformation.checkPlayerConnectivity(player1));
+        assertFalse(gameInformation.checkPlayerConnectivity(player1));
+
+
         gameInformation.disconnectPlayerInGameInformation(player2);
         assertEquals(0, gameInformation.getPlayerList().size());
+        assertEquals(2, gameInformation.getDisconnectedPlayerList().size());
+        assertFalse(gameInformation.checkPlayerConnectivity(player1));
+        assertFalse(gameInformation.checkPlayerConnectivity(player1));
     }
 
     @Test
@@ -154,5 +164,11 @@ class GameInformationTest {
         assertEquals(gameType1, gameInformation.getGameType());
         gameInformation.setGameType(gameType2);
         assertEquals(gameType2, gameInformation.getGameType());
+    }
+
+    @Test
+    void setGamePhase() {
+        gameInformation.setGamePhase(GamePhase.Assembly);
+        assertEquals(GamePhase.Assembly, gameInformation.getGamePhase());
     }
 }

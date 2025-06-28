@@ -49,5 +49,8 @@ class PlayerTest {
 
         player = new Player("A", null, gameInformation);
         System.out.println(player.getColouredNickName());
+
+        player = new Player(null, null, gameInformation);
+        System.out.println(player.getColouredNickName());
     }
 }
