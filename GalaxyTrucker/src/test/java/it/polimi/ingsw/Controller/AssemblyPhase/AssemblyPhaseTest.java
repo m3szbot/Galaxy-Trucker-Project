@@ -116,4 +116,12 @@ public class AssemblyPhaseTest {
 
         assemblyPhase.start();
     }
+/*
+    @Test
+    void chooseComponent() {
+
+        assemblyPhase.start();
+    }
+
+ */
 }

@@ -54,7 +54,7 @@ public class PlaceBookedComponentState extends GameState {
     public void handleInput(String input, AssemblyThread assemblyThread) {
         try {
             int index = Integer.parseInt(input);
-            if (index >= 0 && index < assemblyProtocol.getPlayersBookedComponents().size()) {
+            if (index >= 0 && index < assemblyProtocol.getPlayersBookedComponents().get(player).size()) {
                 if (assemblyProtocol.getPlayersBookedComponents().get(player).get(index) != null) {
                     try {
                         assemblyProtocol.chooseBookedComponent(player, index);
