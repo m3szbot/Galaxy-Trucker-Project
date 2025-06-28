@@ -1,9 +1,6 @@
 package it.polimi.ingsw.View.GUI.utils;
 
-import it.polimi.ingsw.Model.Components.Battery;
-import it.polimi.ingsw.Model.Components.Cabin;
-import it.polimi.ingsw.Model.Components.Component;
-import it.polimi.ingsw.Model.Components.Storage;
+import it.polimi.ingsw.Model.Components.*;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.ShipBoard;
 import javafx.fxml.FXML;
@@ -63,7 +60,13 @@ public class ShipBoardController {
                     } else if (component.getComponentName().equals("Cabin")) {
 
                         numbers = new int[]{((Cabin) component).getCrewMembers()};
+                        
                         colors = new Color[]{Color.WHITE};
+                        if (((Cabin) component).getCrewType().equals(CrewType.Purple))
+                            colors = new Color[]{Color.PURPLE};
+                        else if (((Cabin) component).getCrewType().equals(CrewType.Brown))
+                            colors = new Color[]{Color.BROWN};
+
                         hasIndicators = true;
 
                     } else {
