@@ -38,10 +38,11 @@ public class PlaceBookedComponentState extends GameState {
                 String message = "Component " + i + ": Name: " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
                 playerMessenger.printMessage(message);
             }
+            playerMessenger.printMessage("Choose a booked component:");
         }
         // no booked components
         else {
-            playerMessenger.printMessage("You don't have any booked component");
+            playerMessenger.printMessage("You don't have any booked components");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }

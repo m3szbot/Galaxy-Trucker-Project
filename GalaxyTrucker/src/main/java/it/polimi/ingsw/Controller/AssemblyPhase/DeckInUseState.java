@@ -35,7 +35,7 @@ public class DeckInUseState extends GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyThread) {
-        String message = "Write yes if you have finished to consult the deck";
+        String message = "Write yes if you have finished consulting the deck";
         playerMessenger.printMessage(message);
     }
 
@@ -43,8 +43,8 @@ public class DeckInUseState extends GameState {
      * Handles the player's input. If the input is "yes", marks the deck as no longer in use
      * and returns to the main assembly state. Otherwise, re-prompts the player.
      *
-     * @param input           the player's input string
-     * @param assemblyThread  the thread managing the current player's assembly phase
+     * @param input          the player's input string
+     * @param assemblyThread the thread managing the current player's assembly phase
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {

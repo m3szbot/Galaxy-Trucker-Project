@@ -63,7 +63,7 @@ public class ShowDeckState extends GameState {
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
         } catch (NumberFormatException e) {
-            playerMessenger.printMessage("Invalid Input, please write a number");
+            playerMessenger.printMessage("Invalid input (enter a number)");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }

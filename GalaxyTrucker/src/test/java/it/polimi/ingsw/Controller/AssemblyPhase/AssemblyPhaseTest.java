@@ -6,6 +6,7 @@ import it.polimi.ingsw.Mocker;
 import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -173,6 +174,14 @@ public class AssemblyPhaseTest {
         assertTrue(flightBoard.isInFlight(player));
     }
 
+    @RepeatedTest(50)
+    void end() {
+        String input = String.format("end\n%d\n", ThreadLocalRandom.current().nextInt(-5, 10));
+        Mocker.simulateClientInput(input);
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+    }
+
     @Test
     void shortRandomInputStressTest() {
         ClientInputManager.setTimeOut(100000);
@@ -248,7 +257,7 @@ public class AssemblyPhaseTest {
 
     @Test
     void timeoutNoInput() {
-        ClientInputManager.setTimeOut(110);
+        ClientInputManager.setTimeOut(1);
         assemblyPhase.start();
         assertFalse(player.getIsConnected());
     }
@@ -256,7 +265,7 @@ public class AssemblyPhaseTest {
     @Test
     void timeoutPlace() {
         ClientInputManager.setTimeOut(110);
-        Mocker.simulateClientInput("place\n");
+        Mocker.simulateClientInput("draw\nplace\n");
         assemblyPhase.start();
         assertFalse(player.getIsConnected());
     }
@@ -264,7 +273,39 @@ public class AssemblyPhaseTest {
     @Test
     void timeoutChooseUncovered() {
         ClientInputManager.setTimeOut(110);
-        Mocker.simulateClientInput("choose\n");
+        Mocker.simulateClientInput("draw\ndraw\nchoose\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutPlaceBooked1() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("draw\nbook\nplace booked\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutPlaceBooked2() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("draw\nbook\nplace booked\n0\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutShow1() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("show\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutShow2() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("show\n0\n");
         assemblyPhase.start();
         assertFalse(player.getIsConnected());
     }

@@ -37,11 +37,7 @@ public class ComponentPlacingState extends GameState {
     @Override
     public void enter(AssemblyThread assemblyThread) {
         String message;
-        if (!booked) {
-            message = "Where do you want to place the component? Indicate coordinates Cols and Rows";
-        } else {
-            message = "Where do you want to place your booked component? Indicate coordinates Cols and Rows or write Rotate";
-        }
+        message = "Where do you want to place the component? Enter column and row:";
         playerMessenger.printMessage(message);
     }
 
