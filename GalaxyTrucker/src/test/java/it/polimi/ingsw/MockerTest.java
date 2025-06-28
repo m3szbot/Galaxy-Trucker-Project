@@ -23,7 +23,9 @@ public class MockerTest {
         assertEquals(1, game1.getGameInformation().getPlayerList().size());
         assertNotNull(player1);
         assertNotNull(playerMessenger1);
-
+        assertNotNull(Mocker.getGameMessenger());
+        Mocker.getGameMessenger().sendMessageToAll("GameMessenger working");
+        playerMessenger1.printMessage("PlayerMessenger working");
     }
 
     @Test

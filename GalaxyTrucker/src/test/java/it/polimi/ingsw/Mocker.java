@@ -4,6 +4,7 @@ import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
+import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
@@ -30,12 +31,17 @@ public abstract class Mocker {
         return game.getGameInformation().getPlayerList().getFirst();
     }
 
+    public static GameMessenger getGameMessenger() {
+        return ClientMessenger.getGameMessenger(game.getGameCode());
+    }
+
     public static void simulateClientInput(String input) {
         inputThread = new Thread(() -> {
             ClientInputManager.setTestInput(input);
         });
         inputThread.start();
     }
+
 
     /**
      * Set up a Game with gameType NORMALGAME, 1 player, GameMessenger and PlayerMessenger.
