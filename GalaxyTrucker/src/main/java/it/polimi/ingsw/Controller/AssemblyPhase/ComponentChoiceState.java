@@ -54,43 +54,31 @@ public class ComponentChoiceState extends GameState {
      */
     @Override
     public void handleInput(String input, AssemblyThread assemblyThread) {
-        Component component;
-        String imput = input.toLowerCase();
-        int caseManagement = -1;
+        input = input.toLowerCase();
+        int index;
+
         try {
-            caseManagement = Integer.parseInt(imput);
+            index = Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            playerMessenger.printMessage("Not valid input");
+            playerMessenger.printMessage("\nNot valid input");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             return;
         }
-        if (caseManagement >= 0 && caseManagement < assemblyProtocol.getUncoveredComponentsList().size()) {
-            caseManagement = 1;
-        } else {
-            caseManagement = 0;
-        }
-        switch (caseManagement) {
-            case 1:
-                if (components.get(Integer.parseInt(input.toLowerCase())) == assemblyProtocol.getUncoveredComponentsList().get(Integer.parseInt(input.toLowerCase()))) {
-                    try {
-                        assemblyProtocol.chooseUncoveredComponent(player, Integer.parseInt(imput));
-                    } catch (IllegalSelectionException e) {
-                        playerMessenger.printMessage("Another unreachable place in the universe has been reached.");
-                        break;
-                    }
-                    component = assemblyProtocol.getPlayersInHandComponents().get(player);
-                    message = "New component:" + component.getComponentName() + "Front:" + component.getFront() + "Right:" + component.getRight() + "Back:" + component.getBack() + "Left:" + component.getLeft();
-                } else {
-                    message = "Component has been already taken";
+
+        if (index >= 0 && index < assemblyProtocol.getUncoveredComponentsList().size() && index < components.size()) {
+            if (components.get(index).equals(assemblyProtocol.getUncoveredComponentsList().get(index))) {
+                try {
+                    assemblyProtocol.chooseUncoveredComponent(player, index);
+                } catch (IllegalSelectionException e) {
+                    playerMessenger.printMessage("\nAnother unreachable place in the universe has been reached.");
                 }
+            } else {
+                message = "\nComponent has been already taken";
                 playerMessenger.printMessage(message);
-                break;
-            case 2:
-                message = "Error in component choice";
-                playerMessenger.printMessage(message);
-                break;
-
-
+            }
+        }else{
+            message = "\nComponent index out of range";
+            playerMessenger.printMessage(message);
         }
         assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
     }
