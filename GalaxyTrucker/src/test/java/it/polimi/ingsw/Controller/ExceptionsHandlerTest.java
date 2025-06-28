@@ -41,7 +41,6 @@ public class ExceptionsHandlerTest {
 
         Mocker.simulateClientInput("6 7\n1\n");
         correctionPhase.start();
-
     }
 
     @Test

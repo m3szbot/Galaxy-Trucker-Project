@@ -16,8 +16,17 @@ class ComponentTest {
 
     ComponentAttributesVisitor visitor = new ComponentAttributesVisitor();
 
+    Component connector = new Component(null, 0, new SideType[]{SideType.Smooth, SideType.Smooth, SideType.Smooth, SideType.Smooth});
+
     Component singleEngine = new Engine(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, true);
     Component doubleEngine = new Engine(new SideType[]{SideType.Special, SideType.Single, SideType.Single, SideType.Single}, false);
+
+    @Test
+    void checkConnector() {
+        assertEquals(0, connector.getRotations());
+        assertEquals(0, connector.getCrewMembers());
+        assertEquals(true, connector.isSingle());
+    }
 
     @Test
     void testSingleEnginePower() {
