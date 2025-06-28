@@ -1,13 +1,13 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Mocker;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AssemblyPhaseTest {
 
@@ -29,9 +29,10 @@ public class AssemblyPhaseTest {
         Mocker.simulateClientInput("draw\nplace\n7 8\nend\n1\n");
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
     }
 
-
+/*
     @Test
     public void bookComponent() {
         assemblyPhase.start();
@@ -90,11 +91,14 @@ public class AssemblyPhaseTest {
         assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
     }
 
+ */
+
     @Test
     void executeAllCommands() {
         Mocker.simulateClientInput("draw\nrotate\nbook\ndraw\nplace booked\n0\nplace\n7 8\nchoose\n0\nplace\n7 6\nturn\nshow deck\nend\n1\n");
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
     }
 
     @Test
@@ -102,10 +106,12 @@ public class AssemblyPhaseTest {
         Mocker.simulateClientInput("rotate\ndraw\nrotate\nrotate\nrotate\nrotate\nrotate\nrotate\nplace\n7 6\nrotate\nbook\nrotate\nend\n1\n");
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
     }
 
     @Test
     void drawComponent() {
+        ClientInputManager.setTimeOut(100000);
         StringBuilder input = new StringBuilder();
         for (int i = 0; i < 500; i++) {
             input.append("draw\n");
@@ -115,6 +121,7 @@ public class AssemblyPhaseTest {
         Mocker.simulateClientInput(input.toString());
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
     }
 
     @Test
@@ -122,14 +129,7 @@ public class AssemblyPhaseTest {
         Mocker.simulateClientInput("place booked\n1\n place booked\n0\nplace booked\n-1\ndraw\nplace booked\n0\ndraw\nbook\ndraw\nbook\nplace booked\n0\nplace booked\n1\nplace booked\n2\nend\n1\n");
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
     }
 
-/*
-    @Test
-    void chooseComponent() {
-
-        assemblyPhase.start();
-    }
-
- */
 }

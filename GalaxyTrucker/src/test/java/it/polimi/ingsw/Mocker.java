@@ -7,6 +7,7 @@ import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
@@ -95,8 +96,14 @@ public abstract class Mocker {
             }
         }
 
-        if (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)
-            throw new IllegalStateException("The previous input simulation didn't finish yet.");
+        int trials = 10;
+        while (trials > 0 && (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)) {
+            Sleeper.sleepXSeconds(0.1);
+            trials--;
+        }
+
+        if (trials == 0)
+            throw new IllegalStateException("Previous test couldn't finish");
     }
 
     public static void mockNormalGame2Players() {
