@@ -174,12 +174,20 @@ public class AssemblyPhaseTest {
         assertTrue(flightBoard.isInFlight(player));
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(25)
     void end() {
-        String input = String.format("end\n%d\n", ThreadLocalRandom.current().nextInt(-5, 10));
+        int tile = ThreadLocalRandom.current().nextInt(-5, 10);
+        String input = String.format("end\n%d\n", tile);
         Mocker.simulateClientInput(input);
         assemblyPhase.start();
-        assertTrue(player.getIsConnected());
+
+        if (tile == 1 || tile == 2 || tile == 4 || tile == 7) {
+            assertTrue(flightBoard.isInFlight(player));
+            assertTrue(player.getIsConnected());
+        } else {
+            assertFalse(flightBoard.isInFlight(player));
+            assertFalse(player.getIsConnected());
+        }
     }
 
     @Test
@@ -305,7 +313,7 @@ public class AssemblyPhaseTest {
     @Test
     void timeoutShow2() {
         ClientInputManager.setTimeOut(110);
-        Mocker.simulateClientInput("show\n0\n");
+        Mocker.simulateClientInput("show\n1\n");
         assemblyPhase.start();
         assertFalse(player.getIsConnected());
     }

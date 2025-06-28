@@ -84,8 +84,8 @@ public abstract class Mocker {
 
         game.setUpPhases();
 
-        // set timeout to 1 sec
-        ClientInputManager.setTimeOut(1000);
+        // set timeout to 0.25 sec
+        ClientInputManager.setTimeOut(250);
 
         Mocker.game = game;
     }
