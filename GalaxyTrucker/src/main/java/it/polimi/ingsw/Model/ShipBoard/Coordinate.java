@@ -16,10 +16,6 @@ public class Coordinate {
         this.row = row;
     }
 
-    public Coordinate(int[] coordinates) {
-        this.col = coordinates[0];
-        this.row = coordinates[1];
-    }
 
     /**
      * Override hashCode to maintain hash function coherency, by using fields instead of reference to calculate
