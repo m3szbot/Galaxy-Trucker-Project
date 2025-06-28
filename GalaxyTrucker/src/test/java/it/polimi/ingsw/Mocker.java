@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
+import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ViewType;
@@ -63,6 +64,11 @@ public abstract class Mocker {
         // add 1 player
         Player player1 = new Player("Player1", Color.BLUE, game.getGameInformation());
         game.addPlayer(player1, true);
+
+        // server
+        Server centralServer = new Server();
+        ClientMessenger.setCentralServer(centralServer);
+        centralServer.addNickName(player1.getNickName());
 
 
         // setup messengers

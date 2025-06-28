@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ClientInputManager {
 
     private static AtomicReference<String> userInput = new AtomicReference<>(null);
+    // milliseconds
     private static long timeOut;
 
     // used for input simulation

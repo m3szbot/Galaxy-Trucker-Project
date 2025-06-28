@@ -10,9 +10,20 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Commands:
+ * place
+ * draw
+ * rotate
+ * choose
+ * book
+ * place booked
+ * turn
+ * show
+ * end
+ */
 public class AssemblyPhaseTest {
 
     Game game;
@@ -74,7 +85,8 @@ public class AssemblyPhaseTest {
     void drawComponent() {
         ClientInputManager.setTimeOut(100000);
         StringBuilder input = new StringBuilder();
-        for (int i = 0; i < 500; i++) {
+        // ~150 components
+        for (int i = 0; i < 400; i++) {
             input.append("draw\n");
         }
         input.append("end\n1\n");
@@ -196,7 +208,7 @@ public class AssemblyPhaseTest {
             }
             case 3 -> {
                 // choose uncovered
-                return String.format("choose uncovered\n%d\n", ThreadLocalRandom.current().nextInt(-100, 200));
+                return String.format("choose\n%d\n", ThreadLocalRandom.current().nextInt(-100, 200));
             }
             case 4 -> {
                 // book
@@ -232,5 +244,28 @@ public class AssemblyPhaseTest {
         assemblyPhase.start();
         assertTrue(player.getIsConnected());
         assertTrue(flightBoard.isInFlight(player));
+    }
+
+    @Test
+    void timeoutNoInput() {
+        ClientInputManager.setTimeOut(110);
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutPlace() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("place\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutChooseUncovered() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("choose\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
     }
 }
