@@ -9,7 +9,9 @@ import it.polimi.ingsw.Model.GameInformation.GamePhase;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -21,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AssemblyPhase extends Phase {
     private final AssemblyProtocol assemblyProtocol;
     private AtomicBoolean running = new AtomicBoolean(true);
-    private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private String message;
 
 
@@ -83,7 +84,7 @@ public class AssemblyPhase extends Phase {
         }
         executor.shutdownNow();
         t.interrupt();
-        if(assemblyProtocol.getGameType().equals(GameType.NORMALGAME)){
+        if (assemblyProtocol.getGameType().equals(GameType.NORMALGAME)) {
             assemblyProtocol.getHourGlass().stopHourglass();
         }
 

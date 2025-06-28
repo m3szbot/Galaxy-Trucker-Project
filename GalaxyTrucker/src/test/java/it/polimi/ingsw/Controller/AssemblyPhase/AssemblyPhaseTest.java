@@ -10,39 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AssemblyPhaseTest {
-    /*
-        @BeforeEach
-        public void  createGameInformation(){
 
-            GameInformation gameInformation = new GameInformation();
-            gameInformation.setGameType(GameType.NormalGame);
-            gameInformation.setUpPlayers(gecky = new Player("Gecky", Color.RED, gameInformation), 1);
-            try {gameInformation.setUpCards(GameType.NormalGame);} catch (Exception e){e.printStackTrace();}
-            try  {gameInformation.setUpComponents();} catch (Exception e){e.printStackTrace();}
-            ass = new AssemblyPhase();
-            view = new AssemblyView();
-        }
-
-        @Test
-        public void start1(){
-            ComponentPlacingState state = new ComponentPlacingState(ass.getAssemblyView(), ass.getAssemblyProtocol(), gecky);
-            ComponentChoiceState state1;
-           // ass.start();
-            ass.setState(state);
-            state.enter(ass, ass.getAssemblyView());
-            ass.getAssemblyProtocol().newComponent(gecky);
-            ass.getAssemblyProtocol().newComponent(gecky);
-            ass.getAssemblyProtocol().newComponent(gecky);
-            state.handleInput("7 7", ass);
-            assertTrue(gecky.getShipBoard().getComponent(6, 6) != null);
-            System.out.println("Boti Boti Boti");
-            state1 = new ComponentChoiceState(ass.getAssemblyView(),ass.getAssemblyProtocol(), gecky);
-            ass.setState(state1);
-            state1.enter(ass, ass.getAssemblyView());
-            System.out.println(ass.getAssemblyProtocol().getPlayersInHandComponents().get(gecky).getComponentName() + " "+ ass.getAssemblyProtocol().getPlayersInHandComponents().get(gecky).getFront() + " " + ass.getAssemblyProtocol().getPlayersInHandComponents().get(gecky).getRight() + " " + ass.getAssemblyProtocol().getPlayersInHandComponents().get(gecky).getBack());
-
-        }
-    */
     Game game;
     AssemblyPhase assemblyPhase;
     Player player;
@@ -122,5 +90,11 @@ public class AssemblyPhaseTest {
         assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
     }
 
+    @Test
+    void executeAllCommands() {
+        Mocker.simulateClientInput("draw\nrotate\nbook\nplace booked\n1\nchoose\n0\nplace\n7 6\nturn\nshow deck\nend\n1\n");
+
+        assemblyPhase.start();
+    }
 
 }

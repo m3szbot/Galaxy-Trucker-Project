@@ -33,7 +33,7 @@ public class PlaceBookedComponentState extends GameState {
         if (assemblyProtocol.getPlayersBookedComponents().get(player).size() > 0) {
             for (int i = 0; i < assemblyProtocol.getPlayersBookedComponents().get(player).size(); i++) {
                 Component component = assemblyProtocol.getPlayersBookedComponents().get(player).get(i);
-                String message = "Component " + i + ": Name:" + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
+                String message = "Component " + i + ": Name: " + component.getComponentName() + " Front: " + component.getFront() + " Right: " + component.getRight() + " Back: " + component.getBack() + " Left: " + component.getLeft();
                 playerMessenger.printMessage(message);
             }
         } else {

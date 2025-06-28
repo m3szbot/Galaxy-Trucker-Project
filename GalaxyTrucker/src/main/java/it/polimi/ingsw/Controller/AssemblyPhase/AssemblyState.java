@@ -32,8 +32,8 @@ public class AssemblyState extends GameState {
             playerMessenger.printComponent(assemblyProtocol.getPlayersInHandComponents().get(player));
         }
         playerMessenger.printMessage("Possible commands:");
-        playerMessenger.printMessage("(Place (current component) / Draw (a new component) / Choose (an uncovered component) / Show (a deck) / Rotate (current component)");
-        playerMessenger.printMessage("/ Turn (the hourglass) / Book (current component and have a new one) / Place booked (component) / End (finish your assembling phase))");
+        playerMessenger.printMessage("Place (current component) / Rotate (current component) / Draw (a new component) / Choose (an uncovered component) /");
+        playerMessenger.printMessage("Book (current component) / Place booked (component) / Turn (the hourglass) / Show (a deck) / End (finish assembling)");
         playerMessenger.printMessage("Enter command:");
     }
 
