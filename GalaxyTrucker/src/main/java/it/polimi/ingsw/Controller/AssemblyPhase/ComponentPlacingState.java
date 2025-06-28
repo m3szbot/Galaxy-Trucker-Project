@@ -74,7 +74,7 @@ public class ComponentPlacingState extends GameState {
                 String message = "Not valid format!";
                 playerMessenger.printMessage(message);
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-            }else {
+            } else {
                 // valid coordinates
                 try {
                     int num1 = Integer.parseInt(parts[0]);
@@ -101,48 +101,36 @@ public class ComponentPlacingState extends GameState {
                             ShipBoard playerShipboard = player.getShipBoard();
                             // TODO delete checks, NotPermittedPlacement checked by shipboard
                             // coordinate selected has neighbours
-                            if (playerShipboard.checkNotEmptyNeighbors(ShipBoard.getRealIndex(num1), ShipBoard.getRealIndex(num2))) {
+                            try {
+                                playerShipboard.addComponent(assemblyProtocol.getPlayersInHandComponents().get(player), num1, num2);
+                                // component is removed from hand (not put back into lists or booked)
+                                assemblyProtocol.removePlacedComponentFromHand(player);
+                                // get new component
                                 try {
-                                    playerShipboard.addComponent(assemblyProtocol.getPlayersInHandComponents().get(player), num1, num2);
-                                    // component is removed from hand (not put back into lists or booked)
-                                    assemblyProtocol.removePlacedComponentFromHand(player);
-                                    // get new component
-                                    try {
-                                        assemblyProtocol.newComponent(player);
-                                    } catch (IllegalSelectionException e) {
-                                        playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
-                                        assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
-                                    }
-                                }
-                                // not permitted placement
-                                catch (NotPermittedPlacementException e) {
-                                    String message = "You are not allowed to place your component here";
-                                    playerMessenger.printMessage(message);
-                                    if (booked) {
-                                        try {
-                                            assemblyProtocol.bookComponent(player);
-                                        } catch (IllegalSelectionException er) {
-                                            playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you don't have space to take it back??? Are you trying to cheat?");
-                                        }
-                                    }
-                                }
-                                // coordinates out of bounds (already checked)
-                                catch (IllegalSelectionException e) {
-                                    playerMessenger.printMessage("I have seen a lot of strange things during my journey across the galaxy, but it's the first time that i see a ship taking off without a crew");
+                                    assemblyProtocol.newComponent(player);
+                                } catch (IllegalSelectionException e) {
+                                    playerMessenger.printMessage("Sorry brother, we have finished all components! This situation can't happen so you must be very lucky to be here. I want to reward you. Listen carefully to my words. The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.");
+                                    assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                                 }
                             }
-                            // coordinate selected doesn't have neighbours
-                            else {
-                                String message = "You can't place your component here, it would float in the air";
+                            // not permitted placement
+                            catch (NotPermittedPlacementException e) {
+                                String message = "You are not allowed to place your component here";
                                 playerMessenger.printMessage(message);
                                 if (booked) {
                                     try {
                                         assemblyProtocol.bookComponent(player);
-                                    } catch (IllegalSelectionException e) {
-                                        playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
+                                    } catch (IllegalSelectionException er) {
+                                        playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you don't have space to take it back??? Are you trying to cheat?");
                                     }
                                 }
                             }
+                            // coordinates out of bounds (already checked)
+                            catch (IllegalSelectionException e) {
+                                playerMessenger.printMessage("I have seen a lot of strange things during my journey across the galaxy, but it's the first time that i see a ship taking off without a crew");
+                            }
+
+
                             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                         }
                         // no component in hand

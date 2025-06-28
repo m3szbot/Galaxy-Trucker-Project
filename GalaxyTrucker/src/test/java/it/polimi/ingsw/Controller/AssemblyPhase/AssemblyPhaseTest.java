@@ -7,6 +7,8 @@ import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AssemblyPhaseTest {
@@ -32,66 +34,6 @@ public class AssemblyPhaseTest {
         assertTrue(player.getIsConnected());
     }
 
-/*
-    @Test
-    public void bookComponent() {
-        assemblyPhase.start();
-        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("draw");
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersBookedComponents().get(player));
-        Mocker.simulateClientInput("book");
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersBookedComponents().get(player));
-        Mocker.simulateClientInput("place booked");
-        Mocker.simulateClientInput("0");
-        Mocker.simulateClientInput("67 67");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    @Test
-    public void testComponentPlacing() {
-        assemblyPhase.start();
-        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("draw");
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("place");
-        Mocker.simulateClientInput("45 67");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("place");
-        Mocker.simulateClientInput("6 6");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("place");
-        Mocker.simulateClientInput("7 6");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(player.getShipBoard().getComponent(7, 6));
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-    }
-
- */
 
     @Test
     void executeAllCommands() {
@@ -128,6 +70,22 @@ public class AssemblyPhaseTest {
     void placeBookedComponent() {
         Mocker.simulateClientInput("place booked\n1\n place booked\n0\nplace booked\n-1\ndraw\nplace booked\n0\ndraw\nbook\ndraw\nbook\nplace booked\n0\nplace booked\n1\nplace booked\n2\nend\n1\n");
 
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+    }
+
+    @Test
+    void placeComponent() {
+        ClientInputManager.setTimeOut(100000);
+        StringBuilder input = new StringBuilder();
+        input.append("draw\n");
+        for (int i = 0; i < 100; i++) {
+            input.append(String.format("place\n%d %d\n", ThreadLocalRandom.current().nextInt(-10, 20), ThreadLocalRandom.current().nextInt(-10, 20)));
+        }
+        input.append("end\n1\n");
+
+
+        Mocker.simulateClientInput(input.toString());
         assemblyPhase.start();
         assertTrue(player.getIsConnected());
     }
