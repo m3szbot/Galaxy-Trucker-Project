@@ -66,7 +66,7 @@ public class ComponentPlacingState extends GameState {
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
         } else {
-            input.replaceAll("[^\\d]", " ");
+            input = input.replaceAll("[^\\d]", " ");
             String[] parts = input.trim().split("[ ,]+"); //trim eliminates white spaces at the beginning and at the end
 
             // invalid coordinates
@@ -116,13 +116,13 @@ public class ComponentPlacingState extends GameState {
                                 }
                                 // not permitted placement
                                 catch (NotPermittedPlacementException e) {
-                                    String message = "Your are not allowed to place your component here";
+                                    String message = "You are not allowed to place your component here";
                                     playerMessenger.printMessage(message);
                                     if (booked) {
                                         try {
                                             assemblyProtocol.bookComponent(player);
                                         } catch (IllegalSelectionException er) {
-                                            playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you dont't have space to take it back??? Are you trying to cheat?");
+                                            playerMessenger.printMessage("Something strange is happening. How is it possible that you haven't placed your booked component and now you don't have space to take it back??? Are you trying to cheat?");
                                         }
                                     }
                                 }
