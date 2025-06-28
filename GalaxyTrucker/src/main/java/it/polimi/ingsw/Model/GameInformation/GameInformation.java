@@ -95,7 +95,7 @@ public class GameInformation implements Serializable {
     private void setUpCards() throws IOException {
         // create all cards
 
-        InputStream inputStream = getClass().getResourceAsStream("/Cards.json");
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Cards.json");
         if (inputStream == null) {
             throw new IllegalStateException("Cards.json was not found in the class path!");
         }
@@ -326,7 +326,7 @@ public class GameInformation implements Serializable {
                 Storage.class
         );
 
-        InputStream inputStream = getClass().getResourceAsStream("/Components.json");
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Components.json");
         if (inputStream == null) {
             throw new IllegalStateException("Components.json was not found in the class path!");
         }

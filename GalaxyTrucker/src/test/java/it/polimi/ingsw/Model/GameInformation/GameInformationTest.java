@@ -135,8 +135,8 @@ class GameInformationTest {
         assertNotNull(gameInformation.getPlayerList());
         assertNotNull(gameInformation.getPlayerList().get(0));
         assertEquals(player2, gameInformation.getPlayerList().get(0));
-        assertEquals(2, gameInformation.getDisconnectedPlayerList().size());
-        assertTrue(gameInformation.checkPlayerConnectivity(player1));
+        assertEquals(1, gameInformation.getDisconnectedPlayerList().size());
+        assertTrue(gameInformation.checkPlayerConnectivity(player2));
         assertFalse(gameInformation.checkPlayerConnectivity(player1));
 
 
