@@ -2,4 +2,4 @@
 
 ![uml](images/GalaxyTruckerUML.png)
 
-Here is the final UML diagram generated with IntelliJ tool.
+Here is the final UML diagram generated with the IntelliJ tool.
