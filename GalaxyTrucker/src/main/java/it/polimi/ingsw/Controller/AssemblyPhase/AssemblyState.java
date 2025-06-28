@@ -73,7 +73,7 @@ public class AssemblyState extends GameState {
             case "rotate":
                 if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
                     assemblyProtocol.getPlayersInHandComponents().get(player).accept(new ComponentRotatorVisitor());
-                    message = "Component successfully rotated:";
+                    message = "Component successfully rotated";
                     playerMessenger.printMessage(message);
                 } else {
                     message = "Your hand is empty";
@@ -126,6 +126,7 @@ public class AssemblyState extends GameState {
                     if (assemblyProtocol.getPlayersInHandComponents().get(player) != null) {
                         try {
                             assemblyProtocol.bookComponent(player);
+                            playerMessenger.printMessage("Component booked");
                         } catch (IllegalSelectionException e) {
                             playerMessenger.printMessage("Omg! Arriving here it's almost impossible... You must have finished inside a black hole! OK, don't panic, now I'll bring you back");
                             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));

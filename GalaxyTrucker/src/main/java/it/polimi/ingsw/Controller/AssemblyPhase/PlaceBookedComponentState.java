@@ -54,7 +54,7 @@ public class PlaceBookedComponentState extends GameState {
     public void handleInput(String input, AssemblyThread assemblyThread) {
         try {
             int index = Integer.parseInt(input);
-            if (index == 0 || index == 1) {
+            if (index >= 0 && index < assemblyProtocol.getPlayersBookedComponents().size()) {
                 if (assemblyProtocol.getPlayersBookedComponents().get(player).get(index) != null) {
                     try {
                         assemblyProtocol.chooseBookedComponent(player, index);
@@ -65,7 +65,7 @@ public class PlaceBookedComponentState extends GameState {
                     playerMessenger.printComponent(assemblyProtocol.getPlayersInHandComponents().get(player));
                     assemblyThread.setState(new ComponentPlacingState(assemblyProtocol, playerMessenger, player, true));
                 } else {
-                    String message = "The Booked Component chose doesn't exist";
+                    String message = "The chosen booked component doesn't exist";
                     playerMessenger.printMessage(message);
                     assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
                 }

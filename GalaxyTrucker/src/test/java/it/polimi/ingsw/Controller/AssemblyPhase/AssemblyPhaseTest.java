@@ -92,9 +92,15 @@ public class AssemblyPhaseTest {
 
     @Test
     void executeAllCommands() {
-        Mocker.simulateClientInput("draw\nrotate\nbook\nplace booked\n1\nchoose\n0\nplace\n7 6\nturn\nshow deck\nend\n1\n");
+        Mocker.simulateClientInput("draw\nrotate\nbook\ndraw\nplace booked\n0\nplace\n7 8\nchoose\n0\nplace\n7 6\nturn\nshow deck\nend\n1\n");
 
         assemblyPhase.start();
     }
 
+    @Test
+    void rotateComponent() {
+        Mocker.simulateClientInput("rotate\ndraw\nrotate\nrotate\nrotate\nrotate\nrotate\nrotate\nplace\n7 6\nrotate\nbook\nrotate\nend\n1\n");
+
+        assemblyPhase.start();
+    }
 }
