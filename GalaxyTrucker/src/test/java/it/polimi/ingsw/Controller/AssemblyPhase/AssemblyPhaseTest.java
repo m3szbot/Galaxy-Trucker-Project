@@ -116,6 +116,14 @@ public class AssemblyPhaseTest {
 
         assemblyPhase.start();
     }
+
+    @Test
+    void placeBookedComponent() {
+        Mocker.simulateClientInput("place booked\n1\n place booked\n0\nplace booked\n-1\ndraw\nplace booked\n0\ndraw\nbook\ndraw\nbook\nplace booked\n0\nplace booked\n1\nplace booked\n2\nend\n1\n");
+
+        assemblyPhase.start();
+    }
+
 /*
     @Test
     void chooseComponent() {

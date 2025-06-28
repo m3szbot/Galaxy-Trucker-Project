@@ -26,6 +26,8 @@ public class Player implements Serializable {
      * @author Giacomo
      */
     public Player(String nickName, Color color, GameInformation gameInformation) {
+        if (color == null)
+            throw new IllegalStateException("Player colour cannot be null");
         this.nickName = nickName;
         this.shipBoard = new ShipBoard(gameInformation.getGameType(), color);
         this.color = color;
