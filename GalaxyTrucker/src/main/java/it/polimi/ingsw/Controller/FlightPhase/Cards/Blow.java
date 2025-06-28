@@ -36,6 +36,11 @@ public class Blow implements Serializable {
         return big;
     }
 
+    //For testing
+    public void setRoll(int roll) {
+        this.roll = roll;
+    }
+
     /**
      * Gets a real index between 1 and 11 (included).
      * (Dice rolls can have values 2-12).
