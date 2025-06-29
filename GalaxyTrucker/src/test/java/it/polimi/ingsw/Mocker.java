@@ -91,7 +91,7 @@ public abstract class Mocker {
     }
 
     private static void resetInputSimulation() {
-        int trials = 100;
+        int trials = 50;
 
         if (inputThread != null) {
             while (trials > 0 && (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)) {
@@ -104,7 +104,7 @@ public abstract class Mocker {
                     throw new RuntimeException(e);
                 }
 
-                Sleeper.sleepXSeconds(0.5);
+                Sleeper.sleepXSeconds(0.1);
                 trials--;
             }
         }
