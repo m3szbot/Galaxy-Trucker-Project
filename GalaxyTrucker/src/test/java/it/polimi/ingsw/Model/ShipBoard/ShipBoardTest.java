@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.Model.ShipBoard.ShipBoard.checkCoordinatesInBounds;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShipBoardTest {
@@ -289,22 +290,25 @@ public class ShipBoardTest {
     @Test
     void testCoordinatesOutOfBounds() {
         // illegal coordinates
-        assertFalse(ShipBoard.checkCoordinatesInBounds(0, 1));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(1, 0));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(0, 0));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(-1, -1));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(1, -1));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(-1, 1));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(13, 1));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(1, 13));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(1, 130));
-        assertFalse(ShipBoard.checkCoordinatesInBounds(100, 1));
+        assertFalse(checkCoordinatesInBounds(0, 1));
+        assertFalse(checkCoordinatesInBounds(1, 0));
+        assertFalse(checkCoordinatesInBounds(0, 0));
+        assertFalse(checkCoordinatesInBounds(-1, -1));
+        assertFalse(checkCoordinatesInBounds(1, -1));
+        assertFalse(checkCoordinatesInBounds(-1, 1));
+        assertFalse(checkCoordinatesInBounds(13, 1));
+        assertFalse(checkCoordinatesInBounds(1, 13));
+        assertFalse(checkCoordinatesInBounds(1, 130));
+        assertFalse(checkCoordinatesInBounds(100, 1));
+        assertFalse(checkCoordinatesInBounds(5, -10));
+        assertTrue(checkCoordinatesInBounds(12, 12));
+        assertTrue(checkCoordinatesInBounds(1, 1));
 
         // legal coordinates
-        assertTrue(ShipBoard.checkCoordinatesInBounds(1, 1));
+        assertTrue(checkCoordinatesInBounds(1, 1));
         for (int i = 1; i <= shipBoard.COLS; i++) {
             for (int j = 1; j <= shipBoard.ROWS; j++) {
-                assertTrue(ShipBoard.checkCoordinatesInBounds(i, j));
+                assertTrue(checkCoordinatesInBounds(i, j));
             }
         }
     }
@@ -318,6 +322,7 @@ public class ShipBoardTest {
             shipBoard.removeCrewMember(7, 7);
         });
     }
+
 
     @Test
     void testEdgeIndexesWithAddComponent() {

@@ -3,10 +3,12 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.Connection.ClientSide.RMI.VirtualClient;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInfo;
 import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
+import it.polimi.ingsw.Connection.ServerSide.Server;
 import it.polimi.ingsw.Connection.ServerSide.messengers.ClientMessenger;
 import it.polimi.ingsw.Connection.ServerSide.messengers.GameMessenger;
 import it.polimi.ingsw.Connection.ViewType;
 import it.polimi.ingsw.Controller.Game.Game;
+import it.polimi.ingsw.Controller.Sleeper;
 import it.polimi.ingsw.Model.GameInformation.GameInformation;
 import it.polimi.ingsw.Model.GameInformation.GameType;
 import it.polimi.ingsw.Model.ShipBoard.Color;
@@ -63,6 +65,11 @@ public abstract class Mocker {
         Player player1 = new Player("Player1", Color.BLUE, game.getGameInformation());
         game.addPlayer(player1, true);
 
+        // server
+        Server centralServer = new Server();
+        ClientMessenger.setCentralServer(centralServer);
+        centralServer.addNickName(player1.getNickName());
+
 
         // setup messengers
         ClientMessenger.addGame(gameCode, game.getGameInformation());
@@ -77,8 +84,8 @@ public abstract class Mocker {
 
         game.setUpPhases();
 
-        // set timeout to 1 sec
-        ClientInputManager.setTimeOut(1000);
+        // set timeout to 0.25 sec
+        ClientInputManager.setTimeOut(250);
 
         Mocker.game = game;
     }
@@ -95,8 +102,14 @@ public abstract class Mocker {
             }
         }
 
-        if (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)
-            throw new IllegalStateException("The previous input simulation didn't finish yet.");
+        int trials = 10;
+        while (trials > 0 && (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)) {
+            Sleeper.sleepXSeconds(0.1);
+            trials--;
+        }
+
+        if (trials == 0)
+            throw new IllegalStateException("Previous test couldn't finish");
     }
 
     public static void mockNormalGame2Players() {

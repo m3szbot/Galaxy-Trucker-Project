@@ -45,6 +45,7 @@ class CorrectionPhaseTest {
     void noInputStarterShipBoard() {
         correctionPhase.start();
         assertEquals(1, flightBoard.getPlayerOrderList().size());
+        assertTrue(player.getIsConnected());
     }
 
 
@@ -54,6 +55,7 @@ class CorrectionPhaseTest {
         Mocker.simulateClientInput("7 8\n");
         correctionPhase.start();
         assertEquals(1, flightBoard.getPlayerOrderList().size());
+        assertTrue(player.getIsConnected());
     }
 
 
@@ -65,6 +67,7 @@ class CorrectionPhaseTest {
         Mocker.simulateClientInput("7 6\n7 8\n");
         correctionPhase.start();
         assertEquals(1, flightBoard.getPlayerOrderList().size());
+        assertTrue(player.getIsConnected());
     }
 
 
@@ -75,6 +78,7 @@ class CorrectionPhaseTest {
         Mocker.simulateClientInput("1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n1 1\n");
         correctionPhase.start();
         assertEquals(0, flightBoard.getPlayerOrderList().size());
+        assertTrue(player.getIsConnected());
     }
 
     @Test
@@ -87,6 +91,7 @@ class CorrectionPhaseTest {
         correctionPhase.start();
 
         assertEquals(0, flightBoard.getPlayerOrderList().size());
+        assertFalse(player.getIsConnected());
     }
 
 
@@ -104,6 +109,7 @@ class CorrectionPhaseTest {
         assertEquals(1, flightBoard.getPlayerOrderList().size());
         assertTrue(shipBoard.getShipBoardAttributes().getPurpleAlien());
         assertTrue(shipBoard.getShipBoardAttributes().getBrownAlien());
+        assertTrue(player.getIsConnected());
     }
 
     @Test
@@ -120,6 +126,7 @@ class CorrectionPhaseTest {
         assertEquals(1, flightBoard.getPlayerOrderList().size());
         assertFalse(shipBoard.getShipBoardAttributes().getPurpleAlien());
         assertFalse(shipBoard.getShipBoardAttributes().getBrownAlien());
+        assertTrue(player.getIsConnected());
     }
 
 
@@ -137,6 +144,7 @@ class CorrectionPhaseTest {
         correctionPhase.start();
 
         assertEquals(0, flightBoard.getPlayerOrderList().size());
+        assertFalse(player.getIsConnected());
     }
 
     @Test
@@ -149,6 +157,7 @@ class CorrectionPhaseTest {
         correctionPhase.start();
 
         assertEquals(1, flightBoard.getPlayerOrderList().size());
+        assertTrue(player.getIsConnected());
     }
 
     @Test
@@ -160,6 +169,7 @@ class CorrectionPhaseTest {
         correctionPhase.start();
 
         assertEquals(0, flightBoard.getPlayerOrderList().size());
+        assertFalse(player.getIsConnected());
     }
 
 

@@ -41,7 +41,7 @@ public class ComponentChoiceState extends GameState {
             playerMessenger.printMessage(message);
             i++;
         }
-        message = "Enter the number of the component you would like:";
+        message = "Enter the number of the component to choose:";
         playerMessenger.printMessage(message);
     }
 
@@ -60,7 +60,7 @@ public class ComponentChoiceState extends GameState {
         try {
             index = Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            playerMessenger.printMessage("\nNot valid input");
+            playerMessenger.printMessage("Invalid input (enter a number)");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             return;
         }
@@ -70,14 +70,14 @@ public class ComponentChoiceState extends GameState {
                 try {
                     assemblyProtocol.chooseUncoveredComponent(player, index);
                 } catch (IllegalSelectionException e) {
-                    playerMessenger.printMessage("\nAnother unreachable place in the universe has been reached.");
+                    playerMessenger.printMessage("Another unreachable place in the universe has been reached.");
                 }
             } else {
-                message = "\nComponent has been already taken";
+                message = "Component has been already taken";
                 playerMessenger.printMessage(message);
             }
-        }else{
-            message = "\nComponent index out of range";
+        } else {
+            message = "Component index out of range";
             playerMessenger.printMessage(message);
         }
         assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));

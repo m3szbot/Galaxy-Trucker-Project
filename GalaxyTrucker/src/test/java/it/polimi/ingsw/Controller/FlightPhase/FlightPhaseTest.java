@@ -35,6 +35,6 @@ class FlightPhaseTest {
 
         assertEquals(0, game.getGameInformation().getPlayerList().size());
         assertFalse(flightBoard.isInFlight(player));
-
+        assertFalse(player.getIsConnected());
     }
 }

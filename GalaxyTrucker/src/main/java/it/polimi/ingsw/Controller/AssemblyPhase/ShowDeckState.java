@@ -31,7 +31,7 @@ public class ShowDeckState extends GameState {
      */
     @Override
     public void enter(AssemblyThread assemblyThread) {
-        String message = "Choose a deck from 1 to 3 writing the number:";
+        String message = "Choose a deck (1-3):";
         playerMessenger.printMessage(message);
     }
 
@@ -63,7 +63,7 @@ public class ShowDeckState extends GameState {
                 assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
             }
         } catch (NumberFormatException e) {
-            playerMessenger.printMessage("Invalid Input, please write a number");
+            playerMessenger.printMessage("Invalid input (enter a number)");
             assemblyThread.setState(new AssemblyState(assemblyProtocol, playerMessenger, player));
         }
     }

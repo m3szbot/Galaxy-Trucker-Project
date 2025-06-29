@@ -1,19 +1,36 @@
 package it.polimi.ingsw.Controller.AssemblyPhase;
 
+import it.polimi.ingsw.Connection.ClientSide.utils.ClientInputManager;
 import it.polimi.ingsw.Controller.Game.Game;
 import it.polimi.ingsw.Mocker;
+import it.polimi.ingsw.Model.FlightBoard.FlightBoard;
 import it.polimi.ingsw.Model.ShipBoard.Player;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.concurrent.ThreadLocalRandom;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Commands:
+ * place
+ * draw
+ * rotate
+ * choose
+ * book
+ * place booked
+ * turn
+ * show
+ * end
+ */
 public class AssemblyPhaseTest {
 
     Game game;
     AssemblyPhase assemblyPhase;
     Player player;
+    FlightBoard flightBoard;
 
 
     @BeforeEach
@@ -22,6 +39,7 @@ public class AssemblyPhaseTest {
         game = Mocker.getGame();
         assemblyPhase = game.getAssemblyPhase();
         player = Mocker.getFirstPlayer();
+        flightBoard = game.getGameInformation().getFlightBoard();
     }
 
     @Test
@@ -29,72 +47,30 @@ public class AssemblyPhaseTest {
         Mocker.simulateClientInput("draw\nplace\n7 8\nend\n1\n");
 
         assemblyPhase.start();
-    }
-
-
-    @Test
-    public void bookComponent() {
-        assemblyPhase.start();
-        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("draw");
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersBookedComponents().get(player));
-        Mocker.simulateClientInput("book");
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersBookedComponents().get(player));
-        Mocker.simulateClientInput("place booked");
-        Mocker.simulateClientInput("0");
-        Mocker.simulateClientInput("67 67");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
     }
 
     @Test
-    public void testComponentPlacing() {
+    void drawBookPlaceBooked() {
+        Mocker.simulateClientInput("draw\nbook\nplace booked\n0\n7 8\nend\n1\n");
+
         assemblyPhase.start();
-        assertNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("draw");
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("place");
-        Mocker.simulateClientInput("45 67");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("place");
-        Mocker.simulateClientInput("6 6");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
-        Mocker.simulateClientInput("place");
-        Mocker.simulateClientInput("7 6");
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(player.getShipBoard().getComponent(7, 6));
-        try {
-            wait(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertNotNull(assemblyPhase.getAssemblyProtocol().getPlayersInHandComponents().get(player));
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+        assertNotNull(player.getShipBoard().getComponent(7, 8));
     }
+
 
     @Test
     void executeAllCommands() {
-        Mocker.simulateClientInput("draw\nrotate\nbook\ndraw\nplace booked\n0\nplace\n7 8\nchoose\n0\nplace\n7 6\nturn\nshow deck\nend\n1\n");
+        Mocker.simulateClientInput("draw\nrotate\nbook\ndraw\nplace booked\n0\n7 8\nchoose\n0\nplace\n7 6\nturn\nshow deck\nend\n1\n");
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+        assertNotNull(player.getShipBoard().getComponent(7, 8));
+        assertNotNull(player.getShipBoard().getComponent(7, 6));
     }
 
     @Test
@@ -102,12 +78,16 @@ public class AssemblyPhaseTest {
         Mocker.simulateClientInput("rotate\ndraw\nrotate\nrotate\nrotate\nrotate\nrotate\nrotate\nplace\n7 6\nrotate\nbook\nrotate\nend\n1\n");
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
     }
 
     @Test
     void drawComponent() {
+        ClientInputManager.setTimeOut(100000);
         StringBuilder input = new StringBuilder();
-        for (int i = 0; i < 500; i++) {
+        // ~150 components
+        for (int i = 0; i < 400; i++) {
             input.append("draw\n");
         }
         input.append("end\n1\n");
@@ -115,13 +95,226 @@ public class AssemblyPhaseTest {
         Mocker.simulateClientInput(input.toString());
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
     }
-/*
+
     @Test
-    void chooseComponent() {
+    void placeBookedComponent() {
+        Mocker.simulateClientInput("place booked\n1\n place booked\n0\nplace booked\n-1\ndraw\nplace booked\n0\ndraw\nbook\ndraw\nbook\nplace booked\n0\nplace booked\n1\nplace booked\n2\nend\n1\n");
 
         assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
     }
 
- */
+    @Test
+    void placeComponent() {
+        ClientInputManager.setTimeOut(100000);
+        StringBuilder input = new StringBuilder();
+        input.append("draw\n");
+        for (int i = 0; i < 100; i++) {
+            input.append(String.format("place\n%d %d\n", ThreadLocalRandom.current().nextInt(-10, 20), ThreadLocalRandom.current().nextInt(-10, 20)));
+        }
+        input.append("end\n1\n");
+
+
+        Mocker.simulateClientInput(input.toString());
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+    }
+
+    @Test
+    void chooseUncovered() {
+        ClientInputManager.setTimeOut(100000);
+        StringBuilder input = new StringBuilder();
+        input.append("draw\n");
+        for (int i = 0; i < 250; i++) {
+            input.append(String.format("draw\nchoose\n%d\n", ThreadLocalRandom.current().nextInt(-100, 200)));
+        }
+        input.append("end\n1\n");
+
+        Mocker.simulateClientInput(input.toString());
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+    }
+
+    @Test
+    void bookPlaceBooked() {
+        ClientInputManager.setTimeOut(100000);
+        StringBuilder input = new StringBuilder();
+        for (int i = 0; i < 250; i++) {
+            input.append("draw\nbook\n");
+            if (i % 2 == 1) {
+                input.append(String.format("place booked\n%d\n%d %d\n", ThreadLocalRandom.current().nextInt(-2, 5), ThreadLocalRandom.current().nextInt(-10, 20), ThreadLocalRandom.current().nextInt(-10, 20)));
+            }
+        }
+        input.append("end\n1\n");
+
+        Mocker.simulateClientInput(input.toString());
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+    }
+
+    @Test
+    void showDeck() {
+        ClientInputManager.setTimeOut(100000);
+        StringBuilder input = new StringBuilder();
+        for (int i = 0; i < 100; i++) {
+            input.append(String.format("show\n%d\nyes\n", ThreadLocalRandom.current().nextInt(-2, 5)));
+        }
+        input.append("end\n1\n");
+
+        Mocker.simulateClientInput(input.toString());
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+    }
+
+    @RepeatedTest(25)
+    void end() {
+        int tile = ThreadLocalRandom.current().nextInt(-5, 10);
+        String input = String.format("end\n%d\n", tile);
+        Mocker.simulateClientInput(input);
+        assemblyPhase.start();
+
+        if (tile == 1 || tile == 2 || tile == 4 || tile == 7) {
+            assertTrue(flightBoard.isInFlight(player));
+            assertTrue(player.getIsConnected());
+        } else {
+            assertFalse(flightBoard.isInFlight(player));
+            assertFalse(player.getIsConnected());
+        }
+    }
+
+    @Test
+    void shortRandomInputStressTest() {
+        ClientInputManager.setTimeOut(100000);
+        StringBuilder input = new StringBuilder();
+
+        for (int i = 0; i < 100; i++) {
+            input.append(randomCommand());
+        }
+        input.append("end\n1\n");
+        Mocker.simulateClientInput(input.toString());
+
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+    }
+
+    private String randomCommand() {
+        int command = ThreadLocalRandom.current().nextInt(0, 8);
+
+        // indexes from -2 to simulate wrong selection input
+        switch (command) {
+            case 0 -> {
+                // place
+                return String.format("place\n%d %d\n", ThreadLocalRandom.current().nextInt(-10, 20), ThreadLocalRandom.current().nextInt(-10, 20));
+            }
+            case 1 -> {
+                // draw
+                return String.format("draw\n");
+            }
+            case 2 -> {
+                // rotate
+                return String.format("rotate\n");
+            }
+            case 3 -> {
+                // choose uncovered
+                return String.format("choose\n%d\n", ThreadLocalRandom.current().nextInt(-100, 200));
+            }
+            case 4 -> {
+                // book
+                return String.format("book\n");
+            }
+            case 5 -> {
+                // place booked
+                return String.format("place booked\n%d\n%d %d\n", ThreadLocalRandom.current().nextInt(-5, 8), ThreadLocalRandom.current().nextInt(-100, 200), ThreadLocalRandom.current().nextInt(-100, 200));
+            }
+            case 6 -> {
+                // turn
+                return String.format("turn\n");
+            }
+            case 7 -> {
+                // show deck
+                return String.format("show\n%d\nyes\n", ThreadLocalRandom.current().nextInt(-5, 8));
+            }
+        }
+        return "";
+    }
+
+    @Test
+    void longRandomInputStressTest() {
+        ClientInputManager.setTimeOut(100000);
+        StringBuilder input = new StringBuilder();
+
+        for (int i = 0; i < 500; i++) {
+            input.append(randomCommand());
+        }
+        input.append("end\n1\n");
+        Mocker.simulateClientInput(input.toString());
+
+        assemblyPhase.start();
+        assertTrue(player.getIsConnected());
+        assertTrue(flightBoard.isInFlight(player));
+    }
+
+    @Test
+    void timeoutNoInput() {
+        ClientInputManager.setTimeOut(1);
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutPlace() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("draw\nplace\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutChooseUncovered() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("draw\ndraw\nchoose\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutPlaceBooked1() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("draw\nbook\nplace booked\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutPlaceBooked2() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("draw\nbook\nplace booked\n0\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutShow1() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("show\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
+
+    @Test
+    void timeoutShow2() {
+        ClientInputManager.setTimeOut(110);
+        Mocker.simulateClientInput("show\n1\n");
+        assemblyPhase.start();
+        assertFalse(player.getIsConnected());
+    }
 }

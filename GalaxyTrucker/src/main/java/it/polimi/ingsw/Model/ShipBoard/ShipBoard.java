@@ -277,10 +277,12 @@ public class ShipBoard implements Serializable {
      * @return true if at least 1 neighbor cell is not empty, false if all neighbor cells are empty.
      * @author Boti
      */
-    public boolean checkNotEmptyNeighbors(int realCol, int realRow) {
+    private boolean checkNotEmptyNeighbors(int realCol, int realRow) {
         // should be a private method, shouldn't be used in Assembly
-        if (!checkCoordinatesInBounds(getVisibleIndex(realCol), getVisibleIndex(realRow)))
+        if (!checkCoordinatesInBounds(getVisibleIndex(realCol), getVisibleIndex(realRow))) {
             System.err.println("Error: coordinates out of bounds");
+            return false;
+        }
 
         return (componentMatrix[realCol - 1][realRow] != null || componentMatrix[realCol + 1][realRow] != null ||
                 componentMatrix[realCol][realRow - 1] != null || componentMatrix[realCol][realRow + 1] != null);
@@ -1152,7 +1154,7 @@ public class ShipBoard implements Serializable {
         // change crewtype only if needed
         if (!originalCrewType.equals(crewType)) {
             // purple alien check
-            if (crewType.equals(CrewType.Purple)) {
+            if (crewType.equals(it.polimi.ingsw.Model.Components.CrewType.Purple)) {
                 if (shipBoardAttributes.getPurpleAlien())
                     throw new IllegalSelectionException("Cannot change crew to alien: a purple alien is already present elsewhere.");
 
