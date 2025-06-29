@@ -91,21 +91,22 @@ public abstract class Mocker {
     }
 
     private static void resetInputSimulation() {
-        if (inputThread != null) {
-            ClientInputManager.endTestInput();
-
-            try {
-                // wait for previous input simulator thread to finish
-                inputThread.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
         int trials = 100;
-        while (trials > 0 && (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)) {
-            Sleeper.sleepXSeconds(0.2);
-            trials--;
+
+        if (inputThread != null) {
+            while (trials > 0 && (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)) {
+                ClientInputManager.endTestInput();
+
+                try {
+                    // wait for previous input simulator thread to finish
+                    inputThread.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Sleeper.sleepXSeconds(0.5);
+                trials--;
+            }
         }
 
         if (trials == 0)
