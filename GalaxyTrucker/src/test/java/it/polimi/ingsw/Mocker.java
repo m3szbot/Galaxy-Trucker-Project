@@ -102,9 +102,9 @@ public abstract class Mocker {
             }
         }
 
-        int trials = 10;
+        int trials = 100;
         while (trials > 0 && (ClientInputManager.getTestRunning() || ClientInputManager.getSimulatedInput() != null)) {
-            Sleeper.sleepXSeconds(0.1);
+            Sleeper.sleepXSeconds(0.2);
             trials--;
         }
 
