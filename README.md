@@ -4,14 +4,14 @@
 
  # Implemented functionalities
 
- Regole complete + TUI + GUI + RMI + Socket + 2 FA
+ Complete rule set + TUI + GUI + RMI + Socket + 2 AF
 
- The 2 FA are:
+ The 2 AF (additional functionalities) are:
 
- 1) Volo di prova
- 2) Partite multiple
+ 1) Test flight
+ 2) Multiple games
 
-In addition to those FA, we have implmented 2 extra functionalities not indicated in the project specification:
+In addition to those AF, we have implmented 2 extra functionalities not indicated in the project specification:
 
 1) The possibility to send a message to a specific player inside a game (private message).
 2) The possibility to send a message to all the players inside a game (public message).
@@ -49,5 +49,10 @@ You can now start playing.
 
 # Test coverage percentage
 
+### Model
+
+Class: 100% (36/36) -- Method: 91% (304/332) -- Line: 92% (1332/1440) -- Branch: 85% (750/875)
+
+### Controller
 
 
