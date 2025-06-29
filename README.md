@@ -28,7 +28,7 @@ Go to the github main branch. Go to the directory 'deliverables/final/jar' and d
 
 Go to your system download directory and unzip the zip file that you just downloaded.
 
-### Step 3) Execute server
+### Step 3) Execute the server
 
 Open the unziped file. Go to the directory 'GalaxyTruckerServer/Files'. Open a terminal in the directory and execute the command 'java -jar Server.jar'.
 The server should now be running.
