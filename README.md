@@ -37,7 +37,7 @@ The server should now be running.
 
 Open the unziped file. Go to the directory 'GalaxyTruckerClient/Files. Open a terminal in the directory. Now, depending on your OS do the following:
 
-Windows: execute the command 'run-client-windows.bat'.
+Windows: execute the command '.\run-client-windows.bat'.
 
 MacOS: execute the command 'chmod +x run-client-macos.sh' to make sure you have the permission to execute the file. Then execute the command './run-client-macos.sh'.
 
