@@ -6,7 +6,7 @@
 
  Complete rule set + TUI + GUI + RMI + Socket + 2 AF
 
- The 2 AF (additional functionalities) are:
+ The 2 AF (advanced functionalities) are:
 
  1) Test flight
  2) Multiple games
