@@ -150,7 +150,7 @@ public class FlightBoard implements Serializable {
     /**
      * @return free starting tiles to choose from
      */
-    public List<Integer> getStartingTiles() {
+    public synchronized List<Integer> getStartingTiles() {
         return startingTiles;
     }
 
@@ -197,7 +197,7 @@ public class FlightBoard implements Serializable {
      * @param player Player to examine
      * @return true if player is in game, false if not in game
      */
-    public boolean isInFlight(Player player) {
+    public synchronized boolean isInFlight(Player player) {
         if (playerTilesMap.containsKey(player) && !playerOrderList.contains(player)) {
             throw new IllegalStateException("Player is present in playerTilesMap but not in playerOrderList ");
         }
