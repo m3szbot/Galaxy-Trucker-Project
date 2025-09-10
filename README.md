@@ -1,13 +1,10 @@
 # Project Overview
 
-A LAN-based multiplayer strategy board game implementation of Galaxy Trucker, built in Java using a fat server-thin client architecture and the Model-View-Controller (MVC) design pattern.
+A LAN-based multiplayer implementation of the strategy board game Galaxy Trucker, built in Java using a fat server-thin client architecture and the Model-View-Controller (MVC) design pattern.
 
-This project was developed as part of a Software Engineering group project (4 members) between February 2025 – June 2025 at the Politecnico di Milano.
+This project was developed as part of a group project (4 members) between February 2025 – June 2025 for the Software Engineering course at the Politecnico di Milano.
 
 The game supports both Text-based UI (TUI) and Graphical UI (GUI) using JavaFX, along with TCP/IP socket and RMI protocols for client-server communication. The game is unplayable in its uploaded state, as the image resources are under copyright and have been removed from the repo. TUI gameplay screenshots are provided in the screenshots folder.
-
-
-Architecture: Fat server-thin client with MVC design pattern
 
 ## Tech Stack
 
@@ -26,6 +23,20 @@ Architecture: Fat server-thin client with MVC design pattern
 - Protocols: TCP/IP & RMI
 
 - UI Options: Terminal-based TUI & JavaFX GUI
+
+ ## Features
+
+- LAN Multiplayer Support – Play with friends over a local network.
+
+- Dual Protocols – Choose between TCP/IP sockets or RMI for communication.
+
+- Multiple Parallel Games – The server supports several games simultaneously.
+
+- Centralized Game Logic – The server handles all game logic, sending only view updates to clients.
+
+- Flexible Interfaces – Players can choose between TUI and GUI.
+
+- In-Game Chat – Each game session includes its own chat for players.
 
 ---
 
@@ -87,5 +98,6 @@ Class: 100% (36/36) -- Method: 91% (304/332) -- Line: 92% (1332/1440) -- Branch:
 ### Controller
 
 Class: 78% (39/50) -- Method: 71% (156/219) -- Line: 45% (863/1907) -- Branch: 35% (294/832)
+
 
 
