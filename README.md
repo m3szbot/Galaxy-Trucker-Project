@@ -1,62 +1,68 @@
-# Project Overview
+# Galaxy Trucker Multiplayer Game
 
-A LAN-based multiplayer implementation of the strategy board game Galaxy Trucker, built in Java using a fat server-thin client architecture and the Model-View-Controller (MVC) design pattern.
+## 🧾 Project Overview
 
-This project was developed as part of a group project (4 members) between February 2025 – June 2025 for the Software Engineering course at the Politecnico di Milano.
+A **LAN-based multiplayer** implementation of the strategy board game **Galaxy Trucker**, built in **Java** using a **fat server-thin client** architecture and the **Model-View-Controller (MVC)** design pattern.
 
-The game supports both Text-based UI (TUI) and Graphical UI (GUI) using JavaFX, along with TCP/IP socket and RMI protocols for client-server communication. The game is unplayable in its uploaded state, as the image resources are under copyright and have been removed from the repo. TUI gameplay screenshots are provided in the screenshots folder.
+This project was developed as part of a **group project** (4 members) between **February 2025 – June 2025** for the **Software Engineering course** at **Politecnico di Milano**.
 
-## Tech Stack
+The game supports both **Text-based UI (TUI)** and **Graphical UI (GUI)** using **JavaFX**, along with **TCP/IP socket** and **RMI** protocols for client-server communication.
 
-- Language: Java
-
-- IDE: IntelliJ IDEA
-
-- Version Control: Git & GitHub
-
-- Build & Dependency Management: Maven
-
-- Testing: JUnit
-
-- Design & Architecture: UML, MVC
-
-- Protocols: TCP/IP & RMI
-
-- UI Options: Terminal-based TUI & JavaFX GUI
-
- ## Features
-
-- LAN Multiplayer Support – Play with friends over a local network.
-
-- Dual Protocols – Choose between TCP/IP sockets or RMI for communication.
-
-- Multiple Parallel Games – The server supports several games simultaneously.
-
-- Centralized Game Logic – The server handles all game logic, sending only view updates to clients.
-
-- Flexible Interfaces – Players can choose between TUI and GUI.
-
-- In-Game Chat – Each game session includes its own chat for players.
+> ⚠️ **Note:** The game is **unplayable in its uploaded state**, as the image resources are under copyright and have been removed from the repository.  
+> TUI gameplay screenshots are available in the **`/screenshots`** folder.
 
 ---
 
- # Group members
+## 🛠 Tech Stack
 
- Carlo Maggi, Ludovico Meloni, Giacomo Merlo, Botond Meszaros.
+- **Language:** Java  
+- **IDE:** IntelliJ IDEA  
+- **Version Control:** Git & GitHub  
+- **Build & Dependency Management:** Maven  
+- **Testing:** JUnit  
+- **Design & Architecture:** UML, MVC  
+- **Protocols:** TCP/IP & RMI  
+- **UI Options:** Terminal-based TUI & JavaFX GUI
 
- # Implemented functionalities
+---
 
- Complete rule set + TUI + GUI + RMI + Socket + 2 AF
+## 🚀 Features
 
- The 2 AF (advanced functionalities) are:
+- **LAN Multiplayer Support** – Play with friends over a local network.  
+- **Dual Protocols** – Choose between **TCP/IP sockets** or **RMI** for communication.  
+- **Multiple Parallel Games** – The server supports several games simultaneously.  
+- **Centralized Game Logic** – The server handles **all game rules** and sends only view updates to clients.  
+- **Flexible Interfaces** – Players can choose between **TUI** and **GUI**.  
+- **In-Game Chat** – Each game session includes its own dedicated chat.
 
- 1) Test flight
- 2) Multiple games
+---
 
-In addition to those AF, we have implmented 2 extra functionalities not indicated in the project specification:
+## 👥 Group Members
 
-1) The possibility to send a message to a specific player inside a game (private message).
-2) The possibility to send a message to all the players inside a game (public message).
+- Carlo Maggi  
+- Ludovico Meloni  
+- Giacomo Merlo  
+- Botond Meszaros  
+
+---
+
+## ✅ Implemented Functionalities
+
+- **Complete Rule Set**  
+- **TUI (Text-Based UI)**  
+- **GUI (JavaFX)**  
+- **RMI Support**  
+- **Socket Support**  
+- **2 Advanced Functionalities (AF):**  
+  1. **Test Flight**  
+  2. **Multiple Games**
+
+Additionally, we implemented **two extra functionalities** beyond the project specifications:
+
+1. Ability to **send private messages** to specific players within a game.  
+2. Ability to **send public messages** to all players within a game.
+
+---
 
 # Instructions to execute the jar
 
@@ -98,6 +104,7 @@ Class: 100% (36/36) -- Method: 91% (304/332) -- Line: 92% (1332/1440) -- Branch:
 ### Controller
 
 Class: 78% (39/50) -- Method: 71% (156/219) -- Line: 45% (863/1907) -- Branch: 35% (294/832)
+
 
 
 
