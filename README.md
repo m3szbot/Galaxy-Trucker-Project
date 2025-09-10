@@ -140,3 +140,9 @@ You can now **connect to the server** and **start playing**.
 - **Method:** 71% (156/219)
 - **Line:** 45% (863/1907)
 - **Branch:** 35% (294/832)
+
+---
+
+## 📷 Gameplay Screenshot
+
+![A TUI gameplay screenshot](screenshots/TUI_Assembly.jpg)
