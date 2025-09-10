@@ -64,22 +64,45 @@ Additionally, we implemented **two extra functionalities** beyond the project sp
 
 ---
 
-# Instructions to execute the jar
+## ▶️ Instructions to Execute the JAR
 
-Before continuing with the instructions please make sure that you have a recent version of openJDK installed on your system. Versions 23.0.* upwards should be fine.
+Before proceeding, ensure you have a **recent version of OpenJDK** installed.  
+**Recommended:** JDK **23.0.\*** or later.
 
-### Step 1) Download the zip file containing the jar files
+### **Step 1 — Download the ZIP File**
 
-Go to the github main branch. Go to the directory 'deliverables/final/jar' and download the zip file.
+- Navigate to the **GitHub main branch**.  
+- Go to the directory: `deliverables/final/jar`  
+- Download the provided **ZIP** file.
 
-### Step 2) Unzip the zip file
+### **Step 2 — Unzip the File**
 
-Go to your system download directory and unzip the zip file that you just downloaded.
+- Locate the downloaded ZIP file in your **Downloads** folder.  
+- Extract it to your preferred location.
 
-### Step 3) Execute the server
 
-Open the unziped file. Go to the directory 'GalaxyTruckerServer/Files'. Open a terminal in the directory and execute the command 'java -jar Server.jar'.
-The server should now be running.
+### **Step 3 — Start the Server**
+
+- Open the unzipped folder.  
+- Navigate to: `GalaxyTruckerServer/Files`  
+- Open a terminal in this directory and run:
+
+```bash
+java -jar Server.jar
+```
+The server should now be **running** and ready to accept client connections.
+
+### **Step 4 — Start the Client**
+
+- Open the unzipped folder.  
+- Navigate to: `GalaxyTruckerClient/Files`  
+- Open a terminal in this directory.
+
+Depending on your operating system, run:
+
+#### **Windows**
+```bash
+.\run-client-windows.bat
 
 ### Step 4) Execute the client
 
@@ -104,6 +127,7 @@ Class: 100% (36/36) -- Method: 91% (304/332) -- Line: 92% (1332/1440) -- Branch:
 ### Controller
 
 Class: 78% (39/50) -- Method: 71% (156/219) -- Line: 45% (863/1907) -- Branch: 35% (294/832)
+
 
 
 
